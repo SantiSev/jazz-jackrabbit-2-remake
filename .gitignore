@@ -30,8 +30,8 @@
 *.exe
 *.out
 *.app
-client
-server
+client_src
+server_src
 
 # Mac
 .DS_Store
@@ -45,3 +45,4 @@ server
 
 # Idea
 .idea
+cmake-build-debug
