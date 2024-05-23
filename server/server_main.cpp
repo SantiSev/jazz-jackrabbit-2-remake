@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../common/common_socket.h"
+#include "./server_protocol.h"
 
 #define servname argv[1]
 
@@ -12,21 +12,13 @@ int main(int argc, char* argv[]) {
         }
 
         Socket acceptor(servname);
-        Socket client = acceptor.accept();
+        ServerProtocol protocol(acceptor.accept());
 
-        uint8_t data;
-        bool was_closed = false;
-        while (!was_closed) {
-            client.recvall(&data, sizeof(data), &was_closed);
-            if (was_closed)
+        while (!protocol.is_closed()) {
+            std::string msg = protocol.recv_msg();
+            if (protocol.is_closed())
                 break;
-
-            if (data == 0x00)
-                std::cout << "CONNECTION_EVENT" << std::endl;
-            else if (data == 0x01)
-                std::cout << "IN_GAME_EVENT" << std::endl;
-            else if (data == 0x02)
-                std::cout << "MENU_EVENT" << std::endl;
+            std::cout << msg << std::endl;
         }
 
     } catch (const std::exception& err) {
