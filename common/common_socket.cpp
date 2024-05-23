@@ -52,7 +52,7 @@ Socket::Socket(const char* hostname, const char* servname) {
          * fue dada por `getaddrinfo`
          *
          * Esta operación es **bloqueante** lo que significa que el programa
-         * va a detenerse unos momentos hasta poder conectarse al server_src
+         * va a detenerse unos momentos hasta poder conectarse al server
          * o detectar y notificar de un error.
          * */
         s = connect(skt, addr->ai_addr, addr->ai_addrlen);
@@ -130,7 +130,7 @@ Socket::Socket(const char* servname) {
          * Por que? Long story short: el OS no sabe si hay paquetes de red
          * "aun viajando" hacia el puerto y prefiere reservar el puerto
          * para evitar q algún otro servidor desprevenido se levanta ahí
-         * y se "morfe" paquetes destinados para el server_src anterior.
+         * y se "morfe" paquetes destinados para el server anterior.
          *
          * Con SO_REUSEADDR le decimos al OS q "esta tohdo bien" si el
          * puerto aun esta en WAIT, y q nos debe dejar hacer un bind.
@@ -162,7 +162,7 @@ Socket::Socket(const char* servname) {
          * Ponemos el socket a escuchar. Ese 20 (podría ser otro valor)
          * indica cuantas conexiones a la espera de ser aceptadas se toleraran
          *
-         * No tiene nada q ver con cuantas conexiones totales el server_src tendrá.
+         * No tiene nada q ver con cuantas conexiones totales el server tendrá.
          * */
         s = listen(skt, 20);
         if (s == -1) {

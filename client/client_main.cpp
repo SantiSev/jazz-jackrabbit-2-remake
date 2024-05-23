@@ -2,15 +2,22 @@
 #include <iostream>
 #include <string>
 
-#include "../common_src/common_thread.h"
+#include "../common/common_thread.h"
 
 #include "client_renderer.h"
+
+//#include <SDL2pp/SDL2pp.hh>
+//
+// using namespace SDL2pp;
 
 int main(int argc, char* argv[]) {
     try {
         if (argc == 3) {
             const std::string hostname = argv[1];
             const std::string service = argv[2];
+
+            //            SDL sdl(SDL_INIT_VIDEO);
+
 
             Renderer renderer;
             renderer.start();

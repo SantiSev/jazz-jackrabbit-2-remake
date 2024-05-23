@@ -1,6 +1,6 @@
 #ifndef TP_FINAL_CLIENT_RENDERER_H
 #define TP_FINAL_CLIENT_RENDERER_H
-#include "../common_src/common_thread.h"
+#include "../common/common_thread.h"
 
 class Renderer: public Thread {
 private:
