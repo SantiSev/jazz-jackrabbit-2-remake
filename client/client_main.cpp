@@ -13,9 +13,22 @@ int main(int argc, char* argv[]) {
 
         Socket server(hostname, servname);
 
-        uint8_t proof = 0x01;
-        bool was_closed = false;
-        server.sendall(&proof, sizeof(proof), &was_closed);
+        std::string event;
+        while (std::cin >> event) {
+            uint8_t proof;
+            bool was_closed = false;
+            if (event.compare("CONNECTION_EVENT") == 0) {
+                proof = 0x00;
+                server.sendall(&proof, sizeof(proof), &was_closed);
+            } else if (event.compare("IN_GAME_EVENT") == 0) {
+                proof = 0x01;
+                server.sendall(&proof, sizeof(proof), &was_closed);
+            } else if (event.compare("MENU_EVENT") == 0) {
+                proof = 0x02;
+                server.sendall(&proof, sizeof(proof), &was_closed);
+            }
+        }
+
     } catch (const std::exception& err) {
         std::cerr << "Something went wrong and an exception was caught: " << err.what() << "\n";
         return -1;

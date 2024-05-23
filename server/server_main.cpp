@@ -16,9 +16,19 @@ int main(int argc, char* argv[]) {
 
         uint8_t data;
         bool was_closed = false;
-        client.recvall(&data, sizeof(data), &was_closed);
+        while (!was_closed) {
+            client.recvall(&data, sizeof(data), &was_closed);
+            if (was_closed)
+                break;
 
-        std::cout << int(data) << std::endl;
+            if (data == 0x00)
+                std::cout << "CONNECTION_EVENT" << std::endl;
+            else if (data == 0x01)
+                std::cout << "IN_GAME_EVENT" << std::endl;
+            else if (data == 0x02)
+                std::cout << "MENU_EVENT" << std::endl;
+        }
+
     } catch (const std::exception& err) {
         std::cerr << "Something went wrong and an exception was caught: " << err.what() << "\n";
         return -1;
