@@ -1,34 +1,21 @@
-#include <cstdlib>
 #include <iostream>
-#include <string>
 
-#include "../common/common_thread.h"
+#include "../common/common_socket.h"
 
-#include "client_renderer.h"
-
-//#include <SDL2pp/SDL2pp.hh>
-//
-// using namespace SDL2pp;
+#define hostname argv[1]
+#define servname argv[2]
 
 int main(int argc, char* argv[]) {
     try {
-        if (argc == 3) {
-            const std::string hostname = argv[1];
-            const std::string service = argv[2];
-
-            //            SDL sdl(SDL_INIT_VIDEO);
-
-
-            Renderer renderer;
-            renderer.start();
-            renderer.stop();
-            renderer.join();
-
-
-        } else {
-            std::cout << "Expected: " << argv[0] << " <hostname> <service>\n" << std::endl;
-            exit(1);
+        if (argc != 3) {
+            std::cerr << "Expected format: ./client <hostname> <port>\n";
         }
+
+        Socket server(hostname, servname);
+
+        uint8_t proof = 0x01;
+        bool was_closed = false;
+        server.sendall(&proof, sizeof(proof), &was_closed);
     } catch (const std::exception& err) {
         std::cerr << "Something went wrong and an exception was caught: " << err.what() << "\n";
         return -1;
