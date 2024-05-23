@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 #set(SDL2PP_WITH_TTF ON) # if you need SDL_ttf support
 #set(SDL2PP_WITH_IMAGE YES)
 #set(SDL2PP_WITH_TTF YES)
-add_subdirectory(extlib/SDL2pp)
+#add_subdirectory(extlib/SDL2pp)
 
 # compilation flags
 set(CSTD c17)
@@ -39,7 +39,7 @@ endif()
 
 # define targets
 #add_executable(client)
-target_link_libraries(client PUBLIC libSDL2pp)
+#target_link_libraries(client PUBLIC libSDL2pp)
 #target_link_libraries(client SDL2pp::SDL2pp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAGS}")
@@ -56,15 +56,25 @@ file(GLOB_RECURSE HEADERS_COMMON "common/*.h" "common_*.h")
 file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine_*.h")
 
 
-add_executable(client ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE} )
-add_executable(server ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON})
+add_executable(client ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE}
+        physics_engine/physics_engine.cpp
+        physics_engine/physics_engine.h
+        physics_engine/vector2D.cpp
+        physics_engine/vector2D.h
+        physics_engine/vector2D.h
+        physics_engine/vector2D.cpp)
+add_executable(server ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON}
+        physics_engine/vector2D.h
+        physics_engine/vector2D.cpp)
 
 
 if (DEFINED TSAN)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=thread")
 
-    add_executable(server-tsan ${SOURCES_SERVER} ${SOURCES_COMMON})
+    add_executable(server-tsan ${SOURCES_SERVER} ${SOURCES_COMMON}
+            physics_engine/vector2D.h
+            physics_engine/vector2D.cpp)
 endif()
 
 if (verbose)
