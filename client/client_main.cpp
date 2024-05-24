@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <arpa/inet.h>
+
 #include "../common/common_socket.h"
 
 #define hostname argv[1]
@@ -13,20 +15,13 @@ int main(int argc, char* argv[]) {
 
         Socket server(hostname, servname);
 
-        std::string event;
+        uint16_t event;
         while (std::cin >> event) {
-            uint8_t proof;
             bool was_closed = false;
-            if (event.compare("CONNECTION_EVENT") == 0) {
-                proof = 0x00;
-                server.sendall(&proof, sizeof(proof), &was_closed);
-            } else if (event.compare("IN_GAME_EVENT") == 0) {
-                proof = 0x01;
-                server.sendall(&proof, sizeof(proof), &was_closed);
-            } else if (event.compare("MENU_EVENT") == 0) {
-                proof = 0x02;
-                server.sendall(&proof, sizeof(proof), &was_closed);
-            }
+            event = htons(event);
+            server.sendall(&event, sizeof(event), &was_closed);
+            if (was_closed)
+                break;
         }
 
     } catch (const std::exception& err) {
