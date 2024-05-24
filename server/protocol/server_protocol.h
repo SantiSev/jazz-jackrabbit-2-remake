@@ -3,7 +3,13 @@
 #include <string>
 
 #include "../../common/common_socket.h"
-#include "./messages/server_message.h"
+#include "./messages/connection_events/close_connection.h"
+#include "./messages/in_game_events/recv_cheat_command.h"
+#include "./messages/in_game_events/recv_command.h"
+#include "./messages/in_game_events/recv_leave_match.h"
+#include "./messages/invalid_message.h"
+#include "./messages/menu_events/recv_create_game.h"
+#include "./messages/menu_events/recv_join_match.h"
 
 class ServerProtocol {
 private:
