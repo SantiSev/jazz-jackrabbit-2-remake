@@ -7,7 +7,6 @@
 #define RECV_CHEAT_COMMAND 0x0102
 #define RECV_UNJOIN_MATCH 0x0103
 #define RECV_CREATE_GAME 0x0201
-#define RECV_GAME_CREATED 0x0202
 #define RECV_JOIN_MATCH 0x0203
 
 ServerProtocol::ServerProtocol(Socket&& skt): client(std::move(skt)), was_closed(false) {}
@@ -22,14 +21,12 @@ const std::string ServerProtocol::recv_message() {
 
     switch (header) {
         case CLOSE_CONNECTION:
-            break;
+            return;
         case RECV_COMMAND:
             break;
         case RECV_UNJOIN_MATCH:
             break;
         case RECV_CREATE_GAME:
-            break;
-        case RECV_GAME_CREATED:
             break;
         case RECV_JOIN_MATCH:
             break;
