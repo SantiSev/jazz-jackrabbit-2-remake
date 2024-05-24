@@ -22,10 +22,9 @@ public:
     float getWidth() const { return colisionBox.get_width(); }
     float getHeight() const { return colisionBox.get_height(); }
 
-    void setPosition(float x, float y) override {
-        setPositionX(x);
-        setPositionY(y);
-        colisionBox.update_position(x, y);
+    void setPosition(Vector2D newPosition) override {
+        position = newPosition;
+        colisionBox.update_position(newPosition);
     };
 
 

@@ -8,17 +8,18 @@
 CharacterBody::CharacterBody(float width, float height, float base_speed, float base_acceleration):
         ColisionObject(width, height), velocity(base_speed), acceleration(base_acceleration) {}
 
-// para accelerar el movimiento el deltatime debe ser positivo y para desacelerar debe ser negativo
-void CharacterBody::updateMovementX(float deltaTime) {
-    velocity = velocity + (acceleration * deltaTime);
-    float newPosition = getPositionX() + (velocity * deltaTime);
-    setPosition(newPosition, getPositionY());
+
+void CharacterBody::moveHorizontal(float deltaTime) {
+    Vector2D newPosition = getPosition() + Vector2D(velocity.get_x() * deltaTime, 0);
+    setPosition(newPosition);
 }
 
-void CharacterBody::updateMovementY(float deltaTime) {
-    velocity = velocity + (acceleration * deltaTime);
-    float newPosition = getPositionY() + (velocity * deltaTime);
-    setPosition(getPositionX(), newPosition);
+void CharacterBody::moveVertical(float deltaTime) {
+    Vector2D newPosition = getPosition() + Vector2D(0, velocity.get_y() * deltaTime);
+    setPosition(newPosition);
 }
 
-void CharacterBody::setAcceleration(float newAcceleration) { this->acceleration = newAcceleration; }
+
+void CharacterBody::setAcceleration(Vector2D newAcceleration) {
+    this->acceleration = newAcceleration;
+}

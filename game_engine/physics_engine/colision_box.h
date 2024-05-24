@@ -41,15 +41,15 @@ public:
     [[nodiscard]] float get_width() const { return width; }
     [[nodiscard]] float get_height() const { return height; }
 
-    void update_position(float x, float y) {
-        tl_corner.set_x(x);
-        tl_corner.set_y(y);
-        tr_corner.set_x(x + width);
-        tr_corner.set_y(y);
-        bl_corner.set_x(x);
-        bl_corner.set_y(y + height);
-        br_corner.set_x(x + width);
-        br_corner.set_y(y + height);
+    void update_position(Vector2D new_position) {
+        tl_corner.set_x(new_position.get_x());
+        tl_corner.set_y(new_position.get_y());
+        tr_corner.set_x(new_position.get_x() + width);
+        tr_corner.set_y(new_position.get_y());
+        bl_corner.set_x(new_position.get_x());
+        bl_corner.set_y(new_position.get_y() + height);
+        br_corner.set_x(new_position.get_x() + width);
+        br_corner.set_y(new_position.get_y() + height);
     }
 
     // create a functions that checks if this box is touching another box that i recive by parameter

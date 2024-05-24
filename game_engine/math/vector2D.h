@@ -26,6 +26,8 @@ public:
     Vector2D operator*(float scalar) const;
     // Division por un escalar
     Vector2D operator/(float scalar) const;
+    // Redefinir un vector
+    Vector2D& operator=(const Vector2D& other);
 
     // modulo del vector
     float magnitude() const;

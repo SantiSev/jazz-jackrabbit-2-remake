@@ -9,17 +9,21 @@
 
 class CharacterBody: public ColisionObject {
 private:
-    float velocity;
-    float acceleration;
+    Vector2D velocity;
+    Vector2D acceleration;
 
 public:
     CharacterBody(float width, float height, float base_speed, float base_acceleration);
 
     // para accelerar el movimiento el deltatime debe ser positivo y para desacelerar debe ser
     // negativo
-    void updateMovementX(float deltaTime);
-    void updateMovementY(float deltaTime);
-    void setAcceleration(float newAcceleration);
+    void updateMovement(float deltaTime);
+
+    void moveHorizontal(float deltaTime);
+
+    void moveVertical(float deltaTime);
+
+    void setAcceleration(Vector2D newAcceleration);
 };
 
 
