@@ -24,6 +24,8 @@ const std::string ServerProtocol::recv_message() {
             return;
         case RECV_COMMAND:
             break;
+        case RECV_CHEAT_COMMAND:
+            break;
         case RECV_UNJOIN_MATCH:
             break;
         case RECV_CREATE_GAME:
