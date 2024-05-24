@@ -2,17 +2,19 @@
 // Created by santi on 23/05/24.
 //
 
-#ifndef VECTOR2D_H
-#define VECTOR2D_H
+#ifndef GAME_ENGINE_MATH_VECTOR2D_H_
+#define GAME_ENGINE_MATH_VECTOR2D_H_
 
 #include <cmath>
 #include <vector>
 
 // Vector2D class for basic vector operations
 class Vector2D {
-public:
+
+private:
     float x, y;
 
+public:
     // Constructor
     explicit Vector2D(float x = 0, float y = 0);
 
@@ -30,6 +32,10 @@ public:
 
     // angulo del vector
     float angle() const;
+
+    float get_x() const { return x; }
+    float get_y() const { return y; }
 };
 
-#endif  // VECTOR2D_H
+#endif  // GAME_ENGINE_MATH_VECTOR2D_H_
+// Copyriht 2024  S.E.V

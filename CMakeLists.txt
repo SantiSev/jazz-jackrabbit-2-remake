@@ -57,22 +57,36 @@ file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine_*.h")
 
 
 add_executable(client ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE}
-        physics_engine/physics_engine.cpp
-        physics_engine/physics_engine.h
-        physics_engine/vector_2D/vector2D.cpp
-        physics_engine/vector_2D/vector2D.h
-        physics_engine/vector_2D/vector2D.h
-        physics_engine/vector_2D/vector2D.cpp
-        physics_engine/rigid_body/rigid_body.cpp
-        physics_engine/rigid_body/rigid_body.h
-        physics_engine/physics_engine.cpp
-        physics_engine/physics_engine.h
-        physics_engine/physics_object/physics_object.cpp
-        physics_engine/physics_object/physics_object.h
+        game_engine/physics_engine/physics_engine.cpp
+        game_engine/physics_engine/physics_engine.h
+        game_engine/math/vector2D.cpp
+        game_engine/math/vector2D.h
+        game_engine/math/vector2D.h
+        game_engine/math/vector2D.cpp
+        game_engine/physics_engine/rigid_body/rigid_body.cpp
+        game_engine/physics_engine/rigid_body/rigid_body.h
+        game_engine/physics_engine/physics_engine.cpp
+        game_engine/physics_engine/physics_engine.h
+        game_engine/physics_engine/physics_object/physics_object.cpp
+        game_engine/physics_engine/physics_object/physics_object.h
+        game_engine/physics_engine/static_body/static_body.cpp
+        game_engine/game_object.h
+        game_engine/colision_object.h
+        game_engine/colision_shape.h
+        game_engine/physics_engine/physics_object/character_body.cpp
+        game_engine/physics_engine/physics_object/character_body.h
+        game_engine/physics_engine/physics_object/static_body.cpp
+        game_engine/physics_engine/physics_object/static_body.h
+        game_engine/physics_engine/physics_object/physics_object.cpp
+        game_engine/physics_engine/physics_object/physics_object.h
+        game_engine/shapes/square.h
+        game_engine/shapes/triangle.h
+        game_engine/physics_engine/area_object/item_object.cpp
+        game_engine/physics_engine/area_object/item_object.h
 )
 add_executable(server ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON}
-        physics_engine/vector_2D/vector2D.h
-        physics_engine/vector_2D/vector2D.cpp)
+        game_engine/math/vector2D.h
+        game_engine/math/vector2D.cpp)
 
 
 if (DEFINED TSAN)
@@ -80,8 +94,8 @@ if (DEFINED TSAN)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=thread")
 
     add_executable(server-tsan ${SOURCES_SERVER} ${SOURCES_COMMON}
-            physics_engine/vector_2D/vector2D.h
-            physics_engine/vector_2D/vector2D.cpp)
+            game_engine/math/vector2D.h
+            game_engine/math/vector2D.cpp)
 endif()
 
 if (verbose)
