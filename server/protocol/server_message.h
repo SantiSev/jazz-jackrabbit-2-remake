@@ -46,3 +46,10 @@ public:
     void run() override;
     ~RecvJoinMatchMessage();
 };
+
+class InvalidMessage: public Message {
+public:
+    InvalidMessage();
+    void run() override;
+    ~InvalidMessage();
+};

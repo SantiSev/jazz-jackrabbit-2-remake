@@ -38,9 +38,9 @@ std::shared_ptr<Message> ServerProtocol::recv_message() {
             return std::make_shared<RecvCreateGameMessage>();
         case RECV_JOIN_MATCH:
             return std::make_shared<RecvJoinMatchMessage>();
+        default:
+            return std::make_shared<InvalidMessage>();
     }
-
-    return NULL;
 }
 
 bool ServerProtocol::is_closed() const { return was_closed; }
