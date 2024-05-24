@@ -1,6 +1,6 @@
 #include <string>
 
-#include "../common/common_socket.h"
+#include "../../common/common_socket.h"
 
 class ServerProtocol {
 private:
