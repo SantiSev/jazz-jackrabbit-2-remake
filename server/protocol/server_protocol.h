@@ -3,7 +3,7 @@
 #include <string>
 
 #include "../../common/common_socket.h"
-#include "./server_message.h"
+#include "./messages/server_message.h"
 
 class ServerProtocol {
 private:
