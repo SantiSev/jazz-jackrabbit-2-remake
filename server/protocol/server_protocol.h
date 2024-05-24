@@ -10,14 +10,9 @@ private:
     Socket client;
     bool was_closed;
 
-    const uint16_t recv_header();
-
-    const uint16_t recv_id_player();
-    const uint8_t recv_id_command();
-    const uint8_t recv_id_cheat_command();
-    const std::string recv_match_name();
-    const uint16_t recv_id_match();
-    const uint8_t recv_player_character();
+    const uint8_t recv_one_byte();
+    const uint16_t recv_two_bytes();
+    const std::string recv_string();
 
     std::shared_ptr<RecvCommandMessage> recv_command();
     std::shared_ptr<RecvCheatCommandMessage> recv_cheat_command();
