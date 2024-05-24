@@ -2,7 +2,7 @@
 
 ServerProtocol::ServerProtocol(Socket&& skt): client(std::move(skt)), was_closed(false) {}
 
-const std::string ServerProtocol::recv_msg() {
+const std::string ServerProtocol::recv_message() {
     uint8_t header;
 
     client.recvall(&header, sizeof(header), &was_closed);

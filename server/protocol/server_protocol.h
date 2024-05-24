@@ -10,7 +10,7 @@ private:
 public:
     explicit ServerProtocol(Socket&& skt);
 
-    const std::string recv_msg();
+    const std::string recv_message();
 
     bool is_closed() const;
 };
