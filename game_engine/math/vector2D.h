@@ -35,6 +35,11 @@ public:
 
     float get_x() const { return x; }
     float get_y() const { return y; }
+
+    void set_x(float x) { this->x = x; }
+    void set_y(float y) { this->y = y; }
+
+    void setVector(float x, float y);
 };
 
 #endif  // GAME_ENGINE_MATH_VECTOR2D_H_

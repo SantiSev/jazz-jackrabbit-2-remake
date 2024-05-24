@@ -4,13 +4,6 @@ project(tp_final LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-#set(SDL2PP_WITH_IMAGE ON) # if you need SDL_image support
-#set(SDL2PP_WITH_MIXER ON) # if you need SDL_mixer support
-#set(SDL2PP_WITH_TTF ON) # if you need SDL_ttf support
-#set(SDL2PP_WITH_IMAGE YES)
-#set(SDL2PP_WITH_TTF YES)
-#add_subdirectory(extlib/SDL2pp)
-
 # compilation flags
 set(CSTD c17)
 set(CXXSTD c++17)
@@ -38,9 +31,6 @@ if (static)
 endif()
 
 # define targets
-#add_executable(client)
-#target_link_libraries(client PUBLIC libSDL2pp)
-#target_link_libraries(client SDL2pp::SDL2pp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LDFLAGS}")
@@ -57,45 +47,15 @@ file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine_*.h")
 
 
 add_executable(client ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE}
-        game_engine/physics_engine/physics_engine.cpp
-        game_engine/physics_engine/physics_engine.h
-        game_engine/math/vector2D.cpp
-        game_engine/math/vector2D.h
-        game_engine/math/vector2D.h
-        game_engine/math/vector2D.cpp
-        game_engine/physics_engine/rigid_body/rigid_body.cpp
-        game_engine/physics_engine/rigid_body/rigid_body.h
-        game_engine/physics_engine/physics_engine.cpp
-        game_engine/physics_engine/physics_engine.h
-        game_engine/physics_engine/physics_object/physics_object.cpp
-        game_engine/physics_engine/physics_object/physics_object.h
-        game_engine/physics_engine/static_body/static_body.cpp
-        game_engine/game_object.h
-        game_engine/colision_object.h
-        game_engine/colision_shape.h
-        game_engine/physics_engine/physics_object/character_body.cpp
-        game_engine/physics_engine/physics_object/character_body.h
-        game_engine/physics_engine/physics_object/static_body.cpp
-        game_engine/physics_engine/physics_object/static_body.h
-        game_engine/physics_engine/physics_object/physics_object.cpp
-        game_engine/physics_engine/physics_object/physics_object.h
-        game_engine/shapes/square.h
-        game_engine/shapes/triangle.h
-        game_engine/physics_engine/area_object/item_object.cpp
-        game_engine/physics_engine/area_object/item_object.h
-)
-add_executable(server ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON}
-        game_engine/math/vector2D.h
-        game_engine/math/vector2D.cpp)
+        game_engine/physics_engine/colision_box.h)
+add_executable(server ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON})
 
 
 if (DEFINED TSAN)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=thread")
 
-    add_executable(server-tsan ${SOURCES_SERVER} ${SOURCES_COMMON}
-            game_engine/math/vector2D.h
-            game_engine/math/vector2D.cpp)
+    add_executable(server-tsan ${SOURCES_SERVER} ${SOURCES_COMMON})
 endif()
 
 if (verbose)
