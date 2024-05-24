@@ -3,17 +3,32 @@ public:
     virtual void run() = 0;
 };
 
-class ConnectionMessage: public Message {
+class CloseConnectionMessage: public Message {
 public:
     void run() override;
 };
 
-class InGameMessage: public Message {
+class RecvCommandMessage: public Message {
 public:
     void run() override;
 };
 
-class MenuMessage: public Message {
+class RecvCheatCommandMessage: public Message {
+public:
+    void run() override;
+};
+
+class RecvUnjoinMatchMessage: public Message {
+public:
+    void run() override;
+};
+
+class RecvCreateGameMessage: public Message {
+public:
+    void run() override;
+};
+
+class RecvJoinMatchMessage: public Message {
 public:
     void run() override;
 };
