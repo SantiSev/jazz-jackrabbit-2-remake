@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
         ServerProtocol protocol(acceptor.accept());
 
         while (!protocol.is_closed()) {
-            std::string msg = protocol.recv_msg();
+            std::string msg = protocol.recv_message();
             if (protocol.is_closed())
                 break;
             std::cout << msg << std::endl;
