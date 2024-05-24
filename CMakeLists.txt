@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 #set(SDL2PP_WITH_TTF ON) # if you need SDL_ttf support
 #set(SDL2PP_WITH_IMAGE YES)
 #set(SDL2PP_WITH_TTF YES)
-add_subdirectory(extlib/SDL2pp)
+#add_subdirectory(extlib/SDL2pp)
 
 # compilation flags
 set(CSTD c17)
@@ -39,7 +39,7 @@ endif()
 
 # define targets
 #add_executable(client)
-target_link_libraries(client PUBLIC libSDL2pp)
+#target_link_libraries(client PUBLIC libSDL2pp)
 #target_link_libraries(client SDL2pp::SDL2pp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAGS}")
