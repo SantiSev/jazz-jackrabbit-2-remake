@@ -34,6 +34,8 @@ const std::string ServerProtocol::recv_message() {
         case RECV_JOIN_MATCH:
             break;
     }
+
+    return "";
 }
 
 bool ServerProtocol::is_closed() const { return was_closed; }
