@@ -15,10 +15,10 @@ int main(int argc, char* argv[]) {
         ServerProtocol protocol(acceptor.accept());
 
         while (!protocol.is_closed()) {
-            std::string msg = protocol.recv_message();
+            std::shared_ptr<Message> msg = protocol.recv_message();
             if (protocol.is_closed())
                 break;
-            std::cout << msg << std::endl;
+            msg->run();
         }
 
     } catch (const std::exception& err) {

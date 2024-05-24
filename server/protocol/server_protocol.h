@@ -1,7 +1,9 @@
 #include <map>
+#include <memory>
 #include <string>
 
 #include "../../common/common_socket.h"
+#include "./server_message.h"
 
 class ServerProtocol {
 private:
@@ -11,7 +13,7 @@ private:
 public:
     explicit ServerProtocol(Socket&& skt);
 
-    const std::string recv_message();
+    std::shared_ptr<Message> recv_message();
 
     bool is_closed() const;
 };

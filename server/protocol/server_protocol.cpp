@@ -11,30 +11,30 @@
 
 ServerProtocol::ServerProtocol(Socket&& skt): client(std::move(skt)), was_closed(false) {}
 
-const std::string ServerProtocol::recv_message() {
+std::shared_ptr<Message> ServerProtocol::recv_message() {
     uint16_t header;
 
     client.recvall(&header, sizeof(header), &was_closed);
     header = ntohs(header);
     if (was_closed)
-        return "";
+        return NULL;
 
     switch (header) {
         case CLOSE_CONNECTION:
-            return;
+            return std::make_shared<CloseConnectionMessage>();
         case RECV_COMMAND:
-            break;
+            return std::make_shared<RecvCommandMessage>();
         case RECV_CHEAT_COMMAND:
-            break;
+            return std::make_shared<RecvCheatCommandMessage>();
         case RECV_UNJOIN_MATCH:
-            break;
+            return std::make_shared<RecvUnjoinMatchMessage>();
         case RECV_CREATE_GAME:
-            break;
+            return std::make_shared<RecvCreateGameMessage>();
         case RECV_JOIN_MATCH:
-            break;
+            return std::make_shared<RecvJoinMatchMessage>();
     }
 
-    return "";
+    return NULL;
 }
 
 bool ServerProtocol::is_closed() const { return was_closed; }
