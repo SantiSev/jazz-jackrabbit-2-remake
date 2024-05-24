@@ -3,17 +3,17 @@
 ServerProtocol::ServerProtocol(Socket&& skt): client(std::move(skt)), was_closed(false) {}
 
 const std::string ServerProtocol::recv_msg() {
-    uint8_t data;
+    uint8_t header;
 
-    client.recvall(&data, sizeof(data), &was_closed);
+    client.recvall(&header, sizeof(header), &was_closed);
     if (was_closed)
         return "";
 
-    if (data == 0x00)
+    if (header == 0x00)
         return "CONNECTION_EVENT";
-    else if (data == 0x01)
+    else if (header == 0x01)
         return "IN_GAME_EVENT";
-    else if (data == 0x02)
+    else if (header == 0x02)
         return "MENU_EVENT";
 
     return "";
