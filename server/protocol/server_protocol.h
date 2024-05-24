@@ -10,6 +10,8 @@ private:
     Socket client;
     bool was_closed;
 
+    const uint16_t recv_header();
+
 public:
     explicit ServerProtocol(Socket&& skt);
 

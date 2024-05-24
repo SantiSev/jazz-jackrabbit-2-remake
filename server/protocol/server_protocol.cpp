@@ -11,13 +11,19 @@
 
 ServerProtocol::ServerProtocol(Socket&& skt): client(std::move(skt)), was_closed(false) {}
 
-std::shared_ptr<Message> ServerProtocol::recv_message() {
+const uint16_t ServerProtocol::recv_header() {
     uint16_t header;
 
     client.recvall(&header, sizeof(header), &was_closed);
     header = ntohs(header);
     if (was_closed)
-        return NULL;
+        return CLOSE_CONNECTION;
+
+    return header;
+}
+
+std::shared_ptr<Message> ServerProtocol::recv_message() {
+    const uint16_t header = recv_header();
 
     switch (header) {
         case CLOSE_CONNECTION:
