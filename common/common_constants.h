@@ -23,6 +23,9 @@ const uint8_t SHOOT = 0x06;
 const uint8_t SPECIAL_ATTACK = 0x07;
 const uint8_t PICK_UP_ITEM = 0x08;
 const uint8_t PAUSE_GAME = 0x09;
-const uint8_t TAUNT = 0x10;  // Opcional
+const uint8_t TAUNT = 0x10;
+
+// Gameloop events
+const size_t MAX_EVENTS_PER_LOOP = 4;
 
 #endif

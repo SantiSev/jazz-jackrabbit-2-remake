@@ -7,21 +7,21 @@
 #include "../common/common_queue.h"
 #include "../common/common_thread.h"
 
-class Server_Eventloop: public Thread {
+class ServerEventloop: public Thread {
 private:
     bool online;
-    Queue<std::string>& event_queue;    // COMPARTIDA CON EL SERVER_RECEIVER
-    Queue<std::string>& command_queue;  // COMPARTIDA CON GAMELOOP
+    Queue<std::string>& event_queue;  // COMPARTIDA CON EL SERVER_RECEIVER
+    Queue<std::string>& command_queue;
 
 public:
     // Constructor
-    Server_Eventloop(Queue<std::string>& eventQueue, Queue<std::string>& commandQueue);
+    ServerEventloop(Queue<std::string>& eventQueue, Queue<std::string>& commandQueue);
 
     void run() override;
     // Kill the thread
     void stop() override;
     // Destroyer
-    ~Server_Eventloop() override = default;
+    ~ServerEventloop() override = default;
 
     void compute_command(std::string basic_string);
 

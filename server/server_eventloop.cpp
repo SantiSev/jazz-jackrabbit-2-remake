@@ -1,11 +1,10 @@
 #include "server_eventloop.h"
 
-Server_Eventloop::Server_Eventloop(Queue<std::string>& eventQueue,
-                                   Queue<std::string>& commandQueue):
+ServerEventloop::ServerEventloop(Queue<std::string>& eventQueue, Queue<std::string>& commandQueue):
         online(true), event_queue(eventQueue), command_queue(commandQueue) {}
 
 
-void Server_Eventloop::run() {
+void ServerEventloop::run() {
     try {
         while (online) {
             std::string next_command;
@@ -23,13 +22,18 @@ void Server_Eventloop::run() {
     }
 }
 
-void Server_Eventloop::stop() { online = false; }
+void ServerEventloop::stop() { online = false; }
 
-void Server_Eventloop::compute_command(std::string basic_string) {
+void ServerEventloop::compute_command(std::string basic_string) {
     uint8_t command_type =
             basic_string[0];  // ACA VA EL TIPO DE COMANDO CUANDO TENGA LA ESTRUCTURA CORRECTA
     uint8_t command = basic_string[1];
+
+    // message.run();
+
+
     filter_command_type(command_type);
+
     switch (command) {
         case MOVE_LEFT:
             std::cout << "Command: Move Left" << std::endl;
@@ -67,7 +71,7 @@ void Server_Eventloop::compute_command(std::string basic_string) {
     }
 }
 
-void Server_Eventloop::filter_command_type(uint8_t command_type_string) {
+void ServerEventloop::filter_command_type(uint8_t command_type_string) {
     switch (command_type_string) {
         case CONNECTION_EVENT:
             std::cout << "IS A PLAYER COMMAND" << std::endl;
