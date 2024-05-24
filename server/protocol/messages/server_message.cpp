@@ -16,7 +16,7 @@ RecvCheatCommandMessage::RecvCheatCommandMessage(uint16_t id_player, uint8_t id_
     this->id_player = id_player;
     this->id_cheat_command = id_cheat_command;
 }
-RecvUnjoinMatchMessage::RecvUnjoinMatchMessage(uint16_t id_player) { this->id_player = id_player; }
+RecvLeaveMatchMessage::RecvLeaveMatchMessage(uint16_t id_player) { this->id_player = id_player; }
 
 // MENU
 RecvCreateGameMessage::RecvCreateGameMessage(uint16_t id_player, const std::string& match_name) {
@@ -43,7 +43,7 @@ void RecvCheatCommandMessage::run() {
     std::cout << int(id_player) << std::endl;
     std::cout << int(id_cheat_command) << std::endl;
 }
-void RecvUnjoinMatchMessage::run() {
+void RecvLeaveMatchMessage::run() {
     std::cout << "RECV_UNJOIN_MATCH" << std::endl;
     std::cout << int(id_player) << std::endl;
 }
@@ -62,7 +62,7 @@ Message::~Message() {}
 CloseConnectionMessage::~CloseConnectionMessage() {}
 RecvCommandMessage::~RecvCommandMessage() {}
 RecvCheatCommandMessage::~RecvCheatCommandMessage() {}
-RecvUnjoinMatchMessage::~RecvUnjoinMatchMessage() {}
+RecvLeaveMatchMessage::~RecvLeaveMatchMessage() {}
 RecvCreateGameMessage::~RecvCreateGameMessage() {}
 RecvJoinMatchMessage::~RecvJoinMatchMessage() {}
 InvalidMessage::~InvalidMessage() {}

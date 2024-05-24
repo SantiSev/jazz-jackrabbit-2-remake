@@ -16,7 +16,7 @@ private:
 
     std::shared_ptr<RecvCommandMessage> recv_command();
     std::shared_ptr<RecvCheatCommandMessage> recv_cheat_command();
-    std::shared_ptr<RecvUnjoinMatchMessage> recv_unjoin_match();
+    std::shared_ptr<RecvLeaveMatchMessage> recv_unjoin_match();
 
     std::shared_ptr<RecvCreateGameMessage> recv_create_game();
     std::shared_ptr<RecvJoinMatchMessage> recv_join_match();

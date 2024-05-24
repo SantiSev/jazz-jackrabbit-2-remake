@@ -65,9 +65,9 @@ std::shared_ptr<RecvCheatCommandMessage> ServerProtocol::recv_cheat_command() {
     return std::make_shared<RecvCheatCommandMessage>(id_player, id_cheat_command);
 }
 
-std::shared_ptr<RecvUnjoinMatchMessage> ServerProtocol::recv_unjoin_match() {
+std::shared_ptr<RecvLeaveMatchMessage> ServerProtocol::recv_unjoin_match() {
     const uint16_t id_player = recv_two_bytes();
-    return std::make_shared<RecvUnjoinMatchMessage>(id_player);
+    return std::make_shared<RecvLeaveMatchMessage>(id_player);
 }
 
 std::shared_ptr<RecvCreateGameMessage> ServerProtocol::recv_create_game() {

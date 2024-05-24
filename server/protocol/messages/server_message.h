@@ -37,14 +37,14 @@ public:
     ~RecvCheatCommandMessage();
 };
 
-class RecvUnjoinMatchMessage: public Message {
+class RecvLeaveMatchMessage: public Message {
 private:
     uint16_t id_player;
 
 public:
-    explicit RecvUnjoinMatchMessage(uint16_t id_player);
+    explicit RecvLeaveMatchMessage(uint16_t id_player);
     void run() override;
-    ~RecvUnjoinMatchMessage();
+    ~RecvLeaveMatchMessage();
 };
 
 class RecvCreateGameMessage: public Message {
