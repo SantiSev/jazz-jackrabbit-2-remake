@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "./server_protocol.h"
+#include "./protocol/server_protocol.h"
 
 #define servname argv[1]
 
