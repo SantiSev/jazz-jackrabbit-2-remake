@@ -19,7 +19,12 @@ public:
     ColisionObject(float x, float y, float width, float height);
 
     float getWidth();
+
     float getHeight();
+
+    void setWidth(float width);
+
+    void setHeight(float height);
 
     // Set the position of the object
     void setPosition(Vector2D newPosition) override;

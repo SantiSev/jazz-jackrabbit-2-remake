@@ -27,6 +27,8 @@ public:
     Vector2D get_br_corner() const;
     float get_width() const;
     float get_height() const;
+    void set_width(float new_width);
+    void set_height(float new_height);
 
     void update_position(Vector2D new_position);
     bool is_touching(const ColisionBox& other) const;

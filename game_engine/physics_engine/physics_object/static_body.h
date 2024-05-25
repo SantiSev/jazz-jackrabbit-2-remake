@@ -11,6 +11,8 @@ class StaticBody: public ColisionObject {
 
 public:
     StaticBody(float width, float height);
+
+    void handle_colision(ColisionObject& other) override;
 };
 
 

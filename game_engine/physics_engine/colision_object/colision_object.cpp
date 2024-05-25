@@ -13,6 +13,10 @@ float ColisionObject::getWidth() { return colisionBox.get_width(); }
 
 float ColisionObject::getHeight() { return colisionBox.get_height(); }
 
+void ColisionObject::setWidth(float width) { colisionBox.set_width(width); }
+
+void ColisionObject::setHeight(float height) { colisionBox.set_height(height); }
+
 void ColisionObject::setPosition(Vector2D newPosition) {
     position = newPosition;
     colisionBox.update_position(newPosition);

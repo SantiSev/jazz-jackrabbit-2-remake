@@ -33,6 +33,18 @@ float ColisionBox::get_width() const { return width; }
 
 float ColisionBox::get_height() const { return height; }
 
+void ColisionBox::set_width(float new_width) {
+    width = new_width;
+    tr_corner.set_x(tl_corner.get_x() + width);
+    br_corner.set_x(bl_corner.get_x() + width);
+}
+
+void ColisionBox::set_height(float new_height) {
+    height = new_height;
+    bl_corner.set_y(tl_corner.get_y() + height);
+    br_corner.set_y(tr_corner.get_y() + height);
+}
+
 void ColisionBox::update_position(Vector2D new_position) {
     tl_corner.set_x(new_position.get_x());
     tl_corner.set_y(new_position.get_y());
