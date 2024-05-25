@@ -17,11 +17,14 @@ public:
 
     // para accelerar el movimiento el deltatime debe ser positivo y para desacelerar debe ser
     // negativo
-    void updateMovement(float deltaTime);
 
     void moveHorizontal(float deltaTime);
 
     void moveVertical(float deltaTime);
+
+    void updateVelocity(float deltaTime);
+
+    void handle_colision(ColisionObject& other) override;
 
     void setAcceleration(Vector2D newAcceleration);
 };

@@ -18,6 +18,6 @@ void ColisionObject::setPosition(Vector2D newPosition) {
     colisionBox.update_position(newPosition);
 }
 
-bool ColisionObject::is_in_area(ColisionObject other) {
+bool ColisionObject::is_in_area(const ColisionObject& other) {
     return colisionBox.is_touching(other.colisionBox);
 }

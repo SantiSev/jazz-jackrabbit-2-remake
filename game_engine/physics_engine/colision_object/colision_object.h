@@ -25,9 +25,9 @@ public:
     void setPosition(Vector2D newPosition) override;
 
     // Check if an object is colliding with another
-    bool is_in_area(ColisionObject other);
+    bool is_in_area(const ColisionObject& other);
 
-    virtual void handle_colision(ColisionObject other) const;
+    virtual void handle_colision(ColisionObject& other);
 };
 
 
