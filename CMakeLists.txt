@@ -47,7 +47,9 @@ file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine_*.h")
 
 
 add_executable(client ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE}
-        game_engine/physics_engine/colision_box.h)
+        game_engine/physics_engine/colision_box.h
+        game_engine/physics_engine/colision_object.cpp
+        game_engine/physics_engine/colision_box.cpp)
 add_executable(server ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON})
 
 

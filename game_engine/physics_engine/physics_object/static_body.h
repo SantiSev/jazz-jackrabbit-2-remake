@@ -4,10 +4,14 @@
 
 #ifndef STATIC_BODY_H
 #define STATIC_BODY_H
+#include "../colision_object.h"
 
 
-class static_body {};
+class StaticBody: public ColisionObject {
+
+public:
+    StaticBody(float width, float height);
+};
 
 
 #endif  // STATIC_BODY_H
-// Copyriht 2024  S.E.V
