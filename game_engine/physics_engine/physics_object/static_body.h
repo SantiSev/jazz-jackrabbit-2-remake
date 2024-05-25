@@ -4,7 +4,7 @@
 
 #ifndef STATIC_BODY_H
 #define STATIC_BODY_H
-#include "../colision_object.h"
+#include "../colision_object/colision_object.h"
 
 
 class StaticBody: public ColisionObject {

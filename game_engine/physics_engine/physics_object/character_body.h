@@ -5,7 +5,7 @@
 #ifndef CHARACTER_BODY_H
 #define CHARACTER_BODY_H
 
-#include "../colision_object.h"
+#include "../colision_object/colision_object.h"
 
 class CharacterBody: public ColisionObject {
 private:
