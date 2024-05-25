@@ -48,20 +48,22 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LDFLAGS}")
 file(GLOB_RECURSE SOURCES_CLIENT "client/*.cpp" "client_*.cpp")
 file(GLOB_RECURSE SOURCES_SERVER "server/*.cpp" "server_*.cpp")
 file(GLOB_RECURSE SOURCES_COMMON "common/*.cpp" "common_*.cpp")
-file(GLOB_RECURSE SOURCES_GAME_ENGINE "game_engine/*.cpp" "game_engine_*.cpp")
+file(GLOB_RECURSE SOURCES_GAME_ENGINE "game_engine/*.cpp" "game_engine_*.cpp" "game_engine/**/*.h")
 
 file(GLOB_RECURSE HEADERS_CLIENT "client/*.h" "client_*.h")
 file(GLOB_RECURSE HEADERS_SERVER "server/*.h" "server_*.h")
 file(GLOB_RECURSE HEADERS_COMMON "common/*.h" "common_*.h")
-file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine_*.h")
+file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine_*.h" "game_engine/**/*.h")
 
 
 add_executable(client ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
-add_executable(server ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON})
+add_executable(server ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
+
 target_link_libraries(client SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
+target_link_libraries(server SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 
 # GRAPHICS TEST
-add_executable(graphics_test tests/graphics/graphics_test.cpp)
+add_executable(graphics_test tests/graphics/graphics_test.cpp ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
 target_link_libraries(graphics_test SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 
 if (DEFINED TSAN)
