@@ -11,10 +11,10 @@ repos:
     hooks:
       - id: cpplint
         files: ^(.*[.]cpp|.*[.]h)$
-  # - repo: https://github.com/pocc/pre-commit-hooks
-  #   rev: v1.3.5
-  #   hooks:
-  #     - id: cppcheck
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
+    hooks:
+      - id: cppcheck
   #       # files: ^(.*[.]cpp|.*[.]h)$
   #       args: ["--inline-suppr", "--enable=all", "--suppress=missingIncludeSystem", "--suppress=missingInclude", "--suppress=unusedFunction", "--suppress=unmatchedSuppression", "--language=c++", "--std=c++20", "--error-exitcode=1"]
 
