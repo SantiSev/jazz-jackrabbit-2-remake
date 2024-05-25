@@ -1,6 +1,6 @@
 #include "./send_active_games.h"
 
-SendActiveGamesMessage::SendActiveGamesMessage() {}
+SendActiveGamesMessage::SendActiveGamesMessage(std::vector<Match>&& matches): matches(matches) {}
 
 void SendActiveGamesMessage::run() {}
 

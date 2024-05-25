@@ -54,4 +54,49 @@ const std::string ClientProtocol::recv_string() {
     return result;
 }
 
+std::shared_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
+    const uint16_t id_match = recv_two_bytes();
+    return std::make_shared<SendFinishMatchMessage>(id_match);
+}
+
+std::shared_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() {
+    return std::make_shared<SendGameStateMessage>();
+}
+
+std::shared_ptr<SendActiveGamesMessage> ClientProtocol::recv_active_games() {
+    const uint8_t match_length = recv_one_byte();
+
+    std::vector<Match> matches(match_length);
+    for (size_t i = 0; i < match_length; i++) {
+        const std::string name = recv_string();
+        const uint8_t player = recv_one_byte();
+        matches.push_back({name, player});
+    }
+
+    return std::make_shared<SendActiveGamesMessage>(std::move(matches));
+}
+
+std::shared_ptr<SendGameCreatedMessage> ClientProtocol::recv_game_created() {
+    return std::make_shared<SendGameCreatedMessage>();
+}
+
+std::shared_ptr<Message> ClientProtocol::recv_message() {
+    const uint16_t header = recv_two_bytes();
+
+    switch (header) {
+        case CLOSE_CONNECTION:
+            return std::make_shared<CloseConnectionMessage>();
+        case SEND_FINISH_MATCH:
+            return recv_finish_match();
+        case SEND_GAME_STATE:
+            return recv_game_state();
+        case SEND_ACTIVE_GAMES:
+            return recv_active_games();
+        case SEND_GAME_CREATED:
+            return recv_game_created();
+        default:
+            return std::make_shared<InvalidMessage>();
+    }
+}
+
 ClientProtocol::~ClientProtocol() {}
