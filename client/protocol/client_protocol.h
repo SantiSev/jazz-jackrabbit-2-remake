@@ -9,15 +9,8 @@
 #include "../../common/protocol/messages/menu_events/send_active_games.h"
 #include "../../common/protocol/messages/menu_events/send_game_created.h"
 
-class ClientProtocol {
+class ClientProtocol: public CommonProtocol {
 private:
-    Socket server;
-    bool was_closed;
-
-    const uint8_t recv_one_byte();  // unusedPrivateFunction
-    const uint16_t recv_two_bytes();
-    const std::string recv_string();  // unusedPrivateFunction
-
     std::unique_ptr<SendFinishMatchMessage> recv_finish_match();
     std::unique_ptr<SendGameStateMessage> recv_game_state();
 
