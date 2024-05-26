@@ -18,16 +18,16 @@ private:
     const uint16_t recv_two_bytes();
     const std::string recv_string();  // unusedPrivateFunction
 
-    std::shared_ptr<SendFinishMatchMessage> recv_finish_match();
-    std::shared_ptr<SendGameStateMessage> recv_game_state();
+    std::unique_ptr<SendFinishMatchMessage> recv_finish_match();
+    std::unique_ptr<SendGameStateMessage> recv_game_state();
 
-    std::shared_ptr<SendActiveGamesMessage> recv_active_games();
-    std::shared_ptr<SendGameCreatedMessage> recv_game_created();
+    std::unique_ptr<SendActiveGamesMessage> recv_active_games();
+    std::unique_ptr<SendGameCreatedMessage> recv_game_created();
 
 public:
     ClientProtocol(const std::string& hostname, const std::string& servname);
 
-    std::shared_ptr<Message> recv_message();
+    std::unique_ptr<Message> recv_message();
 
     ~ClientProtocol();
 };
