@@ -104,4 +104,40 @@ std::shared_ptr<Message> ServerProtocol::recv_message() {
     }
 }
 
+void ServerProtocol::send_close_connection() {
+    uint16_t header = CLOSE_CONNECTION;
+    client.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+}
+
+void ServerProtocol::send_game_state() {
+    uint16_t header = SEND_GAME_STATE;
+    client.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+}
+
+void ServerProtocol::send_finish_match() {
+    uint16_t header = SEND_FINISH_MATCH;
+    client.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+}
+
+void ServerProtocol::send_active_games() {
+    uint16_t header = SEND_ACTIVE_GAMES;
+    client.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+}
+
+void ServerProtocol::send_game_created() {
+    uint16_t header = SEND_GAME_CREATED;
+    client.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+}
+
+
 bool ServerProtocol::is_closed() const { return was_closed; }
