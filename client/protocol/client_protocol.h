@@ -12,7 +12,7 @@ public:
 
     void send_command(uint16_t id_player, uint8_t id_command);
 
-    void send_cheat_command();
+    void send_cheat_command(uint16_t id_player, uint8_t id_cheat_command);
 
     void send_leave_match();
 
