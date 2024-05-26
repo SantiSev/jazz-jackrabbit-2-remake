@@ -54,6 +54,31 @@ const std::string ClientProtocol::recv_string() {
     return result;
 }
 
+std::unique_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
+    return std::make_unique<SendFinishMatchMessage>();
+}
+
+std::unique_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() {
+    return std::make_unique<SendGameStateMessage>();
+}
+
+std::unique_ptr<SendActiveGamesMessage> ClientProtocol::recv_active_games() {
+    const uint8_t match_length = recv_one_byte();
+
+    std::vector<Match> matches(match_length);
+    for (size_t i = 0; i < match_length; i++) {
+        const std::string name = recv_string();
+        const uint8_t players = recv_one_byte();
+        matches.push_back({name, players});
+    }
+
+    return std::make_unique<SendActiveGamesMessage>(std::move(matches));
+}
+
+std::unique_ptr<SendGameCreatedMessage> ClientProtocol::recv_game_created() {
+    return std::make_unique<SendGameCreatedMessage>();
+}
+
 void ClientProtocol::send_command(uint16_t id_player, uint8_t id_command) {
     uint16_t header = htons(RECV_COMMAND);
     server.sendall(&header, sizeof(header), &was_closed);
@@ -139,31 +164,6 @@ void ClientProtocol::send_join_match(uint16_t id_player, uint16_t id_match,
     server.sendall(&player_character, sizeof(player_character), &was_closed);
     if (was_closed)
         return;
-}
-
-std::unique_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
-    return std::make_unique<SendFinishMatchMessage>();
-}
-
-std::unique_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() {
-    return std::make_unique<SendGameStateMessage>();
-}
-
-std::unique_ptr<SendActiveGamesMessage> ClientProtocol::recv_active_games() {
-    const uint8_t match_length = recv_one_byte();
-
-    std::vector<Match> matches(match_length);
-    for (size_t i = 0; i < match_length; i++) {
-        const std::string name = recv_string();
-        const uint8_t players = recv_one_byte();
-        matches.push_back({name, players});
-    }
-
-    return std::make_unique<SendActiveGamesMessage>(std::move(matches));
-}
-
-std::unique_ptr<SendGameCreatedMessage> ClientProtocol::recv_game_created() {
-    return std::make_unique<SendGameCreatedMessage>();
 }
 
 std::unique_ptr<Message> ClientProtocol::recv_message() {
