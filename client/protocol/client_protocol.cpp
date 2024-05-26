@@ -20,9 +20,18 @@
 ClientProtocol::ClientProtocol(const std::string& hostname, const std::string& servname):
         server(hostname.c_str(), servname.c_str()), was_closed(false) {}
 
-void ClientProtocol::send_command() {
+void ClientProtocol::send_command(uint16_t id_player, uint8_t id_command) {
     uint16_t header = htons(RECV_COMMAND);
     server.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+
+    id_player = htons(id_player);
+    server.sendall(&id_player, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+
+    server.sendall(&id_command, sizeof(header), &was_closed);
     if (was_closed)
         return;
 }

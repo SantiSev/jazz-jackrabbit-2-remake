@@ -10,7 +10,7 @@ private:
 public:
     ClientProtocol(const std::string& hostname, const std::string& servname);
 
-    void send_command();
+    void send_command(uint16_t id_player, uint8_t id_command);
 
     void send_cheat_command();
 
