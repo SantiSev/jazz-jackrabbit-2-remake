@@ -15,7 +15,8 @@ cmake
 
 ```bash
 sudo apt install \
-pre-commit
+pre-commit \
+cppcheck
 
 pre-commit install
 ```
