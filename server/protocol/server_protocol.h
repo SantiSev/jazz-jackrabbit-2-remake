@@ -36,7 +36,7 @@ public:
 
     void send_game_state();
 
-    void send_finish_match();
+    void send_finish_match(uint16_t id_match);
 
     void send_active_games();
 

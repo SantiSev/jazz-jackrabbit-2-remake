@@ -118,9 +118,13 @@ void ServerProtocol::send_game_state() {
         return;
 }
 
-void ServerProtocol::send_finish_match() {
+void ServerProtocol::send_finish_match(uint16_t id_match) {
     uint16_t header = SEND_FINISH_MATCH;
     client.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+
+    client.sendall(&id_match, sizeof(id_match), &was_closed);
     if (was_closed)
         return;
 }
