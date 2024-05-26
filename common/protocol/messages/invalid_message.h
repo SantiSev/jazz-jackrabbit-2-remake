@@ -1,4 +1,4 @@
-#include "./client_message.h"
+#include "./common_message.h"
 
 class InvalidMessage: public Message {
 public:

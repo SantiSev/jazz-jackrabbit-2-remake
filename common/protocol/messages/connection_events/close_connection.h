@@ -1,4 +1,4 @@
-#include "../server_message.h"
+#include "../common_message.h"
 
 class CloseConnectionMessage: public Message {
 public:

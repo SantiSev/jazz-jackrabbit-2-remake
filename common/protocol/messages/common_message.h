@@ -1,5 +1,5 @@
-#ifndef _CLIENT_MESSAGE_H
-#define _CLIENT_MESSAGE_H
+#ifndef _COMMON_MESSAGE_H
+#define _COMMON_MESSAGE_H
 
 class Message {
 public:

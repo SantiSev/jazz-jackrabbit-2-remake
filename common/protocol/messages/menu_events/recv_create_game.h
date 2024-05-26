@@ -1,6 +1,7 @@
+#include <cstdint>
 #include <string>
 
-#include "../server_message.h"
+#include "../common_message.h"
 
 class RecvCreateGameMessage: public Message {
 private:
