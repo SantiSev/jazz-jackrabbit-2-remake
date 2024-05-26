@@ -130,11 +130,25 @@ void ServerProtocol::send_finish_match(uint16_t id_match) {
         return;
 }
 
-void ServerProtocol::send_active_games() {
+void ServerProtocol::send_active_games(uint8_t length, std::vector<Match>& matches) {
     uint16_t header = htons(SEND_ACTIVE_GAMES);
     client.sendall(&header, sizeof(header), &was_closed);
     if (was_closed)
         return;
+
+
+    client.sendall(&length, sizeof(length), &was_closed);
+    if (was_closed)
+        return;
+
+    for (auto& match: matches) {
+        client.sendall(&(match.player), sizeof(match.player), &was_closed);
+        if (was_closed)
+            return;
+        client.sendall(match.name.data(), match.name.length(), &was_closed);
+        if (was_closed)
+            return;
+    }
 }
 
 void ServerProtocol::send_game_created() {

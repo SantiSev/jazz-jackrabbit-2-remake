@@ -1,6 +1,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "../../common/common_socket.h"
 #include "./messages/connection_events/close_connection.h"
@@ -10,6 +11,12 @@
 #include "./messages/invalid_message.h"
 #include "./messages/menu_events/recv_create_game.h"
 #include "./messages/menu_events/recv_join_match.h"
+
+struct Match {
+    std::string name;
+    // cppcheck-suppress unusedStructMember
+    uint8_t player;
+};
 
 class ServerProtocol {
 private:
@@ -38,7 +45,7 @@ public:
 
     void send_finish_match(uint16_t id_match);
 
-    void send_active_games();
+    void send_active_games(uint8_t length, std::vector<Match>& matches);
 
     void send_game_created();
 
