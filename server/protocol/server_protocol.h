@@ -32,5 +32,15 @@ public:
 
     std::shared_ptr<Message> recv_message();
 
+    void send_close_connection();
+
+    void send_game_state();
+
+    void send_finish_match();
+
+    void send_active_games();
+
+    void send_game_created();
+
     bool is_closed() const;
 };
