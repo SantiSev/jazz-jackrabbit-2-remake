@@ -27,11 +27,11 @@ void ClientProtocol::send_command(uint16_t id_player, uint8_t id_command) {
         return;
 
     id_player = htons(id_player);
-    server.sendall(&id_player, sizeof(header), &was_closed);
+    server.sendall(&id_player, sizeof(id_player), &was_closed);
     if (was_closed)
         return;
 
-    server.sendall(&id_command, sizeof(header), &was_closed);
+    server.sendall(&id_command, sizeof(id_command), &was_closed);
     if (was_closed)
         return;
 }
@@ -43,11 +43,11 @@ void ClientProtocol::send_cheat_command(uint16_t id_player, uint8_t id_cheat_com
         return;
 
     id_player = htons(id_player);
-    server.sendall(&id_player, sizeof(header), &was_closed);
+    server.sendall(&id_player, sizeof(id_player), &was_closed);
     if (was_closed)
         return;
 
-    server.sendall(&id_cheat_command, sizeof(header), &was_closed);
+    server.sendall(&id_cheat_command, sizeof(id_cheat_command), &was_closed);
     if (was_closed)
         return;
 }
@@ -59,14 +59,27 @@ void ClientProtocol::send_leave_match(uint16_t id_player) {
         return;
 
     id_player = htons(id_player);
-    server.sendall(&id_player, sizeof(header), &was_closed);
+    server.sendall(&id_player, sizeof(id_player), &was_closed);
     if (was_closed)
         return;
 }
 
-void ClientProtocol::send_create_game() {
+void ClientProtocol::send_create_game(uint16_t id_player, uint8_t length, std::string& match_name) {
     uint16_t header = htons(RECV_CREATE_GAME);
     server.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+
+    id_player = htons(id_player);
+    server.sendall(&id_player, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+
+    server.sendall(&length, sizeof(length), &was_closed);
+    if (was_closed)
+        return;
+
+    server.sendall(match_name.data(), length, &was_closed);
     if (was_closed)
         return;
 }
