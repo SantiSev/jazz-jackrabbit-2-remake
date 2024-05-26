@@ -155,8 +155,8 @@ std::unique_ptr<SendActiveGamesMessage> ClientProtocol::recv_active_games() {
     std::vector<Match> matches(match_length);
     for (size_t i = 0; i < match_length; i++) {
         const std::string name = recv_string();
-        const uint8_t player = recv_one_byte();
-        matches.push_back({name, player});
+        const uint8_t players = recv_one_byte();
+        matches.push_back({name, players});
     }
 
     return std::make_unique<SendActiveGamesMessage>(std::move(matches));

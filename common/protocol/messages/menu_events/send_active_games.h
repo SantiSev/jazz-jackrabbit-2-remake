@@ -7,7 +7,7 @@
 struct Match {
     std::string name;
     // cppcheck-suppress unusedStructMember
-    uint8_t player;
+    uint8_t players;
 };
 
 class SendActiveGamesMessage: public Message {
