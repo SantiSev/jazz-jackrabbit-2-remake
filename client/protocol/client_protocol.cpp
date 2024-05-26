@@ -52,9 +52,14 @@ void ClientProtocol::send_cheat_command(uint16_t id_player, uint8_t id_cheat_com
         return;
 }
 
-void ClientProtocol::send_leave_match() {
+void ClientProtocol::send_leave_match(uint16_t id_player) {
     uint16_t header = htons(RECV_LEAVE_MATCH);
     server.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+
+    id_player = htons(id_player);
+    server.sendall(&id_player, sizeof(header), &was_closed);
     if (was_closed)
         return;
 }
