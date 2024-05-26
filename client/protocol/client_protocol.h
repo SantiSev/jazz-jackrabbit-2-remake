@@ -27,6 +27,8 @@ private:
 public:
     ClientProtocol(const std::string& hostname, const std::string& servname);
 
+    std::unique_ptr<Message> recv_message();
+
     void send_command(uint16_t id_player, uint8_t id_command);
 
     void send_cheat_command(uint16_t id_player, uint8_t id_cheat_command);
@@ -36,8 +38,6 @@ public:
     void send_create_game(uint16_t id_player, std::string& match_name);
 
     void send_join_match(uint16_t id_player, uint16_t id_match, uint8_t player_character);
-
-    std::unique_ptr<Message> recv_message();
 
     ~ClientProtocol();
 };
