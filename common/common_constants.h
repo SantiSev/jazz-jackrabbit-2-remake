@@ -25,7 +25,9 @@ const uint8_t PICK_UP_ITEM = 0x08;
 const uint8_t PAUSE_GAME = 0x09;
 const uint8_t TAUNT = 0x10;
 
-// Gameloop events
+// Gameloop
 const size_t MAX_EVENTS_PER_LOOP = 4;
+const size_t STARTING_MATCH_TIME = 300;
+const size_t REQUIRED_PLAYERS_TO_START = 2;
 
 #endif

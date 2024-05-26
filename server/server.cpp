@@ -3,16 +3,15 @@
 #include <iostream>
 #include <utility>
 
+#include "../server/game_logic/matches_manager.h"
+
 #include "server_eventloop.h"
 #include "server_gameloop.h"
 
 void Server::run() {
     try {
-        Queue<Message> event_queue;
-        Queue<Snapshot> snapshot_queue;
-        auto gameloop = new Server_Gameloop(event_queue, snapshot_queue);
-        gameloop->start();
-
+        auto matches_manager = new MatchesManager();
+        matches_manager->start();
 
         std::string serverInput;
         while (true) {
@@ -22,9 +21,9 @@ void Server::run() {
             }
         }
 
-        gameloop->stop();
-        gameloop->join();
-        delete gameloop;
+        matches_manager->stop();
+        matches_manager->join();
+        delete matches_manager;
     } catch (const std::exception& err) {
         std::cerr << "An exception was caught in server_class: " << err.what() << "\n";
     }

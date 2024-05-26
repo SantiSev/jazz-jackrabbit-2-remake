@@ -1,6 +1,5 @@
 #include "message.h"
 
-
 Message::Message(size_t id): id(id) {}
 
 void Message::run(ServerEventloop* eventloop) {}

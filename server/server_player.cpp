@@ -9,7 +9,6 @@ Player::Player(size_t id, std::string name, std::string character):
         character(std::move(character)),
         points(STARTING_POINTS) {}
 
-
 size_t Player::get_id() const { return id; }
 
 std::string Player::get_name() { return name; }
@@ -20,11 +19,11 @@ std::string Player::get_character() { return character; }
 
 size_t Player::get_points() const { return points; }
 
-void Player::set_id(size_t new_id) { this->id = new_id; }
+void Player::set_id(const size_t new_id) { this->id = new_id; }
 
 void Player::set_name(std::string new_name) { this->name = std::move(new_name); }
 
-void Player::set_health(size_t new_health) { this->health = new_health; }
+void Player::set_health(const size_t new_health) { this->health = new_health; }
 
 void Player::decrease_health(size_t susbstract_health) {
     if (((int)health - (int)susbstract_health) < MIN_HEALTH) {
