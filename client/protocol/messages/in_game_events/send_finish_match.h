@@ -3,11 +3,8 @@
 #include "../client_message.h"
 
 class SendFinishMatchMessage: public Message {
-private:
-    uint16_t id_match;
-
 public:
-    explicit SendFinishMatchMessage(uint16_t id_match);
+    SendFinishMatchMessage();
     void run() override;
     ~SendFinishMatchMessage();
 };

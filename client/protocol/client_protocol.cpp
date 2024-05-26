@@ -55,8 +55,7 @@ const std::string ClientProtocol::recv_string() {
 }
 
 std::unique_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
-    const uint16_t id_match = recv_two_bytes();
-    return std::make_unique<SendFinishMatchMessage>(id_match);
+    return std::make_unique<SendFinishMatchMessage>();
 }
 
 std::unique_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() {

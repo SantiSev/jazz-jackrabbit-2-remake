@@ -1,6 +1,6 @@
 #include "./send_finish_match.h"
 
-SendFinishMatchMessage::SendFinishMatchMessage(uint16_t id_match) { this->id_match = id_match; }
+SendFinishMatchMessage::SendFinishMatchMessage() {}
 
 void SendFinishMatchMessage::run() {}
 
