@@ -4,18 +4,18 @@
 #include "colision_object.h"
 
 
-ColisionObject::ColisionObject(float width, float height): colisionBox(width, height) {}
+ColisionObject::ColisionObject(int width, int height): colisionBox(width, height) {}
 
-ColisionObject::ColisionObject(float x, float y, float width, float height):
+ColisionObject::ColisionObject(int x, int y, int width, int height):
         GameObject(x, y), colisionBox(x, y, width, height) {}
 
-float ColisionObject::getWidth() { return colisionBox.get_width(); }
+int ColisionObject::getWidth() { return colisionBox.get_width(); }
 
-float ColisionObject::getHeight() { return colisionBox.get_height(); }
+int ColisionObject::getHeight() { return colisionBox.get_height(); }
 
-void ColisionObject::setWidth(float width) { colisionBox.set_width(width); }
+void ColisionObject::setWidth(int width) { colisionBox.set_width(width); }
 
-void ColisionObject::setHeight(float height) { colisionBox.set_height(height); }
+void ColisionObject::setHeight(int height) { colisionBox.set_height(height); }
 
 void ColisionObject::setPosition(Vector2D newPosition) {
     position = newPosition;

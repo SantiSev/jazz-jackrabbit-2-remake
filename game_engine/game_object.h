@@ -9,7 +9,7 @@ protected:
 
 public:
     GameObject(): position(0, 0) {}
-    GameObject(float x, float y): position(x, y) {}
+    GameObject(int x, int y): position(x, y) {}
 
     virtual void setPosition(Vector2D newPosition) { position = newPosition; }
 

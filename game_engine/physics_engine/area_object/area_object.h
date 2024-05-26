@@ -9,7 +9,7 @@
 
 class AreaObject: ColisionObject {
 public:
-    AreaObject(float width, float height);
+    AreaObject(int width, int height);
     void handle_colision(ColisionObject& other) override;
 };
 

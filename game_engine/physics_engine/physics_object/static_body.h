@@ -10,7 +10,7 @@
 class StaticBody: public ColisionObject {
 
 public:
-    StaticBody(float width, float height);
+    StaticBody(int width, int height);
 
     void handle_colision(ColisionObject& other) override;
 };

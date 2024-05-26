@@ -4,7 +4,7 @@
 
 #include "area_object.h"
 
-AreaObject::AreaObject(float width, float height): ColisionObject(width, height) {}
+AreaObject::AreaObject(int width, int height): ColisionObject(width, height) {}
 
 void AreaObject::handle_colision(ColisionObject& other) {
     if (is_in_area(other)) {

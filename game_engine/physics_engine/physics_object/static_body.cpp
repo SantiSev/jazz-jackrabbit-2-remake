@@ -4,7 +4,7 @@
 
 #include "static_body.h"
 
-StaticBody::StaticBody(float width, float height): ColisionObject(width, height) {}
+StaticBody::StaticBody(int width, int height): ColisionObject(width, height) {}
 
 void StaticBody::handle_colision(ColisionObject& other) {
     if (is_in_area(other)) {

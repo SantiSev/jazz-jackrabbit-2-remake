@@ -14,17 +14,17 @@ private:
     ColisionBox colisionBox;
 
 public:
-    ColisionObject(float width, float height);
+    ColisionObject(int width, int height);
 
-    ColisionObject(float x, float y, float width, float height);
+    ColisionObject(int x, int y, int width, int height);
 
-    float getWidth();
+    int getWidth();
 
-    float getHeight();
+    int getHeight();
 
-    void setWidth(float width);
+    void setWidth(int width);
 
-    void setHeight(float height);
+    void setHeight(int height);
 
     // Set the position of the object
     void setPosition(Vector2D newPosition) override;
@@ -32,7 +32,7 @@ public:
     // Check if an object is colliding with another
     bool is_in_area(const ColisionObject& other);
 
-    virtual void handle_colision(ColisionObject& other);
+    virtual void handle_colision(ColisionObject& other) = 0;
 };
 
 

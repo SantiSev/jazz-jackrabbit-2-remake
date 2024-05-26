@@ -3,7 +3,7 @@
 //
 #include "colision_box.h"
 
-ColisionBox::ColisionBox(float width, float height):
+ColisionBox::ColisionBox(int width, int height):
         width(width),
         height(height),
         tl_corner(0, 0),
@@ -11,7 +11,7 @@ ColisionBox::ColisionBox(float width, float height):
         bl_corner(0, height),
         br_corner(width, height) {}
 
-ColisionBox::ColisionBox(float x, float y, float width, float height):
+ColisionBox::ColisionBox(int x, int y, int width, int height):
         width(width),
         height(height),
         tl_corner(x, y),
@@ -29,17 +29,17 @@ Vector2D ColisionBox::get_bl_corner() const { return bl_corner; }
 
 Vector2D ColisionBox::get_br_corner() const { return br_corner; }
 
-float ColisionBox::get_width() const { return width; }
+int ColisionBox::get_width() const { return width; }
 
-float ColisionBox::get_height() const { return height; }
+int ColisionBox::get_height() const { return height; }
 
-void ColisionBox::set_width(float new_width) {
+void ColisionBox::set_width(int new_width) {
     width = new_width;
     tr_corner.set_x(tl_corner.get_x() + width);
     br_corner.set_x(bl_corner.get_x() + width);
 }
 
-void ColisionBox::set_height(float new_height) {
+void ColisionBox::set_height(int new_height) {
     height = new_height;
     bl_corner.set_y(tl_corner.get_y() + height);
     br_corner.set_y(tr_corner.get_y() + height);
