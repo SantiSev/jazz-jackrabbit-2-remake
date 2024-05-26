@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-#include "../client_message.h"
+#include "../common_message.h"
 
 struct Match {
     std::string name;

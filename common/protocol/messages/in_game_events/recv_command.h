@@ -1,4 +1,6 @@
-#include "../server_message.h"
+#include <cstdint>
+
+#include "../common_message.h"
 
 class RecvCommandMessage: public Message {
 private:

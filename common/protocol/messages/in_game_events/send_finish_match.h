@@ -1,6 +1,4 @@
-#include <cstdint>
-
-#include "../client_message.h"
+#include "../common_message.h"
 
 class SendFinishMatchMessage: public Message {
 public:
