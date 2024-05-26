@@ -18,7 +18,7 @@ public:
 
     void send_create_game(uint16_t id_player, std::string& match_name);
 
-    void send_join_match(uint16_t id_player, uint16_t id_match, uint8_t player_charecter);
+    void send_join_match(uint16_t id_player, uint16_t id_match, uint8_t player_character);
 
     ~ClientProtocol();
 };
