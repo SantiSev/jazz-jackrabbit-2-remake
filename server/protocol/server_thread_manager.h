@@ -1,3 +1,5 @@
+#include <memory>
+
 #include "./server_receiver.h"
 #include "./server_sender.h"
 
@@ -8,6 +10,6 @@ private:
     ServerSender sender;
 
 public:
-    explicit ServerThreadManager(Socket&& skt);
+    ServerThreadManager(Socket&& skt, Queue<std::unique_ptr<Message>>& receiver_queue);
     ~ServerThreadManager();
 };

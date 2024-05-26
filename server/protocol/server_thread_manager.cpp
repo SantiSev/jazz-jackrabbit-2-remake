@@ -1,7 +1,10 @@
 #include "./server_thread_manager.h"
 
-ServerThreadManager::ServerThreadManager(Socket&& skt):
-        server_protocol(std::move(skt)), receiver(server_protocol), sender(server_protocol) {
+ServerThreadManager::ServerThreadManager(Socket&& skt,
+                                         Queue<std::unique_ptr<Message>>& receiver_queue):
+        server_protocol(std::move(skt)),
+        receiver(server_protocol, receiver_queue),
+        sender(server_protocol) {
     receiver.start();
     sender.start();
 }
