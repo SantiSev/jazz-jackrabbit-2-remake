@@ -10,5 +10,15 @@ private:
 public:
     ClientProtocol(const std::string& hostname, const std::string& servname);
 
+    void send_command();
+
+    void send_cheat_command();
+
+    void send_leave_match();
+
+    void send_create_game();
+
+    void send_join_match();
+
     ~ClientProtocol();
 };
