@@ -20,6 +20,40 @@
 ClientProtocol::ClientProtocol(const std::string& hostname, const std::string& servname):
         server(hostname.c_str(), servname.c_str()), was_closed(false) {}
 
+const uint8_t ClientProtocol::recv_one_byte() {
+    uint8_t one_byte;
+
+    server.recvall(&one_byte, sizeof(one_byte), &was_closed);
+    if (was_closed)
+        return CLOSE_CONNECTION;
+
+    return one_byte;
+}
+
+const uint16_t ClientProtocol::recv_two_bytes() {
+    uint16_t two_bytes;
+
+    server.recvall(&two_bytes, sizeof(two_bytes), &was_closed);
+    if (was_closed)
+        return CLOSE_CONNECTION;
+
+    return ntohs(two_bytes);
+}
+
+const std::string ClientProtocol::recv_string() {
+    uint8_t length;
+
+    server.recvall(&length, sizeof(length), &was_closed);
+    length = ntohs(length);
+
+    std::vector<char> buf(length);
+    server.recvall(buf.data(), length, &was_closed);
+
+    std::string result(buf.begin(), buf.end());
+
+    return result;
+}
+
 void ClientProtocol::send_command(uint16_t id_player, uint8_t id_command) {
     uint16_t header = htons(RECV_COMMAND);
     server.sendall(&header, sizeof(header), &was_closed);
@@ -105,6 +139,50 @@ void ClientProtocol::send_join_match(uint16_t id_player, uint16_t id_match,
     server.sendall(&player_character, sizeof(player_character), &was_closed);
     if (was_closed)
         return;
+}
+
+std::unique_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
+    return std::make_unique<SendFinishMatchMessage>();
+}
+
+std::unique_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() {
+    return std::make_unique<SendGameStateMessage>();
+}
+
+std::unique_ptr<SendActiveGamesMessage> ClientProtocol::recv_active_games() {
+    const uint8_t match_length = recv_one_byte();
+
+    std::vector<Match> matches(match_length);
+    for (size_t i = 0; i < match_length; i++) {
+        const std::string name = recv_string();
+        const uint8_t player = recv_one_byte();
+        matches.push_back({name, player});
+    }
+
+    return std::make_unique<SendActiveGamesMessage>(std::move(matches));
+}
+
+std::unique_ptr<SendGameCreatedMessage> ClientProtocol::recv_game_created() {
+    return std::make_unique<SendGameCreatedMessage>();
+}
+
+std::unique_ptr<Message> ClientProtocol::recv_message() {
+    const uint16_t header = recv_two_bytes();
+
+    switch (header) {
+        case CLOSE_CONNECTION:
+            return std::make_unique<CloseConnectionMessage>();
+        case SEND_FINISH_MATCH:
+            return recv_finish_match();
+        case SEND_GAME_STATE:
+            return recv_game_state();
+        case SEND_ACTIVE_GAMES:
+            return recv_active_games();
+        case SEND_GAME_CREATED:
+            return recv_game_created();
+        default:
+            return std::make_unique<InvalidMessage>();
+    }
 }
 
 ClientProtocol::~ClientProtocol() {}
