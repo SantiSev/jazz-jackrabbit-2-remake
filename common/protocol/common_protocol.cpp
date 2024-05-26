@@ -1,7 +1,5 @@
 #include "./common_protocol.h"
 
-#define CLOSE_CONNECTION 0x0000
-
 #include <vector>
 
 #include <arpa/inet.h>

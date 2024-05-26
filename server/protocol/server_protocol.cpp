@@ -4,19 +4,6 @@
 
 #include <arpa/inet.h>
 
-#define CLOSE_CONNECTION 0x0000
-
-#define SEND_GAME_STATE 0x0100
-#define RECV_COMMAND 0x0101
-#define RECV_CHEAT_COMMAND 0x0102
-#define RECV_UNJOIN_MATCH 0x0103
-#define SEND_FINISH_MATCH 0x0104
-
-#define SEND_ACTIVE_GAMES 0x0200
-#define RECV_CREATE_GAME 0x0201
-#define SEND_GAME_CREATED 0x0202
-#define RECV_JOIN_MATCH 0x0203
-
 ServerProtocol::ServerProtocol(Socket&& skt): CommonProtocol(std::move(skt)) {}
 
 std::unique_ptr<RecvCommandMessage> ServerProtocol::recv_command() {
@@ -59,7 +46,7 @@ std::unique_ptr<Message> ServerProtocol::recv_message() {
             return recv_command();
         case RECV_CHEAT_COMMAND:
             return recv_cheat_command();
-        case RECV_UNJOIN_MATCH:
+        case RECV_LEAVE_MATCH:
             return recv_unjoin_match();
         case RECV_CREATE_GAME:
             return recv_create_game();
