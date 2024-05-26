@@ -53,8 +53,13 @@ add_executable(client ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HE
         game_engine/physics_engine/area_object/area_object.cpp
         game_engine/physics_engine/area_object/area_object.h
 )
-add_executable(server ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON})
 
+add_executable(server ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON})
+target_link_libraries(client SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
+
+# GRAPHICS TEST
+add_executable(graphics_test tests/graphics/graphics_test.cpp)
+target_link_libraries(graphics_test SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 
 if (DEFINED TSAN)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
