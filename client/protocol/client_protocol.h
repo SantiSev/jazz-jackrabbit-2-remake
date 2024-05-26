@@ -2,6 +2,7 @@
 #include <string>
 
 #include "../../common/common_socket.h"
+#include "../../common/protocol/common_protocol.h"
 #include "../../common/protocol/messages/connection_events/close_connection.h"
 #include "../../common/protocol/messages/in_game_events/send_finish_match.h"
 #include "../../common/protocol/messages/in_game_events/send_game_state.h"
