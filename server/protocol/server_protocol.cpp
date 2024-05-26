@@ -17,41 +17,7 @@
 #define SEND_GAME_CREATED 0x0202
 #define RECV_JOIN_MATCH 0x0203
 
-ServerProtocol::ServerProtocol(Socket&& skt): client(std::move(skt)), was_closed(false) {}
-
-const uint8_t ServerProtocol::recv_one_byte() {
-    uint8_t one_byte;
-
-    client.recvall(&one_byte, sizeof(one_byte), &was_closed);
-    if (was_closed)
-        return CLOSE_CONNECTION;
-
-    return one_byte;
-}
-
-const uint16_t ServerProtocol::recv_two_bytes() {
-    uint16_t two_bytes;
-
-    client.recvall(&two_bytes, sizeof(two_bytes), &was_closed);
-    if (was_closed)
-        return CLOSE_CONNECTION;
-
-    return ntohs(two_bytes);
-}
-
-const std::string ServerProtocol::recv_string() {
-    uint8_t length;
-
-    client.recvall(&length, sizeof(length), &was_closed);
-    length = ntohs(length);
-
-    std::vector<char> buf(length);
-    client.recvall(buf.data(), length, &was_closed);
-
-    std::string match_name(buf.begin(), buf.end());
-
-    return match_name;
-}
+ServerProtocol::ServerProtocol(Socket&& skt): CommonProtocol(std::move(skt)) {}
 
 std::unique_ptr<RecvCommandMessage> ServerProtocol::recv_command() {
     const uint16_t id_player = recv_two_bytes();
@@ -106,41 +72,41 @@ std::unique_ptr<Message> ServerProtocol::recv_message() {
 
 void ServerProtocol::send_close_connection() {
     uint16_t header = htons(CLOSE_CONNECTION);
-    client.sendall(&header, sizeof(header), &was_closed);
+    skt.sendall(&header, sizeof(header), &was_closed);
     if (was_closed)
         return;
 }
 
 void ServerProtocol::send_game_state() {
     uint16_t header = htons(SEND_GAME_STATE);
-    client.sendall(&header, sizeof(header), &was_closed);
+    skt.sendall(&header, sizeof(header), &was_closed);
     if (was_closed)
         return;
 }
 
 void ServerProtocol::send_finish_match() {
     uint16_t header = htons(SEND_FINISH_MATCH);
-    client.sendall(&header, sizeof(header), &was_closed);
+    skt.sendall(&header, sizeof(header), &was_closed);
     if (was_closed)
         return;
 }
 
 void ServerProtocol::send_active_games(uint8_t length, std::vector<Match>& matches) {
     uint16_t header = htons(SEND_ACTIVE_GAMES);
-    client.sendall(&header, sizeof(header), &was_closed);
+    skt.sendall(&header, sizeof(header), &was_closed);
     if (was_closed)
         return;
 
 
-    client.sendall(&length, sizeof(length), &was_closed);
+    skt.sendall(&length, sizeof(length), &was_closed);
     if (was_closed)
         return;
 
     for (auto& match: matches) {
-        client.sendall(&(match.players), sizeof(match.players), &was_closed);
+        skt.sendall(&(match.players), sizeof(match.players), &was_closed);
         if (was_closed)
             return;
-        client.sendall(match.name.data(), match.name.length(), &was_closed);
+        skt.sendall(match.name.data(), match.name.length(), &was_closed);
         if (was_closed)
             return;
     }
@@ -148,7 +114,7 @@ void ServerProtocol::send_active_games(uint8_t length, std::vector<Match>& match
 
 void ServerProtocol::send_game_created() {
     uint16_t header = htons(SEND_GAME_CREATED);
-    client.sendall(&header, sizeof(header), &was_closed);
+    skt.sendall(&header, sizeof(header), &was_closed);
     if (was_closed)
         return;
 }

@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "../../common/common_socket.h"
+#include "../../common/protocol/common_protocol.h"
 #include "./messages/connection_events/close_connection.h"
 #include "./messages/in_game_events/recv_cheat_command.h"
 #include "./messages/in_game_events/recv_command.h"
@@ -18,15 +19,8 @@ struct Match {
     uint8_t players;
 };
 
-class ServerProtocol {
+class ServerProtocol: public CommonProtocol {
 private:
-    Socket client;
-    bool was_closed;
-
-    const uint8_t recv_one_byte();
-    const uint16_t recv_two_bytes();
-    const std::string recv_string();
-
     std::unique_ptr<RecvCommandMessage> recv_command();
     std::unique_ptr<RecvCheatCommandMessage> recv_cheat_command();
     std::unique_ptr<RecvLeaveMatchMessage> recv_unjoin_match();

@@ -5,8 +5,8 @@
 
 class CommonProtocol {
 protected:
-    bool was_closed;
     Socket skt;
+    bool was_closed;
 
     const uint8_t recv_one_byte();
     const uint16_t recv_two_bytes();
