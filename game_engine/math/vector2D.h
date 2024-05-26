@@ -12,36 +12,38 @@
 class Vector2D {
 
 private:
-    float x, y;
+    int x, y;
 
 public:
     // Constructor
-    explicit Vector2D(float x = 0, float y = 0);
+    explicit Vector2D(int x = 0, int y = 0);
 
     // Suma de 2 vectores
     Vector2D operator+(const Vector2D& other) const;
     // Resta de 2 vectores
     Vector2D operator-(const Vector2D& other) const;
     // Multiplicacion por un escalar
-    Vector2D operator*(float scalar) const;
+    Vector2D operator*(int scalar) const;
     // Division por un escalar
-    Vector2D operator/(float scalar) const;
+    Vector2D operator/(int scalar) const;
     // Redefinir un vector
     Vector2D& operator=(const Vector2D& other);
+    // crear == operator
+    bool operator==(const Vector2D& other) const;
 
     // modulo del vector
-    float magnitude() const;
+    int magnitude() const;
 
     // angulo del vector
-    float angle() const;
+    int angle() const;
 
-    float get_x() const { return x; }
-    float get_y() const { return y; }
+    int get_x() const { return x; }
+    int get_y() const { return y; }
 
-    void set_x(float x) { this->x = x; }
-    void set_y(float y) { this->y = y; }
+    void set_x(int x) { this->x = x; }
+    void set_y(int y) { this->y = y; }
 
-    void setVector(float x, float y);
+    void setVector(int x, int y);
 };
 
 #endif  // GAME_ENGINE_MATH_VECTOR2D_H_

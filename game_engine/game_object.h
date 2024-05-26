@@ -9,14 +9,12 @@ protected:
 
 public:
     GameObject(): position(0, 0) {}
-    GameObject(float x, float y): position(x, y) {}
+    GameObject(int x, int y): position(x, y) {}
 
     virtual void setPosition(Vector2D newPosition) { position = newPosition; }
-
 
     Vector2D getPosition() const { return position; }
 };
 
 
 #endif  // GAME_ENGINE_GAME_OBJECT_H_
-        // Copyriht 2024  S.E.V
