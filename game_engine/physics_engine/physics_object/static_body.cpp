@@ -8,6 +8,6 @@ StaticBody::StaticBody(int width, int height): ColisionObject(width, height) {}
 
 void StaticBody::handle_colision(ColisionObject& other) {
     if (is_in_area(other)) {
-        // todo move al otro objeto para que no este adentro del objecto estatico
+        // todo when the object is colided, the other object should not move
     }
 }
