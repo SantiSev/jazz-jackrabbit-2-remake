@@ -71,7 +71,7 @@ void ClientProtocol::send_create_game(uint16_t id_player, uint8_t length, std::s
         return;
 
     id_player = htons(id_player);
-    server.sendall(&id_player, sizeof(header), &was_closed);
+    server.sendall(&id_player, sizeof(id_player), &was_closed);
     if (was_closed)
         return;
 
@@ -84,9 +84,24 @@ void ClientProtocol::send_create_game(uint16_t id_player, uint8_t length, std::s
         return;
 }
 
-void ClientProtocol::send_join_match() {
+void ClientProtocol::send_join_match(uint16_t id_player, uint16_t id_match,
+                                     uint8_t player_charecter) {
     uint16_t header = htons(RECV_JOIN_MATCH);
     server.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+
+    id_player = htons(id_player);
+    server.sendall(&id_player, sizeof(id_player), &was_closed);
+    if (was_closed)
+        return;
+
+    id_match = htons(id_match);
+    server.sendall(&id_match, sizeof(id_match), &was_closed);
+    if (was_closed)
+        return;
+
+    server.sendall(&player_charecter, sizeof(player_charecter), &was_closed);
     if (was_closed)
         return;
 }
