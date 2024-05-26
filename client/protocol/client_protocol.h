@@ -13,7 +13,7 @@ class ClientProtocol {
 private:
     Socket server;
     bool was_closed;
-
+    
     const uint8_t recv_one_byte();  // unusedPrivateFunction
     const uint16_t recv_two_bytes();
     const std::string recv_string();  // unusedPrivateFunction
@@ -23,9 +23,19 @@ private:
 
     std::unique_ptr<SendActiveGamesMessage> recv_active_games();
     std::unique_ptr<SendGameCreatedMessage> recv_game_created();
-
+  
 public:
     ClientProtocol(const std::string& hostname, const std::string& servname);
+  
+    void send_command(uint16_t id_player, uint8_t id_command);
+
+    void send_cheat_command(uint16_t id_player, uint8_t id_cheat_command);
+
+    void send_leave_match(uint16_t id_player);
+
+    void send_create_game(uint16_t id_player, std::string& match_name);
+
+    void send_join_match(uint16_t id_player, uint16_t id_match, uint8_t player_character);
 
     std::unique_ptr<Message> recv_message();
 

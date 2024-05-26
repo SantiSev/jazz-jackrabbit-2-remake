@@ -9,7 +9,7 @@
 #define SEND_GAME_STATE 0x0100
 #define RECV_COMMAND 0x0101
 #define RECV_CHEAT_COMMAND 0x0102
-#define RECV_UNJOIN_MATCH 0x0103
+#define RECV_LEAVE_MATCH 0x0103
 #define SEND_FINISH_MATCH 0x0104
 
 #define SEND_ACTIVE_GAMES 0x0200
@@ -52,6 +52,93 @@ const std::string ClientProtocol::recv_string() {
     std::string result(buf.begin(), buf.end());
 
     return result;
+}
+
+void ClientProtocol::send_command(uint16_t id_player, uint8_t id_command) {
+    uint16_t header = htons(RECV_COMMAND);
+    server.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+
+    id_player = htons(id_player);
+    server.sendall(&id_player, sizeof(id_player), &was_closed);
+    if (was_closed)
+        return;
+
+    server.sendall(&id_command, sizeof(id_command), &was_closed);
+    if (was_closed)
+        return;
+}
+
+void ClientProtocol::send_cheat_command(uint16_t id_player, uint8_t id_cheat_command) {
+    uint16_t header = htons(RECV_CHEAT_COMMAND);
+    server.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+
+    id_player = htons(id_player);
+    server.sendall(&id_player, sizeof(id_player), &was_closed);
+    if (was_closed)
+        return;
+
+    server.sendall(&id_cheat_command, sizeof(id_cheat_command), &was_closed);
+    if (was_closed)
+        return;
+}
+
+void ClientProtocol::send_leave_match(uint16_t id_player) {
+    uint16_t header = htons(RECV_LEAVE_MATCH);
+    server.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+
+    id_player = htons(id_player);
+    server.sendall(&id_player, sizeof(id_player), &was_closed);
+    if (was_closed)
+        return;
+}
+
+void ClientProtocol::send_create_game(uint16_t id_player, std::string& match_name) {
+    uint16_t header = htons(RECV_CREATE_GAME);
+    server.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+
+    id_player = htons(id_player);
+    server.sendall(&id_player, sizeof(id_player), &was_closed);
+    if (was_closed)
+        return;
+
+    uint8_t length = match_name.length();
+    server.sendall(&length, sizeof(length), &was_closed);
+    if (was_closed)
+        return;
+
+    server.sendall(match_name.data(), length, &was_closed);
+    if (was_closed)
+        return;
+}
+
+void ClientProtocol::send_join_match(uint16_t id_player, uint16_t id_match,
+                                     uint8_t player_character) {
+    uint16_t header = htons(RECV_JOIN_MATCH);
+    server.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+
+    id_player = htons(id_player);
+    server.sendall(&id_player, sizeof(id_player), &was_closed);
+    if (was_closed)
+        return;
+
+    id_match = htons(id_match);
+    server.sendall(&id_match, sizeof(id_match), &was_closed);
+    if (was_closed)
+        return;
+
+    server.sendall(&player_character, sizeof(player_character), &was_closed);
+    if (was_closed)
+        return;
 }
 
 std::unique_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
