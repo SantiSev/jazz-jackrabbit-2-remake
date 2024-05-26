@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <list>
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -14,8 +15,8 @@
 
 class MatchesManager: public Thread {
 private:
-    //    std::map<size_t, std::shared_ptr<Server_Gameloop>> matches;
-    std::map<size_t, Server_Gameloop&> matches;
+    std::map<size_t, std::shared_ptr<ServerGameloop>> matches;
+    //    std::map<size_t, Server_Gameloop&> matches;
     bool online = true;
     size_t matches_number = 0;
 
@@ -32,7 +33,7 @@ public:
 
     void check_matches_status();
 
-    void stop_finished_match(Server_Gameloop* match);
+    void stop_finished_match(ServerGameloop* match);
 
     void add_player_to_game(Player& player, size_t match_id);
 

@@ -9,18 +9,19 @@
 
 #include "../common/common_constants.h"
 
-Server_Gameloop::Server_Gameloop(Queue<Message*>& event_queue, Queue<Snapshot>& snapshot_queue,
-                                 std::string match_name, size_t required_players_setting):
+ServerGameloop::ServerGameloop(std::shared_ptr<Queue<std::shared_ptr<Message>>> event_queue,
+                               std::shared_ptr<Queue<Snapshot>> snapshot_queue,
+                               std::string match_name, size_t required_players_setting):
         online(true),
         match_name(std::move(match_name)),
-        event_queue(event_queue),
-        snapshot_queue(snapshot_queue),
+        event_queue(std::move(event_queue)),
+        snapshot_queue(std::move(snapshot_queue)),
         players(),
         enemies(),
         required_players(required_players_setting),
         snapshot(players, enemies) {}
 
-void Server_Gameloop::run() {
+void ServerGameloop::run() {
     try {
         Player player(0, "pepe", "mago");
         add_player_to_game(player);
@@ -32,7 +33,7 @@ void Server_Gameloop::run() {
         auto runTime = startTime;
 
         const double FPSMAX = 1000.0 / 60.0;
-        Message next_message(0);
+        std::shared_ptr<Message> next_message;
         int minutes;
         int seconds;
 
@@ -44,10 +45,9 @@ void Server_Gameloop::run() {
             auto frameStart = std::chrono::system_clock::now();
 
             size_t events = 0;
-            while (event_queue.try_pop(reinterpret_cast<Message*&>(next_message)) &&
-                   events < MAX_EVENTS_PER_LOOP && online) {
+            while (event_queue->try_pop(next_message) && events < MAX_EVENTS_PER_LOOP && online) {
                 events++;
-                next_message.run(reinterpret_cast<ServerEventloop*>(this));
+                next_message->run(reinterpret_cast<ServerEventloop*>(this));
             }
             if (get_player(1).get_health() != 0) {
                 get_player(1).decrease_health(10);
@@ -73,7 +73,7 @@ void Server_Gameloop::run() {
             }
 
             create_actual_snapshot(seconds, minutes);
-            snapshot_queue.push(snapshot);
+            snapshot_queue->push(snapshot);
 
             auto frameEnd = std::chrono::system_clock::now();
             delta = frameEnd - frameStart;
@@ -91,13 +91,13 @@ void Server_Gameloop::run() {
     }
 }
 
-void Server_Gameloop::add_player_to_game(Player& player) {
+void ServerGameloop::add_player_to_game(Player& player) {
     players_connected++;
     player.set_id(players_connected);
     players.push_back(player);
 }
 
-Player& Server_Gameloop::get_player(size_t id) {
+Player& ServerGameloop::get_player(size_t id) {
     auto it = std::find_if(players.begin(), players.end(),
                            [id](const Player& player) { return player.get_id() == id; });
     if (it != players.end()) {
@@ -107,27 +107,27 @@ Player& Server_Gameloop::get_player(size_t id) {
     }
 }
 
-void Server_Gameloop::create_actual_snapshot(int const seconds, int const minutes) {
+void ServerGameloop::create_actual_snapshot(int const seconds, int const minutes) {
     snapshot.set_enemies(enemies);
     snapshot.set_players(players);
     snapshot.set_seconds(seconds);
     snapshot.set_minutes(minutes);
 }
 
-bool Server_Gameloop::has_match_ended() const { return match_has_ended; }
+bool ServerGameloop::has_match_ended() const { return match_has_ended; }
 
-std::string Server_Gameloop::get_match_name() const { return match_name; }
+std::string ServerGameloop::get_match_name() const { return match_name; }
 
-void Server_Gameloop::stop() {
+void ServerGameloop::stop() {
     online = false;
-    event_queue.close();
-    snapshot_queue.close();
+    event_queue->close();
+    snapshot_queue->close();
 }
 
-size_t Server_Gameloop::get_num_players() { return players.size(); }
+size_t ServerGameloop::get_num_players() { return players.size(); }
 
-size_t Server_Gameloop::get_max_players() const { return required_players; }
+size_t ServerGameloop::get_max_players() const { return required_players; }
 
-int Server_Gameloop::get_minutes() { return snapshot.get_minutes(); }
+int ServerGameloop::get_minutes() { return snapshot.get_minutes(); }
 
-int Server_Gameloop::get_seconds() { return snapshot.get_seconds(); }
+int ServerGameloop::get_seconds() { return snapshot.get_seconds(); }

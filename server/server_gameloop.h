@@ -1,6 +1,7 @@
 #ifndef TP_FINAL_SERVER_GAMELOOP_H
 #define TP_FINAL_SERVER_GAMELOOP_H
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -12,14 +13,14 @@
 #include "server_enemies.h"
 #include "server_player.h"
 
-class Server_Gameloop: public Thread {
+class ServerGameloop: public Thread {
 private:
     bool online;
     bool match_has_ended = false;
     std::string match_name;
     int match_time = STARTING_MATCH_TIME;
-    Queue<Message*>& event_queue;     // shared with the receiver
-    Queue<Snapshot>& snapshot_queue;  // shared with the sender
+    std::shared_ptr<Queue<std::shared_ptr<Message>>> event_queue;  // shared with the receiver
+    std::shared_ptr<Queue<Snapshot>> snapshot_queue;               // shared with the sender
     std::vector<Player> players;
     std::vector<Enemies> enemies;
     std::vector<std::string> items;
@@ -30,13 +31,14 @@ private:
 
 public:
     // Constructor
-    explicit Server_Gameloop(Queue<Message*>& event_queue, Queue<Snapshot>& snapshot_queue,
-                             std::string match_name, size_t required_players);
+    explicit ServerGameloop(std::shared_ptr<Queue<std::shared_ptr<Message>>> event_queue,
+                            std::shared_ptr<Queue<Snapshot>> snapshot_queue, std::string match_name,
+                            size_t required_players);
     void run() override;
     // Kill the thread
     void stop() override;
     // Destroyer
-    ~Server_Gameloop() = default;
+    ~ServerGameloop() = default;
 
     Player& get_player(size_t id);
 
