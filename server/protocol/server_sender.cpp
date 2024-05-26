@@ -1,5 +1,5 @@
 #include "./server_sender.h"
 
-ServerSender::ServerSender(Socket&& skt): server_protocol(std::move(skt)) {}
+ServerSender::ServerSender(ServerProtocol& protocol): server_protocol(protocol) {}
 
 ServerSender::~ServerSender() {}

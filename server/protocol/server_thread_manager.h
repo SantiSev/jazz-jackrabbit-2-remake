@@ -3,10 +3,11 @@
 
 class ServerThreadManager {
 private:
-    ServerReceiver* receiver;
-    ServerSender* sender;
+    ServerProtocol server_protocol;
+    ServerReceiver receiver;
+    ServerSender sender;
 
 public:
-    ServerThreadManager();
+    explicit ServerThreadManager(Socket&& skt);
     ~ServerThreadManager();
 };

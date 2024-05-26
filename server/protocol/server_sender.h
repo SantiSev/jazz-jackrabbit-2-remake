@@ -3,9 +3,10 @@
 
 class ServerSender: public Thread {
 private:
-    ServerProtocol server_protocol;
+    ServerProtocol& server_protocol;
 
 public:
-    explicit ServerSender(Socket&& skt);
+    explicit ServerSender(ServerProtocol& protocol);
+    void run() override;
     ~ServerSender();
 };

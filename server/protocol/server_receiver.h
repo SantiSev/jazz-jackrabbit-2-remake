@@ -3,9 +3,10 @@
 
 class ServerReceiver: public Thread {
 private:
-    ServerProtocol server_protocol;
+    ServerProtocol& server_protocol;
 
 public:
-    explicit ServerReceiver(Socket&& skt);
+    explicit ServerReceiver(ServerProtocol& protocol);
+    void run() override;
     ~ServerReceiver();
 };
