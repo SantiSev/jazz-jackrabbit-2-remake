@@ -142,7 +142,7 @@ void ServerProtocol::send_active_games(uint8_t length, std::vector<Match>& match
         return;
 
     for (auto& match: matches) {
-        client.sendall(&(match.player), sizeof(match.player), &was_closed);
+        client.sendall(&(match.players), sizeof(match.players), &was_closed);
         if (was_closed)
             return;
         client.sendall(match.name.data(), match.name.length(), &was_closed);
