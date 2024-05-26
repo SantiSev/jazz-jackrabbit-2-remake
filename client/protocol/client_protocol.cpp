@@ -20,4 +20,39 @@
 ClientProtocol::ClientProtocol(const std::string& hostname, const std::string& servname):
         server(hostname.c_str(), servname.c_str()), was_closed(false) {}
 
+void ClientProtocol::send_command() {
+    uint16_t header = htons(RECV_COMMAND);
+    server.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+}
+
+void ClientProtocol::send_cheat_command() {
+    uint16_t header = htons(RECV_CHEAT_COMMAND);
+    server.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+}
+
+void ClientProtocol::send_leave_match() {
+    uint16_t header = htons(RECV_LEAVE_MATCH);
+    server.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+}
+
+void ClientProtocol::send_create_game() {
+    uint16_t header = htons(RECV_CREATE_GAME);
+    server.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+}
+
+void ClientProtocol::send_join_match() {
+    uint16_t header = htons(RECV_JOIN_MATCH);
+    server.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+}
+
 ClientProtocol::~ClientProtocol() {}
