@@ -4,13 +4,14 @@
 #include <list>
 
 #include <SDL2/SDL.h>
+
+#include "../gui/canvas_object.h"
+
 #include "controller.h"
 
-typedef void (*on_click_signal_handler)(SDL_Point);
-
-class Mouse : public Controller {
+class Mouse: public Controller {
 private:
-    std::list<on_click_signal_handler> signal_handlers;
+    std::list<CanvasObject*> signal_objs;
 
 public:
     SDL_Point cursor;
@@ -18,9 +19,9 @@ public:
     explicit Mouse(int x, int y);
 
     void update(const SDL_Event& event) override;
-    void add_on_click_signal_handler(on_click_signal_handler handler);
-    void remove_on_click_signal_handler(on_click_signal_handler handler);
-    
+    void add_on_click_signal_obj(CanvasObject* obj);
+    void remove_on_click_signal_obj(CanvasObject* obj);
+
     ~Mouse() override;
 };
 

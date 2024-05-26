@@ -6,7 +6,7 @@
 class Controller {
 public:
     virtual void update(const SDL_Event& event) = 0;
-    virtual ~Controller() = 0;
+    virtual ~Controller() = default;
 };
 
 
