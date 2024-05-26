@@ -15,6 +15,7 @@ int main() {
 
     Mouse mouse(0, 0);
     Button button({0, 0, 100, 100}, {255, 255, 255, 255}, {0, 0, 0, 0});
+    mouse.add_on_click_signal_obj(&button);
 
     SDL_CreateWindowAndRenderer(800, 600, 0, &window, &renderer);
     while (running) {

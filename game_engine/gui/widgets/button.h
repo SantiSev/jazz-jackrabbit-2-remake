@@ -1,6 +1,8 @@
 #ifndef TP_FINAL_BUTTON_H
 #define TP_FINAL_BUTTON_H
 
+#include <iostream>
+
 #include <SDL2/SDL.h>
 
 #include "../../controllers/mouse.h"
@@ -18,6 +20,10 @@ public:
 
     void update(Mouse& mouse);
     void draw(SDL_Renderer* renderer) override;
+
+    void on_click() override;
+    bool is_intersecting(SDL_Point&) override;
+    bool is_intersecting(SDL_Rect&) override;
 
     ~Button() override;
 };

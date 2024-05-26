@@ -8,6 +8,8 @@ void Button::update(Mouse& mouse) {
     is_hovered = SDL_PointInRect(&mousePoint, &this->rect);
 }
 
+void Button::on_click() { std::cout << "I was clicked" << std::endl; }
+
 void Button::draw(SDL_Renderer* renderer) {
     if (is_hovered) {
         SDL_SetRenderDrawColor(renderer, hover_color.r, hover_color.g, hover_color.b,
@@ -16,6 +18,12 @@ void Button::draw(SDL_Renderer* renderer) {
         SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     }
     SDL_RenderFillRect(renderer, &rect);
+}
+
+bool Button::is_intersecting(SDL_Point& point) { return SDL_PointInRect(&point, &this->rect); }
+
+bool Button::is_intersecting(SDL_Rect& other_rect) {
+    return SDL_IntersectRect(&this->rect, &other_rect, NULL);
 }
 
 Button::~Button() = default;
