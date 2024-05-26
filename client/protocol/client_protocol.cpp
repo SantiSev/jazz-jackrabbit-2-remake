@@ -64,7 +64,7 @@ void ClientProtocol::send_leave_match(uint16_t id_player) {
         return;
 }
 
-void ClientProtocol::send_create_game(uint16_t id_player, uint8_t length, std::string& match_name) {
+void ClientProtocol::send_create_game(uint16_t id_player, std::string& match_name) {
     uint16_t header = htons(RECV_CREATE_GAME);
     server.sendall(&header, sizeof(header), &was_closed);
     if (was_closed)
@@ -75,6 +75,7 @@ void ClientProtocol::send_create_game(uint16_t id_player, uint8_t length, std::s
     if (was_closed)
         return;
 
+    uint8_t length = match_name.length();
     server.sendall(&length, sizeof(length), &was_closed);
     if (was_closed)
         return;
