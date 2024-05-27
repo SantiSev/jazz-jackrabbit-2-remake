@@ -12,6 +12,7 @@
 class Keyboard: public Controller {
 private:
     std::list<CanvasObject*> signal_objs;
+    bool is_special_key(const SDL_Keycode& key);
 
 public:
     void update(const SDL_Event& event) override;
