@@ -45,6 +45,7 @@ build/*
 
 # Idea
 .idea
+.vscode
 cmake-build-debug
 build
 CMakeFiles
