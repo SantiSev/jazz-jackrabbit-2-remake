@@ -10,21 +10,23 @@
 #include "../../common/common_queue.h"
 #include "../../common/message/message.h"
 
+#include "snapshot.h"
+
 
 class ClientMonitor {
 private:
-    std::list<std::reference_wrapper<Queue<std::shared_ptr<Message>>>> clientQueues;
+    std::list<std::reference_wrapper<std::shared_ptr<Queue<Snapshot>>>> clientQueues;
     std::mutex mutex;
 
 public:
     // Constructor
     ClientMonitor();
     // Add a client to the list of clients (Thread safe)
-    void addClient(Queue<std::shared_ptr<Message>> queue);
+    void addClient(std::shared_ptr<Queue<Snapshot>> queue);
     // Broadcast message to all clients (Thread safe), pushing (Blocking) the message to the queue
     // of each client
-    void broadcastClients(const std::shared_ptr<Message>& gameMessage);
-    void removeQueue(Queue<std::shared_ptr<Message>> queueToRemove);
+    void broadcastClients(const Snapshot& gameMessage);
+    void removeQueue(std::shared_ptr<Queue<Snapshot>> queueToRemove);
 
     ClientMonitor(const ClientMonitor&) = delete;
     ClientMonitor& operator=(const ClientMonitor&) = delete;

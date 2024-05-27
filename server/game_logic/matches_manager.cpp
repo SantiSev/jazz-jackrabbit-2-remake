@@ -1,18 +1,26 @@
 #include "matches_manager.h"
 
 #include <memory>
+#include <utility>
 #include <vector>
+
+#include "../../common/common_socket.h"
 
 MatchesManager::MatchesManager() {}
 
 void MatchesManager::run() {
     try {
         add_match("my first match");
+        std::shared_ptr<Message> client_message;
         while (online) {
             check_matches_status();
 
+            while (waiting_server_queue->try_pop(client_message)) {}
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+            client_message->run();
+
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
             //                        Player player(0, "jorge", "guerrero");
             //                        add_player_to_game(player, matches_number);
         }
@@ -26,21 +34,22 @@ void MatchesManager::run() {
 }
 
 void MatchesManager::create_new_match(TestClientServer client, std::shared_ptr<Message> message) {
-    //     matches_number++;
-    //     auto event_queue = std::make_shared<Queue<std::shared_ptr<Message>>>(0);
-    //     auto snapshot_queue = std::make_shared<Queue<Snapshot>>();
-    //     auto gameloop = std::make_shared<Match>(event_queue, snapshot_queue, name,
-    //                                             REQUIRED_PLAYERS_TO_START);
-    //     matches.insert({matches_number, gameloop});
-    //     gameloop->start();
+    matches_number++;
+    // deberia ser así:
+    // std::shared_ptr<NuevaPartida> nueva_partida =
+    // std::dynamic_pointer_cast<NuevaPartida>(message);
+    // auto match = std::make_shared<Match>(nueva_partida->get_map_name(),
+    // nueva_partida->get_name(),nueva_partida->get_required_players());
+    //
+    auto match = std::make_shared<Match>("map 1", "my first match", REQUIRED_PLAYERS_TO_START);
+    matches.insert({matches_number, match});
+    match->start();
+    match->add_client_to_match(&client);
 }
 
 void MatchesManager::add_match(const std::string& name) {
     matches_number++;
-    auto event_queue = std::make_shared<Queue<std::shared_ptr<Message>>>(0);
-    auto snapshot_queue = std::make_shared<Queue<Snapshot>>();
-    auto gameloop =
-            std::make_shared<Match>(event_queue, snapshot_queue, name, REQUIRED_PLAYERS_TO_START);
+    auto gameloop = std::make_shared<Match>("map 1", "my first match", REQUIRED_PLAYERS_TO_START);
     matches.insert({matches_number, gameloop});
     gameloop->start();
 }
@@ -94,6 +103,12 @@ void MatchesManager::add_player_to_game(Player& player, size_t match_id) {
     if (it != matches.end()) {
         it->second->add_player_to_game(player);
     }
+}
+
+void MatchesManager::add_new_client(Socket client_socket) {
+    auto client = new TestClientServer(std::move(client_socket), waiting_server_queue);
+    client->start();
+    clients.push_back(client);
 }
 
 void MatchesManager::stop() { online = false; }

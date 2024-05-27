@@ -9,16 +9,13 @@
 
 #include "../common/common_constants.h"
 
-Match::Match(std::shared_ptr<Queue<std::shared_ptr<Message>>> event_queue,
-             std::shared_ptr<Queue<Snapshot>> snapshot_queue, std::string match_name,
-             size_t required_players_setting):
+Match::Match(const std::string& map, std::string match_name, size_t required_players_setting):
         online(true),
         match_name(std::move(match_name)),
-        event_queue(std::move(event_queue)),
-        snapshot_queue(std::move(snapshot_queue)),
         players(),
         enemies(),
         required_players(required_players_setting),
+        map(const_cast<std::string&>(map)),
         snapshot(players, enemies) {}
 
 void Match::run() {
@@ -45,7 +42,7 @@ void Match::run() {
             auto frameStart = std::chrono::system_clock::now();
 
             size_t events = 0;
-            while (event_queue->try_pop(next_message) && events < MAX_EVENTS_PER_LOOP && online) {
+            while (event_queue->try_pop(next_message) && events < MAX_EVENTS_PER_LOOP) {
                 events++;
                 next_message->run();
             }
@@ -60,7 +57,7 @@ void Match::run() {
             countdown_match(runTime, endTime, minutes, seconds);
 
             create_actual_snapshot(seconds, minutes);
-            snapshot_queue->push(snapshot);
+            client_monitor.broadcastClients(snapshot);
 
             if (match_has_ended) {
                 stop();
@@ -132,7 +129,6 @@ std::string Match::get_match_name() const { return match_name; }
 void Match::stop() {
     online = false;
     event_queue->close();
-    snapshot_queue->close();
     send_end_message_to_players();
 }
 
@@ -147,4 +143,9 @@ int Match::get_seconds() { return snapshot.get_seconds(); }
 void Match::send_end_message_to_players() {
     //    set_snapshot_final_message();
     //    broadcast();
+}
+
+void Match::add_client_to_match(TestClientServer* client) {
+    client_monitor.addClient(client->get_sender_queue());
+    clients.push_back(client);
 }

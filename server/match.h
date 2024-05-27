@@ -25,22 +25,19 @@ private:
     std::string match_name;
     int match_time = STARTING_MATCH_TIME;
     std::shared_ptr<Queue<std::shared_ptr<Message>>> event_queue;  // shared with the receiver
-    std::shared_ptr<Queue<Snapshot>> snapshot_queue;               // shared with the sender
-    std::list<TestClientServer> clients;
+    std::list<TestClientServer*> clients;
     std::vector<Player> players;
     std::vector<Enemies> enemies;
     std::vector<std::string> items;
-    ClientMonitor client_monitor;
     size_t players_connected = 0;
     size_t required_players;
-    std::string map;
+    ClientMonitor client_monitor;
+    std::string& map;
     Snapshot snapshot;
 
 public:
     // Constructor
-    explicit Match(std::shared_ptr<Queue<std::shared_ptr<Message>>> event_queue,
-                   std::shared_ptr<Queue<Snapshot>> snapshot_queue, std::string match_name,
-                   size_t required_players);
+    explicit Match(const std::string& map, std::string match_name, size_t required_players);
     void run() override;
     // Kill the thread
     void stop() override;
@@ -70,6 +67,8 @@ public:
                          int& minutes, int& seconds);
 
     void send_end_message_to_players();
+
+    void add_client_to_match(TestClientServer* client);
 };
 
 #endif

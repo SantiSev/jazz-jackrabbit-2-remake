@@ -14,6 +14,8 @@
 class MatchesManager: public Thread {
 private:
     std::map<size_t, std::shared_ptr<Match>> matches;
+    std::list<TestClientServer*> clients;
+    std::shared_ptr<Queue<std::shared_ptr<Message>>> waiting_server_queue;
     bool online = true;
     size_t matches_number = 0;
 
@@ -33,6 +35,8 @@ public:
     std::vector<matchesDTO> return_matches_lists();
 
     void create_new_match(TestClientServer client, std::shared_ptr<Message> message);
+
+    void add_new_client(Socket client_socket);
 };
 
 
