@@ -12,5 +12,6 @@ ClientThreadManager::ClientThreadManager(const std::string& hostname, const std:
 
 ClientThreadManager::~ClientThreadManager() {
     receiver.join();
+    receiver.kill();
     sender.join();
 }

@@ -4,6 +4,10 @@ ClientReceiver::ClientReceiver(ClientProtocol& client_protocol,
                                Queue<std::unique_ptr<Message>>& queue):
         client_protocol(client_protocol), queue(queue) {}
 
+bool ClientReceiver::is_dead() { return _keep_running; }
+
+void ClientReceiver::kill() { _keep_running = false; }
+
 void ClientReceiver::run() {
     try {
         while (_keep_running) {
