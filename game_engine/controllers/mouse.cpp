@@ -5,6 +5,9 @@ Mouse::Mouse(int x, int y): cursor({x, y}) {}
 void Mouse::update(const SDL_Event& event) {
     if (event.type == SDL_MOUSEMOTION) {
         SDL_GetMouseState(&cursor.x, &cursor.y);
+        for (auto obj: signal_objs) {
+            obj->is_hovered(obj->is_intersecting(cursor));
+        }
     } else if (event.type == SDL_MOUSEBUTTONUP) {
         SDL_GetMouseState(&cursor.x, &cursor.y);
         for (auto obj: signal_objs) {

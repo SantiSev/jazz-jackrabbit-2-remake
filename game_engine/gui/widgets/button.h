@@ -8,20 +8,25 @@
 #include "../../controllers/mouse.h"
 #include "../canvas_object.h"
 
+#include "label.h"
+
 class Button: public CanvasObject {
 private:
     SDL_Rect rect;
     SDL_Color color;
     SDL_Color hover_color;
-    bool is_hovered;
+    bool is_hovered_m;
+    Label label;
 
 public:
-    explicit Button(SDL_Rect rect, SDL_Color color, SDL_Color hoverColor);
+    explicit Button(const SDL_Rect& rect, const SDL_Color& color, const SDL_Color& hoverColor,
+                    Label& label);
 
-    void update(Mouse& mouse);
     void draw(SDL_Renderer* renderer) override;
 
     void on_click() override;
+    void is_hovered(bool) override;
+
     bool is_intersecting(SDL_Point&) override;
     bool is_intersecting(SDL_Rect&) override;
 
