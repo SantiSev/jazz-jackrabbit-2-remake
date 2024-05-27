@@ -55,6 +55,9 @@ target_link_libraries(server SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 add_executable(graphics_test tests/graphics/graphics_test.cpp ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
 target_link_libraries(graphics_test SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 
+add_executable(keyboard_test tests/graphics/controllers/keyboard_test.cpp ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
+target_link_libraries(keyboard_test SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
+
 if (DEFINED TSAN)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=thread")
