@@ -5,7 +5,7 @@
 #ifndef COLISION_BOX_H
 #define COLISION_BOX_H
 
-#include "../../math/vector2D.h"
+#include "../math/vector2D.h"
 
 
 class ColisionBox {

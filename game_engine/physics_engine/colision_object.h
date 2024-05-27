@@ -4,7 +4,7 @@
 
 #ifndef GAME_ENGINE_COLISION_OBJECT_H_
 #define GAME_ENGINE_COLISION_OBJECT_H_
-#include "../../game_object.h"
+#include "../game_object.h"
 
 #include "colision_box.h"
 

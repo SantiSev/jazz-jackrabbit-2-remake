@@ -1,7 +1,7 @@
 //
 // Created by santi on 25/05/24.
 //
-#include "colision_box.h"
+#include "colision_object/colision_box.h"
 
 ColisionBox::ColisionBox(int width, int height):
         width(width),

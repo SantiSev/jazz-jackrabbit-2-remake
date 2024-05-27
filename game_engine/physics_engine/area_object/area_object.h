@@ -4,7 +4,7 @@
 
 #ifndef AREA_OBJECT_H
 #define AREA_OBJECT_H
-#include "../colision_object/colision_object.h"
+#include "../colision_object.h"
 
 
 class AreaObject: ColisionObject {
