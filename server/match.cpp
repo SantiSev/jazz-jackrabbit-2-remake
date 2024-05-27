@@ -45,7 +45,7 @@ void Match::run() {
             auto frameStart = std::chrono::system_clock::now();
 
             size_t events = 0;
-            while (event_queue->try_pop(next_message) && events < MAX_EVENTS_PER_LOOP && online) {
+            while (event_queue->try_pop(next_message) && events < MAX_EVENTS_PER_LOOP) {
                 events++;
                 next_message->run();
             }
