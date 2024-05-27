@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 #set(SDL2PP_WITH_TTF ON) # if you need SDL_ttf support
 #set(SDL2PP_WITH_IMAGE YES)
 #set(SDL2PP_WITH_TTF YES)
-add_subdirectory(extlib/SDL2pp)
+#add_subdirectory(extlib/SDL2pp)
 
 # compilation flags
 set(CSTD c17)
@@ -39,15 +39,15 @@ endif()
 
 # define targets
 #add_executable(client)
-target_link_libraries(client PUBLIC libSDL2pp)
+#target_link_libraries(client PUBLIC libSDL2pp)
 #target_link_libraries(client SDL2pp::SDL2pp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LDFLAGS}")
 
-file(GLOB_RECURSE SOURCES_CLIENT "client/*.cpp" "client_*.cpp")
-file(GLOB_RECURSE SOURCES_SERVER "server/*.cpp" "server_*.cpp")
-file(GLOB_RECURSE SOURCES_COMMON "common/*.cpp" "common_*.cpp")
+file(GLOB_RECURSE SOURCES_CLIENT "client/*.cpp")
+file(GLOB_RECURSE SOURCES_SERVER "server/*.cpp")
+file(GLOB_RECURSE SOURCES_COMMON "common/*.cpp")
 file(GLOB_RECURSE SOURCES_GAME_ENGINE "game_engine/*.cpp" "game_engine_*.cpp")
 
 file(GLOB_RECURSE HEADERS_CLIENT "client/*.h" "client_*.h")
@@ -55,10 +55,15 @@ file(GLOB_RECURSE HEADERS_SERVER "server/*.h" "server_*.h")
 file(GLOB_RECURSE HEADERS_COMMON "common/*.h" "common_*.h")
 file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine_*.h")
 
+add_executable(client client/client_main.cpp ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE} )
+add_executable(server server/server_main.cpp ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON})
 
-add_executable(client ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE} )
-add_executable(server ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON})
+# COMMUNICATION - TESTS
+file(GLOB_RECURSE SOURCES_CLIENT_T "client/protocol/*.cpp")
+file(GLOB_RECURSE SOURCES_SERVER_T "server/protocol/*.cpp")
 
+add_executable(client_test tests/events/client_test.cpp ${SOURCES_COMMON} ${SOURCES_CLIENT_T} ${HEADERS_CLIENT} ${HEADERS_COMMON})
+add_executable(server_test tests/events/server_test.cpp ${SOURCES_COMMON} ${SOURCES_SERVER_T} ${HEADERS_SERVER} ${HEADERS_COMMON})
 
 if (DEFINED TSAN)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
