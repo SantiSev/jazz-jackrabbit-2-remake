@@ -6,11 +6,11 @@
 
 #include "client_renderer.h"
 
-//#include <SDL2pp/SDL2pp.hh>
+// #include <SDL2pp/SDL2pp.hh>
 //
-// using namespace SDL2pp;
+//  using namespace SDL2pp;
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* argv[]) {
     try {
         if (argc == 3) {
             const std::string hostname = argv[1];
