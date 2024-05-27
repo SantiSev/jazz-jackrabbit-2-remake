@@ -1,3 +1,5 @@
+#include "../../game_engine/gui/widgets/button.h"
+
 #include <exception>
 #include <iostream>
 
@@ -5,7 +7,6 @@
 #include <SDL2/SDL_ttf.h>
 
 #include "../../game_engine/controllers/mouse.h"
-#include "../../game_engine/gui/widgets/button.h"
 #include "../../game_engine/gui/widgets/label.h"
 
 int main() {
