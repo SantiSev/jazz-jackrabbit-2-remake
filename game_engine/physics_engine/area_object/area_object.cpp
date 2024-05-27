@@ -4,11 +4,12 @@
 
 #include "area_object.h"
 
+#include <iostream>
+
 AreaObject::AreaObject(int width, int height): ColisionObject(width, height) {}
 
 void AreaObject::handle_colision(ColisionObject& other) {
     if (is_in_area(other)) {
-        // TODO: Here there should be a signal or something indicating that the object received a
-        // collision It should be indicated that it was 'collected or touched'
+        std::cout << "Item Colision detected!" << std::endl;
     }
 }

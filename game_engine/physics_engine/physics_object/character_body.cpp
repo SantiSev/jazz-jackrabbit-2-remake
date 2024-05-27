@@ -29,13 +29,17 @@ void CharacterBody::setAcceleration(Vector2D newAcceleration) {
     this->acceleration = newAcceleration;
 }
 
+void CharacterBody::setVelocity(Vector2D newVelocity) { this->velocity = newVelocity; }
+
+void CharacterBody::stop_movement() { velocity = Vector2D(0, 0); }
+
 Vector2D CharacterBody::getVelocity() const { return velocity; }
 
 Vector2D CharacterBody::getAcceleration() const { return acceleration; }
 
-// TODO no estoy seguro si esto funca, habria que hacer pruebas y ver si se puede mejorar
+// When a character collides with another object, the other object should handle the collision
 void CharacterBody::handle_colision(ColisionObject& other) {
     if (is_in_area(other)) {
-        velocity = Vector2D(0, 0);
+        other.handle_colision(*this);
     }
 }

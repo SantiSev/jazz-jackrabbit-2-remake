@@ -12,7 +12,7 @@ class StaticBody: public ColisionObject {
 public:
     StaticBody(int width, int height);
 
-    void handle_colision(ColisionObject& other) override;
+    virtual void handle_colision(ColisionObject& other) override;
 };
 
 

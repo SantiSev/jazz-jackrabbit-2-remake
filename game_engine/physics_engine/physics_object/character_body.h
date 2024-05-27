@@ -27,7 +27,11 @@ public:
 
     void handle_colision(ColisionObject& other) override;
 
+    void setVelocity(Vector2D newVelocity);
+
     void setAcceleration(Vector2D newAcceleration);
+
+    void stop_movement();
 
     Vector2D getVelocity() const;
 
