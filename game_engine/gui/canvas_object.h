@@ -9,7 +9,7 @@ public:
 
     virtual void on_click() {}
     virtual void is_hovered(bool) {}
-    virtual void on_key_down(SDL_Keycode) {}
+    virtual void on_key_press(SDL_Keycode) {}
 
     virtual bool is_intersecting(SDL_Point&) = 0;
     virtual bool is_intersecting(SDL_Rect&) = 0;

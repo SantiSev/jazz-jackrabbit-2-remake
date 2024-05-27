@@ -8,7 +8,9 @@
 class Atus: public CanvasObject {
 public:
     Atus() = default;
-    void on_key_down(SDL_Keycode key) override { std::cout << "Key pressed: " << key << std::endl; }
+    void on_key_press(SDL_Keycode key) override {
+        std::cout << "Key pressed: " << key << std::endl;
+    }
 
     void draw(SDL_Renderer* renderer) override {}
     bool is_intersecting(SDL_Point& point) override { return false; }
