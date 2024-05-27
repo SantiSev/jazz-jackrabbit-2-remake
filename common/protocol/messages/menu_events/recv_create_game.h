@@ -1,3 +1,6 @@
+#ifndef _RECV_CREATE_GAME_H
+#define _RECV_CREATE_GAME_H
+
 #include <cstdint>
 #include <string>
 
@@ -13,3 +16,5 @@ public:
     void run() override;
     ~RecvCreateGameMessage();
 };
+
+#endif

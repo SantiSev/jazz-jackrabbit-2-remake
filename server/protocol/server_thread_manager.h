@@ -10,7 +10,7 @@ private:
     ServerSender sender;
 
 public:
-    ServerThreadManager(Socket&& skt, Queue<std::unique_ptr<Message>>& receiver_queue,
+    ServerThreadManager(Socket&& skt, Queue<std::shared_ptr<Message>>& receiver_queue,
                         Queue<int>& sender_queue);
     ~ServerThreadManager();
 };

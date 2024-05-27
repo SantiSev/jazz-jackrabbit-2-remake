@@ -4,7 +4,7 @@
 
 #define servname argv[1]
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* argv[]) {
     try {
         if (argc != 2) {
             std::cerr << "Expected format: ./server <port>\n";

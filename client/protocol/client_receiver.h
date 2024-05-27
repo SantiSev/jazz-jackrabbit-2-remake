@@ -8,10 +8,10 @@
 class ClientReceiver: public Thread {
 private:
     ClientProtocol& client_protocol;
-    Queue<std::unique_ptr<Message>>& queue;
+    Queue<std::shared_ptr<Message>>& queue;
 
 public:
-    ClientReceiver(ClientProtocol& client_protocol, Queue<std::unique_ptr<Message>>& queue);
+    ClientReceiver(ClientProtocol& client_protocol, Queue<std::shared_ptr<Message>>& queue);
     bool is_dead();
 
     void kill();

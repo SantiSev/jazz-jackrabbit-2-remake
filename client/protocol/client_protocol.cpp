@@ -7,15 +7,15 @@
 ClientProtocol::ClientProtocol(const std::string& hostname, const std::string& servname):
         CommonProtocol(hostname, servname) {}
 
-std::unique_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
-    return std::make_unique<SendFinishMatchMessage>();
+std::shared_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
+    return std::make_shared<SendFinishMatchMessage>();
 }
 
-std::unique_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() {
-    return std::make_unique<SendGameStateMessage>();
+std::shared_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() {
+    return std::make_shared<SendGameStateMessage>();
 }
 
-std::unique_ptr<SendActiveGamesMessage> ClientProtocol::recv_active_games() {
+std::shared_ptr<SendActiveGamesMessage> ClientProtocol::recv_active_games() {
     const uint8_t match_length = recv_one_byte();
 
     std::vector<Match> matches(match_length);
@@ -25,19 +25,19 @@ std::unique_ptr<SendActiveGamesMessage> ClientProtocol::recv_active_games() {
         matches.push_back({name, players});
     }
 
-    return std::make_unique<SendActiveGamesMessage>(std::move(matches));
+    return std::make_shared<SendActiveGamesMessage>(std::move(matches));
 }
 
-std::unique_ptr<SendGameCreatedMessage> ClientProtocol::recv_game_created() {
-    return std::make_unique<SendGameCreatedMessage>();
+std::shared_ptr<SendGameCreatedMessage> ClientProtocol::recv_game_created() {
+    return std::make_shared<SendGameCreatedMessage>();
 }
 
-std::unique_ptr<Message> ClientProtocol::recv_message() {
+std::shared_ptr<Message> ClientProtocol::recv_message() {
     const uint16_t header = recv_two_bytes();
 
     switch (header) {
         case CLOSE_CONNECTION:
-            return std::make_unique<CloseConnectionMessage>();
+            return std::make_shared<CloseConnectionMessage>();
         case SEND_FINISH_MATCH:
             return recv_finish_match();
         case SEND_GAME_STATE:
@@ -47,7 +47,7 @@ std::unique_ptr<Message> ClientProtocol::recv_message() {
         case SEND_GAME_CREATED:
             return recv_game_created();
         default:
-            return std::make_unique<InvalidMessage>();
+            return std::make_shared<InvalidMessage>();
     }
 }
 

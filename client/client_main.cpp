@@ -7,7 +7,7 @@
 #define hostname argv[1]
 #define servname argv[2]
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* argv[]) {
     try {
         if (argc != 3) {
             std::cerr << "Expected format: ./client <hostname> <port>\n";

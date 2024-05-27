@@ -1,3 +1,6 @@
+#ifndef _SEND_ACTIVE_GAMES_H
+#define _SEND_ACTIVE_GAMES_H
+
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -19,3 +22,5 @@ public:
     void run() override;
     ~SendActiveGamesMessage();
 };
+
+#endif
