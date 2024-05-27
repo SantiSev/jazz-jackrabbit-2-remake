@@ -13,4 +13,6 @@ ServerThreadManager::ServerThreadManager(Socket&& skt,
 ServerThreadManager::~ServerThreadManager() {
     receiver.kill();
     receiver.join();
+    sender.kill();
+    sender.join();
 }

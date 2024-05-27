@@ -13,6 +13,10 @@ private:
 public:
     ServerSender(ServerProtocol& protocol, Queue<int>& queue);
 
+    bool is_dead();
+
+    void kill();
+
     void run() override;
 
     ~ServerSender();
