@@ -9,4 +9,7 @@ ServerThreadManager::ServerThreadManager(Socket&& skt,
     sender.start();
 }
 
-ServerThreadManager::~ServerThreadManager() {}
+ServerThreadManager::~ServerThreadManager() {
+    receiver.kill();
+    receiver.join();
+}

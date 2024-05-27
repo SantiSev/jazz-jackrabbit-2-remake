@@ -12,6 +12,12 @@ private:
 
 public:
     ServerReceiver(ServerProtocol& protocol, Queue<std::unique_ptr<Message>>& queue);
+
+    bool is_dead();
+
+    void kill();
+
     void run() override;
+
     ~ServerReceiver();
 };

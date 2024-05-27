@@ -3,6 +3,10 @@
 ServerReceiver::ServerReceiver(ServerProtocol& protocol, Queue<std::unique_ptr<Message>>& queue):
         server_protocol(protocol), queue(queue) {}
 
+bool ServerReceiver::is_dead() { return _keep_running; }
+
+void ServerReceiver::kill() { _keep_running = false; }
+
 void ServerReceiver::run() {
     try {
         while (_keep_running) {
