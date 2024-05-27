@@ -14,4 +14,5 @@ ClientThreadManager::~ClientThreadManager() {
     receiver.join();
     receiver.kill();
     sender.join();
+    sender.kill();
 }

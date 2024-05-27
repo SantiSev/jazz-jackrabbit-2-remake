@@ -12,6 +12,12 @@ private:
 
 public:
     explicit ClientSender(ClientProtocol& client_protocol, Queue<int>& queue);
+
+    bool is_dead();
+
+    void kill();
+
     void run() override;
+
     ~ClientSender();
 };
