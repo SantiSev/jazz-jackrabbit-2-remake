@@ -4,13 +4,6 @@ project(tp_final LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-#set(SDL2PP_WITH_IMAGE ON) # if you need SDL_image support
-#set(SDL2PP_WITH_MIXER ON) # if you need SDL_mixer support
-#set(SDL2PP_WITH_TTF ON) # if you need SDL_ttf support
-#set(SDL2PP_WITH_IMAGE YES)
-#set(SDL2PP_WITH_TTF YES)
-#add_subdirectory(extlib/SDL2pp)
-
 # compilation flags
 set(CSTD c17)
 set(CXXSTD c++17)
@@ -38,9 +31,6 @@ if (static)
 endif()
 
 # define targets
-#add_executable(client)
-#target_link_libraries(client PUBLIC libSDL2pp)
-#target_link_libraries(client SDL2pp::SDL2pp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LDFLAGS}")
@@ -56,7 +46,9 @@ file(GLOB_RECURSE HEADERS_COMMON "common/*.h" "common_*.h")
 file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine_*.h" "game_engine/**/*.h")
 
 
-add_executable(client ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
+
+add_executable(client ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE}
+        game_engine/physics_engine/colision_box.h)
 add_executable(server ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
 
 target_link_libraries(client SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
