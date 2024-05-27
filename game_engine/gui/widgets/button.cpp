@@ -1,8 +1,8 @@
 #include "button.h"
 
 Button::Button(const SDL_Rect& rect, const SDL_Color& color, const SDL_Color& hover_color,
-               Label& label)
-    : rect(rect), color(color), hover_color(hover_color), is_hovered_m(false), label(label) {}
+               Label& label):
+        rect(rect), color(color), hover_color(hover_color), is_hovered_m(false), label(label) {}
 
 void Button::on_click() {
     std::cout << "Button was clicked." << std::endl;

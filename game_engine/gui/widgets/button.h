@@ -7,6 +7,7 @@
 
 #include "../../controllers/mouse.h"
 #include "../canvas_object.h"
+
 #include "label.h"
 
 class Button: public CanvasObject {
@@ -18,9 +19,7 @@ private:
     Label label;
 
 public:
-    explicit Button(const SDL_Rect& rect,
-                    const SDL_Color& color,
-                    const SDL_Color& hoverColor,
+    explicit Button(const SDL_Rect& rect, const SDL_Color& color, const SDL_Color& hoverColor,
                     Label& label);
 
     void draw(SDL_Renderer* renderer) override;
