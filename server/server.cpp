@@ -3,10 +3,7 @@
 #include <iostream>
 #include <utility>
 
-#include "../server/game_logic/matches_manager.h"
-
-#include "server_eventloop.h"
-#include "server_gameloop.h"
+#include "game_logic/matches_manager.h"
 
 void Server::run() {
     try {

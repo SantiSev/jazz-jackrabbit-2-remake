@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "../server/server_enemies.h"
-#include "../server/server_player.h"
+#include "../server/game_logic/characters/enemies.h"
+#include "../server/game_logic/characters/player.h"
 
 struct SnapshotDTO {
     std::vector<Player> players;

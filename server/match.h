@@ -1,19 +1,24 @@
-#ifndef TP_FINAL_SERVER_GAMELOOP_H
-#define TP_FINAL_SERVER_GAMELOOP_H
+#ifndef TP_FINAL_MATCH_H
+#define TP_FINAL_MATCH_H
 
+#include <list>
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "../common/common_constants.h"
 #include "../common/common_queue.h"
 #include "../common/common_thread.h"
 #include "../common/message/message.h"
+#include "game_logic/characters/enemies.h"
+#include "game_logic/characters/player.h"
+#include "game_logic/client_monitor.h"
 #include "game_logic/snapshot.h"
 
-#include "server_enemies.h"
-#include "server_player.h"
+#include "test_client_server.h"
 
-class ServerGameloop: public Thread {
+
+class Match: public Thread {
 private:
     bool online;
     bool match_has_ended = false;
@@ -21,9 +26,11 @@ private:
     int match_time = STARTING_MATCH_TIME;
     std::shared_ptr<Queue<std::shared_ptr<Message>>> event_queue;  // shared with the receiver
     std::shared_ptr<Queue<Snapshot>> snapshot_queue;               // shared with the sender
+    std::list<TestClientServer> clients;
     std::vector<Player> players;
     std::vector<Enemies> enemies;
     std::vector<std::string> items;
+    ClientMonitor client_monitor;
     size_t players_connected = 0;
     size_t required_players;
     std::string map;
@@ -31,14 +38,14 @@ private:
 
 public:
     // Constructor
-    explicit ServerGameloop(std::shared_ptr<Queue<std::shared_ptr<Message>>> event_queue,
-                            std::shared_ptr<Queue<Snapshot>> snapshot_queue, std::string match_name,
-                            size_t required_players);
+    explicit Match(std::shared_ptr<Queue<std::shared_ptr<Message>>> event_queue,
+                   std::shared_ptr<Queue<Snapshot>> snapshot_queue, std::string match_name,
+                   size_t required_players);
     void run() override;
     // Kill the thread
     void stop() override;
     // Destroyer
-    ~ServerGameloop() = default;
+    ~Match() = default;
 
     Player& get_player(size_t id);
 
@@ -57,6 +64,12 @@ public:
     int get_minutes();
 
     int get_seconds();
+
+    void countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
+                         const std::chrono::time_point<std::chrono::system_clock>& endTime,
+                         int& minutes, int& seconds);
+
+    void send_end_message_to_players();
 };
 
 #endif

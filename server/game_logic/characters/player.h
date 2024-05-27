@@ -1,5 +1,5 @@
-#ifndef TP_FINAL_SERVER_PLAYER_H
-#define TP_FINAL_SERVER_PLAYER_H
+#ifndef TP_FINAL_PLAYER_H
+#define TP_FINAL_PLAYER_H
 
 #include <cstdio>
 #include <string>
@@ -15,7 +15,6 @@ private:
     size_t health;
     std::string character;
     size_t points;
-
 
 public:
     Player(size_t id, std::string name, std::string character);

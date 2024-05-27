@@ -4,18 +4,10 @@ project(tp_final LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-#set(SDL2PP_WITH_IMAGE ON) # if you need SDL_image support
-#set(SDL2PP_WITH_MIXER ON) # if you need SDL_mixer support
-#set(SDL2PP_WITH_TTF ON) # if you need SDL_ttf support
-#set(SDL2PP_WITH_IMAGE YES)
-#set(SDL2PP_WITH_TTF YES)
-#add_subdirectory(extlib/SDL2pp)
-
 # compilation flags
 set(CSTD c17)
 set(CXXSTD c++17)
 add_definitions(-DDATA_PATH="${PROJECT_SOURCE_DIR}/data")
-#include_directories(${SDL2PP_INCLUDE_DIRS})
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -pedantic -pedantic-errors -O0 -ggdb -DDEBUG -fno-inline -std=${CSTD} -D _POSIX_C_SOURCE=200809L")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic -pedantic-errors -O0 -ggdb -DDEBUG -fno-inline -std=${CXXSTD} -D _POSIX_C_SOURCE=200809L")
@@ -37,21 +29,16 @@ if (static)
     set(LDFLAGS "${LDFLAGS} -static")
 endif()
 
-# define targets
-#add_executable(client)
-#target_link_libraries(client PUBLIC libSDL2pp)
-#target_link_libraries(client SDL2pp::SDL2pp)
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LDFLAGS}")
 
 file(GLOB_RECURSE SOURCES_CLIENT "client/*.cpp" "client_*.cpp")
-file(GLOB_RECURSE SOURCES_SERVER "server/*.cpp" "server_*.cpp")
+file(GLOB_RECURSE SOURCES_SERVER "server/*.cpp" "server/game_logic/*.cpp" "server_*.cpp")
 file(GLOB_RECURSE SOURCES_COMMON "common/*.cpp" "common_*.cpp")
 file(GLOB_RECURSE SOURCES_GAME_ENGINE "game_engine/*.cpp" "game_engine_*.cpp")
 
 file(GLOB_RECURSE HEADERS_CLIENT "client/*.h" "client_*.h")
-file(GLOB_RECURSE HEADERS_SERVER "server/*.h" "server_*.h")
+file(GLOB_RECURSE HEADERS_SERVER "server/*.h" "server/game_logic/*.h" "server_*.h")
 file(GLOB_RECURSE HEADERS_COMMON "common/*.h" "common_*.h")
 file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine_*.h")
 

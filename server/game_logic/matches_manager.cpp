@@ -3,8 +3,6 @@
 #include <memory>
 #include <vector>
 
-#include "snapshot.h"
-
 MatchesManager::MatchesManager() {}
 
 void MatchesManager::run() {
@@ -13,9 +11,10 @@ void MatchesManager::run() {
         while (online) {
             check_matches_status();
 
+
             std::this_thread::sleep_for(std::chrono::milliseconds(10000));
-            //            Player player(0, "jorge", "guerrero");
-            //            add_player_to_game(player, matches_number);
+            //                        Player player(0, "jorge", "guerrero");
+            //                        add_player_to_game(player, matches_number);
         }
         stop_all_matches();
     } catch (const std::exception& err) {
@@ -26,17 +25,22 @@ void MatchesManager::run() {
     }
 }
 
-// void create_new_match(TestClientServer client, std::shared_ptr<Message> message) {
-//     std::shared_ptr<Server_Gameloop> gameloop =
-//     std::dynamic_pointer_cast<Server_Gameloop>(message);
-// }
+void MatchesManager::create_new_match(TestClientServer client, std::shared_ptr<Message> message) {
+    //     matches_number++;
+    //     auto event_queue = std::make_shared<Queue<std::shared_ptr<Message>>>(0);
+    //     auto snapshot_queue = std::make_shared<Queue<Snapshot>>();
+    //     auto gameloop = std::make_shared<Match>(event_queue, snapshot_queue, name,
+    //                                             REQUIRED_PLAYERS_TO_START);
+    //     matches.insert({matches_number, gameloop});
+    //     gameloop->start();
+}
 
 void MatchesManager::add_match(const std::string& name) {
     matches_number++;
     auto event_queue = std::make_shared<Queue<std::shared_ptr<Message>>>(0);
     auto snapshot_queue = std::make_shared<Queue<Snapshot>>();
-    auto gameloop = std::make_shared<ServerGameloop>(event_queue, snapshot_queue, name,
-                                                     REQUIRED_PLAYERS_TO_START);
+    auto gameloop =
+            std::make_shared<Match>(event_queue, snapshot_queue, name, REQUIRED_PLAYERS_TO_START);
     matches.insert({matches_number, gameloop});
     gameloop->start();
 }
@@ -54,7 +58,7 @@ void MatchesManager::check_matches_status() {
     }
 }
 
-void MatchesManager::stop_finished_match(ServerGameloop* match) {
+void MatchesManager::stop_finished_match(Match* match) {
     match->stop();
     match->join();
 }

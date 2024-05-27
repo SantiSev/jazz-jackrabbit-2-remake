@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "../../common/common_dto.h"
-#include "../server_enemies.h"
-#include "../server_player.h"
+#include "characters/enemies.h"
+#include "characters/player.h"
 
 class Snapshot {
 private:
