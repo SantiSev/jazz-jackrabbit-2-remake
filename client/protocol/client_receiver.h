@@ -7,5 +7,6 @@ private:
 
 public:
     explicit ClientReceiver(ClientProtocol& client_protocol);
+    void run() override;
     ~ClientReceiver();
 };
