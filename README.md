@@ -2,6 +2,8 @@
 
 ```
 How to run tests:
+Antes que nada, hace
+
  1. Hacer build del proyecto
  2. Entrar a la carpeta cmake-build-debug & ejectutar "./tests" 
     <br> En caso de ejecutar una sola prueba, debe ingresar el nombre de su prueba como argumento
@@ -17,5 +19,6 @@ sudo apt-get install \
 libsdl2-dev \
 libsdl2-image-dev \
 libsdl2-ttf-dev \
-libsdl2-mixer-dev cmake
+libsdl2-mixer-dev cmake \
+catch2
 ```
