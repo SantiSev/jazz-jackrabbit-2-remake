@@ -48,4 +48,5 @@ build/*
 .vscode
 cmake-build-debug
 build
+tests_bin
 CMakeFiles
