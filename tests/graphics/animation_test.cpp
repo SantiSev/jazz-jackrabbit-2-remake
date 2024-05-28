@@ -17,7 +17,7 @@ int main() {
     SDL_CreateWindowAndRenderer(800, 600, 0, &window, &renderer);
 
     IMG_Init(IMG_INIT_PNG);
-    AnimatedSprite sprite("/home/maxo/Desktop/taller/assets/jazz.png", {0, 1682, 218, 198},
+    AnimatedSprite sprite("/home/maxo/Desktop/taller/assets/jazz.png", {0, 420, 53, 50},
                           {0, 0, 800, 600}, 13, 1);
 
     while (running) {
@@ -32,7 +32,7 @@ int main() {
         sprite.draw(renderer);
 
         SDL_RenderPresent(renderer);
-        SDL_Delay(1);
+        SDL_Delay(60);
     }
     return 0;
 }
