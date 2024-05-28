@@ -60,7 +60,7 @@ void Match::run() {
 
             create_actual_snapshot(seconds, minutes);
             auto snapshot_message = std::make_shared<Message>(snapshot);
-            client_monitor.broadcastClients(snapshot_message);
+            //            client_monitor.broadcastClients(snapshot_message);
 
             if (match_has_ended) {
                 stop();
@@ -102,12 +102,6 @@ void Match::countdown_match(std::chrono::time_point<std::chrono::system_clock>& 
     }
 }
 
-void Match::add_player_to_game(Player& player) {
-    players_connected++;
-    player.set_id(players_connected);
-    players.push_back(player);
-}
-
 Player& Match::get_player(size_t id) {
     auto it = std::find_if(players.begin(), players.end(),
                            [id](const Player& player) { return player.get_id() == id; });
@@ -129,10 +123,19 @@ bool Match::has_match_ended() const { return match_has_ended; }
 
 std::string Match::get_match_name() const { return match_name; }
 
-void Match::stop() {
-    online = false;
-    event_queue->close();
-    send_end_message_to_players();
+void Match::add_player_to_game(const std::string& player_name, std::string character) {
+    players_connected++;
+    Player new_player(players_connected, player_name, std::move(character));
+    new_player.set_id(players_connected);
+    players.push_back(new_player);
+}
+
+void Match::add_client_to_match(TestClientServer* client, const std::string& player_name,
+                                std::string character) {
+    client_monitor.addClient(client->get_sender_queue());
+    client->change_receiver_queue(event_queue);
+    clients.push_back(client);
+    add_player_to_game(player_name, std::move(character));
 }
 
 size_t Match::get_num_players() { return players.size(); }
@@ -147,8 +150,12 @@ void Match::send_end_message_to_players() {
     //        client_monitor.broadcastClients(game_ended_message);
 }
 
-void Match::add_client_to_match(TestClientServer* client) {
-    client_monitor.addClient(client->get_sender_queue());
-    client->change_receiver_queue(event_queue);
-    clients.push_back(client);
+void Match::stop() {
+    online = false;
+    event_queue->close();
+    send_end_message_to_players();
+    //    for (auto& client: clients) {
+    //        client->get_sender_queue()->close();
+    //    }
+    client_monitor.remove_all_queues();
 }

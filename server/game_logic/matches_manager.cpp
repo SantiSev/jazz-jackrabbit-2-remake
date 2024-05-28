@@ -52,17 +52,15 @@ void MatchesManager::create_new_match(TestClientServer* client,
     //    matches.insert({matches_number, match});
     //    match->start();
     //    Player player(0, nueva_partida->get_name(), nueva_partida->get_character_name());
+    //    match->add_client_to_match(client);
     //    match->add_player_to_game(player);
-
     //
     // reemplazar
     auto match = std::make_shared<Match>("map 1", "my first match", REQUIRED_PLAYERS_TO_START);
     //
     matches.insert({matches_number, match});
     match->start();
-    Player player(0, "pepe", "mago");
-    match->add_player_to_game(player);
-    match->add_client_to_match(client);
+    match->add_client_to_match(client, "pepe", "mago");
     //
 }
 
@@ -121,15 +119,18 @@ std::vector<matchesDTO> MatchesManager::return_matches_lists() {
 }
 
 void MatchesManager::add_player_to_game(Player& player, size_t match_id) {
-    auto it = matches.find(match_id);
-    if (it != matches.end()) {
-        it->second->add_player_to_game(player);
-    }
+    //    auto it = matches.find(match_id);
+    //    if (it != matches.end()) {
+    //        it->second->add_player_to_game(player, std::string());
+    //    }
 }
 
 void MatchesManager::add_new_client(Socket client_socket) {
+    clients_connected++;
     auto client = new TestClientServer(std::move(client_socket), waiting_server_queue);
     client->start();
+    //    auto message =std::make_shared<ConnectedMessage>(clients_connected);  // le mando su id
+    //    para que lo guarde client->get_sender_queue()->push(message);
     clients.push_back(client);
 }
 
