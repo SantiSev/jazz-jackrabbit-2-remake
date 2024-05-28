@@ -8,10 +8,10 @@
 class ServerSender: public Thread {
 private:
     ServerProtocol& server_protocol;
-    Queue<int>& queue;
+    Queue<std::shared_ptr<Message>>& queue;
 
 public:
-    ServerSender(ServerProtocol& protocol, Queue<int>& queue);
+    ServerSender(ServerProtocol& protocol, Queue<std::shared_ptr<Message>>& queue);
 
     bool is_dead();
 

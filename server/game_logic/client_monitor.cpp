@@ -33,3 +33,8 @@ void ClientMonitor::removeQueue(
         clientQueues.erase(queue);
     }
 }
+
+void ClientMonitor::remove_all_queues() {
+    std::lock_guard<std::mutex> lock(mutex);
+    clientQueues.clear();
+}

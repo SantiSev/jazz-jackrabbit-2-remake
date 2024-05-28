@@ -15,7 +15,6 @@ void MatchesManager::run() {
     try {
         Socket skt("8081");
         add_new_client(std::move(skt));
-        //        auto client = new TestClientServer(std::move(skt), waiting_server_queue);
         create_new_match(clients.front(), nullptr);
         std::shared_ptr<Message> client_message;
         while (online) {
@@ -27,8 +26,6 @@ void MatchesManager::run() {
 
 
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            //                        Player player(0, "jorge", "guerrero");
-            //                        add_player_to_game(player, matches_number);
         }
         clear_all_waiting_clients();
         stop_all_matches();
@@ -52,17 +49,15 @@ void MatchesManager::create_new_match(TestClientServer* client,
     //    matches.insert({matches_number, match});
     //    match->start();
     //    Player player(0, nueva_partida->get_name(), nueva_partida->get_character_name());
+    //    match->add_client_to_match(client);
     //    match->add_player_to_game(player);
-
     //
     // reemplazar
     auto match = std::make_shared<Match>("map 1", "my first match", REQUIRED_PLAYERS_TO_START);
     //
     matches.insert({matches_number, match});
     match->start();
-    Player player(0, "pepe", "mago");
-    match->add_player_to_game(player);
-    match->add_client_to_match(client);
+    match->add_client_to_match(client, "pepe", "mago");
     //
 }
 
@@ -100,7 +95,7 @@ void MatchesManager::stop_all_matches() {
             break;
         it->second->stop();
         it->second->join();
-        it->second.reset();
+        //        it->second.reset();
         matches.erase(it);
     }
 }
@@ -121,16 +116,18 @@ std::vector<matchesDTO> MatchesManager::return_matches_lists() {
 }
 
 void MatchesManager::add_player_to_game(Player& player, size_t match_id) {
-    auto it = matches.find(match_id);
-    if (it != matches.end()) {
-        it->second->add_player_to_game(player);
-    }
+    //    auto it = matches.find(match_id);
+    //    if (it != matches.end()) {
+    //        it->second->add_player_to_game(player, std::string());
+    //    }
 }
 
 void MatchesManager::add_new_client(Socket client_socket) {
     clients_connected++;
     auto client = new TestClientServer(std::move(client_socket), waiting_server_queue);
     client->start();
+    //    auto message =std::make_shared<ConnectedMessage>(clients_connected);  // le mando su id
+    //    para que lo guarde client->get_sender_queue()->push(message);
     clients.push_back(client);
 }
 

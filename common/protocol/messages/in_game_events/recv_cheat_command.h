@@ -1,3 +1,5 @@
+#ifndef _RECV_CHEAT_COMMAND_H
+#define _RECV_CHEAT_COMMAND_H
 #include <cstdint>
 
 #include "../common_message.h"
@@ -12,3 +14,5 @@ public:
     void run() override;
     ~RecvCheatCommandMessage();
 };
+
+#endif

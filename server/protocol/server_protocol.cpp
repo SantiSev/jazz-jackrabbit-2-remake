@@ -6,42 +6,42 @@
 
 ServerProtocol::ServerProtocol(Socket&& skt): CommonProtocol(std::move(skt)) {}
 
-std::unique_ptr<RecvCommandMessage> ServerProtocol::recv_command() {
-    const uint16_t id_player = recv_two_bytes();
-    const uint8_t id_command = recv_one_byte();
-    return std::make_unique<RecvCommandMessage>(id_player, id_command);
+std::shared_ptr<RecvCommandMessage> ServerProtocol::recv_command() {
+    uint16_t id_player = recv_two_bytes();
+    uint8_t id_command = recv_one_byte();
+    return std::make_shared<RecvCommandMessage>(id_player, id_command);
 }
 
-std::unique_ptr<RecvCheatCommandMessage> ServerProtocol::recv_cheat_command() {
+std::shared_ptr<RecvCheatCommandMessage> ServerProtocol::recv_cheat_command() {
     const uint16_t id_player = recv_two_bytes();
     const uint8_t id_cheat_command = recv_one_byte();
-    return std::make_unique<RecvCheatCommandMessage>(id_player, id_cheat_command);
+    return std::make_shared<RecvCheatCommandMessage>(id_player, id_cheat_command);
 }
 
-std::unique_ptr<RecvLeaveMatchMessage> ServerProtocol::recv_unjoin_match() {
+std::shared_ptr<RecvLeaveMatchMessage> ServerProtocol::recv_unjoin_match() {
     const uint16_t id_player = recv_two_bytes();
-    return std::make_unique<RecvLeaveMatchMessage>(id_player);
+    return std::make_shared<RecvLeaveMatchMessage>(id_player);
 }
 
-std::unique_ptr<RecvCreateGameMessage> ServerProtocol::recv_create_game() {
+std::shared_ptr<RecvCreateGameMessage> ServerProtocol::recv_create_game() {
     const uint16_t id_player = recv_two_bytes();
     std::string match_name = recv_string();
-    return std::make_unique<RecvCreateGameMessage>(id_player, match_name);
+    return std::make_shared<RecvCreateGameMessage>(id_player, match_name);
 }
 
-std::unique_ptr<RecvJoinMatchMessage> ServerProtocol::recv_join_match() {
+std::shared_ptr<RecvJoinMatchMessage> ServerProtocol::recv_join_match() {
     const uint16_t id_player = recv_two_bytes();
     const uint16_t id_match = recv_two_bytes();
     const uint8_t player_character = recv_one_byte();
-    return std::make_unique<RecvJoinMatchMessage>(id_player, id_match, player_character);
+    return std::make_shared<RecvJoinMatchMessage>(id_player, id_match, player_character);
 }
 
-std::unique_ptr<Message> ServerProtocol::recv_message() {
+std::shared_ptr<Message> ServerProtocol::recv_message() {
     const uint16_t header = recv_two_bytes();
 
     switch (header) {
         case CLOSE_CONNECTION:
-            return std::make_unique<CloseConnectionMessage>();
+            return std::make_shared<CloseConnectionMessage>();
         case RECV_COMMAND:
             return recv_command();
         case RECV_CHEAT_COMMAND:
@@ -53,7 +53,7 @@ std::unique_ptr<Message> ServerProtocol::recv_message() {
         case RECV_JOIN_MATCH:
             return recv_join_match();
         default:
-            return std::make_unique<InvalidMessage>();
+            return std::make_shared<InvalidMessage>();
     }
 }
 
@@ -78,7 +78,7 @@ void ServerProtocol::send_finish_match() {
         return;
 }
 
-void ServerProtocol::send_active_games(uint8_t length, std::vector<Match>& matches) {
+void ServerProtocol::send_active_games(uint8_t length, std::vector<Match_str>& matches) {
     uint16_t header = htons(SEND_ACTIVE_GAMES);
     skt.sendall(&header, sizeof(header), &was_closed);
     if (was_closed)

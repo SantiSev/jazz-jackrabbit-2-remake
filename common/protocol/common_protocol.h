@@ -1,3 +1,5 @@
+#ifndef _COMMON_PROTOCOL_H
+#define _COMMON_PROTOCOL_H
 #include <cstdint>
 #include <string>
 
@@ -30,3 +32,5 @@ public:
     CommonProtocol(const std::string& hostname, const std::string& servname);
     ~CommonProtocol();
 };
+
+#endif

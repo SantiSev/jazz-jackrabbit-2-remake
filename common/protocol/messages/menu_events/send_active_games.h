@@ -1,10 +1,13 @@
+#ifndef SEND_ACTIVE_GAMES_H
+#define SEND_ACTIVE_GAMES_H
+
 #include <cstdint>
 #include <string>
 #include <vector>
 
 #include "../common_message.h"
 
-struct Match {
+struct Match_str {
     std::string name;
     // cppcheck-suppress unusedStructMember
     uint8_t players;
@@ -12,10 +15,13 @@ struct Match {
 
 class SendActiveGamesMessage: public Message {
 private:
-    std::vector<Match> matches;
+    std::vector<Match_str> matches;
 
 public:
-    explicit SendActiveGamesMessage(std::vector<Match>&& matches);
     void run() override;
     ~SendActiveGamesMessage();
+
+    explicit SendActiveGamesMessage(const std::vector<Match_str>& vector1);
 };
+
+#endif

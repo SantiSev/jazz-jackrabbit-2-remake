@@ -5,7 +5,7 @@ class Message {
 public:
     Message();
     virtual void run() = 0;
-    ~Message();
+    virtual ~Message();
 };
 
 #endif

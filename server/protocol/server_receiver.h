@@ -8,10 +8,10 @@
 class ServerReceiver: public Thread {
 private:
     ServerProtocol& server_protocol;
-    Queue<std::unique_ptr<Message>>& queue;
+    Queue<std::shared_ptr<Message>>& queue;
 
 public:
-    ServerReceiver(ServerProtocol& protocol, Queue<std::unique_ptr<Message>>& queue);
+    ServerReceiver(ServerProtocol& protocol, Queue<std::shared_ptr<Message>>& queue);
 
     bool is_dead();
 

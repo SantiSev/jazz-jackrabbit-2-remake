@@ -1,6 +1,6 @@
 #include "./server_sender.h"
 
-ServerSender::ServerSender(ServerProtocol& protocol, Queue<int>& queue):
+ServerSender::ServerSender(ServerProtocol& protocol, Queue<std::shared_ptr<Message>>& queue):
         server_protocol(protocol), queue(queue) {}
 
 bool ServerSender::is_dead() { return _keep_running; }

@@ -32,5 +32,7 @@ public:
     ClientMonitor& operator=(const ClientMonitor&) = delete;
     // Destroyer
     ~ClientMonitor() = default;
+
+    void remove_all_queues();
 };
 #endif

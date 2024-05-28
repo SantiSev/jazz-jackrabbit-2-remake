@@ -46,7 +46,7 @@ public:
 
     Player& get_player(size_t id);
 
-    void add_player_to_game(Player& player);
+    void add_player_to_game(const std::string& player_name, std::string character);
 
     void create_actual_snapshot(int const seconds, int const minutes);
 
@@ -68,7 +68,8 @@ public:
 
     void send_end_message_to_players();
 
-    void add_client_to_match(TestClientServer* client);
+    void add_client_to_match(TestClientServer* client, const std::string& player_name,
+                             std::string character);
 };
 
 #endif

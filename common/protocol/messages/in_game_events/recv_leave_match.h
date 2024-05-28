@@ -1,3 +1,6 @@
+
+#ifndef _RECV_LEAVE_MATCH_H
+#define _RECV_LEAVE_MATCH_H
 #include <cstdint>
 
 #include "../common_message.h"
@@ -11,3 +14,5 @@ public:
     void run() override;
     ~RecvLeaveMatchMessage();
 };
+
+#endif
