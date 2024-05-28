@@ -12,6 +12,7 @@
 Match::Match(const std::string& map, std::string match_name, size_t required_players_setting):
         online(true),
         match_name(std::move(match_name)),
+        event_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()),
         players(),
         enemies(),
         required_players(required_players_setting),
@@ -20,11 +21,12 @@ Match::Match(const std::string& map, std::string match_name, size_t required_pla
 
 void Match::run() {
     try {
-        Player player(0, "pepe", "mago");
-        add_player_to_game(player);
+        //        Player player(0, "pepe", "mago");
+        //        add_player_to_game(player);
         while (online && players.size() != required_players) {
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-            std::cout << "Waiting for all players to connect to start..." << std::endl;
+            std::cout << "Match: " << match_name
+                      << " Waiting for all players to connect to start..." << std::endl;
         }
         auto startTime = std::chrono::system_clock::now();
         auto runTime = startTime;
@@ -57,7 +59,8 @@ void Match::run() {
             countdown_match(runTime, endTime, minutes, seconds);
 
             create_actual_snapshot(seconds, minutes);
-            client_monitor.broadcastClients(snapshot);
+            auto snapshot_message = std::make_shared<Message>(snapshot);
+            client_monitor.broadcastClients(snapshot_message);
 
             if (match_has_ended) {
                 stop();
@@ -141,11 +144,11 @@ int Match::get_minutes() { return snapshot.get_minutes(); }
 int Match::get_seconds() { return snapshot.get_seconds(); }
 
 void Match::send_end_message_to_players() {
-    //    set_snapshot_final_message();
-    //    broadcast();
+    //        client_monitor.broadcastClients(game_ended_message);
 }
 
 void Match::add_client_to_match(TestClientServer* client) {
     client_monitor.addClient(client->get_sender_queue());
+    client->change_receiver_queue(event_queue);
     clients.push_back(client);
 }

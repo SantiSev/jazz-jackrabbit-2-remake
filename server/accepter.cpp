@@ -15,6 +15,9 @@ void ServerAccepter::run() {
         matches_manager.start();
         while (online) {
             Socket peer = skt.accept();
+            if (!online) {
+                break;
+            }
             matches_manager.add_new_client(std::move(peer));
         }
     } catch (const std::exception& err) {
@@ -28,4 +31,6 @@ void ServerAccepter::stop() {
     online = false;
     skt.shutdown(2);
     skt.close();
+    matches_manager.stop();
+    matches_manager.join();
 }

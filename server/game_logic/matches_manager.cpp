@@ -6,11 +6,17 @@
 
 #include "../../common/common_socket.h"
 
-MatchesManager::MatchesManager() {}
+MatchesManager::MatchesManager():
+        online(true),
+        matches_number(0),
+        waiting_server_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()) {}
 
 void MatchesManager::run() {
     try {
-        add_match("my first match");
+        Socket skt("8081");
+        add_new_client(std::move(skt));
+        //        auto client = new TestClientServer(std::move(skt), waiting_server_queue);
+        create_new_match(clients.front(), nullptr);
         std::shared_ptr<Message> client_message;
         while (online) {
             check_matches_status();
@@ -24,7 +30,9 @@ void MatchesManager::run() {
             //                        Player player(0, "jorge", "guerrero");
             //                        add_player_to_game(player, matches_number);
         }
+        clear_all_waiting_clients();
         stop_all_matches();
+        waiting_server_queue->close();
     } catch (const std::exception& err) {
         if (online) {
             std::cerr << "An exception was caught in gameloop: " << err.what() << "\n";
@@ -33,25 +41,39 @@ void MatchesManager::run() {
     }
 }
 
-void MatchesManager::create_new_match(TestClientServer client, std::shared_ptr<Message> message) {
+void MatchesManager::create_new_match(TestClientServer* client,
+                                      const std::shared_ptr<Message>& message) {
     matches_number++;
-    // deberia ser así:
-    // std::shared_ptr<NuevaPartida> nueva_partida =
-    // std::dynamic_pointer_cast<NuevaPartida>(message);
-    // auto match = std::make_shared<Match>(nueva_partida->get_map_name(),
-    // nueva_partida->get_name(),nueva_partida->get_required_players());
+    // todo deberia ser así:
+    //     std::shared_ptr<NuevaPartida> nueva_partida =
+    //     std::dynamic_pointer_cast<NuevaPartida>(message);
+    //     auto match = std::make_shared<Match>(nueva_partida->get_map_name(),
+    //     nueva_partida->get_name(),nueva_partida->get_required_players());
+    //    matches.insert({matches_number, match});
+    //    match->start();
+    //    Player player(0, nueva_partida->get_name(), nueva_partida->get_character_name());
+    //    match->add_player_to_game(player);
+
     //
+    // reemplazar
     auto match = std::make_shared<Match>("map 1", "my first match", REQUIRED_PLAYERS_TO_START);
+    //
     matches.insert({matches_number, match});
     match->start();
-    match->add_client_to_match(&client);
+    Player player(0, "pepe", "mago");
+    match->add_player_to_game(player);
+    match->add_client_to_match(client);
+    //
 }
 
-void MatchesManager::add_match(const std::string& name) {
-    matches_number++;
-    auto gameloop = std::make_shared<Match>("map 1", "my first match", REQUIRED_PLAYERS_TO_START);
-    matches.insert({matches_number, gameloop});
-    gameloop->start();
+void MatchesManager::join_match(TestClientServer* client, const std::shared_ptr<Message>& message) {
+    //    auto join_match = std::dynamic_pointer_cast<JoinMatch>(message);
+    //    auto it = matches.find(join_match->get_id());
+    //    if (it != matches.end()) {
+    //        it->second->add_client_to_match(client);
+    //        Player player(0, join_match->get_name(), join_match->get_character_name());
+    //        it->second->add_player_to_game(player);
+    //    }
 }
 
 void MatchesManager::check_matches_status() {
@@ -111,4 +133,19 @@ void MatchesManager::add_new_client(Socket client_socket) {
     clients.push_back(client);
 }
 
+void MatchesManager::send_match_lists(TestClientServer* client) {
+    // todo deberia ser así
+    // client->get_sender_queue()->push(return_matches_lists());
+}
+
 void MatchesManager::stop() { online = false; }
+
+void MatchesManager::clear_all_waiting_clients() {
+    for (auto& client: clients) {
+        client->stop();
+    }
+    for (auto& client: clients) {
+        delete client;
+    }
+    clients.clear();
+}

@@ -14,7 +14,7 @@ class TestClientServer {
 private:
     Socket skt;
     std::shared_ptr<Queue<std::shared_ptr<Message>>>& event_queue;
-    std::shared_ptr<Queue<Snapshot>> snapshot_queue;
+    std::shared_ptr<Queue<std::shared_ptr<Message>>> snapshot_queue;
 
 public:
     explicit TestClientServer(Socket skt,
@@ -29,9 +29,11 @@ public:
 
     std::shared_ptr<Queue<std::shared_ptr<Message>>> get_receiver_queue();
 
-    std::shared_ptr<Queue<Snapshot>> get_sender_queue();
+    std::shared_ptr<Queue<std::shared_ptr<Message>>> get_sender_queue();
 
     void start();
+
+    void stop();
 };
 
 

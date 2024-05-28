@@ -15,18 +15,19 @@
 
 class ClientMonitor {
 private:
-    std::list<std::reference_wrapper<std::shared_ptr<Queue<Snapshot>>>> clientQueues;
+    std::list<std::reference_wrapper<std::shared_ptr<Queue<std::shared_ptr<Message>>>>>
+            clientQueues;
     std::mutex mutex;
 
 public:
     // Constructor
     ClientMonitor();
     // Add a client to the list of clients (Thread safe)
-    void addClient(std::shared_ptr<Queue<Snapshot>> queue);
+    void addClient(std::shared_ptr<Queue<std::shared_ptr<Message>>> queue);
     // Broadcast message to all clients (Thread safe), pushing (Blocking) the message to the queue
     // of each client
-    void broadcastClients(const Snapshot& gameMessage);
-    void removeQueue(std::shared_ptr<Queue<Snapshot>> queueToRemove);
+    void broadcastClients(const std::shared_ptr<Message>& gameMessage);
+    void removeQueue(std::shared_ptr<Queue<std::shared_ptr<Message>>> queueToRemove);
 
     ClientMonitor(const ClientMonitor&) = delete;
     ClientMonitor& operator=(const ClientMonitor&) = delete;

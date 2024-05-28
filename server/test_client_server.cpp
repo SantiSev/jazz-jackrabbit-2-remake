@@ -11,8 +11,20 @@ void TestClientServer::start() {
     // todo sender start
 }
 
+void TestClientServer::stop() {
+    skt.shutdown(2);
+    skt.close();
+    // todo receiver stop
+    // todo sender stop
+    // join
+    // join
+    // deletes
+}
+
 std::shared_ptr<Queue<std::shared_ptr<Message>>> TestClientServer::get_receiver_queue() {
     return event_queue;
 }
 
-std::shared_ptr<Queue<Snapshot>> TestClientServer::get_sender_queue() { return snapshot_queue; }
+std::shared_ptr<Queue<std::shared_ptr<Message>>> TestClientServer::get_sender_queue() {
+    return snapshot_queue;
+}

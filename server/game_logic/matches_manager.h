@@ -13,17 +13,16 @@
 
 class MatchesManager: public Thread {
 private:
+    bool online = true;
+    size_t matches_number = 0;
     std::map<size_t, std::shared_ptr<Match>> matches;
     std::list<TestClientServer*> clients;
     std::shared_ptr<Queue<std::shared_ptr<Message>>> waiting_server_queue;
-    bool online = true;
-    size_t matches_number = 0;
 
 public:
     MatchesManager();
 
     void run() override;
-    void add_match(const std::string& name);
     void stop() override;
     ~MatchesManager() = default;
 
@@ -34,9 +33,15 @@ public:
 
     std::vector<matchesDTO> return_matches_lists();
 
-    void create_new_match(TestClientServer client, std::shared_ptr<Message> message);
+    void create_new_match(TestClientServer* client, const std::shared_ptr<Message>& message);
 
     void add_new_client(Socket client_socket);
+
+    void send_match_lists(TestClientServer* client);
+
+    void clear_all_waiting_clients();
+
+    void join_match(TestClientServer* client, const std::shared_ptr<Message>& message);
 };
 
 
