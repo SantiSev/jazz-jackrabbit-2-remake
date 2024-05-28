@@ -26,6 +26,12 @@ void Button::draw(SDL_Renderer* renderer) {
     label.draw(renderer);
 }
 
+void Button::set_position(int x, int y) {
+    rect.x = x;
+    rect.y = y;
+    label.set_position(x, y);
+}
+
 bool Button::is_intersecting(SDL_Point& point) { return SDL_PointInRect(&point, &this->rect); }
 
 bool Button::is_intersecting(SDL_Rect& other_rect) {

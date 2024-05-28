@@ -14,6 +14,11 @@ void Sprite::draw(SDL_Renderer* renderer) {
     SDL_DestroyTexture(texture);
 }
 
+void Sprite::set_position(int x, int y) {
+    d_rect.x = x;
+    d_rect.y = y;
+}
+
 bool Sprite::is_intersecting(SDL_Point& point) { return SDL_PointInRect(&point, &d_rect); }
 
 bool Sprite::is_intersecting(SDL_Rect& rect) { return SDL_HasIntersection(&d_rect, &rect); }

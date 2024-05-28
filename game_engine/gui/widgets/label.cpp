@@ -23,6 +23,11 @@ void Label::draw(SDL_Renderer* renderer) {
     SDL_DestroyTexture(texture);
 }
 
+void Label::set_position(int x, int y) {
+    rect.x = x;
+    rect.y = y;
+}
+
 bool Label::is_intersecting(SDL_Point& point) {
     SDL_Rect point_rect = {point.x, point.y, 1, 1};
     return SDL_HasIntersection(&rect, &point_rect);

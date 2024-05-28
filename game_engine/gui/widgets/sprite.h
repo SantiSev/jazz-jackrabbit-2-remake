@@ -20,6 +20,8 @@ public:
 
     void draw(SDL_Renderer* renderer) override;
 
+    void set_position(int x, int y) override;
+
     bool is_intersecting(SDL_Point&) override;
     bool is_intersecting(SDL_Rect&) override;
 
