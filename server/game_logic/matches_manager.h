@@ -14,6 +14,7 @@
 class MatchesManager: public Thread {
 private:
     bool online = true;
+    size_t clients_connected = 0;
     size_t matches_number = 0;
     std::map<size_t, std::shared_ptr<Match>> matches;
     std::list<TestClientServer*> clients;

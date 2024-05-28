@@ -128,6 +128,7 @@ void MatchesManager::add_player_to_game(Player& player, size_t match_id) {
 }
 
 void MatchesManager::add_new_client(Socket client_socket) {
+    clients_connected++;
     auto client = new TestClientServer(std::move(client_socket), waiting_server_queue);
     client->start();
     clients.push_back(client);
