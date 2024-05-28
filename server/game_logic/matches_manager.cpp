@@ -15,7 +15,6 @@ void MatchesManager::run() {
     try {
         Socket skt("8081");
         add_new_client(std::move(skt));
-        //        auto client = new TestClientServer(std::move(skt), waiting_server_queue);
         create_new_match(clients.front(), nullptr);
         std::shared_ptr<Message> client_message;
         while (online) {
@@ -27,8 +26,6 @@ void MatchesManager::run() {
 
 
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            //                        Player player(0, "jorge", "guerrero");
-            //                        add_player_to_game(player, matches_number);
         }
         clear_all_waiting_clients();
         stop_all_matches();
