@@ -8,7 +8,7 @@
 #include "../common/common_queue.h"
 #include "../common/common_socket.h"
 #include "../common/message/message.h"
-#include "game_logic/snapshot.h"
+#include "../common/message/snapshot.h"
 
 class TestClientServer {
 private:

@@ -2,7 +2,7 @@
 #define TP_FINAL_MESSAGE_H
 #include <cstdio>
 
-#include "../../server/game_logic/snapshot.h"
+#include "snapshot.h"
 
 class Message {
 private:

@@ -9,8 +9,7 @@
 
 #include "../../common/common_queue.h"
 #include "../../common/message/message.h"
-
-#include "snapshot.h"
+#include "../../common/message/snapshot.h"
 
 
 class ClientMonitor {

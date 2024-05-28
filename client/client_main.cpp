@@ -10,7 +10,7 @@
 //
 // using namespace SDL2pp;
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* argv[]) {
     try {
         if (argc == 3) {
             const std::string hostname = argv[1];

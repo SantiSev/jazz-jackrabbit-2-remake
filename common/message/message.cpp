@@ -1,4 +1,6 @@
 #include "message.h"
+
+#include "snapshot.h"
 #define SNAPSHOT_ID 10
 
 Message::Message(size_t id): id(id) {}

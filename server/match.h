@@ -10,10 +10,10 @@
 #include "../common/common_queue.h"
 #include "../common/common_thread.h"
 #include "../common/message/message.h"
+#include "../common/message/snapshot.h"
 #include "game_logic/characters/enemies.h"
 #include "game_logic/characters/player.h"
 #include "game_logic/client_monitor.h"
-#include "game_logic/snapshot.h"
 
 #include "test_client_server.h"
 

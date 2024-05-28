@@ -3,9 +3,9 @@
 
 #include <vector>
 
-#include "../../common/common_dto.h"
-#include "characters/enemies.h"
-#include "characters/player.h"
+#include "../../server/game_logic/characters/enemies.h"
+#include "../../server/game_logic/characters/player.h"
+#include "../common_dto.h"
 
 class Snapshot {
 private:
