@@ -33,7 +33,6 @@ const std::string CommonProtocol::recv_string() {
     uint8_t length;
 
     skt.recvall(&length, sizeof(length), &was_closed);
-    length = ntohs(length);
 
     std::vector<char> buf(length);
     skt.recvall(buf.data(), length, &was_closed);
