@@ -27,7 +27,7 @@ const uint8_t TAUNT = 0x10;
 
 // Gameloop
 const size_t MAX_EVENTS_PER_LOOP = 4;
-const size_t STARTING_MATCH_TIME = 300;
+const size_t STARTING_MATCH_TIME = 20;
 const size_t REQUIRED_PLAYERS_TO_START = 1;
 
 #endif

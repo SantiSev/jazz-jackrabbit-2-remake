@@ -62,18 +62,19 @@ void Match::run() {
             auto snapshot_message = std::make_shared<SendGameStateMessage>();
             //            client_monitor.broadcastClients(snapshot_message);
 
-            if (match_has_ended) {
-                stop();
-            }
-
             auto frameEnd = std::chrono::system_clock::now();
             delta = frameEnd - frameStart;
+
+            if (match_has_ended) {
+                break;
+            }
 
             if (delta.count() < FPSMAX) {
                 std::this_thread::sleep_for(
                         std::chrono::milliseconds(static_cast<int>(FPSMAX - delta.count())));
             }
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     } catch (const std::exception& err) {
         if (online) {
             std::cerr << "An exception was caught in gameloop: " << err.what() << "\n";
@@ -150,9 +151,17 @@ void Match::send_end_message_to_players() {
     //        client_monitor.broadcastClients(game_ended_message);
 }
 
+std::vector<size_t> Match::get_clients_ids() {  // DEVUELVE MAL LOS IDS CREO QUE SE ASIGNAN MAL
+                                                // SIEMPRE 1 CUANDO ENTRA A CADA PARTIDA.
+    std::vector<size_t> ids;
+    std::transform(clients.begin(), clients.end(), std::back_inserter(ids),
+                   [](auto& client) { return client->get_client_id(); });
+    return ids;
+}
+
 void Match::stop() {
     online = false;
-    event_queue->close();
+    //    event_queue->close();
     send_end_message_to_players();
     //    for (auto& client: clients) {
     //        client->get_sender_queue()->close();

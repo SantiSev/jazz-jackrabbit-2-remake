@@ -14,9 +14,6 @@ MatchesManager::MatchesManager():
 
 void MatchesManager::run() {
     try {
-        //        Socket skt("8081");
-        //        add_new_client(std::move(skt));
-        //        create_new_match(clients.front(), nullptr);
         while (online) {
             std::shared_ptr<Message> client_message = nullptr;
             check_matches_status();
@@ -34,7 +31,7 @@ void MatchesManager::run() {
         waiting_server_queue->close();
     } catch (const std::exception& err) {
         if (online) {
-            std::cerr << "An exception was caught in gameloop: " << err.what() << "\n";
+            std::cerr << "An exception was caught in matches manager: " << err.what() << "\n";
             stop();
         }
     }
@@ -79,7 +76,8 @@ void MatchesManager::check_matches_status() {
             std::cout << "Match " << it->first << " " << it->second->get_match_name()
                       << " has ended.\n";
             stop_finished_match(it->second.get());
-            it = matches.erase(it);
+            matches.erase(it);
+            break;
         } else {
             ++it;
         }
@@ -89,6 +87,20 @@ void MatchesManager::check_matches_status() {
 void MatchesManager::stop_finished_match(Match* match) {
     match->stop();
     match->join();
+    std::vector<size_t> ids = match->get_clients_ids();
+    for (auto id: ids) {
+        auto it = clients.begin();
+        while (it != clients.end()) {
+            if ((*it)->get_client_id() == id) {
+                (*it)->stop();
+                delete (*it);
+                clients.erase(it);
+                break;
+            } else {
+                ++it;
+            }
+        }
+    }
 }
 
 void MatchesManager::stop_all_matches() {
@@ -96,12 +108,6 @@ void MatchesManager::stop_all_matches() {
         match.second->stop();
         match.second->join();
     }
-    //        if (matches.empty())
-    //            break;
-    //        it->second->stop();
-    //        it->second->join();
-    //        it->second.reset();
-    //        matches.erase(it);
     matches.clear();
 }
 
@@ -134,16 +140,13 @@ void MatchesManager::add_new_client(Socket client_socket) {
             new ServerThreadManager(std::move(client_socket), waiting_server_queue, sender_queue);
     //    auto message =std::make_shared<ConnectedMessage>(clients_connected);  // le mando su id
     //    para que lo guarde client->get_sender_queue()->push(message);
+    client->set_client_id(clients_connected);
     clients.push_back(client);
-    create_new_match(clients.front(), nullptr);
+    create_new_match(clients.front(), nullptr);  // esto normalmente no se llama aca, quitar cuando
+                                                 // se conecte mediante mensajes.
+                                                 // ATENCION FALLA SI CONECTAN MAS DE UNO PORQUE SE
+                                                 // USA EL FRONT(). ES PARA TESTEAR
 }
-
-void MatchesManager::send_match_lists(TestClientServer* client) {
-    // todo deberia ser así
-    // client->get_sender_queue()->push(return_matches_lists());
-}
-
-void MatchesManager::stop() { online = false; }
 
 void MatchesManager::clear_all_waiting_clients() {
     for (auto& client: clients) {
@@ -152,3 +155,10 @@ void MatchesManager::clear_all_waiting_clients() {
     }
     clients.clear();
 }
+
+void MatchesManager::send_match_lists(TestClientServer* client) {
+    // todo deberia ser así
+    // client->get_sender_queue()->push(return_matches_lists());
+}
+
+void MatchesManager::stop() { online = false; }

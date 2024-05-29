@@ -71,6 +71,8 @@ public:
 
     void add_client_to_match(ServerThreadManager* client, const std::string& player_name,
                              std::string character);
+
+    std::vector<size_t> get_clients_ids();
 };
 
 #endif

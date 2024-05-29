@@ -10,12 +10,7 @@ ServerThreadManager::ServerThreadManager(
     sender.start();
 }
 
-ServerThreadManager::~ServerThreadManager() {
-    //    receiver.kill();
-    //    receiver.join();
-    //    sender.kill();
-    //    sender.join();
-}
+ServerThreadManager::~ServerThreadManager() {}
 
 std::shared_ptr<Queue<std::shared_ptr<Message>>> ServerThreadManager::get_receiver_queue() {
     return receiver.get_receiver_queue();
@@ -42,3 +37,7 @@ void ServerThreadManager::stop() {
     sender.kill();
     sender.join();
 }
+
+void ServerThreadManager::set_client_id(const size_t& new_id) { this->client_id = new_id; }
+
+size_t ServerThreadManager::get_client_id() const { return client_id; }
