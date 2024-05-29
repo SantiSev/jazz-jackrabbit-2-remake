@@ -1,6 +1,7 @@
 #ifndef TP_FINAL_SPRITE_H
 #define TP_FINAL_SPRITE_H
 
+#include <memory>
 #include <stdexcept>
 #include <string>
 
@@ -11,12 +12,13 @@
 
 class Sprite: public CanvasObject {
 private:
+    std::shared_ptr<SDL_Texture*> texture;
     SDL_Rect s_rect;
     SDL_Rect d_rect;
-    SDL_Surface* surface;
 
 public:
-    Sprite(const std::string& file, const SDL_Rect& s_react, const SDL_Rect& d_rect);
+    explicit Sprite(const std::shared_ptr<SDL_Texture*>& texture, SDL_Rect& s_react,
+                    SDL_Rect& d_rect);
 
     void draw(SDL_Renderer* renderer) override;
 
