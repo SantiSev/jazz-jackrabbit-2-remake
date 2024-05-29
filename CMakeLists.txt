@@ -62,8 +62,31 @@ add_executable(server server/server_main.cpp ${SOURCES_COMMON} ${SOURCES_SERVER}
 file(GLOB_RECURSE SOURCES_CLIENT_T "client/protocol/*.cpp")
 file(GLOB_RECURSE SOURCES_SERVER_T "server/protocol/*.cpp")
 
-add_executable(client_test tests/events/client_test.cpp ${SOURCES_COMMON} ${SOURCES_CLIENT_T} ${HEADERS_CLIENT} ${HEADERS_COMMON})
-add_executable(server_test tests/events/server_test.cpp ${SOURCES_COMMON} ${SOURCES_SERVER_T} ${HEADERS_SERVER} ${HEADERS_COMMON})
+add_executable(client_test_one tests/events/client_to_server/client_main.cpp 
+    ${SOURCES_COMMON} 
+    ${SOURCES_CLIENT_T} 
+    ${HEADERS_CLIENT} 
+    ${HEADERS_COMMON}
+)
+add_executable(server_test_one tests/events/client_to_server/server_main.cpp 
+    ${SOURCES_COMMON} 
+    ${SOURCES_SERVER_T} 
+    ${HEADERS_SERVER} 
+    ${HEADERS_COMMON}
+)
+
+add_executable(client_test_two tests/events/server_to_client/client_main.cpp 
+    ${SOURCES_COMMON} 
+    ${SOURCES_CLIENT_T} 
+    ${HEADERS_CLIENT} 
+    ${HEADERS_COMMON}
+)
+add_executable(server_test_two tests/events/server_to_client/server_main.cpp 
+    ${SOURCES_COMMON} 
+    ${SOURCES_SERVER_T} 
+    ${HEADERS_SERVER} 
+    ${HEADERS_COMMON}
+)
 
 if (DEFINED TSAN)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
