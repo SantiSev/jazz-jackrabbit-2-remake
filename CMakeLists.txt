@@ -47,46 +47,48 @@ file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine_*.h")
 file(GLOB_RECURSE SOURCES_CLIENT_T "client/protocol/*.cpp")
 file(GLOB_RECURSE SOURCES_SERVER_T "server/protocol/*.cpp")
 
-add_executable(client_test_one tests/events/client_to_server/client_main.cpp 
-    ${SOURCES_COMMON} 
-    ${SOURCES_CLIENT_T} 
-    ${HEADERS_CLIENT} 
-    ${HEADERS_COMMON}
-)
-add_executable(server_test_one tests/events/client_to_server/server_main.cpp 
-    ${SOURCES_COMMON} 
-    ${SOURCES_SERVER_T} 
-    ${HEADERS_SERVER} 
-    ${HEADERS_COMMON}
-)
+if(EVENTS)
+    add_executable(client_test_one tests/events/client_to_server/client_main.cpp 
+        ${SOURCES_COMMON} 
+        ${SOURCES_CLIENT_T} 
+        ${HEADERS_CLIENT} 
+        ${HEADERS_COMMON}
+    )
+    add_executable(server_test_one tests/events/client_to_server/server_main.cpp 
+        ${SOURCES_COMMON} 
+        ${SOURCES_SERVER_T} 
+        ${HEADERS_SERVER} 
+        ${HEADERS_COMMON}
+    )
 
-add_executable(client_test_two tests/events/server_to_client/client_main.cpp 
-    ${SOURCES_COMMON} 
-    ${SOURCES_CLIENT_T} 
-    ${HEADERS_CLIENT} 
-    ${HEADERS_COMMON}
-)
-add_executable(server_test_two tests/events/server_to_client/server_main.cpp 
-    ${SOURCES_COMMON} 
-    ${SOURCES_SERVER_T} 
-    ${HEADERS_SERVER} 
-    ${HEADERS_COMMON}
-)
+    add_executable(client_test_two tests/events/server_to_client/client_main.cpp 
+        ${SOURCES_COMMON} 
+        ${SOURCES_CLIENT_T} 
+        ${HEADERS_CLIENT} 
+        ${HEADERS_COMMON}
+    )
+    add_executable(server_test_two tests/events/server_to_client/server_main.cpp 
+        ${SOURCES_COMMON} 
+        ${SOURCES_SERVER_T} 
+        ${HEADERS_SERVER} 
+        ${HEADERS_COMMON}
+    )
+else()
+    add_executable(client client/client_main.cpp ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE}
+            game_engine/physics_engine/colision_object/colision_box.h
+            game_engine/physics_engine/colision_object/colision_object.cpp
+            game_engine/physics_engine/colision_object/colision_box.cpp
+            game_engine/physics_engine/area_object/area_object.cpp
+            game_engine/physics_engine/area_object/area_object.h
+    )
 
-add_executable(client client/client_main.cpp ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE}
-        game_engine/physics_engine/colision_object/colision_box.h
-        game_engine/physics_engine/colision_object/colision_object.cpp
-        game_engine/physics_engine/colision_object/colision_box.cpp
-        game_engine/physics_engine/area_object/area_object.cpp
-        game_engine/physics_engine/area_object/area_object.h
-)
+    add_executable(server server/server_main.cpp ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON})
+    target_link_libraries(client SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 
-add_executable(server server/server_main.cpp ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON})
-target_link_libraries(client SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
-
-# GRAPHICS TEST
-add_executable(graphics_test tests/graphics/graphics_test.cpp)
-target_link_libraries(graphics_test SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
+    # GRAPHICS TEST
+    add_executable(graphics_test tests/graphics/graphics_test.cpp)
+    target_link_libraries(graphics_test SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
+endif()
 
 if (DEFINED TSAN)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
