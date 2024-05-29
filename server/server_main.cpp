@@ -1,8 +1,6 @@
 #include <iostream>
 
-#include "./protocol/server_protocol.h"
-
-#define servname argv[1]
+#include "server.h"
 
 int main(int argc, const char* argv[]) {
     try {
@@ -11,15 +9,8 @@ int main(int argc, const char* argv[]) {
             return EXIT_FAILURE;
         }
 
-        Socket acceptor(servname);
-        ServerProtocol protocol(acceptor.accept());
-
-        while (!protocol.is_closed()) {
-            std::shared_ptr<Message> msg = protocol.recv_message();
-            if (protocol.is_closed())
-                break;
-            msg->run();
-        }
+        Server server(servname);
+        server.run();
 
     } catch (const std::exception& err) {
         std::cerr << "Something went wrong and an exception was caught: " << err.what() << "\n";
