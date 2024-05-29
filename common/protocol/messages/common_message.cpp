@@ -1,5 +1,7 @@
 #include "./common_message.h"
 
-Message::Message() {}
+Message::Message() = default;
 
-Message::~Message() {}
+void Message::run() {}
+
+Message::~Message() = default;

@@ -17,13 +17,15 @@ void MatchesManager::run() {
         //        Socket skt("8081");
         //        add_new_client(std::move(skt));
         //        create_new_match(clients.front(), nullptr);
-        std::shared_ptr<Message> client_message;
         while (online) {
+            std::shared_ptr<Message> client_message = nullptr;
             check_matches_status();
 
-            while (waiting_server_queue->try_pop(client_message)) {}
-
-            //            client_message->run();
+            while (waiting_server_queue->try_pop(client_message)) {
+                if (client_message != nullptr) {
+                    client_message->run();
+                }
+            }
 
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
@@ -90,14 +92,17 @@ void MatchesManager::stop_finished_match(Match* match) {
 }
 
 void MatchesManager::stop_all_matches() {
-    for (auto it = matches.begin(); it != matches.end();) {
-        if (matches.empty())
-            break;
-        it->second->stop();
-        it->second->join();
-        //        it->second.reset();
-        matches.erase(it);
+    for (auto& match: matches) {
+        match.second->stop();
+        match.second->join();
     }
+    //        if (matches.empty())
+    //            break;
+    //        it->second->stop();
+    //        it->second->join();
+    //        it->second.reset();
+    //        matches.erase(it);
+    matches.clear();
 }
 
 std::vector<matchesDTO> MatchesManager::return_matches_lists() {
@@ -141,9 +146,6 @@ void MatchesManager::send_match_lists(TestClientServer* client) {
 void MatchesManager::stop() { online = false; }
 
 void MatchesManager::clear_all_waiting_clients() {
-    //    for (auto& client: clients) {
-    //        client->kill();
-    //    }
     for (auto& client: clients) {
         client->stop();
         delete client;

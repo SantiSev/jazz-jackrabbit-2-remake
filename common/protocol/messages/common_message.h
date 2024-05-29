@@ -4,7 +4,7 @@
 class Message {
 public:
     Message();
-    virtual void run() = 0;
+    virtual void run();
     virtual ~Message();
 };
 
