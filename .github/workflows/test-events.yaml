@@ -10,14 +10,9 @@ jobs:
       - run: |
           mkdir build
           cd build && cmake .. && make
-          ./tests/events/client_to_server/run_tests.sh \ 
-            build/ \
-            tests/events/client_to_server/cases/ \ 
-            single-client \ 
-            no-valgrind 60 10
-          ./tests/events/client_to_server/compare_outputs.sh \ 
-            tests/events/client_to_server/cases/ \ 
-            tests/events/client_to_server/expected/
+          cd ..
+          ./tests/events/client_to_server/run_tests.sh build/ tests/events/client_to_server/cases/ single-client no-valgrind 60 10
+          ./tests/events/client_to_server/compare_outputs.sh tests/events/client_to_server/cases/ tests/events/client_to_server/expected/
           rm -r build
   test-events-server-to-client:
     runs-on: ubuntu-latest
@@ -26,12 +21,7 @@ jobs:
       - run: |
           mkdir build
           cd build && cmake .. && make
-          ./tests/events/server_to_client/run_tests.sh \ 
-            build/ \
-            tests/events/server_to_client/cases/ \ 
-            single-client \ 
-            no-valgrind 60 10
-          ./tests/events/server_to_client/compare_outputs.sh \ 
-            tests/events/server_to_client/cases/ \ 
-            tests/events/server_to_client/expected/
+          cd ..
+          ./tests/events/server_to_client/run_tests.sh build/ tests/events/server_to_client/cases/ single-client no-valgrind 60 10
+          ./tests/events/server_to_client/compare_outputs.sh tests/events/server_to_client/cases/ tests/events/server_to_client/expected/
           rm -r build
