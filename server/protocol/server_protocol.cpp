@@ -18,7 +18,7 @@ std::shared_ptr<RecvCheatCommandMessage> ServerProtocol::recv_cheat_command() {
     return std::make_shared<RecvCheatCommandMessage>(id_player, id_cheat_command);
 }
 
-std::shared_ptr<RecvLeaveMatchMessage> ServerProtocol::recv_unjoin_match() {
+std::shared_ptr<RecvLeaveMatchMessage> ServerProtocol::recv_leave_match() {
     const uint16_t id_player = recv_two_bytes();
     return std::make_shared<RecvLeaveMatchMessage>(id_player);
 }
@@ -47,7 +47,7 @@ std::shared_ptr<Message> ServerProtocol::recv_message() {
         case RECV_CHEAT_COMMAND:
             return recv_cheat_command();
         case RECV_LEAVE_MATCH:
-            return recv_unjoin_match();
+            return recv_leave_match();
         case RECV_CREATE_GAME:
             return recv_create_game();
         case RECV_JOIN_MATCH:
@@ -90,10 +90,10 @@ void ServerProtocol::send_active_games(uint8_t length, std::vector<Match>& match
         return;
 
     for (auto& match: matches) {
-        skt.sendall(&(match.players), sizeof(match.players), &was_closed);
+        skt.sendall(match.name.data(), match.name.length(), &was_closed);
         if (was_closed)
             return;
-        skt.sendall(match.name.data(), match.name.length(), &was_closed);
+        skt.sendall(&(match.players), sizeof(match.players), &was_closed);
         if (was_closed)
             return;
     }
