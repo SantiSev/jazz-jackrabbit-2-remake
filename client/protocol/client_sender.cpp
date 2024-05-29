@@ -1,6 +1,6 @@
 #include "./client_sender.h"
 
-ClientSender::ClientSender(ClientProtocol& client_protocol, Queue<int>& queue):
+ClientSender::ClientSender(ClientProtocol& client_protocol, Queue<std::shared_ptr<Message>>& queue):
         client_protocol(client_protocol), queue(queue) {}
 
 bool ClientSender::is_dead() { return _keep_running; }

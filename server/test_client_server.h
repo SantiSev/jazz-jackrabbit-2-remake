@@ -7,8 +7,8 @@
 
 #include "../common/common_queue.h"
 #include "../common/common_socket.h"
-#include "../common/message/message.h"
 #include "../common/message/snapshot.h"
+#include "../common/protocol/messages/common_message.h"
 
 class TestClientServer {
 private:

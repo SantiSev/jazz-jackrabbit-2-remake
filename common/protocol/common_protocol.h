@@ -31,6 +31,8 @@ public:
     explicit CommonProtocol(Socket&& skt);
     CommonProtocol(const std::string& hostname, const std::string& servname);
     ~CommonProtocol();
+
+    void force_shutdown();
 };
 
 #endif

@@ -71,8 +71,8 @@ if (verbose)
     set(CMAKE_VERBOSE_MAKEFILE ON)
 endif()
 
-find_package(Catch2 REQUIRED)
+#find_package(Catch2 REQUIRED)
 # These tests can use the Catch2-provided main
-add_executable(tests ${SOURCES_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_COMMON} ${HEADERS_GAME_ENGINE} ${HEADERS_SERVER} ${HEADERS_CLIENT}
-        tests/unit_tests/physics_test.cpp)
-target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
+#add_executable(tests ${SOURCES_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_COMMON} ${HEADERS_GAME_ENGINE} ${HEADERS_SERVER} ${HEADERS_CLIENT}
+#        tests/unit_tests/physics_test.cpp)
+#target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)

@@ -8,6 +8,7 @@
 #include <utility>
 
 #include "../common/common_constants.h"
+#include "../common/protocol/messages/in_game_events/send_game_state.h"
 
 Match::Match(const std::string& map, std::string match_name, size_t required_players_setting):
         online(true),
@@ -49,7 +50,6 @@ void Match::run() {
                 next_message->run();
             }
 
-
             //            if (get_player(1).get_health() != 0) {
             //                get_player(1).decrease_health(10);
             //                std::cout << get_player(1).get_health() << std::endl;
@@ -59,7 +59,7 @@ void Match::run() {
             countdown_match(runTime, endTime, minutes, seconds);
 
             create_actual_snapshot(seconds, minutes);
-            auto snapshot_message = std::make_shared<Message>(snapshot);
+            auto snapshot_message = std::make_shared<SendGameStateMessage>();
             //            client_monitor.broadcastClients(snapshot_message);
 
             if (match_has_ended) {
@@ -130,10 +130,10 @@ void Match::add_player_to_game(const std::string& player_name, std::string chara
     players.push_back(new_player);
 }
 
-void Match::add_client_to_match(TestClientServer* client, const std::string& player_name,
+void Match::add_client_to_match(ServerThreadManager* client, const std::string& player_name,
                                 std::string character) {
     client_monitor.addClient(client->get_sender_queue());
-    client->change_receiver_queue(event_queue);
+    client->set_receiver_queue(event_queue);
     clients.push_back(client);
     add_player_to_game(player_name, std::move(character));
 }

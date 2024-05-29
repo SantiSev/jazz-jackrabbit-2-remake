@@ -1,3 +1,6 @@
+#ifndef CLIENT_PROTOCOL
+#define CLIENT_PROTOCOL
+
 #include <memory>
 #include <string>
 
@@ -35,3 +38,5 @@ public:
 
     ~ClientProtocol();
 };
+
+#endif

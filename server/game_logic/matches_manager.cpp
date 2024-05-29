@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "../../common/common_socket.h"
+#include "../protocol/server_thread_manager.h"
 
 MatchesManager::MatchesManager():
         online(true),
@@ -13,22 +14,21 @@ MatchesManager::MatchesManager():
 
 void MatchesManager::run() {
     try {
-        Socket skt("8081");
-        add_new_client(std::move(skt));
-        create_new_match(clients.front(), nullptr);
+        //        Socket skt("8081");
+        //        add_new_client(std::move(skt));
+        //        create_new_match(clients.front(), nullptr);
         std::shared_ptr<Message> client_message;
         while (online) {
             check_matches_status();
 
             while (waiting_server_queue->try_pop(client_message)) {}
 
-            client_message->run();
-
+            //            client_message->run();
 
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
-        clear_all_waiting_clients();
         stop_all_matches();
+        clear_all_waiting_clients();
         waiting_server_queue->close();
     } catch (const std::exception& err) {
         if (online) {
@@ -38,7 +38,7 @@ void MatchesManager::run() {
     }
 }
 
-void MatchesManager::create_new_match(TestClientServer* client,
+void MatchesManager::create_new_match(ServerThreadManager* client,
                                       const std::shared_ptr<Message>& message) {
     matches_number++;
     // todo deberia ser así:
@@ -124,11 +124,13 @@ void MatchesManager::add_player_to_game(Player& player, size_t match_id) {
 
 void MatchesManager::add_new_client(Socket client_socket) {
     clients_connected++;
-    auto client = new TestClientServer(std::move(client_socket), waiting_server_queue);
-    client->start();
+    auto sender_queue = std::make_shared<Queue<std::shared_ptr<Message>>>();
+    auto client =
+            new ServerThreadManager(std::move(client_socket), waiting_server_queue, sender_queue);
     //    auto message =std::make_shared<ConnectedMessage>(clients_connected);  // le mando su id
     //    para que lo guarde client->get_sender_queue()->push(message);
     clients.push_back(client);
+    create_new_match(clients.front(), nullptr);
 }
 
 void MatchesManager::send_match_lists(TestClientServer* client) {
@@ -139,10 +141,11 @@ void MatchesManager::send_match_lists(TestClientServer* client) {
 void MatchesManager::stop() { online = false; }
 
 void MatchesManager::clear_all_waiting_clients() {
+    //    for (auto& client: clients) {
+    //        client->kill();
+    //    }
     for (auto& client: clients) {
         client->stop();
-    }
-    for (auto& client: clients) {
         delete client;
     }
     clients.clear();

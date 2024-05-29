@@ -43,4 +43,10 @@ const std::string CommonProtocol::recv_string() {
     return result;
 }
 
+void CommonProtocol::force_shutdown() {
+    was_closed = true;
+    skt.shutdown(2);
+    skt.close();
+}
+
 CommonProtocol::~CommonProtocol() {}

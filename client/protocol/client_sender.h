@@ -8,10 +8,10 @@
 class ClientSender: public Thread {
 private:
     ClientProtocol& client_protocol;
-    Queue<int>& queue;
+    Queue<std::shared_ptr<Message>>& queue;
 
 public:
-    explicit ClientSender(ClientProtocol& client_protocol, Queue<int>& queue);
+    explicit ClientSender(ClientProtocol& client_protocol, Queue<std::shared_ptr<Message>>& queue);
 
     bool is_dead();
 

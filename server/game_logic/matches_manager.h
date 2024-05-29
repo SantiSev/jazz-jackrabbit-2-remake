@@ -10,6 +10,7 @@
 
 #include "../../common/common_thread.h"
 #include "../match.h"
+#include "../protocol/server_thread_manager.h"
 
 class MatchesManager: public Thread {
 private:
@@ -17,7 +18,7 @@ private:
     size_t clients_connected = 0;
     size_t matches_number = 0;
     std::map<size_t, std::shared_ptr<Match>> matches;
-    std::list<TestClientServer*> clients;
+    std::list<ServerThreadManager*> clients;
     std::shared_ptr<Queue<std::shared_ptr<Message>>> waiting_server_queue;
 
 public:
@@ -34,7 +35,7 @@ public:
 
     std::vector<matchesDTO> return_matches_lists();
 
-    void create_new_match(TestClientServer* client, const std::shared_ptr<Message>& message);
+    void create_new_match(ServerThreadManager* client, const std::shared_ptr<Message>& message);
 
     void add_new_client(Socket client_socket);
 

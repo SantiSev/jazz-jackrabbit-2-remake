@@ -1,3 +1,5 @@
+#ifndef _SERVER_THREAD_MANAGER_H
+#define _SERVER_THREAD_MANAGER_H
 #include <memory>
 
 #include "./server_receiver.h"
@@ -10,7 +12,21 @@ private:
     ServerSender sender;
 
 public:
-    ServerThreadManager(Socket&& skt, Queue<std::shared_ptr<Message>>& receiver_queue,
-                        Queue<std::shared_ptr<Message>>& sender_queue);
+    ServerThreadManager(Socket&& skt,
+                        std::shared_ptr<Queue<std::shared_ptr<Message>>>& receiver_queue,
+                        std::shared_ptr<Queue<std::shared_ptr<Message>>>& sender_queue);
+
+    std::shared_ptr<Queue<std::shared_ptr<Message>>> get_receiver_queue();
+
+    std::shared_ptr<Queue<std::shared_ptr<Message>>> get_sender_queue();
+
+    void set_receiver_queue(std::shared_ptr<Queue<std::shared_ptr<Message>>> receiver_queue);
+
+    void set_sender_queue(std::shared_ptr<Queue<std::shared_ptr<Message>>> sender_queue);
+
+    void stop();
+
     ~ServerThreadManager();
 };
+
+#endif

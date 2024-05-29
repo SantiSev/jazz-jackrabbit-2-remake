@@ -14,6 +14,7 @@
 #include "game_logic/characters/enemies.h"
 #include "game_logic/characters/player.h"
 #include "game_logic/client_monitor.h"
+#include "protocol/server_thread_manager.h"
 
 #include "test_client_server.h"
 
@@ -25,7 +26,7 @@ private:
     std::string match_name;
     int match_time = STARTING_MATCH_TIME;
     std::shared_ptr<Queue<std::shared_ptr<Message>>> event_queue;  // shared with the receiver
-    std::list<TestClientServer*> clients;
+    std::list<ServerThreadManager*> clients;
     std::vector<Player> players;
     std::vector<Enemies> enemies;
     std::vector<std::string> items;
@@ -68,7 +69,7 @@ public:
 
     void send_end_message_to_players();
 
-    void add_client_to_match(TestClientServer* client, const std::string& player_name,
+    void add_client_to_match(ServerThreadManager* client, const std::string& player_name,
                              std::string character);
 };
 
