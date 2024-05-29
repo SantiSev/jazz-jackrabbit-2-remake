@@ -9,9 +9,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: |
           mkdir build
-          cd build && cmake ..
-          cd build && make
-          cd ..
+          cd build && cmake .. && make
           ./tests/events/client_to_server/run_tests.sh \ 
             build/ \
             tests/events/client_to_server/cases/ \ 
@@ -28,7 +26,6 @@ jobs:
       - run: |
           mkdir build
           cd build && cmake .. && make
-          cd ..
           ./tests/events/server_to_client/run_tests.sh \ 
             build/ \
             tests/events/server_to_client/cases/ \ 
