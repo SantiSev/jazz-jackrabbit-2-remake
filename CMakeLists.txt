@@ -43,9 +43,6 @@ file(GLOB_RECURSE HEADERS_SERVER "server/*.h" "server/game_logic/*.h" "server_*.
 file(GLOB_RECURSE HEADERS_COMMON "common/*.h" "common_*.h")
 file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine_*.h")
 
-add_executable(client client/client_main.cpp ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE} )
-add_executable(server server/server_main.cpp ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON})
-
 # COMMUNICATION - TESTS
 file(GLOB_RECURSE SOURCES_CLIENT_T "client/protocol/*.cpp")
 file(GLOB_RECURSE SOURCES_SERVER_T "server/protocol/*.cpp")
@@ -76,7 +73,7 @@ add_executable(server_test_two tests/events/server_to_client/server_main.cpp
     ${HEADERS_COMMON}
 )
 
-add_executable(client ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE}
+add_executable(client client/client_main.cpp ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE}
         game_engine/physics_engine/colision_object/colision_box.h
         game_engine/physics_engine/colision_object/colision_object.cpp
         game_engine/physics_engine/colision_object/colision_box.cpp
@@ -84,7 +81,7 @@ add_executable(client ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HE
         game_engine/physics_engine/area_object/area_object.h
 )
 
-add_executable(server ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON})
+add_executable(server server/server_main.cpp ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON})
 target_link_libraries(client SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 
 # GRAPHICS TEST
