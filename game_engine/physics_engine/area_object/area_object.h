@@ -7,10 +7,15 @@
 #include "../colision_object.h"
 
 
-class AreaObject: ColisionObject {
+class AreaObject: public ColisionObject {
+
+protected:
+    // TODO finish implementing this method
+    virtual void handle_colision(ColisionObject& other);
+
 public:
     AreaObject(int width, int height);
-    void handle_colision(ColisionObject& other) override;
+    void detect_colision(ColisionObject& other) override;
 };
 
 

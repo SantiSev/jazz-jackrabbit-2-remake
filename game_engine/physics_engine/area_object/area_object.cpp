@@ -8,8 +8,13 @@
 
 AreaObject::AreaObject(int width, int height): ColisionObject(width, height) {}
 
-void AreaObject::handle_colision(ColisionObject& other) {
-    if (is_in_area(other)) {
-        std::cout << "Item Colision detected!" << std::endl;
+void AreaObject::detect_colision(ColisionObject& other) {
+
+    if (is_touching_bool(other)) {
+        handle_colision(other);
     }
+}
+
+void AreaObject::handle_colision(ColisionObject& other) {
+    std::cout << "Collision handled" << std::endl;
 }

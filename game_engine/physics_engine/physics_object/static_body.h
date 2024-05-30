@@ -9,10 +9,12 @@
 
 class StaticBody: public ColisionObject {
 
-public:
-    StaticBody(int width, int height);
+protected:
+    void handle_colision(CollisionFace face, ColisionObject& other) const;
 
-    virtual void handle_colision(ColisionObject& other) override;
+public:
+    void detect_colision(ColisionObject& other) override;
+    StaticBody(int width, int height);
 };
 
 

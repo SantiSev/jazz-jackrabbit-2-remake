@@ -11,9 +11,16 @@ public:
     GameObject(): position(0, 0) {}
     GameObject(int x, int y): position(x, y) {}
 
-    virtual void setPosition(Vector2D newPosition) { position = newPosition; }
+    virtual Vector2D update_position(Vector2D newPosition) {
+        position = newPosition;
+        return position;
+    }
+    virtual Vector2D update_position(int x, int y) {
+        position = Vector2D(x, y);
+        return position;
+    }
 
-    Vector2D getPosition() const { return position; }
+    Vector2D get_position() const { return position; }
 };
 
 

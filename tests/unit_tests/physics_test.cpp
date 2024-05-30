@@ -11,7 +11,7 @@ TEST_CASE("CharacterBody Initialization", "[CharacterBody]") {
 
     REQUIRE(character.getWidth() == 50);
     REQUIRE(character.getHeight() == 100);
-    REQUIRE(character.getPosition() == Vector2D(0, 0));
+    REQUIRE(character.get_position() == Vector2D(0, 0));
     REQUIRE(character.getVelocity() == Vector2D(0, 0));
     REQUIRE(character.getAcceleration() == Vector2D(0, 0));
 }
@@ -21,7 +21,7 @@ TEST_CASE("CharacterBody with default velocity & acceleration values", "[Charact
 
     REQUIRE(character.getWidth() == 50);
     REQUIRE(character.getHeight() == 100);
-    REQUIRE(character.getPosition() == Vector2D(0, 0));
+    REQUIRE(character.get_position() == Vector2D(0, 0));
     REQUIRE(character.getVelocity() == Vector2D(10, 10));
     REQUIRE(character.getAcceleration() == Vector2D(20, 20));
 }

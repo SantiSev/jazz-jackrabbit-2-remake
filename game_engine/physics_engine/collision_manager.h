@@ -5,6 +5,7 @@
 #ifndef COLLISION_MANAGER_H
 #define COLLISION_MANAGER_H
 
+#include <unordered_set>
 #include <vector>
 
 #include "../math/vector2D.h"
@@ -18,7 +19,6 @@ private:
     int gridHeight;
     std::vector<std::vector<ColisionObject*>> grid;  // grid: [x][y] stores a collisionObject
 
-    Vector2D getCellCoords(int x, int y) const { return Vector2D(x, y); }
 
     bool isValidCell(int x, int y) const {
         return x >= 0 && x < gridWidth && y >= 0 && y < gridHeight;
@@ -27,9 +27,10 @@ private:
 public:
     CollisionManager(int levelWidth, int levelHeight);
 
+    ColisionObject* getColisionObjectAt(int x, int y) const;
     void addObject(ColisionObject* obj);
     void removeObject(ColisionObject* obj);
-    void updateObject(ColisionObject* obj, const Vector2D& oldPosition);
+    void updateObject(ColisionObject* obj);
     void clear();
 };
 
