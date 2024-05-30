@@ -7,8 +7,8 @@
 
 #define SEND_ACTIVE_GAMES 0x0200
 
-#include "../common_message.h"
 #include "../common_dto.h"
+#include "../common_message.h"
 
 class SendActiveGamesMessage: public Message {
 private:
