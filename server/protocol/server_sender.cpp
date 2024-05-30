@@ -1,8 +1,7 @@
 #include "./server_sender.h"
 
-ServerSender::ServerSender(ServerProtocol& protocol,
-                           std::shared_ptr<Queue<std::shared_ptr<Message>>>& queue):
-        server_protocol(protocol), queue(queue) {}
+ServerSender::ServerSender(ServerProtocol& protocol):
+        server_protocol(protocol), queue(std::make_shared<Queue<std::shared_ptr<Message>>>()) {}
 
 bool ServerSender::is_dead() { return _keep_running; }
 
@@ -16,11 +15,11 @@ void ServerSender::run() {
     }
 }
 
-std::shared_ptr<Queue<std::shared_ptr<Message>>> ServerSender::get_sender_queue() { return queue; }
+std::shared_ptr<Queue<std::shared_ptr<Message>>>& ServerSender::get_sender_queue() { return queue; }
 
 void ServerSender::change_sender_queue(
         const std::shared_ptr<Queue<std::shared_ptr<Message>>>& new_queue) {
     this->queue = new_queue;
 }
 
-ServerSender::~ServerSender() {}
+ServerSender::~ServerSender() = default;

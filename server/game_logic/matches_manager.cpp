@@ -135,9 +135,7 @@ void MatchesManager::add_player_to_game(Player& player, size_t match_id) {
 
 void MatchesManager::add_new_client(Socket client_socket) {
     clients_connected++;
-    auto sender_queue = std::make_shared<Queue<std::shared_ptr<Message>>>();
-    auto client =
-            new ServerThreadManager(std::move(client_socket), waiting_server_queue, sender_queue);
+    auto client = new ServerThreadManager(std::move(client_socket), waiting_server_queue);
     //    auto message =std::make_shared<ConnectedMessage>(clients_connected);  // le mando su id
     //    para que lo guarde client->get_sender_queue()->push(message);
     client->set_client_id(clients_connected);

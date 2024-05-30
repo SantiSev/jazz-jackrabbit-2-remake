@@ -5,7 +5,7 @@
 
 ClientMonitor::ClientMonitor(): clientQueues() {}
 
-void ClientMonitor::addClient(std::shared_ptr<Queue<std::shared_ptr<Message>>> queue) {
+void ClientMonitor::addClient(std::shared_ptr<Queue<std::shared_ptr<Message>>>& queue) {
     std::unique_lock<std::mutex> lck(mutex);
     clientQueues.emplace_back(queue);
 }

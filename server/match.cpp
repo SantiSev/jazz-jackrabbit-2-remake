@@ -22,8 +22,6 @@ Match::Match(const std::string& map, std::string match_name, size_t required_pla
 
 void Match::run() {
     try {
-        //        Player player(0, "pepe", "mago");
-        //        add_player_to_game(player);
         while (online && players.size() != required_players) {
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
             std::cout << "Match: " << match_name
@@ -59,8 +57,8 @@ void Match::run() {
             countdown_match(runTime, endTime, minutes, seconds);
 
             create_actual_snapshot(seconds, minutes);
-            auto snapshot_message = std::make_shared<SendGameStateMessage>();
-            //            client_monitor.broadcastClients(snapshot_message);
+            auto snapshot_message = std::make_shared<SendGameStateMessage>(snapshot);
+            client_monitor.broadcastClients(snapshot_message);
 
             auto frameEnd = std::chrono::system_clock::now();
             delta = frameEnd - frameStart;
@@ -113,7 +111,7 @@ Player& Match::get_player(size_t id) {
     }
 }
 
-void Match::create_actual_snapshot(int const seconds, int const minutes) {
+void Match::create_actual_snapshot(int const& seconds, int const& minutes) {
     snapshot.set_enemies(enemies);
     snapshot.set_players(players);
     snapshot.set_seconds(seconds);
@@ -151,8 +149,7 @@ void Match::send_end_message_to_players() {
     //        client_monitor.broadcastClients(game_ended_message);
 }
 
-std::vector<size_t> Match::get_clients_ids() {  // DEVUELVE MAL LOS IDS CREO QUE SE ASIGNAN MAL
-                                                // SIEMPRE 1 CUANDO ENTRA A CADA PARTIDA.
+std::vector<size_t> Match::get_clients_ids() {
     std::vector<size_t> ids;
     std::transform(clients.begin(), clients.end(), std::back_inserter(ids),
                    [](auto& client) { return client->get_client_id(); });

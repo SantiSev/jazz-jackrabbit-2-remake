@@ -1,8 +1,15 @@
+#include "../../../message/snapshot.h"
 #include "../common_message.h"
 
 class SendGameStateMessage: public Message {
+private:
+    int match_seconds = 0;
+    int match_minutes = 0;
+
 public:
     SendGameStateMessage();
+    explicit SendGameStateMessage(const Snapshot& snapshot);
+
     void run() override;
-    ~SendGameStateMessage();
+    ~SendGameStateMessage() override;
 };
