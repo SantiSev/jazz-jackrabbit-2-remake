@@ -1,3 +1,6 @@
+#ifndef _RECV_JOIN_MATCH_H
+#define _RECV_JOIN_MATCH_H
+
 #include <cstdint>
 
 #include "../common_message.h"
@@ -13,3 +16,5 @@ public:
     void run() override;
     ~RecvJoinMatchMessage();
 };
+
+#endif

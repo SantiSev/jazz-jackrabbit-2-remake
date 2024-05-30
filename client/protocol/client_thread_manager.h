@@ -12,6 +12,6 @@ private:
 
 public:
     ClientThreadManager(const std::string& hostname, const std::string& servname,
-                        Queue<std::unique_ptr<Message>>& receiver_queue, Queue<int>& sender_queue);
+                        Queue<std::shared_ptr<Message>>& receiver_queue, Queue<int>& sender_queue);
     ~ClientThreadManager();
 };
