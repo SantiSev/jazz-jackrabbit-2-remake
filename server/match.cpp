@@ -57,6 +57,7 @@ void Match::run() {
             countdown_match(runTime, endTime, minutes, seconds);
 
             create_actual_snapshot(seconds, minutes);
+
             auto snapshot_message = std::make_shared<SendGameStateMessage>(snapshot);
             client_monitor.broadcastClients(snapshot_message);
 
