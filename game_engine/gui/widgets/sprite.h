@@ -8,17 +8,17 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "../basic/texture.h"
 #include "../canvas_object.h"
 
 class Sprite: public CanvasObject {
 private:
-    std::shared_ptr<SDL_Texture*> texture;
+    std::shared_ptr<Texture> texture;
     SDL_Rect s_rect;
     SDL_Rect d_rect;
 
 public:
-    explicit Sprite(const std::shared_ptr<SDL_Texture*>& texture, SDL_Rect& s_react,
-                    SDL_Rect& d_rect);
+    explicit Sprite(std::shared_ptr<Texture> texture, SDL_Rect& s_react, SDL_Rect& d_rect);
 
     void draw(SDL_Renderer* renderer) override;
 
