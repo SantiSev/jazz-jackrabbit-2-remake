@@ -24,7 +24,7 @@ private:
     std::string character;
     size_t points;
     uint8_t state;
-    //bool is_facing_right; (?)
+    // bool is_facing_right; (?)
     bool is_alive = true;
     size_t revive_cooldown = REVIVE_COOLDOWN;
     std::vector<Weapon> weapons{};

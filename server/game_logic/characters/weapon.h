@@ -12,7 +12,7 @@ public:
     Weapon();
     ~Weapon();
     void set_weapon_name(size_t weapon_name);
-    size_t get_weapon_name () const;
+    size_t get_weapon_name() const;
     void set_ammo(size_t new_ammo);
     void add_ammo(size_t added_ammo);
     size_t get_ammo() const;

@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <utility>
+
 #include "../../../common/common_constants.h"
 
 Player::Player(size_t id, std::string name, std::string character):
@@ -10,9 +11,8 @@ Player::Player(size_t id, std::string name, std::string character):
         health(MAX_HEALTH),
         character(std::move(character)),
         points(STARTING_POINTS),
-        state(STATE_IDLE_RIGHT)
-        {
-            set_starting_weapon();
+        state(STATE_IDLE_RIGHT) {
+    set_starting_weapon();
 }
 void Player::set_starting_weapon() {
     weapons[DEFAULT_WEAPON].set_is_empty(false);
@@ -71,22 +71,22 @@ void Player::set_character(std::string new_character) {
 
 void Player::increase_points(size_t new_points) { this->points += new_points; }
 
-void Player::decrease_revive_cooldown() { this->revive_cooldown--;}
+void Player::decrease_revive_cooldown() { this->revive_cooldown--; }
 
-void Player::reset_revive_cooldown() {this->revive_cooldown = REVIVE_COOLDOWN; }
+void Player::reset_revive_cooldown() { this->revive_cooldown = REVIVE_COOLDOWN; }
 
 void Player::get_weapon_ammo(size_t ammo, size_t weapon) {
     this->weapons[weapon].add_ammo(ammo);
     this->weapons[weapon].set_is_empty(false);
 }
 
-void Player::shoot_selected_weapon(){
+void Player::shoot_selected_weapon() {
     if (selected_weapon == DEFAULT_WEAPON) {
         // GENERAR PROYECTIL DEFAULT (no decrementa balas)
     }
     if (!weapons[selected_weapon].is_weapon_empty())
         this->weapons[selected_weapon].decrease_ammo();
-    if (weapons[selected_weapon].get_ammo() == 0){
+    if (weapons[selected_weapon].get_ammo() == 0) {
         weapons[selected_weapon].set_is_empty(true);
     }
     // GENERAR PROYECTIL
@@ -94,16 +94,14 @@ void Player::shoot_selected_weapon(){
 
 
 void Player::select_weapon(size_t weapon_number) {
-    if (!weapons[weapon_number].is_weapon_empty() ) {
+    if (!weapons[weapon_number].is_weapon_empty()) {
         this->selected_weapon = weapons[weapon_number].get_weapon_name();
     }
 }
 
-bool Player::can_revive() const{
-    return (!is_alive && revive_cooldown == 0);
-}
+bool Player::can_revive() const { return (!is_alive && revive_cooldown == 0); }
 
-void Player::revive(){
+void Player::revive() {
     this->health = MAX_HEALTH;
     this->revive_cooldown = REVIVE_COOLDOWN;
     this->state = STATE_IDLE_RIGHT;
@@ -111,4 +109,3 @@ void Player::revive(){
 }
 
 uint8_t Player::get_state() const { return state; }
-
