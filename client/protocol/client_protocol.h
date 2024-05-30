@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "../../common/common_socket.h"
 #include "../../common/protocol/common_protocol.h"

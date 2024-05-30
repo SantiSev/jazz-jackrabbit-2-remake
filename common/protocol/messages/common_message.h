@@ -12,7 +12,7 @@ private:
 
 public:
     Message();
-    uint16_t return_header() const { return header; };
+    uint16_t return_header() const { return header; }
     virtual void send_message(CommonProtocol& protocol) = 0;
     virtual void run();
     virtual ~Message();
