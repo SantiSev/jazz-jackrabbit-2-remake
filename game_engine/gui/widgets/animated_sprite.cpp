@@ -1,7 +1,7 @@
 #include "animated_sprite.h"
 
-AnimatedSprite::AnimatedSprite(const std::shared_ptr<SDL_Texture*>& texture, SDL_Rect& s_rect,
-                               SDL_Rect& d_rect, int frames, int fps):
+AnimatedSprite::AnimatedSprite(std::shared_ptr<Texture> texture, SDL_Rect& s_rect, SDL_Rect& d_rect,
+                               int frames, int fps):
         texture(texture),
         s_rect(s_rect),
         d_rect(d_rect),
@@ -9,7 +9,7 @@ AnimatedSprite::AnimatedSprite(const std::shared_ptr<SDL_Texture*>& texture, SDL
         current_frame(0),
         elapsed_time(0) {
     if (fps <= 0) {
-        throw BadParamsErr("FPS must be greater than 0");
+        throw BadParams("FPS must be greater than 0");
     }
     ms_per_frame = 1000 / fps;
 }
@@ -24,7 +24,7 @@ void AnimatedSprite::update(int delta) {
 
 void AnimatedSprite::draw(SDL_Renderer* renderer) {
     s_rect.x = current_frame * s_rect.w;
-    SDL_RenderCopy(renderer, *texture, &s_rect, &d_rect);
+    SDL_RenderCopy(renderer, texture->get_texture(), &s_rect, &d_rect);
 }
 
 void AnimatedSprite::next_frame() { current_frame = (current_frame + 1) % frames; }

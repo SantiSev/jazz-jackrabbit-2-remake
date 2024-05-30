@@ -9,11 +9,12 @@
 #include <SDL2/SDL_image.h>
 
 #include "../../errors.h"
+#include "../basic/texture.h"
 #include "../canvas_object.h"
 
 class AnimatedSprite: public CanvasObject {
 private:
-    std::shared_ptr<SDL_Texture*> texture;
+    std::shared_ptr<Texture> texture;
     SDL_Rect s_rect;
     SDL_Rect d_rect;
     int frames;
@@ -24,8 +25,8 @@ private:
     void next_frame();
 
 public:
-    explicit AnimatedSprite(const std::shared_ptr<SDL_Texture*>& texture, SDL_Rect& s_rect,
-                            SDL_Rect& d_rect, int frames, int fps);
+    explicit AnimatedSprite(std::shared_ptr<Texture> texture, SDL_Rect& s_rect, SDL_Rect& d_rect,
+                            int frames, int fps);
 
     void draw(SDL_Renderer* renderer) override;
     void update(int delta) override;
