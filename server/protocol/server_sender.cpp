@@ -10,7 +10,8 @@ void ServerSender::kill() { _keep_running = false; }
 
 void ServerSender::run() {
     try {
-        // TODO: What type of data needs should be popped from the queue
+        std::shared_ptr<Message> msg = queue->pop();
+        server_protocol.send_message(msg);
     } catch (const ClosedQueue& err) {
         _keep_running = false;
     }

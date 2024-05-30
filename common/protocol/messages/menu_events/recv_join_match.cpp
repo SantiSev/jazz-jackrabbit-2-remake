@@ -7,6 +7,10 @@ RecvJoinMatchMessage::RecvJoinMatchMessage(uint16_t id_player, uint16_t id_match
     this->player_character = player_character;
 }
 
+void RecvJoinMatchMessage::send_message(CommonProtocol& protocol) {
+    //   protocol.send_cheat_command();
+}
+
 void RecvJoinMatchMessage::run() {}
 
 RecvJoinMatchMessage::~RecvJoinMatchMessage() {}

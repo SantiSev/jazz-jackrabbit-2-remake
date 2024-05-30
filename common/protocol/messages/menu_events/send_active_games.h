@@ -5,23 +5,21 @@
 #include <string>
 #include <vector>
 
-#include "../common_message.h"
+#define SEND_ACTIVE_GAMES 0x0200
 
-struct Match_str {
-    std::string name;
-    // cppcheck-suppress unusedStructMember
-    uint8_t players;
-};
+#include "../common_message.h"
+#include "../common_dto.h"
 
 class SendActiveGamesMessage: public Message {
 private:
-    std::vector<Match_str> matches;
+    uint16_t header = SEND_ACTIVE_GAMES;
+    std::vector<MatchDTO> matches;
 
 public:
+    explicit SendActiveGamesMessage(const std::vector<MatchDTO>& vector1);
     void run() override;
+    void send_message(CommonProtocol& protocol) override;
     ~SendActiveGamesMessage();
-
-    explicit SendActiveGamesMessage(const std::vector<Match_str>& vector1);
 };
 
 #endif

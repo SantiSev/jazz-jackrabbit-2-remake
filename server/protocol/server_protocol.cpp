@@ -57,6 +57,8 @@ std::shared_ptr<Message> ServerProtocol::recv_message() {
     }
 }
 
+void ServerProtocol::send_message(std::shared_ptr<Message> msg) { msg->send_message(*this); }
+
 void ServerProtocol::send_close_connection() {
     uint16_t header = htons(CLOSE_CONNECTION);
     skt.sendall(&header, sizeof(header), &was_closed);
@@ -78,7 +80,7 @@ void ServerProtocol::send_finish_match() {
         return;
 }
 
-void ServerProtocol::send_active_games(uint8_t length, std::vector<Match_str>& matches) {
+void ServerProtocol::send_active_games(uint8_t length, std::vector<MatchDTO>& matches) {
     uint16_t header = htons(SEND_ACTIVE_GAMES);
     skt.sendall(&header, sizeof(header), &was_closed);
     if (was_closed)

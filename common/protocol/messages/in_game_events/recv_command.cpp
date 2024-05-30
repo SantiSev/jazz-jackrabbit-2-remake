@@ -5,4 +5,8 @@ RecvCommandMessage::RecvCommandMessage(const uint16_t& id_player, const uint8_t&
 
 void RecvCommandMessage::run() {}
 
+void RecvCommandMessage::send_message(CommonProtocol& protocol) {
+    //   protocol.send_cheat_command();
+}
+
 RecvCommandMessage::~RecvCommandMessage() {}
