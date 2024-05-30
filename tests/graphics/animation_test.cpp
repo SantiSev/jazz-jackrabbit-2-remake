@@ -4,22 +4,22 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "../../game_engine/gui/basic/texture.h"
 #include "../../game_engine/gui/widgets/animated_sprite.h"
 
-int main() {
-    SDL_Window* window = nullptr;
-    SDL_Renderer* renderer = nullptr;
+void run(SDL_Renderer* renderer, SDL_Window* window) {
     SDL_Event event;
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
         std::cerr << "Error initializing SDL:" << SDL_GetError() << std::endl;
-        return 1;
+        return;
     }
 
     bool running = true;
 
     if (SDL_CreateWindowAndRenderer(800, 600, 0, &window, &renderer) < 0) {
         std::cerr << "Error creating window and renderer:" << SDL_GetError() << std::endl;
-        return 1;
+        SDL_Quit();
+        return;
     }
 
     if (IMG_Init(IMG_INIT_PNG) == 0) {
@@ -27,17 +27,16 @@ int main() {
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
         SDL_Quit();
-        return 1;
+        return;
     }
 
-    auto texture = std::make_shared<SDL_Texture*>(
-            IMG_LoadTexture(renderer, "/home/maxo/Desktop/taller/assets/jazz.png"));
+    auto texture = std::make_shared<Texture>("/home/maxo/Desktop/taller/assets/jazz.png", renderer);
     SDL_Rect rect = {0, 420, 53, 50};
     SDL_Rect d_rect = {0, 0, 800, 600};
     AnimatedSprite sprite(texture, rect, d_rect, 13, 8);
 
-    Uint32 frame_start;
-    int frame_time;
+    Uint32 frame_start = 0;
+    int frame_time = 0;
     const int frame_delay = 1000 / 60;
 
     while (running) {
@@ -64,11 +63,22 @@ int main() {
             SDL_Delay(frame_delay - frame_time);
         }
     }
+}
 
+
+void clean(SDL_Renderer* renderer, SDL_Window* window) {
     IMG_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+}
+
+int main() {
+    SDL_Window* window = nullptr;
+    SDL_Renderer* renderer = nullptr;
+
+    run(renderer, window);
+    clean(renderer, window);
 
     return 0;
 }
