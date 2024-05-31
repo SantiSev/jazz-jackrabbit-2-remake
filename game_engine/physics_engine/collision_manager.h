@@ -7,30 +7,37 @@
 
 #include <unordered_set>
 #include <vector>
-
+#include <memory>
 #include "../math/vector2D.h"
+#include "physics_object/dynamic_body.h"
 
 #include "colision_object.h"
 
 
 class CollisionManager {
 private:
-    int gridWidth;
-    int gridHeight;
-    std::vector<std::vector<ColisionObject*>> grid;  // grid: [x][y] stores a collisionObject
+    int grid_width;
+    int grid_height;
+    std::vector<std::vector<std::shared_ptr<CollisionObject>>> grid;  // grid: [x][y] stores a vector of shared pointers to CollisionObjects
 
+    void place_object_in_grid(std::shared_ptr<CollisionObject> obj);
+    void remove_object_from_grid(std::shared_ptr<CollisionObject> obj, Vector2D position);
 
-    bool isValidCell(int x, int y) const {
-        return x >= 0 && x < gridWidth && y >= 0 && y < gridHeight;
+    bool is_valid_cell(int x, int y) const {
+        return x >= 0 && x < grid_width && y >= 0 && y < grid_height;
     }
 
 public:
     CollisionManager(int levelWidth, int levelHeight);
 
-    ColisionObject* getColisionObjectAt(int x, int y) const;
-    void addObject(ColisionObject* obj);
-    void removeObject(ColisionObject* obj);
-    void updateObject(ColisionObject* obj);
+    std::shared_ptr<CollisionObject> get_collision_object_at(int x, int y) const;
+    void add_object(std::shared_ptr<CollisionObject> obj);
+    void remove_object(std::shared_ptr<CollisionObject> obj);
+    void update_object(std::shared_ptr<CollisionObject> obj);
+    void update__dynamic_object(std::shared_ptr<DynamicBody> obj, Vector2D old_position);
+
+
+
     void clear();
 };
 

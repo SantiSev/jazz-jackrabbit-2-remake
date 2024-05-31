@@ -1,4 +1,4 @@
-//
+//git@github.com:SantiSev/tp-final-Veiga.git
 // Created by santi on 24/05/24.
 //
 
@@ -19,7 +19,7 @@
  * 5. handle_collision is not a virtual method here because each child class can have different
  * signatures for that function
  */
-class ColisionObject: public GameObject {
+class CollisionObject: public GameObject {
 private:
     int hitbox_width;
     int hitbox_height;
@@ -30,17 +30,17 @@ protected:
      * CollisionObject instance (i.e., *this or self)
      * is being touched by the other collision object.
      */
-    CollisionFace is_touching(const ColisionObject& other) const;
+    CollisionFace is_touching(const CollisionObject& other) const;
 
     /*
      * This code is identical to the is_touching method,
      * but it returns a boolean value instead of a CollisionFace.
      */
-    bool is_touching_bool(const ColisionObject& other) const;
+    bool is_touching_bool(const CollisionObject& other) const;
 
 public:
-    ColisionObject(int width, int height);
-    ColisionObject(int x, int y, int width, int height);
+    CollisionObject(int width, int height);
+    CollisionObject(int x, int y, int width, int height);
 
     int get_left_hitbox_side() const;
     int get_right_hitbox_side() const;
@@ -56,7 +56,9 @@ public:
      * In case of being nececary, if i need to detect a collision
      * and act upon it, i can override this method and implement it.
      */
-    virtual void detect_colision(ColisionObject& other);
+    virtual void handle_colision(CollisionObject& other) = 0;
+
+    virtual ~CollisionObject() = default;
 };
 
 

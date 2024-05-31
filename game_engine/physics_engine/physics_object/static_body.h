@@ -7,14 +7,12 @@
 #include "../colision_object.h"
 
 
-class StaticBody: public ColisionObject {
-
-protected:
-    void handle_colision(CollisionFace face, ColisionObject& other) const;
+class StaticBody: public CollisionObject {
 
 public:
-    void detect_colision(ColisionObject& other) override;
+    void handle_colision(CollisionObject& other) override;
     StaticBody(int width, int height);
+    StaticBody(int x, int y, int width, int height);
 };
 
 

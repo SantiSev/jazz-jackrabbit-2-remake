@@ -21,6 +21,8 @@ public:
     }
 
     Vector2D get_position() const { return position; }
+
+    virtual ~GameObject() = default;
 };
 
 

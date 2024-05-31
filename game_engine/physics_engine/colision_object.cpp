@@ -3,31 +3,31 @@
 //
 #include "colision_object.h"
 
-ColisionObject::ColisionObject(int hitbox_width, int hitbox_height):
+CollisionObject::CollisionObject(int hitbox_width, int hitbox_height):
         GameObject(0, 0), hitbox_width(hitbox_width), hitbox_height(hitbox_height) {}
 
-ColisionObject::ColisionObject(int x, int y, int hitbox_width, int hitbox_height):
+CollisionObject::CollisionObject(int x, int y, int hitbox_width, int hitbox_height):
         GameObject(x, y), hitbox_width(hitbox_width), hitbox_height(hitbox_height) {}
 
-int ColisionObject::get_left_hitbox_side() const { return get_position().get_x(); }
+int CollisionObject::get_left_hitbox_side() const { return get_position().get_x(); }
 
-int ColisionObject::get_right_hitbox_side() const { return get_position().get_x() + hitbox_width; }
+int CollisionObject::get_right_hitbox_side() const { return get_position().get_x() + hitbox_width; }
 
-int ColisionObject::get_top_hitbox_side() const { return get_position().get_y(); }
+int CollisionObject::get_top_hitbox_side() const { return get_position().get_y(); }
 
-int ColisionObject::get_bottom_hitbox_side() const {
+int CollisionObject::get_bottom_hitbox_side() const {
     return get_position().get_y() + hitbox_height;
 }
 
-int ColisionObject::get_hitbox_width() const { return hitbox_width; }
+int CollisionObject::get_hitbox_width() const { return hitbox_width; }
 
-int ColisionObject::get_hitbox_height() const { return hitbox_height; }
+int CollisionObject::get_hitbox_height() const { return hitbox_height; }
 
-void ColisionObject::set_hitbox_width(int new_hitbox_width) { hitbox_width = new_hitbox_width; }
+void CollisionObject::set_hitbox_width(int new_hitbox_width) { hitbox_width = new_hitbox_width; }
 
-void ColisionObject::set_hitbox_height(int new_hitbox_height) { hitbox_height = new_hitbox_height; }
+void CollisionObject::set_hitbox_height(int new_hitbox_height) { hitbox_height = new_hitbox_height; }
 
-bool ColisionObject::is_touching_bool(const ColisionObject& other) const {
+bool CollisionObject::is_touching_bool(const CollisionObject& other) const {
 
     int left_diff = get_right_hitbox_side() - other.get_left_hitbox_side();
     int right_diff = other.get_right_hitbox_side() - get_left_hitbox_side();
@@ -43,7 +43,7 @@ bool ColisionObject::is_touching_bool(const ColisionObject& other) const {
 }
 
 
-CollisionFace ColisionObject::is_touching(const ColisionObject& other) const {
+CollisionFace CollisionObject::is_touching(const CollisionObject& other) const {
 
     int left_diff = get_right_hitbox_side() - other.get_left_hitbox_side();
     int right_diff = other.get_right_hitbox_side() - get_left_hitbox_side();

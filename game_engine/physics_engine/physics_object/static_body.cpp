@@ -5,11 +5,16 @@
 #include "static_body.h"
 
 
-StaticBody::StaticBody(int width, int height): ColisionObject(width, height) {}
+StaticBody::StaticBody(int width, int height): CollisionObject(width, height) {}
 
-void StaticBody::handle_colision(CollisionFace face, ColisionObject& other) const {
+ StaticBody::StaticBody(int x, int y, int width, int height): CollisionObject(x,y,width,height) {}
+
+
+void StaticBody::handle_colision(CollisionObject& other) {
     // This is a static body, so it does not move.
     // Therefore, it does not need to handle colisions.
+    CollisionFace face = this->is_touching(other);
+
     switch (face) {
         case CollisionFace::TOP:  // other object is under this object
                                   // Move other object to be just below this object
@@ -37,11 +42,3 @@ void StaticBody::handle_colision(CollisionFace face, ColisionObject& other) cons
     }
 }
 
-
-void StaticBody::detect_colision(ColisionObject& other) {
-
-    CollisionFace face = this->is_touching(other);
-    if (face != CollisionFace::NONE) {
-        this->handle_colision(face, other);
-    }
-}

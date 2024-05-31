@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "../../../game_engine/physics_engine/physics_object/character_body.h"
+#include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
 
 #define MAX_HEALTH 100
 #define MIN_HEALTH 0
@@ -11,7 +11,7 @@
 
 class Player {
 private:
-    CharacterBody character_body;
+    DynamicBody character_body;
     size_t id;
     std::string name;
     size_t health;

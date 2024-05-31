@@ -30,6 +30,8 @@ public:
     Vector2D& operator=(const Vector2D& other);
     // crear == operator
     bool operator==(const Vector2D& other) const;
+    Vector2D& operator-=(const Vector2D& other);
+    Vector2D& operator+=(const Vector2D& other);
 
     // modulo del vector
     int magnitude() const;

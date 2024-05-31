@@ -32,6 +32,18 @@ bool Vector2D::operator==(const Vector2D& other) const {
     return this->x == other.x && this->y == other.y;
 }
 
+Vector2D& Vector2D::operator+=(const Vector2D& other) {
+    this->x += other.x;
+    this->y += other.y;
+    return *this;
+}
+
+Vector2D& Vector2D::operator-=(const Vector2D& other) {
+    this->x -= other.x;
+    this->y -= other.y;
+    return *this;
+}
+
 int Vector2D::magnitude() const { return std::sqrt(x * x + y * y); }
 
 int Vector2D::angle() const { return std::atan2(y, x); }
