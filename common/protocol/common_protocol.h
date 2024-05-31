@@ -2,22 +2,11 @@
 #define _COMMON_PROTOCOL_H
 
 #include <cstdint>
+#include <memory>
 #include <string>
 
 #include "../common_socket.h"
-
-#define CLOSE_CONNECTION 0x0000
-
-#define SEND_GAME_STATE 0x0100
-#define RECV_COMMAND 0x0101
-#define RECV_CHEAT_COMMAND 0x0102
-#define RECV_LEAVE_MATCH 0x0103
-#define SEND_FINISH_MATCH 0x0104
-
-#define SEND_ACTIVE_GAMES 0x0200
-#define RECV_CREATE_GAME 0x0201
-#define SEND_GAME_CREATED 0x0202
-#define RECV_JOIN_MATCH 0x0203
+#include "./common_dto.h"
 
 class CommonProtocol {
 protected:
@@ -31,6 +20,7 @@ protected:
 public:
     explicit CommonProtocol(Socket&& skt);
     CommonProtocol(const std::string& hostname, const std::string& servname);
+    void send_message(std::shared_ptr<BaseDTO> message);
     ~CommonProtocol();
 };
 

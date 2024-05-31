@@ -42,4 +42,10 @@ const std::string CommonProtocol::recv_string() {
     return result;
 }
 
+void CommonProtocol::send_message(std::shared_ptr<BaseDTO> message) {
+    skt.sendall(&(*message) + sizeof(BaseDTO) / 8, message->size(), &was_closed);
+    if (was_closed)
+        return;
+}
+
 CommonProtocol::~CommonProtocol() {}

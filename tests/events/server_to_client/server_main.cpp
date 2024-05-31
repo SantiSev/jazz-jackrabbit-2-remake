@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <vector>
 
 #include <arpa/inet.h>
@@ -24,33 +25,36 @@ int main(int argc, const char* argv[]) {
 
         std::string command;
         while (std::cin >> command) {
-            if (command.compare("q") == 0)
-                break;
+            auto m = std::make_shared<Command>(MOVE_LEFT);
+            std::cout << sizeof(Command) << std::endl;
+            protocol.send_message(m);
+            // if (command.compare("q") == 0)
+            //     break;
 
-            if (command.compare(FINISH_MATCH) == 0) {
-                protocol.send_finish_match();
-            } else if (command.compare(GAME_STATE) == 0) {
-                protocol.send_game_state();
-            } else if (command.compare(ACTIVE_GAMES) == 0) {
-                int length;
-                std::cin >> length;
-                std::vector<Match> matches;
+            // if (command.compare(FINISH_MATCH) == 0) {
+            //     protocol.send_finish_match();
+            // } else if (command.compare(GAME_STATE) == 0) {
+            //     protocol.send_game_state();
+            // } else if (command.compare(ACTIVE_GAMES) == 0) {
+            //     int length;
+            //     std::cin >> length;
+            //     std::vector<Match> matches;
 
-                for (int i = 0; i < length; i++) {
-                    std::string name;
-                    int players;
+            //     for (int i = 0; i < length; i++) {
+            //         std::string name;
+            //         int players;
 
-                    std::cin >> name;
-                    std::cin >> players;
+            //         std::cin >> name;
+            //         std::cin >> players;
 
-                    matches.push_back({name, uint8_t(players)});
-                }
+            //         matches.push_back({name, uint8_t(players)});
+            //     }
 
 
-                protocol.send_active_games(length, matches);
-            } else if (command.compare(GAME_CREATED) == 0) {
-                protocol.send_game_created();
-            }
+            //     protocol.send_active_games(length, matches);
+            // } else if (command.compare(GAME_CREATED) == 0) {
+            //     protocol.send_game_created();
+            // }
         }
     } catch (const std::exception& err) {
         std::cerr << "Something went wrong and an exception was caught: " << err.what() << "\n";
