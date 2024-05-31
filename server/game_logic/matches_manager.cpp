@@ -14,8 +14,8 @@ MatchesManager::MatchesManager():
 
 void MatchesManager::run() {
     try {
+        std::shared_ptr<Message> client_message = nullptr;
         while (online) {
-            std::shared_ptr<Message> client_message = nullptr;
             check_matches_status();
 
             while (waiting_server_queue->try_pop(client_message)) {
