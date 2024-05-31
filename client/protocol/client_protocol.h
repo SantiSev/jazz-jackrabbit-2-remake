@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "../../common/common_socket.h"
 #include "../../common/protocol/common_protocol.h"
@@ -23,20 +24,17 @@ private:
 
 public:
     ClientProtocol(const std::string& hostname, const std::string& servname);
-
     std::shared_ptr<Message> recv_message();
-
     void send_command(uint16_t id_player, uint8_t id_command);
-
     void send_cheat_command(uint16_t id_player, uint8_t id_cheat_command);
-
     void send_leave_match(uint16_t id_player);
-
     void send_create_game(uint16_t id_player, std::string& match_name);
-
     void send_join_match(uint16_t id_player, uint16_t id_match, uint8_t player_character);
-
-    ~ClientProtocol();
+    void send_close_connection() override;
+    void send_game_state() override;
+    void send_finish_match() override;
+    void send_active_games(uint8_t length, std::vector<MatchDTO>& matches) override;
+    void send_game_created() override;
 };
 
 #endif

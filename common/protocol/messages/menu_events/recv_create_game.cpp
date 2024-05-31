@@ -7,4 +7,8 @@ RecvCreateGameMessage::RecvCreateGameMessage(uint16_t id_player, const std::stri
 
 void RecvCreateGameMessage::run() {}
 
+void RecvCreateGameMessage::send_message(CommonProtocol& protocol) {
+    //   protocol.send_cheat_command();
+}
+
 RecvCreateGameMessage::~RecvCreateGameMessage() {}

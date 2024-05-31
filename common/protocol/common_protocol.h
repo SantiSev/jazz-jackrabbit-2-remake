@@ -2,8 +2,10 @@
 #define _COMMON_PROTOCOL_H
 #include <cstdint>
 #include <string>
+#include <vector>
 
-#include "../common_socket.h"
+#include "../../common/common_socket.h"
+#include "./messages/common_dto.h"
 
 #define CLOSE_CONNECTION 0x0000
 
@@ -30,9 +32,13 @@ protected:
 public:
     explicit CommonProtocol(Socket&& skt);
     CommonProtocol(const std::string& hostname, const std::string& servname);
+    virtual void send_close_connection() = 0;
+    virtual void send_game_state() = 0;
+    virtual void send_finish_match() = 0;
+    virtual void send_active_games(uint8_t length, std::vector<MatchDTO>& matches) = 0;
+    virtual void send_game_created() = 0;
+    virtual void force_shutdown();
     ~CommonProtocol();
-
-    void force_shutdown();
 };
 
 #endif

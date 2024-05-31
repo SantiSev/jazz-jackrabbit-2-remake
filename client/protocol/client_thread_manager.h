@@ -1,6 +1,7 @@
 #include <memory>
 #include <string>
 
+#include "./client_protocol.h"
 #include "./client_receiver.h"
 #include "./client_sender.h"
 

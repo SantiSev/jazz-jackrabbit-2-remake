@@ -14,12 +14,6 @@
 #include "../../common/protocol/messages/menu_events/recv_create_game.h"
 #include "../../common/protocol/messages/menu_events/recv_join_match.h"
 
-struct Match_str {
-    std::string name;
-    // cppcheck-suppress unusedStructMember
-    uint8_t players;
-};
-
 class ServerProtocol: public CommonProtocol {
 private:
     std::shared_ptr<RecvCommandMessage> recv_command();
@@ -34,15 +28,17 @@ public:
 
     std::shared_ptr<Message> recv_message();
 
-    void send_close_connection();
+    void send_message(std::shared_ptr<Message> msg);
 
-    void send_game_state();
+    void send_close_connection() override;
 
-    void send_finish_match();
+    void send_game_state() override;
 
-    void send_active_games(uint8_t length, std::vector<Match_str>& matches);
+    void send_finish_match() override;
 
-    void send_game_created();
+    void send_active_games(uint8_t length, std::vector<MatchDTO>& matches) override;
+
+    void send_game_created() override;
 
     bool is_closed() const;
 };

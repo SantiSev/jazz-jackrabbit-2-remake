@@ -2,6 +2,8 @@
 
 SendGameStateMessage::SendGameStateMessage() = default;
 
+void SendGameStateMessage::send_message(CommonProtocol& protocol) { protocol.send_game_state(); }
+
 void SendGameStateMessage::run() {}
 
 SendGameStateMessage::SendGameStateMessage(const Snapshot& snapshot) {

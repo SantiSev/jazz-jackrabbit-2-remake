@@ -6,6 +6,7 @@
 class InvalidMessage: public Message {
 public:
     InvalidMessage();
+    void send_message(CommonProtocol& protocol) override;
     void run() override;
     ~InvalidMessage();
 };

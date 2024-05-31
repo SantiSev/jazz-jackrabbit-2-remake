@@ -7,6 +7,12 @@
 ClientProtocol::ClientProtocol(const std::string& hostname, const std::string& servname):
         CommonProtocol(hostname, servname) {}
 
+void ClientProtocol::send_close_connection() {}
+void ClientProtocol::send_game_state() {}
+void ClientProtocol::send_finish_match() {}
+void ClientProtocol::send_active_games(uint8_t length, std::vector<MatchDTO>& matches) {}
+void ClientProtocol::send_game_created() {}
+
 std::shared_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() { return {}; }
 
 std::shared_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() { return {}; }
@@ -14,7 +20,7 @@ std::shared_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() { return
 std::shared_ptr<SendActiveGamesMessage> ClientProtocol::recv_active_games() {
     const uint8_t match_length = recv_one_byte();
 
-    std::vector<Match_str> matches(match_length);
+    std::vector<MatchDTO> matches(match_length);
     for (size_t i = 0; i < match_length; i++) {
         const std::string name = recv_string();
         const uint8_t players = recv_one_byte();
@@ -133,5 +139,3 @@ void ClientProtocol::send_join_match(uint16_t id_player, uint16_t id_match,
     if (was_closed)
         return;
 }
-
-ClientProtocol::~ClientProtocol() {}
