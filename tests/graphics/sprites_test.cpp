@@ -7,7 +7,7 @@
 #include "../../game_engine/gui/basic/texture.h"
 #include "../../game_engine/gui/widgets/sprite.h"
 
-void run(SDL_Renderer* renderer, SDL_Window* window) {
+void run(SDL_Renderer*& renderer, SDL_Window*& window) {
     SDL_Event event;
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
         std::cerr << "Error initializing SDL:" << SDL_GetError() << std::endl;
