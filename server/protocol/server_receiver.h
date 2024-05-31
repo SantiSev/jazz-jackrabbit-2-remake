@@ -26,7 +26,7 @@ public:
 
     ~ServerReceiver();
 
-    void change_receiver_queue(std::shared_ptr<Queue<std::shared_ptr<Message>>>& sharedPtr);
+    void change_receiver_queue(const std::shared_ptr<Queue<std::shared_ptr<Message>>>& sharedPtr);
 };
 
 #endif

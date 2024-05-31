@@ -49,7 +49,7 @@ public:
 
     void add_player_to_game(const std::string& player_name, std::string character);
 
-    void create_actual_snapshot(int const seconds, int const minutes);
+    void create_actual_snapshot(int const& seconds, int const& minutes);
 
     bool has_match_ended() const;
 
@@ -71,6 +71,8 @@ public:
 
     void add_client_to_match(ServerThreadManager* client, const std::string& player_name,
                              std::string character);
+
+    std::vector<size_t> get_clients_ids();
 };
 
 #endif

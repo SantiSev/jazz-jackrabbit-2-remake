@@ -15,11 +15,14 @@ private:
     Socket skt;
     std::shared_ptr<Queue<std::shared_ptr<Message>>>& event_queue;
     std::shared_ptr<Queue<std::shared_ptr<Message>>> snapshot_queue;
+    size_t id = 0;
 
 public:
     explicit TestClientServer(Socket skt,
                               std::shared_ptr<Queue<std::shared_ptr<Message>>>& eventQueue):
-            skt(std::move(skt)), event_queue(eventQueue) {}
+            skt(std::move(skt)),
+            event_queue(eventQueue),
+            snapshot_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()) {}
 
     ~TestClientServer() = default;
 
