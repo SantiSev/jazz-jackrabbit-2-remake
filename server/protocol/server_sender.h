@@ -11,10 +11,10 @@
 class ServerSender: public Thread {
 private:
     ServerProtocol& server_protocol;
-    std::shared_ptr<Queue<std::shared_ptr<Message>>>& queue;
+    std::shared_ptr<Queue<std::shared_ptr<Message>>> queue;
 
 public:
-    ServerSender(ServerProtocol& protocol, std::shared_ptr<Queue<std::shared_ptr<Message>>>& queue);
+    explicit ServerSender(ServerProtocol& protocol);
 
     bool is_dead();
 
@@ -22,9 +22,9 @@ public:
 
     void run() override;
 
-    ~ServerSender();
+    ~ServerSender() override;
 
-    std::shared_ptr<Queue<std::shared_ptr<Message>>> get_sender_queue();
+    std::shared_ptr<Queue<std::shared_ptr<Message>>>& get_sender_queue();
 
     void change_sender_queue(const std::shared_ptr<Queue<std::shared_ptr<Message>>>& new_queue);
 };

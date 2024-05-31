@@ -15,9 +15,9 @@ int Snapshot::get_minutes() const { return minutes; }
 
 int Snapshot::get_seconds() const { return seconds; }
 
-void Snapshot::set_minutes(int new_minutes) { minutes = new_minutes; }
+void Snapshot::set_minutes(const int& new_minutes) { minutes = new_minutes; }
 
-void Snapshot::set_seconds(int new_seconds) { seconds = new_seconds; }
+void Snapshot::set_seconds(const int& new_seconds) { seconds = new_seconds; }
 
 SnapshotDTO Snapshot::to_dto() const {
     SnapshotDTO dto;

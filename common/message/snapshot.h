@@ -25,8 +25,8 @@ public:
     int get_minutes() const;
     int get_seconds() const;
 
-    void set_minutes(int new_minutes);
-    void set_seconds(int new_seconds);
+    void set_minutes(const int& new_minutes);
+    void set_seconds(const int& new_seconds);
 
     SnapshotDTO to_dto() const;
 };

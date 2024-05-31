@@ -26,6 +26,6 @@ std::shared_ptr<Queue<std::shared_ptr<Message>>>& ServerReceiver::get_receiver_q
 }
 
 void ServerReceiver::change_receiver_queue(
-        std::shared_ptr<Queue<std::shared_ptr<Message>>>& sharedPtr) {
-    queue = std::move(sharedPtr);
+        const std::shared_ptr<Queue<std::shared_ptr<Message>>>& sharedPtr) {
+    queue = sharedPtr;
 }

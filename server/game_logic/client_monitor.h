@@ -22,11 +22,12 @@ public:
     // Constructor
     ClientMonitor();
     // Add a client to the list of clients (Thread safe)
-    void addClient(std::shared_ptr<Queue<std::shared_ptr<Message>>> queue);
+    void addClient(std::shared_ptr<Queue<std::shared_ptr<Message>>>& queue);
     // Broadcast message to all clients (Thread safe), pushing (Blocking) the message to the queue
     // of each client
     void broadcastClients(const std::shared_ptr<Message>& gameMessage);
-    void removeQueue(std::shared_ptr<Queue<std::shared_ptr<Message>>> queueToRemove);
+    //    void removeQueue(std::shared_ptr<Queue<std::shared_ptr<Message>>> queueToRemove);
+    void removeQueue(const std::shared_ptr<Queue<std::shared_ptr<Message>>>& queueToRemove);
 
     ClientMonitor(const ClientMonitor&) = delete;
     ClientMonitor& operator=(const ClientMonitor&) = delete;
