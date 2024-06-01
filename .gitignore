@@ -1,8 +1,6 @@
 # Prerequisites
 *.d
 
-build/*
-
 # Compiled Object files
 *.slo
 *.lo
@@ -28,10 +26,14 @@ build/*
 *.a
 *.lib
 
-# Executables
+# BINS
 *.exe
 *.out
 *.app
+cmake-build-debug
+build
+build/*
+tests_bin
 
 # Mac
 .DS_Store
@@ -43,10 +45,10 @@ build/*
 .*.swp
 *~
 
-# Idea
+# IDEs
 .idea
 .vscode
-cmake-build-debug
-build
-tests_bin
+
+# CMake
 CMakeFiles
+valgrind.log

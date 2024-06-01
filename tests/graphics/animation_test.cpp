@@ -1,26 +1,51 @@
-#include <exception>
 #include <iostream>
+#include <memory>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "../../game_engine/gui/basic/texture.h"
 #include "../../game_engine/gui/widgets/animated_sprite.h"
 
-int main() {
-    SDL_Window* window = nullptr;
-    SDL_Renderer* renderer = nullptr;
+void run(SDL_Renderer*& renderer, SDL_Window*& window) {
     SDL_Event event;
-    SDL_Init(SDL_INIT_EVERYTHING);
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+        std::cerr << "Error initializing SDL:" << SDL_GetError() << std::endl;
+        return;
+    }
 
     bool running = true;
 
-    SDL_CreateWindowAndRenderer(800, 600, 0, &window, &renderer);
+    if (SDL_CreateWindowAndRenderer(800, 600, 0, &window, &renderer) < 0) {
+        std::cerr << "Error creating window and renderer:" << SDL_GetError() << std::endl;
+        SDL_Quit();
+        return;
+    }
 
-    IMG_Init(IMG_INIT_PNG);
-    AnimatedSprite sprite("/home/maxo/Desktop/taller/assets/jazz.png", {0, 1682, 218, 198},
-                          {0, 0, 800, 600}, 13, 1);
+    if (IMG_Init(IMG_INIT_PNG) == 0) {
+        std::cerr << "Error initializing SDL_image:" << IMG_GetError() << std::endl;
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return;
+    }
+
+    auto texture = std::make_shared<Texture>("/home/maxo/Desktop/taller/assets/jazz.png", renderer);
+    SDL_Rect rect = {0, 420, 53, 50};
+    SDL_Rect d_rect = {0, 0, 800, 600};
+    AnimatedSprite sprite(texture, rect, d_rect, 13, 8);
+
+    Uint32 frame_start = 0;
+    int frame_time = 0;
+    const int frame_delay = 1000 / 60;
 
     while (running) {
+        // Updates
+        int delta_time = SDL_GetTicks() - frame_start;
+        sprite.update(delta_time);
+
+        frame_start = SDL_GetTicks();
+
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 running = false;
@@ -29,10 +54,31 @@ int main() {
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
         SDL_RenderClear(renderer);
 
+        // Draw
         sprite.draw(renderer);
-
         SDL_RenderPresent(renderer);
-        SDL_Delay(1);
+
+        frame_time = SDL_GetTicks() - frame_start;
+        if (frame_delay > frame_time) {  // Delay to achieve 60 fps
+            SDL_Delay(frame_delay - frame_time);
+        }
     }
+}
+
+
+void clean(SDL_Renderer* renderer, SDL_Window* window) {
+    IMG_Quit();
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+}
+
+int main() {
+    SDL_Window* window = nullptr;
+    SDL_Renderer* renderer = nullptr;
+
+    run(renderer, window);
+    clean(renderer, window);
+
     return 0;
 }

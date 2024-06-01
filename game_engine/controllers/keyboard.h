@@ -15,6 +15,12 @@ private:
     bool is_special_key(const SDL_Keycode& key);
 
 public:
+    Keyboard() = default;
+
+    // cant copy
+    Keyboard(const Keyboard&) = delete;
+    Keyboard& operator=(const Keyboard&) = delete;
+
     void update(const SDL_Event& event) override;
 
     void add_on_key_down_signal_obj(CanvasObject* obj);
