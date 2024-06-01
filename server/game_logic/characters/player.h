@@ -21,27 +21,27 @@ private:
     size_t id;
     std::string name;
     size_t health;
-    std::string character;
+    uint8_t character;
     size_t points;
     uint8_t state;
     // bool is_facing_right; (?)
     bool is_alive = true;
     size_t revive_cooldown = REVIVE_COOLDOWN;
-    //    std::vector<Weapon> weapons{};
+    std::vector<Weapon> weapons{};
     size_t selected_weapon = DEFAULT_WEAPON;
 
 public:
-    Player(size_t id, std::string name, std::string character);
+    Player(size_t id, std::string name, const uint8_t& character);
 
     size_t get_id() const;
     std::string get_name();
     size_t get_health() const;
-    std::string get_character();
+    uint8_t get_character() const;
     size_t get_points() const;
     void set_id(size_t id);
     void set_name(std::string name);
     void set_health(size_t health);
-    void set_character(std::string character);
+    void set_character(uint8_t new_character);
     void add_points(size_t points);
     void increase_points(size_t new_points);
     void decrease_health(size_t susbstract_health);

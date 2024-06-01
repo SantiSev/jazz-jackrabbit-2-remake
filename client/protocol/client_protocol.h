@@ -29,7 +29,7 @@ public:
     void send_command(uint16_t id_player, uint8_t id_command);
     void send_cheat_command(uint16_t id_player, uint8_t id_cheat_command);
     void send_leave_match(uint16_t id_player);
-    void send_create_game(uint16_t id_player, std::string& match_name);
+    void send_create_game(uint16_t client_id, std::string& match_name, uint8_t character);
     void send_join_match(uint16_t id_player, uint16_t id_match, uint8_t player_character);
     void send_close_connection() override;
     void send_game_state() override;

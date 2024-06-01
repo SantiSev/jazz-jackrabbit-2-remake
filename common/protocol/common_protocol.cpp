@@ -1,5 +1,6 @@
 #include "./common_protocol.h"
 
+#include <iostream>
 #include <vector>
 
 #include <arpa/inet.h>
@@ -26,6 +27,16 @@ const uint16_t CommonProtocol::recv_two_bytes() {
     if (was_closed)
         return CLOSE_CONNECTION;
 
+    //    while (true) {
+    //        uint8_t one_byte;
+    //        skt.recvall(&one_byte, sizeof(one_byte), &was_closed);
+    //        if (was_closed)
+    //            return CLOSE_CONNECTION;
+    //
+    //        std::cout << one_byte << std::endl;
+    //    }
+
+
     return ntohs(two_bytes);
 }
 
@@ -33,7 +44,6 @@ const std::string CommonProtocol::recv_string() {
     uint8_t length;
 
     skt.recvall(&length, sizeof(length), &was_closed);
-    length = ntohs(length);
 
     std::vector<char> buf(length);
     skt.recvall(buf.data(), length, &was_closed);

@@ -39,7 +39,7 @@ public:
 
     Player& get_player(size_t id);
 
-    void add_player_to_game(const std::string& player_name, std::string character);
+    void add_player_to_game(const std::string& player_name, const uint8_t& character);
 
     void create_actual_snapshot(int const& seconds, int const& minutes);
 
@@ -62,7 +62,7 @@ public:
     void send_end_message_to_players();
 
     void add_client_to_match(ServerThreadManager* client, const std::string& player_name,
-                             std::string character);
+                             const uint8_t& character);
 
     std::vector<size_t> get_clients_ids();
 };

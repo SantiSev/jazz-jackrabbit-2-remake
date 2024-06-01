@@ -122,19 +122,19 @@ bool Match::has_match_ended() const { return match_has_ended; }
 
 std::string Match::get_match_name() const { return match_name; }
 
-void Match::add_player_to_game(const std::string& player_name, std::string character) {
+void Match::add_player_to_game(const std::string& player_name, const uint8_t& character) {
     players_connected++;
-    Player new_player(players_connected, player_name, std::move(character));
+    Player new_player(players_connected, player_name, character);
     new_player.set_id(players_connected);
     players.push_back(new_player);
 }
 
 void Match::add_client_to_match(ServerThreadManager* client, const std::string& player_name,
-                                std::string character) {
+                                const uint8_t& character) {
     client_monitor.addClient(client->get_sender_queue());
     client->set_receiver_queue(event_queue);
     clients.push_back(client);
-    add_player_to_game(player_name, std::move(character));
+    add_player_to_game(player_name, character);
 }
 
 size_t Match::get_num_players() { return players.size(); }

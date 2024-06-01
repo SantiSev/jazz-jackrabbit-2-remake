@@ -10,13 +10,14 @@
 class RecvJoinMatchMessage: public Message {
 private:
     uint16_t header = RECV_JOIN_MATCH;
-    uint16_t id_player;
+    uint16_t id_client;
     uint16_t id_match;
     uint8_t player_character;
 
 public:
-    RecvJoinMatchMessage(uint16_t id_player, uint16_t id_match, uint8_t player_character);
+    RecvJoinMatchMessage(uint16_t client_id, uint16_t id_match, uint8_t player_character);
     void run() override;
+    void run(MatchesManager& matches_manager) override;
     void send_message(CommonProtocol& protocol) override;
     ~RecvJoinMatchMessage();
 };

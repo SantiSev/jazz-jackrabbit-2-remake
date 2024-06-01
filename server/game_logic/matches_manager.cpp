@@ -38,23 +38,13 @@ void MatchesManager::run() {
 }
 
 void MatchesManager::create_new_match(const uint16_t& id_client, const std::string& match_name,
-                                      const size_t& max_players, const std::string& map_name) {
+                                      const size_t& max_players, const std::string& map_name,
+                                      const uint8_t& character_selected) {
     matches_number++;
     auto match = std::make_shared<Match>(map_name, match_name, max_players);
     matches.insert({matches_number, match});
     match->start();
-    Player player(matches_number, "jugador1", "personaje1");
-    match->add_client_to_match(get_client_by_id(id_client), player.get_name(),
-                               player.get_character());
-
-    // reemplazar
-    //    auto match = std::make_shared<Match>("map 1", "my first match",
-    //    REQUIRED_PLAYERS_TO_START);
-    //    //
-    //    matches.insert({matches_number, match});
-    //    match->start();
-    //    match->add_client_to_match(client, "pepe", "mago");
-    //
+    match->add_client_to_match(get_client_by_id(id_client), "jugador 1", character_selected);
 }
 
 ServerThreadManager* MatchesManager::get_client_by_id(size_t id) {
@@ -65,15 +55,12 @@ ServerThreadManager* MatchesManager::get_client_by_id(size_t id) {
     return (it != clients.end()) ? *it : nullptr;
 }
 
-void MatchesManager::join_match(ServerThreadManager* client,
-                                const std::shared_ptr<Message>& message) {
-    //    auto join_match = std::dynamic_pointer_cast<JoinMatch>(message);
-    //    auto it = matches.find(join_match->get_id());
-    //    if (it != matches.end()) {
-    //        it->second->add_client_to_match(client);
-    //        Player player(0, join_match->get_name(), join_match->get_character_name());
-    //        it->second->add_player_to_game(player);
-    //    }
+void MatchesManager::join_match(const uint16_t& client_id, const uint16_t& match_id,
+                                const uint8_t& character) {
+    auto it = matches.find(match_id);
+    if (it != matches.end()) {
+        it->second->add_client_to_match(get_client_by_id(client_id), "pepo", character);
+    }
 }
 
 void MatchesManager::check_matches_status() {
@@ -132,13 +119,6 @@ std::vector<matchesDTO> MatchesManager::return_matches_lists() {
     return matches_list;
 }
 
-void MatchesManager::add_player_to_game(Player& player, size_t match_id) {
-    //    auto it = matches.find(match_id);
-    //    if (it != matches.end()) {
-    //        it->second->add_player_to_game(player, std::string());
-    //    }
-}
-
 void MatchesManager::add_new_client(Socket client_socket) {
     clients_connected++;
     auto client = new ServerThreadManager(std::move(client_socket), waiting_server_queue);
@@ -146,11 +126,6 @@ void MatchesManager::add_new_client(Socket client_socket) {
     //    para que lo guarde client->get_sender_queue()->push(message);
     client->set_client_id(clients_connected);
     clients.push_back(client);
-    // create_new_match(client->get_client_id(), "match 1", REQUIRED_PLAYERS_TO_START, "map 1");
-    //  esto normalmente no se llama aca, quitar cuando
-    //  se conecte mediante mensajes.
-    //  ATENCION FALLA SI CONECTAN MAS DE UNO PORQUE SE
-    //  USA EL FRONT(). ES PARA TESTEAR
 }
 
 void MatchesManager::clear_all_waiting_clients() {
@@ -162,8 +137,7 @@ void MatchesManager::clear_all_waiting_clients() {
 }
 
 void MatchesManager::send_match_lists(ServerThreadManager* client) {
-    // todo deberia ser así
-    // client->get_sender_queue()->push(return_matches_lists());
+    //     client->get_sender_queue()->push(return_matches_lists());
 }
 
 void MatchesManager::stop() { online = false; }

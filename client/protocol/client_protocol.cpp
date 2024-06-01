@@ -99,23 +99,28 @@ void ClientProtocol::send_leave_match(uint16_t id_player) {
         return;
 }
 
-void ClientProtocol::send_create_game(uint16_t id_player, std::string& match_name) {
+void ClientProtocol::send_create_game(uint16_t client_id, std::string& match_name,
+                                      uint8_t character) {
     uint16_t header = htons(RECV_CREATE_GAME);
     skt.sendall(&header, sizeof(header), &was_closed);
     if (was_closed)
         return;
 
-    id_player = htons(id_player);
-    skt.sendall(&id_player, sizeof(id_player), &was_closed);
+    client_id = htons(client_id);
+    skt.sendall(&client_id, sizeof(client_id), &was_closed);
     if (was_closed)
         return;
 
-    uint8_t length = match_name.length();
-    skt.sendall(&length, sizeof(length), &was_closed);
+    auto length = (uint8_t)match_name.length();
+    skt.sendall(&length, sizeof(uint8_t), &was_closed);
     if (was_closed)
         return;
 
     skt.sendall(match_name.data(), length, &was_closed);
+    if (was_closed)
+        return;
+
+    skt.sendall(&character, sizeof(character), &was_closed);
     if (was_closed)
         return;
 }

@@ -10,6 +10,8 @@ ClientThreadManager::ClientThreadManager(const std::string& hostname, const std:
     sender.start();
 }
 
+ClientProtocol& ClientThreadManager::get_protocol() { return client_protocol; }
+
 ClientThreadManager::~ClientThreadManager() {
     receiver.join();
     receiver.kill();

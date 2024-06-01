@@ -16,4 +16,6 @@ public:
                         Queue<std::shared_ptr<Message>>& receiver_queue,
                         Queue<std::shared_ptr<Message>>& sender_queue);
     ~ClientThreadManager();
+
+    ClientProtocol& get_protocol();
 };

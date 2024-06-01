@@ -29,7 +29,8 @@ std::shared_ptr<RecvLeaveMatchMessage> ServerProtocol::recv_unjoin_match() {
 std::shared_ptr<RecvCreateGameMessage> ServerProtocol::recv_create_game() {
     const uint16_t id_player = recv_two_bytes();
     std::string match_name = recv_string();
-    return std::make_shared<RecvCreateGameMessage>(id_player, match_name);
+    const uint8_t character = recv_one_byte();
+    return std::make_shared<RecvCreateGameMessage>(id_player, match_name, character);
 }
 
 std::shared_ptr<RecvJoinMatchMessage> ServerProtocol::recv_join_match() {
