@@ -9,4 +9,20 @@ Font::Font(const std::string& path, int size) {
 
 TTF_Font* Font::get_font() const { return font; }
 
-Font::~Font() { TTF_CloseFont(font); }
+Font::Font(Font&& other) noexcept: font(other.font) { other.font = nullptr; }
+
+Font& Font::operator=(Font&& other) noexcept {
+    if (this == &other)
+        return *this;
+
+    font = other.font;
+    other.font = nullptr;
+
+    return *this;
+}
+
+Font::~Font() {
+    if (font != nullptr) {
+        TTF_CloseFont(font);
+    }
+}

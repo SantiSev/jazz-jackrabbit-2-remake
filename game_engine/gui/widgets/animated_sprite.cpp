@@ -34,8 +34,36 @@ void AnimatedSprite::set_position(int x, int y) {
     d_rect.y = y;
 }
 
-bool AnimatedSprite::is_intersecting(SDL_Point& point) { return SDL_PointInRect(&point, &d_rect); }
+bool AnimatedSprite::is_intersecting(SDL_Point& point) const {
+    return SDL_PointInRect(&point, &d_rect);
+}
 
-bool AnimatedSprite::is_intersecting(SDL_Rect& rect) { return SDL_HasIntersection(&d_rect, &rect); }
+bool AnimatedSprite::is_intersecting(SDL_Rect& rect) const {
+    return SDL_HasIntersection(&d_rect, &rect);
+}
+
+AnimatedSprite::AnimatedSprite(AnimatedSprite&& other) noexcept:
+        texture(std::move(other.texture)),
+        s_rect(other.s_rect),
+        d_rect(other.d_rect),
+        frames(other.frames),
+        current_frame(other.current_frame),
+        ms_per_frame(other.ms_per_frame),
+        elapsed_time(other.elapsed_time) {}
+
+AnimatedSprite& AnimatedSprite::operator=(AnimatedSprite&& other) noexcept {
+    if (this == &other)
+        return *this;
+
+    texture = std::move(other.texture);
+    s_rect = other.s_rect;
+    d_rect = other.d_rect;
+    frames = other.frames;
+    current_frame = other.current_frame;
+    ms_per_frame = other.ms_per_frame;
+    elapsed_time = other.elapsed_time;
+
+    return *this;
+}
 
 AnimatedSprite::~AnimatedSprite() = default;

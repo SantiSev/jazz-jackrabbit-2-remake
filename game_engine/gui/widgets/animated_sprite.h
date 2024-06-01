@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <utility>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -28,13 +29,21 @@ public:
     explicit AnimatedSprite(std::shared_ptr<Texture> texture, SDL_Rect& s_rect, SDL_Rect& d_rect,
                             int frames, int fps);
 
+    // Cant copy
+    AnimatedSprite(const AnimatedSprite&) = delete;
+    AnimatedSprite& operator=(const AnimatedSprite&) = delete;
+
+    // Can move
+    AnimatedSprite(AnimatedSprite&&) noexcept;
+    AnimatedSprite& operator=(AnimatedSprite&&) noexcept;
+
     void draw(SDL_Renderer* renderer) override;
     void update(int delta) override;
 
     void set_position(int x, int y) override;
 
-    bool is_intersecting(SDL_Point&) override;
-    bool is_intersecting(SDL_Rect&) override;
+    bool is_intersecting(SDL_Point&) const override;
+    bool is_intersecting(SDL_Rect&) const override;
 
     ~AnimatedSprite() override;
 };

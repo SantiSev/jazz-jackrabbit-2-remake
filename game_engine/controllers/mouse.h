@@ -18,6 +18,10 @@ public:
 
     explicit Mouse(int x, int y);
 
+    // cant copy
+    Mouse(const Mouse&) = delete;
+    Mouse& operator=(const Mouse&) = delete;
+
     void update(const SDL_Event& event) override;
 
     void add_on_click_signal_obj(CanvasObject* obj);

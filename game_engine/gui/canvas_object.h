@@ -14,8 +14,8 @@ public:
 
     virtual void set_position(int x, int y) = 0;
 
-    virtual bool is_intersecting(SDL_Point&) = 0;
-    virtual bool is_intersecting(SDL_Rect&) = 0;
+    virtual bool is_intersecting(SDL_Point&) const = 0;
+    virtual bool is_intersecting(SDL_Rect&) const = 0;
 
     virtual ~CanvasObject() = default;
 };

@@ -14,6 +14,14 @@ private:
 public:
     explicit Font(const std::string& path, int size);
 
+    // Cant copy
+    Font(const Font& other) = delete;
+    Font& operator=(const Font& other) = delete;
+
+    // Move constructors
+    Font(Font&& other) noexcept;
+    Font& operator=(Font&& other) noexcept;
+
     TTF_Font* get_font() const;
 
     ~Font();

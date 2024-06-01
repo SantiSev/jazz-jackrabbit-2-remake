@@ -1,8 +1,11 @@
 #include "button.h"
 
-Button::Button(const SDL_Rect& rect, const SDL_Color& color, const SDL_Color& hover_color,
-               Label& label):
-        rect(rect), color(color), hover_color(hover_color), is_hovered_m(false), label(label) {}
+Button::Button(Label&& label, SDL_Rect& rect, const SDL_Color& color, const SDL_Color& hover_color):
+        label(std::move(label)),
+        rect(rect),
+        color(color),
+        hover_color(hover_color),
+        is_hovered_m(false) {}
 
 void Button::on_click() {
     std::cout << "Button was clicked." << std::endl;
@@ -32,10 +35,32 @@ void Button::set_position(int x, int y) {
     label.set_position(x, y);
 }
 
-bool Button::is_intersecting(SDL_Point& point) { return SDL_PointInRect(&point, &this->rect); }
+bool Button::is_intersecting(SDL_Point& point) const {
+    return SDL_PointInRect(&point, &this->rect);
+}
 
-bool Button::is_intersecting(SDL_Rect& other_rect) {
+bool Button::is_intersecting(SDL_Rect& other_rect) const {
     return SDL_IntersectRect(&this->rect, &other_rect, NULL);
+}
+
+Button::Button(Button&& other) noexcept:
+        label(std::move(other.label)),
+        rect(other.rect),
+        color(other.color),
+        hover_color(other.hover_color),
+        is_hovered_m(other.is_hovered_m) {}
+
+Button& Button::operator=(Button&& other) noexcept {
+    if (this == &other)
+        return *this;
+
+    label = std::move(other.label);
+    rect = other.rect;
+    color = other.color;
+    hover_color = other.hover_color;
+    is_hovered_m = other.is_hovered_m;
+
+    return *this;
 }
 
 Button::~Button() = default;
