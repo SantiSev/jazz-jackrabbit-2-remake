@@ -24,9 +24,17 @@ typedef enum: uint8_t { INFINTY_AMMO } cheat_command_t;
 typedef enum: uint8_t {
     MOVE_LEFT = 0x00,
     MOVE_RIGHT = 0x01,
+    MOVE_LEFT_FAST = 0x02,
+    MOVE_RIGHT_FAST = 0x03,
+    JUMP = 0x04,
+    ESPECIAL_ATTACK = 0x05
 } command_t;
 
-typedef enum: uint8_t { RABBIT_CHARACTER } character_t;
+typedef enum: uint8_t {
+    JAZZ_CHARACTER = 0x00,
+    SPAZ_CHARACTER = 0x01,
+    LORI_CHAARCTER = 0x02
+} character_t;
 
 struct CloseConnection {
     const uint16_t header = htons(CLOSE_CONNECTION);
