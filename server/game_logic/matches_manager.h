@@ -12,6 +12,7 @@
 #include "../match.h"
 #include "../protocol/server_thread_manager.h"
 
+class Message;
 
 class MatchesManager: public Thread {
 private:

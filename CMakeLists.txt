@@ -44,8 +44,9 @@ file(GLOB_RECURSE HEADERS_SERVER "server/*.h" "server/game_logic/*.h" "server/pr
 file(GLOB_RECURSE HEADERS_COMMON "common/*.h" "common/protocol/*.h" "common/protocol/messages/*.h" "common_*.h")
 file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine_*.h")
 
+file(GLOB_RECURSE SERVER_WITHOUT_MAIN "server/game_logic/*.cpp" "server/protocol/*.cpp" "server/match.cpp" "server/match.h")
 
-add_executable(client ${SOURCES_COMMON} ${HEADERS_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT}  ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE} ${HEADERS_SERVER})
+add_executable(client ${SOURCES_COMMON} ${HEADERS_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT}  ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE} ${SERVER_WITHOUT_MAIN})
 add_executable(server ${SOURCES_COMMON} ${HEADERS_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} )
 target_link_libraries(client SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 

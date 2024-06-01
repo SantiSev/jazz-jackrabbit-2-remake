@@ -13,13 +13,14 @@ MatchesManager::MatchesManager():
 
 void MatchesManager::run() {
     try {
-        std::shared_ptr<Message> client_message = nullptr;
+        std::shared_ptr<Message> client_message;
         while (online) {
+            client_message = nullptr;
             check_matches_status();
 
             while (waiting_server_queue->try_pop(client_message)) {
                 if (client_message != nullptr) {
-                    client_message->run();
+                    client_message->run(*this);
                 }
             }
 
@@ -145,11 +146,11 @@ void MatchesManager::add_new_client(Socket client_socket) {
     //    para que lo guarde client->get_sender_queue()->push(message);
     client->set_client_id(clients_connected);
     clients.push_back(client);
-    create_new_match(client->get_client_id(), "match 1", REQUIRED_PLAYERS_TO_START,
-                     "map 1");  // esto normalmente no se llama aca, quitar cuando
-                                // se conecte mediante mensajes.
-                                // ATENCION FALLA SI CONECTAN MAS DE UNO PORQUE SE
-                                // USA EL FRONT(). ES PARA TESTEAR
+    // create_new_match(client->get_client_id(), "match 1", REQUIRED_PLAYERS_TO_START, "map 1");
+    //  esto normalmente no se llama aca, quitar cuando
+    //  se conecte mediante mensajes.
+    //  ATENCION FALLA SI CONECTAN MAS DE UNO PORQUE SE
+    //  USA EL FRONT(). ES PARA TESTEAR
 }
 
 void MatchesManager::clear_all_waiting_clients() {

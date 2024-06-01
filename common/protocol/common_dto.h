@@ -68,11 +68,10 @@ struct GameState: public BaseDTO {
     int size() override { return sizeof(GameState) - sizeof(BaseDTO); }
 } __attribute__((packed));
 
-struct CreateGame: public BaseDTO {
+struct CreateGame {
     const uint16_t header = htons(RECV_CREATE_GAME);
-    uint16_t id_player;
-    char match_name[256];
-    {}
+    uint16_t id_player = htons(0);
+    char match_name[256] = "";
 } __attribute__((packed));
 
 struct JoinMatch: public BaseDTO {

@@ -6,6 +6,7 @@
 #define RECV_CREATE_GAME 0x0201
 
 #include "../common_message.h"
+//#include "../../common_dto.h"
 //#include "../../../../server/game_logic/matches_manager.h"
 
 class RecvCreateGameMessage: public Message {
@@ -16,7 +17,7 @@ private:
 
 public:
     RecvCreateGameMessage(uint16_t client_id, const std::string& match_name);
-    //    void run(MatchesManager& matches_manager) override;
+    void run(MatchesManager& matches_manager) override;
     void run() override;
     void send_message(CommonProtocol& protocol) override;
 

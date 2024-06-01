@@ -21,9 +21,11 @@ int main(int argc, const char* argv[]) {
 
         uint16_t event;
         auto create_meesage = std::make_shared<RecvCreateGameMessage>(1, "match 1");
+        bool was_closed = false;
+
+        server.sendall(&create_meesage, sizeof(create_meesage), &was_closed);
         while (std::cin.get() != QUIT) {
-            bool was_closed = false;
-            if (std::cin.get() == 'c') {}
+            was_closed = false;
             event = htons(event);
             server.sendall(&event, sizeof(event), &was_closed);
             if (was_closed)
