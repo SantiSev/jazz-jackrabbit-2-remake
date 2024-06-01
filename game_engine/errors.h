@@ -9,9 +9,14 @@ struct BadParams: public std::runtime_error {
     explicit BadParams(const std::string& message): std::runtime_error(message) {}
 };
 
-struct FileDoesNotExist: public std::runtime_error {
-    FileDoesNotExist(): std::runtime_error("Inexistent file") {}
-    explicit FileDoesNotExist(const std::string& message): std::runtime_error(message) {}
+struct FileNotFound: public std::runtime_error {
+    FileNotFound(): std::runtime_error("Inexistent file") {}
+    explicit FileNotFound(const std::string& message): std::runtime_error(message) {}
+};
+
+struct SDLError: public std::runtime_error {
+    SDLError(): std::runtime_error("There was an error in SDL") {}
+    explicit SDLError(const std::string& message): std::runtime_error(message) {}
 };
 
 #endif  // TP_FINAL_ERRORS_H

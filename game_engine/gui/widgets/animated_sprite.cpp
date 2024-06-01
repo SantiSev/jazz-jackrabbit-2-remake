@@ -24,7 +24,10 @@ void AnimatedSprite::update(int delta) {
 
 void AnimatedSprite::draw(SDL_Renderer* renderer) {
     s_rect.x = current_frame * s_rect.w;
-    SDL_RenderCopy(renderer, texture->get_texture(), &s_rect, &d_rect);
+    int err = SDL_RenderCopy(renderer, texture->get_texture(), &s_rect, &d_rect);
+    if (err < 0) {
+        throw SDLError("Error drawing animation: " + std::string(SDL_GetError()));
+    }
 }
 
 void AnimatedSprite::next_frame() { current_frame = (current_frame + 1) % frames; }

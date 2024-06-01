@@ -8,6 +8,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+#include "../../errors.h"
 #include "../basic/font.h"
 #include "../basic/texture.h"
 #include "../canvas_object.h"

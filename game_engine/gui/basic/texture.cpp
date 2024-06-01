@@ -3,23 +3,24 @@
 Texture::Texture(const std::string& file, SDL_Renderer* renderer): texture(nullptr) {
     texture = IMG_LoadTexture(renderer, file.c_str());
     if (texture == nullptr) {
-        throw FileDoesNotExist("Could not load texture from file: " + file);
+        throw SDLError("Error loading texture from image: " + file +
+                       " Errno: " + std::string(SDL_GetError()));
     }
 }
 
-Texture::Texture(std::shared_ptr<Font> font, const SDL_Color& color, const std::string& text,
+Texture::Texture(const std::shared_ptr<Font>& font, const SDL_Color& color, const std::string& text,
                  SDL_Renderer* renderer):
         texture(nullptr) {
     SDL_Surface* surface = TTF_RenderText_Solid(font->get_font(), text.c_str(), color);
     if (surface == nullptr) {
-        throw FileDoesNotExist("Could not render text surface.");
+        throw SDLError("Error creating surface from text: " + std::string(TTF_GetError()));
     }
 
     texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
 
     if (texture == nullptr) {
-        throw FileDoesNotExist("Could not create texture from surface.");
+        throw SDLError("Error creating texture from surface: " + std::string(SDL_GetError()));
     }
 }
 

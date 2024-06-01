@@ -9,6 +9,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "../../errors.h"
 #include "../basic/texture.h"
 #include "../canvas_object.h"
 

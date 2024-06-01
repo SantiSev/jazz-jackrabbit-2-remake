@@ -6,6 +6,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "../../errors.h"
 
@@ -17,8 +18,8 @@ private:
 
 public:
     explicit Texture(const std::string& file, SDL_Renderer* renderer);
-    explicit Texture(std::shared_ptr<Font> font, const SDL_Color& color, const std::string& text,
-                     SDL_Renderer* renderer);
+    explicit Texture(const std::shared_ptr<Font>& font, const SDL_Color& color,
+                     const std::string& text, SDL_Renderer* renderer);
 
     // Cant copy
     Texture(const Texture& other) = delete;

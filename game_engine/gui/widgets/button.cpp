@@ -18,13 +18,21 @@ void Button::is_hovered(bool hovered) {
 }
 
 void Button::draw(SDL_Renderer* renderer) {
+    int err;
     if (is_hovered_m) {
-        SDL_SetRenderDrawColor(renderer, hover_color.r, hover_color.g, hover_color.b,
-                               hover_color.a);
+        err = SDL_SetRenderDrawColor(renderer, hover_color.r, hover_color.g, hover_color.b,
+                                     hover_color.a);
     } else {
-        SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+        err = SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     }
-    SDL_RenderFillRect(renderer, &rect);
+    if (err < 0) {
+        throw SDLError("Error setting color: " + std::string(SDL_GetError()));
+    }
+
+    err = SDL_RenderFillRect(renderer, &rect);
+    if (err < 0) {
+        throw SDLError("Error drawing button: " + std::string(SDL_GetError()));
+    }
 
     label.draw(renderer);
 }

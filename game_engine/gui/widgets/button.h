@@ -2,17 +2,19 @@
 #define TP_FINAL_BUTTON_H
 
 #include <iostream>
+#include <string>
 #include <utility>
 
 #include <SDL2/SDL.h>
 
 #include "../../controllers/mouse.h"
+#include "../../errors.h"
 #include "../canvas_object.h"
 
 #include "label.h"
 
 class Button: public CanvasObject {
-private:
+protected:
     Label label;
     SDL_Rect rect;
     SDL_Color color;

@@ -1,9 +1,9 @@
 #include "font.h"
 
-Font::Font(const std::string& path, int size) {
-    font = TTF_OpenFont(path.c_str(), size);
+Font::Font(const std::string& file, int size) {
+    font = TTF_OpenFont(file.c_str(), size);
     if (font == nullptr) {
-        throw FileDoesNotExist("Font file does not exist");
+        throw SDLError("Error opening font: " + file + " Errno: " + std::string(TTF_GetError()));
     }
 }
 

@@ -4,7 +4,10 @@ Sprite::Sprite(std::shared_ptr<Texture> texture, SDL_Rect& s_rect, SDL_Rect& d_r
         texture(texture), s_rect(s_rect), d_rect(d_rect) {}
 
 void Sprite::draw(SDL_Renderer* renderer) {
-    SDL_RenderCopy(renderer, texture->get_texture(), &s_rect, &d_rect);
+    int err = SDL_RenderCopy(renderer, texture->get_texture(), &s_rect, &d_rect);
+    if (err < 0) {
+        throw SDLError("Error drawing sprite: " + std::string(SDL_GetError()));
+    }
 }
 
 void Sprite::set_position(int x, int y) {
