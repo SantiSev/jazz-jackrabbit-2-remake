@@ -2,6 +2,8 @@
 
 #include <SDL2/SDL.h>
 
+// COMPILE WITH `g++ rects_main.cpp -lSDL2 -o rects_main`
+
 int main() {
     SDL_Window* window = nullptr;
     SDL_Renderer* renderer = nullptr;
