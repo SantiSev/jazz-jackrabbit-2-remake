@@ -28,71 +28,54 @@ typedef enum: uint8_t {
 
 typedef enum: uint8_t { RABBIT_CHARACTER } character_t;
 
-struct BaseDTO {
-    virtual int size() = 0;
-} __attribute__((packed));
-
-struct CloseConnection: public BaseDTO {
+struct CloseConnection {
     const uint16_t header = htons(CLOSE_CONNECTION);
-    CloseConnection() {}
-    int size() override { return sizeof(CloseConnection) - sizeof(BaseDTO); }
 } __attribute__((packed));
 
-struct CheatCommand: public BaseDTO {
+struct CheatCommand {
     const uint16_t header = htons(RECV_CHEAT_COMMAND);
     cheat_command_t command;
-    int size() override { return sizeof(CheatCommand) - sizeof(BaseDTO); }
 } __attribute__((packed));
 
-struct Command: public BaseDTO {
+struct Command {
     const uint16_t header = htons(RECV_COMMAND);
     command_t command;
-    explicit Command(command_t command): command(command) {}
-    int size() override { return sizeof(Command) - sizeof(BaseDTO); }
 } __attribute__((packed));
 
-struct LeaveMatch: public BaseDTO {
+struct LeaveMatch {
     const uint16_t header = htons(RECV_LEAVE_MATCH);
     uint16_t id_player;
-    explicit LeaveMatch(uint16_t id_player): id_player(htons(id_player)) {}
-    int size() override { return sizeof(LeaveMatch) - sizeof(BaseDTO); }
 } __attribute__((packed));
 
-struct FinishMatch: public BaseDTO {
+struct FinishMatch {
     const uint16_t header = htons(SEND_FINISH_MATCH);
-    int size() override { return sizeof(FinishMatch) - sizeof(BaseDTO); }
 } __attribute__((packed));
 
-struct GameState: public BaseDTO {
+struct GameState {
     const uint16_t header = htons(SEND_GAME_STATE);
-    int size() override { return sizeof(GameState) - sizeof(BaseDTO); }
 } __attribute__((packed));
 
-struct CreateGame: public BaseDTO {
+struct CreateGame {
     const uint16_t header = htons(RECV_CREATE_GAME);
     uint16_t id_player;
     char match_name[256];
-    int size() override { return sizeof(CreateGame) - sizeof(BaseDTO); }
 } __attribute__((packed));
 
-struct JoinMatch: public BaseDTO {
+struct JoinMatch {
     const uint16_t header = htons(RECV_JOIN_MATCH);
     uint16_t id_player;
     uint16_t id_match;
     character_t player_character;
-    int size() override { return sizeof(JoinMatch) - sizeof(BaseDTO); }
 } __attribute__((packed));
 
-struct ActiveGames: public BaseDTO {
+struct ActiveGames {
     const uint16_t header = htons(SEND_ACTIVE_GAMES);
     char name[256];
     uint8_t players;
-    int size() override { return sizeof(ActiveGames) - sizeof(BaseDTO); }
 } __attribute__((packed));
 
-struct GameCreated: public BaseDTO {
+struct GameCreated {
     const uint16_t header = htons(SEND_GAME_CREATED);
-    int size() override { return sizeof(GameCreated) - sizeof(BaseDTO); }
 } __attribute__((packed));
 
 #endif
