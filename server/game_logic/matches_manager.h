@@ -26,7 +26,7 @@ public:
 
     void run() override;
     void stop() override;
-    ~MatchesManager() = default;
+    ~MatchesManager() override = default;
 
     void stop_all_matches();
     void check_matches_status();
@@ -35,15 +35,18 @@ public:
 
     std::vector<matchesDTO> return_matches_lists();
 
-    void create_new_match(ServerThreadManager* client, const std::shared_ptr<Message>& message);
+    void create_new_match(const uint16_t& id_client, const std::string& match_name,
+                          const size_t& max_players, const std::string& map_name);
 
     void add_new_client(Socket client_socket);
 
-    void send_match_lists(TestClientServer* client);
+    void send_match_lists(ServerThreadManager* client);
 
     void clear_all_waiting_clients();
 
-    void join_match(TestClientServer* client, const std::shared_ptr<Message>& message);
+    void join_match(ServerThreadManager* client, const std::shared_ptr<Message>& message);
+
+    ServerThreadManager* get_client_by_id(size_t id);
 };
 
 

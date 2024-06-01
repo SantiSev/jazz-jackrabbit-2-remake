@@ -13,6 +13,8 @@ void ClientProtocol::send_finish_match() {}
 void ClientProtocol::send_active_games(uint8_t length, std::vector<MatchDTO>& matches) {}
 void ClientProtocol::send_game_created() {}
 
+void ClientProtocol::send_message(const std::shared_ptr<Message>& msg) { msg->send_message(*this); }
+
 std::shared_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() { return {}; }
 
 std::shared_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() { return {}; }

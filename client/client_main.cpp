@@ -1,11 +1,15 @@
 #include <iostream>
+#include <memory>
 
 #include <arpa/inet.h>
 
 #include "../common/common_socket.h"
+#include "../common/protocol/messages/menu_events/recv_create_game.h"
+#include "../common/protocol/messages/menu_events/send_game_created.h"
 
 #define hostname argv[1]
 #define servname argv[2]
+#define QUIT 'q'
 
 int main(int argc, const char* argv[]) {
     try {
@@ -16,8 +20,10 @@ int main(int argc, const char* argv[]) {
         Socket server(hostname, servname);
 
         uint16_t event;
-        while (std::cin >> event) {
+        auto create_meesage = std::make_shared<RecvCreateGameMessage>();
+        while (std::cin.get() != QUIT) {
             bool was_closed = false;
+            if (std::cin.get() == 'c') {}
             event = htons(event);
             server.sendall(&event, sizeof(event), &was_closed);
             if (was_closed)

@@ -7,7 +7,6 @@
 #include <string>
 #include <utility>
 
-#include "../common/common_constants.h"
 #include "../common/protocol/messages/in_game_events/send_game_state.h"
 
 Match::Match(const std::string& map, std::string match_name, size_t required_players_setting):

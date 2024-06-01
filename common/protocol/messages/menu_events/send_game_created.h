@@ -11,6 +11,7 @@ class SendGameCreatedMessage: public Message {
 private:
     uint16_t header = SEND_GAME_CREATED;
 
+
 public:
     SendGameCreatedMessage();
     void run() override;

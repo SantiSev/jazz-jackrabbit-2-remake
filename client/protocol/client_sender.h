@@ -13,11 +13,11 @@ private:
 public:
     explicit ClientSender(ClientProtocol& client_protocol, Queue<std::shared_ptr<Message>>& queue);
 
+    void run() override;
+
     bool is_dead();
 
     void kill();
-
-    void run() override;
 
     ~ClientSender();
 };

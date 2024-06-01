@@ -14,6 +14,7 @@
 #include "../../common/protocol/messages/menu_events/send_active_games.h"
 #include "../../common/protocol/messages/menu_events/send_game_created.h"
 
+
 class ClientProtocol: public CommonProtocol {
 private:
     std::shared_ptr<SendFinishMatchMessage> recv_finish_match();
@@ -35,6 +36,8 @@ public:
     void send_finish_match() override;
     void send_active_games(uint8_t length, std::vector<MatchDTO>& matches) override;
     void send_game_created() override;
+
+    void send_message(const std::shared_ptr<Message>& msg);
 };
 
 #endif

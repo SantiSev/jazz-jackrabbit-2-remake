@@ -4,9 +4,6 @@
 #include <utility>
 #include <vector>
 
-#include "../../common/common_socket.h"
-#include "../protocol/server_thread_manager.h"
-
 MatchesManager::MatchesManager():
         online(true),
         matches_number(0),
@@ -37,30 +34,38 @@ void MatchesManager::run() {
     }
 }
 
-void MatchesManager::create_new_match(ServerThreadManager* client,
-                                      const std::shared_ptr<Message>& message) {
+void MatchesManager::create_new_match(const uint16_t& id_client, const std::string& match_name,
+                                      const size_t& max_players, const std::string& map_name) {
     matches_number++;
-    // todo deberia ser así:
-    //     std::shared_ptr<NuevaPartida> nueva_partida =
-    //     std::dynamic_pointer_cast<NuevaPartida>(message);
-    //     auto match = std::make_shared<Match>(nueva_partida->get_map_name(),
-    //     nueva_partida->get_name(),nueva_partida->get_required_players());
-    //    matches.insert({matches_number, match});
-    //    match->start();
-    //    Player player(0, nueva_partida->get_name(), nueva_partida->get_character_name());
-    //    match->add_client_to_match(client);
-    //    match->add_player_to_game(player);
-    //
-    // reemplazar
-    auto match = std::make_shared<Match>("map 1", "my first match", REQUIRED_PLAYERS_TO_START);
-    //
+    auto match = std::make_shared<Match>(map_name, match_name, max_players);
     matches.insert({matches_number, match});
     match->start();
-    match->add_client_to_match(client, "pepe", "mago");
+    Player player(0, "jugador1", "personaje1");
+    match->add_client_to_match(get_client_by_id(id_client), player.get_name(),
+                               player.get_character());
+    match->add_player_to_game(player.get_name(), player.get_character());
+
+
+    // reemplazar
+    //    auto match = std::make_shared<Match>("map 1", "my first match",
+    //    REQUIRED_PLAYERS_TO_START);
+    //    //
+    //    matches.insert({matches_number, match});
+    //    match->start();
+    //    match->add_client_to_match(client, "pepe", "mago");
     //
 }
 
-void MatchesManager::join_match(TestClientServer* client, const std::shared_ptr<Message>& message) {
+ServerThreadManager* MatchesManager::get_client_by_id(size_t id) {
+    auto it = std::find_if(clients.begin(), clients.end(), [id](ServerThreadManager* client) {
+        return client->get_client_id() == id;
+    });
+
+    return (it != clients.end()) ? *it : nullptr;
+}
+
+void MatchesManager::join_match(ServerThreadManager* client,
+                                const std::shared_ptr<Message>& message) {
     //    auto join_match = std::dynamic_pointer_cast<JoinMatch>(message);
     //    auto it = matches.find(join_match->get_id());
     //    if (it != matches.end()) {
@@ -140,10 +145,11 @@ void MatchesManager::add_new_client(Socket client_socket) {
     //    para que lo guarde client->get_sender_queue()->push(message);
     client->set_client_id(clients_connected);
     clients.push_back(client);
-    create_new_match(clients.front(), nullptr);  // esto normalmente no se llama aca, quitar cuando
-                                                 // se conecte mediante mensajes.
-                                                 // ATENCION FALLA SI CONECTAN MAS DE UNO PORQUE SE
-                                                 // USA EL FRONT(). ES PARA TESTEAR
+    create_new_match(1, "match 1", REQUIRED_PLAYERS_TO_START,
+                     "map 1");  // esto normalmente no se llama aca, quitar cuando
+                                // se conecte mediante mensajes.
+                                // ATENCION FALLA SI CONECTAN MAS DE UNO PORQUE SE
+                                // USA EL FRONT(). ES PARA TESTEAR
 }
 
 void MatchesManager::clear_all_waiting_clients() {
@@ -154,7 +160,7 @@ void MatchesManager::clear_all_waiting_clients() {
     clients.clear();
 }
 
-void MatchesManager::send_match_lists(TestClientServer* client) {
+void MatchesManager::send_match_lists(ServerThreadManager* client) {
     // todo deberia ser así
     // client->get_sender_queue()->push(return_matches_lists());
 }
