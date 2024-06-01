@@ -4,6 +4,8 @@
 #include <utility>
 #include <vector>
 
+#include "../../common/protocol/messages/common_message.h"
+
 MatchesManager::MatchesManager():
         online(true),
         matches_number(0),
@@ -40,11 +42,9 @@ void MatchesManager::create_new_match(const uint16_t& id_client, const std::stri
     auto match = std::make_shared<Match>(map_name, match_name, max_players);
     matches.insert({matches_number, match});
     match->start();
-    Player player(0, "jugador1", "personaje1");
+    Player player(matches_number, "jugador1", "personaje1");
     match->add_client_to_match(get_client_by_id(id_client), player.get_name(),
                                player.get_character());
-    match->add_player_to_game(player.get_name(), player.get_character());
-
 
     // reemplazar
     //    auto match = std::make_shared<Match>("map 1", "my first match",
@@ -145,7 +145,7 @@ void MatchesManager::add_new_client(Socket client_socket) {
     //    para que lo guarde client->get_sender_queue()->push(message);
     client->set_client_id(clients_connected);
     clients.push_back(client);
-    create_new_match(1, "match 1", REQUIRED_PLAYERS_TO_START,
+    create_new_match(client->get_client_id(), "match 1", REQUIRED_PLAYERS_TO_START,
                      "map 1");  // esto normalmente no se llama aca, quitar cuando
                                 // se conecte mediante mensajes.
                                 // ATENCION FALLA SI CONECTAN MAS DE UNO PORQUE SE

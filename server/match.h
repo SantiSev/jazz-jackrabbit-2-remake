@@ -6,15 +6,9 @@
 #include <string>
 #include <vector>
 
-//#include "../common/common_constants.h"
-//#include "../common/common_queue.h"
-#include "../common/common_thread.h"
 #include "../common/message/snapshot.h"
-#include "game_logic/characters/enemies.h"
-#include "game_logic/characters/player.h"
 #include "game_logic/client_monitor.h"
 #include "protocol/server_thread_manager.h"
-//#include "../common/protocol/messages/in_game_events/send_game_state.h"
 
 
 class Match: public Thread {

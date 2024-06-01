@@ -30,11 +30,10 @@ void ServerThreadManager::set_sender_queue(
 }
 
 void ServerThreadManager::stop() {
-    server_protocol.force_shutdown();
-    receiver.kill();
-    receiver.join();
     sender.kill();
     sender.join();
+    receiver.kill();
+    receiver.join();
 }
 
 void ServerThreadManager::set_client_id(const size_t& new_id) { this->client_id = new_id; }

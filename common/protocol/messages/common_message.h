@@ -5,8 +5,9 @@
 #include <memory>
 
 #include "../common_protocol.h"
-//#include "../../../server/game_logic/matches_manager.h"
-//#include "../../../server/match.h"
+
+class MatchesManager;
+class Match;
 
 class Message {
 private:
@@ -16,8 +17,8 @@ public:
     Message();
     uint16_t return_header() const { return header; }
     virtual void send_message(CommonProtocol& protocol) = 0;
-    //    virtual void run(MatchesManager& matches_manager) {};
-    //    virtual void run(Match& match) {};
+    virtual void run(MatchesManager& matches_manager) {}
+    virtual void run(Match& match) {}
     virtual void run();
     virtual ~Message();
 };

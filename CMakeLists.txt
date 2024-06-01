@@ -45,7 +45,7 @@ file(GLOB_RECURSE HEADERS_COMMON "common/*.h" "common/protocol/*.h" "common/prot
 file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine_*.h")
 
 
-add_executable(client ${SOURCES_COMMON} ${HEADERS_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT}  ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
+add_executable(client ${SOURCES_COMMON} ${HEADERS_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT}  ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE} ${HEADERS_SERVER})
 add_executable(server ${SOURCES_COMMON} ${HEADERS_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} )
 target_link_libraries(client SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 

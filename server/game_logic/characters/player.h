@@ -27,7 +27,7 @@ private:
     // bool is_facing_right; (?)
     bool is_alive = true;
     size_t revive_cooldown = REVIVE_COOLDOWN;
-    std::vector<Weapon> weapons{};
+    //    std::vector<Weapon> weapons{};
     size_t selected_weapon = DEFAULT_WEAPON;
 
 public:

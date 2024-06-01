@@ -4,8 +4,8 @@
 
 #include "../../common/common_queue.h"
 #include "../../common/common_thread.h"
+#include "../../common/protocol/messages/common_message.h"
 #include "./server_protocol.h"
-//#include "../../common/protocol/messages/common_message.h"
 
 class ServerReceiver: public Thread {
 private:

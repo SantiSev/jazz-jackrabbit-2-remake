@@ -10,7 +10,6 @@
 #include "../../common/common_queue.h"
 #include "../../common/protocol/messages/common_message.h"
 
-
 class ClientMonitor {
 private:
     std::list<std::reference_wrapper<std::shared_ptr<Queue<std::shared_ptr<Message>>>>>

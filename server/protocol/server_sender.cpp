@@ -5,12 +5,18 @@ ServerSender::ServerSender(ServerProtocol& protocol):
 
 bool ServerSender::is_dead() { return _keep_running; }
 
-void ServerSender::kill() { _keep_running = false; }
+void ServerSender::kill() {
+    _keep_running = false;
+    queue->close();
+    server_protocol.force_shutdown();
+}
 
 void ServerSender::run() {
     try {
-        std::shared_ptr<Message> msg = queue->pop();
-        server_protocol.send_message(msg);
+        while (_keep_running) {
+            std::shared_ptr<Message> msg = queue->pop();
+            server_protocol.send_message(msg);
+        }
     } catch (const ClosedQueue& err) {
         _keep_running = false;
     }

@@ -4,7 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "../../common/protocol/common_protocol.h"
+//#include "../../common/protocol/common_protocol.h"
+#include "../../common/protocol/messages/common_message.h"
 #include "../../common/protocol/messages/in_game_events/recv_cheat_command.h"
 #include "../../common/protocol/messages/in_game_events/recv_command.h"
 #include "../../common/protocol/messages/in_game_events/recv_leave_match.h"

@@ -5,7 +5,8 @@
 
 #include "../../server/game_logic/characters/enemies.h"
 #include "../../server/game_logic/characters/player.h"
-#include "../common_dto.h"
+#include "../../server/game_logic/characters/weapon.h"
+
 
 class Snapshot {
 private:
@@ -27,8 +28,6 @@ public:
 
     void set_minutes(const int& new_minutes);
     void set_seconds(const int& new_seconds);
-
-    SnapshotDTO to_dto() const;
 };
 
 

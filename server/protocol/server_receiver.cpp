@@ -12,7 +12,9 @@ void ServerReceiver::run() {
     try {
         while (_keep_running) {
             std::shared_ptr<Message> message = server_protocol.recv_message();
-            queue->try_push(message);
+            if (_keep_running) {
+                queue->push(message);
+            }
         }
     } catch (const ClosedQueue& err) {
         _keep_running = false;

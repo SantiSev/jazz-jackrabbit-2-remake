@@ -49,4 +49,4 @@ void CommonProtocol::force_shutdown() {
     skt.close();
 }
 
-CommonProtocol::~CommonProtocol() {}
+CommonProtocol::~CommonProtocol() = default;

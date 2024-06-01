@@ -20,7 +20,7 @@ int main(int argc, const char* argv[]) {
         Socket server(hostname, servname);
 
         uint16_t event;
-        auto create_meesage = std::make_shared<RecvCreateGameMessage>();
+        auto create_meesage = std::make_shared<RecvCreateGameMessage>(1, "match 1");
         while (std::cin.get() != QUIT) {
             bool was_closed = false;
             if (std::cin.get() == 'c') {}
