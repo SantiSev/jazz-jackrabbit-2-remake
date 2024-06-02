@@ -156,3 +156,38 @@ TEST_CASE("Push Dynamic Object out of bounds", "[CollisionManager]") {
                             ->get_hitbox_width());  // now our body true position should be still at
                                                     // 990,Y since the objects width is of 10
 }
+
+TEST_CASE("Move multiple dynamic objects", "[DynamicBody]") {
+
+    CollisionManager collision_manager(1000, 1000);
+    int Y = 10;  // Y axis remains constant because we are only moving horizontally
+    int expected_position = 50;
+
+    auto dynamic_body_1 = std::make_shared<DynamicBody>(
+            expected_position, Y, 10,
+            10);  // Create a dynamic body at position 50,Y and speed of 1
+
+    auto dynamic_body_2 = std::make_shared<DynamicBody>(
+            expected_position + 40, Y, 10,
+            10);  // Create a dynamic body at position 50,Y and speed of 1
+
+
+    collision_manager.add_object(dynamic_body_1);  // Add the object to the collision manager
+    collision_manager.add_object(dynamic_body_2);  // Add the object to the collision manager
+
+    // tracking start!
+    // since i want to move the dynamic body into the wall, i need to make sure that if the DO
+    // toches the wall then it's position sould be in the left index of the wall
+
+    // iterate move_horizontal 10 times
+    for (int i = 0; i < 10; ++i) {
+
+        dynamic_body->move_horizontal(1);  // Move the object horizontally by 1 unit
+        collision_manager.update_dynamic_object(
+                dynamic_body);  // update the object in the collision manager
+    }
+
+    REQUIRE(dynamic_body->get_position().get_x() ==
+            expected_position);  // now our body should be at (50,10) since its pushing against a
+    // wall
+}

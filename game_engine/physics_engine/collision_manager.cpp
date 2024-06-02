@@ -21,7 +21,7 @@ void CollisionManager::place_object_in_grid(std::shared_ptr<CollisionObject> obj
          i < obj->get_position().get_x() + obj->get_hitbox_width(); ++i) {
         for (int j = obj->get_position().get_y();
              j < obj->get_position().get_y() + obj->get_hitbox_height(); ++j) {
-            if (is_valid_cell(i, j)) {
+            if (is_valid_cell(i, j) && grid[i][j] == nullptr) {
                 grid[i][j] = obj;
             }
         }
