@@ -2,6 +2,7 @@
 #define TP_FINAL_ASSET_MANAGER_H
 
 #include <string>
+
 #include <SDL2/SDL.h>
 
 #include "../../errors.h"
@@ -18,4 +19,4 @@ public:
     ~AssetManager();
 };
 
-#endif //TP_FINAL_ASSET_MANAGER_H
+#endif  // TP_FINAL_ASSET_MANAGER_H

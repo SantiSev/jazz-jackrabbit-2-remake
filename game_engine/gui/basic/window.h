@@ -1,6 +1,8 @@
 #ifndef TP_FINAL_WINDOW_H
 #define TP_FINAL_WINDOW_H
 
+#include <string>
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -30,4 +32,4 @@ public:
     ~Window();
 };
 
-#endif //TP_FINAL_WINDOW_H
+#endif  // TP_FINAL_WINDOW_H

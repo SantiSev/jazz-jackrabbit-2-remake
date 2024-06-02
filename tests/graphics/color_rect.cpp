@@ -1,9 +1,9 @@
+#include "../../game_engine/gui/widgets/color_rect.h"
+
 #include <iostream>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-
-#include "../../game_engine/gui/widgets/color_rect.h"
 
 void run(SDL_Renderer*& renderer, SDL_Window*& window) {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {

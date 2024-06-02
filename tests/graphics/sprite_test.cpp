@@ -1,13 +1,14 @@
+#include "../../game_engine/gui/widgets/sprite.h"
+
 #include <iostream>
 #include <string>
 
 #include <SDL2/SDL.h>
 
 #include "../../game_engine/controllers/mouse.h"
+#include "../../game_engine/gui/basic/asset_manager.h"
 #include "../../game_engine/gui/basic/texture.h"
 #include "../../game_engine/gui/basic/window.h"
-#include "../../game_engine/gui/basic/asset_manager.h"
-#include "../../game_engine/gui/widgets/sprite.h"
 
 int main() {
     Window window(800, 600, true, false);
@@ -19,10 +20,7 @@ int main() {
     SDL_Event event;
     bool running = true;
     auto texture =
-            std::make_shared<Texture>(
-                asset_manager.get_full_path("assets/screens.png"),
-             renderer
-             );
+            std::make_shared<Texture>(asset_manager.get_full_path("assets/screens.png"), renderer);
     SDL_Rect rect = {16, 16, 640, 480};
     SDL_Rect d_rect = {0, 0, 800, 600};
     Sprite sprite(texture, rect, d_rect);
@@ -47,7 +45,7 @@ int main() {
 
         // Draw
         sprite.draw(renderer);
-        
+
         window.render();
 
         frame_time = SDL_GetTicks() - frame_start;

@@ -11,6 +11,4 @@ std::string AssetManager::get_full_path(const std::string& file) const {
     return std::string(base_path) + file;
 }
 
-AssetManager::~AssetManager() {
-    SDL_free(base_path);
-}
+AssetManager::~AssetManager() { SDL_free(base_path); }
