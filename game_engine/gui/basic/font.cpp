@@ -3,7 +3,7 @@
 Font::Font(const std::string& file, int size) {
     font = TTF_OpenFont(file.c_str(), size);
     if (font == nullptr) {
-        throw SDLError("Error opening font: " + file + " Errno: " + std::string(TTF_GetError()));
+        throw SDLError("Error opening font: " + std::string(TTF_GetError()));
     }
 }
 
