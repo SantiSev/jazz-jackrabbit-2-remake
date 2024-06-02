@@ -32,6 +32,10 @@ bool Vector2D::operator==(const Vector2D& other) const {
     return this->x == other.x && this->y == other.y;
 }
 
+bool Vector2D::operator!=(const Vector2D& other) const {
+    return this->x != other.x || this->y != other.y;
+}
+
 Vector2D& Vector2D::operator+=(const Vector2D& other) {
     this->x += other.x;
     this->y += other.y;

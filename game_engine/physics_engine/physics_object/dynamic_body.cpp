@@ -4,33 +4,40 @@
 
 #include "dynamic_body.h"
 
-DynamicBody::DynamicBody(int width, int height, CollisionManager& collision_manager): CollisionObject(width, height), collision_manager(collision_manager) {}
+DynamicBody::DynamicBody(int width, int height):
+        CollisionObject(width, height),
+        velocity(1, 1),
+        acceleration(0, 0),
+        old_position_reference(0, 0) {}
 
-DynamicBody::DynamicBody(int x, int y, int width, int height, CollisionManager& collision_manager): CollisionObject(x, y, width, height), collision_manager(collision_manager) {}
+DynamicBody::DynamicBody(int x, int y, int width, int height):
+        CollisionObject(x, y, width, height),
+        velocity(1, 1),
+        acceleration(0, 0),
+        old_position_reference(x, y) {}
 
 DynamicBody::DynamicBody(int x, int y, int width, int height, Vector2D base_speed,
-                             Vector2D base_acceleration, CollisionManager& collision_manager): CollisionObject(x, y, width, height),
-                             velocity(base_speed), acceleration(base_acceleration),collision_manager(collision_manager) {}
+                         Vector2D base_acceleration):
+        CollisionObject(x, y, width, height),
+        velocity(base_speed),
+        acceleration(base_acceleration),
+        old_position_reference(x, y) {}
 
 
 Vector2D DynamicBody::move_horizontal(int deltaTime) {
 
-    Vector2D newPosition = get_position() + Vector2D(velocity.get_x() * deltaTime, 0); //update position
-    detect_colision(); // detect if there is a collision and handle it
-    return update_position(newPosition); // update position internally
-
+    Vector2D newPosition =
+            get_position() + Vector2D(velocity.get_x() * deltaTime, 0);  // update position
+    return update_position(newPosition);  // update position internally
 }
 
 Vector2D DynamicBody::move_vertical(int deltaTime) {
 
     Vector2D newPosition = get_position() + Vector2D(0, velocity.get_y() * deltaTime);
-    detect_colision();
     return update_position(newPosition);
 }
 
-void DynamicBody::update_velocity(int deltaTime) {
-    velocity = velocity + acceleration * deltaTime;
-}
+void DynamicBody::update_velocity(int deltaTime) { velocity = velocity + acceleration * deltaTime; }
 
 void DynamicBody::set_acceleration(Vector2D newAcceleration) {
     this->acceleration = newAcceleration;
@@ -38,14 +45,18 @@ void DynamicBody::set_acceleration(Vector2D newAcceleration) {
 
 void DynamicBody::set_velocity(Vector2D newVelocity) { this->velocity = newVelocity; }
 
-Vector2D DynamicBody::stop_movement() { velocity = Vector2D(0, 0); return velocity; }
+Vector2D DynamicBody::stop_movement() {
+    velocity = Vector2D(0, 0);
+    return velocity;
+}
 
 Vector2D DynamicBody::get_velocity() const { return velocity; }
 
 Vector2D DynamicBody::get_acceleration() const { return acceleration; }
 
+Vector2D DynamicBody::get_update_position_reference() const { return old_position_reference; }
+
 Vector2D DynamicBody::update_position(Vector2D newPosition) {
-    collision_manager.update__dynamic_object(this, old_position_reference);
     old_position_reference = get_position();
     return CollisionObject::update_position(newPosition);
 }
@@ -78,17 +89,5 @@ void DynamicBody::handle_colision(
         default:
             // No collision detected
             break;
-    }
-}
-
-// When a character collides with another object, the other object should handle the collision
-void DynamicBody::detect_colision() {
-    for (int i = get_position().get_x(); i < get_position().get_x() + get_hitbox_width(); ++i) {
-        for (int j = get_position().get_y(); j < get_position().get_y() + get_hitbox_height(); ++j) {
-            std::shared_ptr<CollisionObject> other = collision_manager.get_collision_object_at(i, j);
-            if (other != nullptr && other.get() != this) {
-                other->handle_colision(*this);
-            }
-        }
     }
 }

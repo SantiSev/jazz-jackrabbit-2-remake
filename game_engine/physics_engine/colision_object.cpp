@@ -25,7 +25,9 @@ int CollisionObject::get_hitbox_height() const { return hitbox_height; }
 
 void CollisionObject::set_hitbox_width(int new_hitbox_width) { hitbox_width = new_hitbox_width; }
 
-void CollisionObject::set_hitbox_height(int new_hitbox_height) { hitbox_height = new_hitbox_height; }
+void CollisionObject::set_hitbox_height(int new_hitbox_height) {
+    hitbox_height = new_hitbox_height;
+}
 
 bool CollisionObject::is_touching_bool(const CollisionObject& other) const {
 
@@ -44,6 +46,15 @@ bool CollisionObject::is_touching_bool(const CollisionObject& other) const {
 
 
 CollisionFace CollisionObject::is_touching(const CollisionObject& other) const {
+
+    /*
+    Result:
+        CollisionFace::LEFT: The right side of this is touching the left side of other.
+        CollisionFace::RIGHT: The left side of this is touching the right side of other.
+        CollisionFace::TOP: The bottom side of this is touching the top side of other.
+        CollisionFace::BOTTOM: The top side of this is touching the bottom side of other.
+        CollisionFace::NONE: No sides are touching.
+    */
 
     int left_diff = get_right_hitbox_side() - other.get_left_hitbox_side();
     int right_diff = other.get_right_hitbox_side() - get_left_hitbox_side();

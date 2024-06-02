@@ -47,8 +47,7 @@ file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine_*.h")
 
 add_executable(client ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE}
         game_engine/physics_engine/collision_manager.h
-        game_engine/physics_engine/colision_object.h
-        game_engine/physics_engine/colision_face.h)
+        game_engine/physics_engine/colision_object.h)
 
 add_executable(server ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON}
         game_engine/physics_engine/collision_manager.h
@@ -59,8 +58,7 @@ target_link_libraries(client SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 # GRAPHICS TEST
 add_executable(graphics_test tests/graphics/graphics_test.cpp
         game_engine/physics_engine/collision_manager.h
-        game_engine/physics_engine/colision_object.h
-        game_engine/physics_engine/colision_face.h)
+        game_engine/physics_engine/colision_object.h)
 target_link_libraries(graphics_test SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 
 if (DEFINED TSAN)
@@ -69,8 +67,7 @@ if (DEFINED TSAN)
 
     add_executable(server-tsan ${SOURCES_SERVER} ${SOURCES_COMMON}
     game_engine/physics_engine/collision_manager.h
-    game_engine/physics_engine/colision_object.h
-    game_engine/physics_engine/colision_face.h)
+    game_engine/physics_engine/colision_object.h)
 
 endif()
 

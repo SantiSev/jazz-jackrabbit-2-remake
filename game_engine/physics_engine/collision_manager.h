@@ -5,9 +5,10 @@
 #ifndef COLLISION_MANAGER_H
 #define COLLISION_MANAGER_H
 
-#include <unordered_set>
-#include <vector>
+
 #include <memory>
+#include <vector>
+
 #include "../math/vector2D.h"
 #include "physics_object/dynamic_body.h"
 
@@ -18,7 +19,8 @@ class CollisionManager {
 private:
     int grid_width;
     int grid_height;
-    std::vector<std::vector<std::shared_ptr<CollisionObject>>> grid;  // grid: [x][y] stores a vector of shared pointers to CollisionObjects
+    std::vector<std::vector<std::shared_ptr<CollisionObject>>>
+            grid;  // grid: [x][y] stores a vector of shared pointers to CollisionObjects
 
     void place_object_in_grid(std::shared_ptr<CollisionObject> obj);
     void remove_object_from_grid(std::shared_ptr<CollisionObject> obj, Vector2D position);
@@ -27,6 +29,8 @@ private:
         return x >= 0 && x < grid_width && y >= 0 && y < grid_height;
     }
 
+    void detect_colisions(std::shared_ptr<DynamicBody> obj);
+
 public:
     CollisionManager(int levelWidth, int levelHeight);
 
@@ -34,8 +38,7 @@ public:
     void add_object(std::shared_ptr<CollisionObject> obj);
     void remove_object(std::shared_ptr<CollisionObject> obj);
     void update_object(std::shared_ptr<CollisionObject> obj);
-    void update__dynamic_object(std::shared_ptr<DynamicBody> obj, Vector2D old_position);
-
+    void update_dynamic_object(std::shared_ptr<DynamicBody> obj);
 
 
     void clear();

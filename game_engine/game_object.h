@@ -20,6 +20,16 @@ public:
         return position;
     }
 
+    virtual Vector2D update_position_x(int x) {
+        position.set_x(x);
+        return position;
+    }
+
+    virtual Vector2D update_position_y(int y) {
+        position.set_y(y);
+        return position;
+    }
+
     Vector2D get_position() const { return position; }
 
     virtual ~GameObject() = default;

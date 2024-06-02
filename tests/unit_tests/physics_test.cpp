@@ -2,18 +2,23 @@
 // Created by santi on 25/05/24.
 //
 #define CATCH_CONFIG_MAIN
-#include "../catch.hpp"
+#include <iostream>
+
 #include "../../game_engine/physics_engine/collision_manager.h"
 #include "../../game_engine/physics_engine/physics_object/dynamic_body.h"
 #include "../../game_engine/physics_engine/physics_object/static_body.h"
+#include "../catch.hpp"
 
+#define PRINT_DEBUG(message)                                                                      \
+    std::cout << "DEBUG: " << __FILE__ << ":" << __LINE__ << " (" << __func__ << "): " << message \
+              << std::endl
 
 
 TEST_CASE("ColisionManager with a static body", "[ColisionManager]") {
 
     CollisionManager collision_manager(100, 100);
 
-    std::shared_ptr<StaticBody> body = std::make_shared<StaticBody>(50,50,10,10);
+    std::shared_ptr<StaticBody> body = std::make_shared<StaticBody>(50, 50, 10, 10);
 
     collision_manager.add_object(body);
 
@@ -30,7 +35,7 @@ TEST_CASE("ColisionManager with a static body", "[ColisionManager]") {
 TEST_CASE("ColisionManager with a static body, then remove it", "[ColisionManager]") {
     CollisionManager collision_manager(100, 100);
 
-    std::shared_ptr<StaticBody> body = std::make_shared<StaticBody>(50,50,10,10);
+    std::shared_ptr<StaticBody> body = std::make_shared<StaticBody>(50, 50, 10, 10);
 
     collision_manager.add_object(body);
 
@@ -40,7 +45,8 @@ TEST_CASE("ColisionManager with a static body, then remove it", "[ColisionManage
     for (int x = 50; x < 60; ++x) {
         for (int y = 50; y < 60; ++y) {
             auto obj = collision_manager.get_collision_object_at(x, y);
-            REQUIRE(obj == nullptr); // Assuming get_collision_object_at returns nullptr if no object is present
+            REQUIRE(obj == nullptr);  // Assuming get_collision_object_at returns nullptr if no
+                                      // object is present
         }
     }
 }
@@ -48,9 +54,9 @@ TEST_CASE("ColisionManager with a static body, then remove it", "[ColisionManage
 TEST_CASE("Check colision everywhere else other than the current place", "[ColisionManager]") {
     CollisionManager collision_manager(100, 100);
 
-    std::shared_ptr<StaticBody> body = std::make_shared<StaticBody>(0,0,10,10);
+    std::shared_ptr<StaticBody> body = std::make_shared<StaticBody>(0, 0, 10, 10);
 
-    collision_manager.add_object(body);
+    collision_manager.add_object(body);  // the CM will now track body
 
     for (int x = 11; x < 100; ++x) {
         for (int y = 11; y < 100; ++y) {
@@ -63,81 +69,60 @@ TEST_CASE("Check colision everywhere else other than the current place", "[Colis
 
 TEST_CASE("Update object position using move_horizontal", "[DynamicBody]") {
 
-    int game_time = 0; // Assuming the game time is 10 ms
-    int expected_position = 51;
-    auto body = std::make_shared<DynamicBody>(50, 50, 10, 10, Vector2D(1, 1), Vector2D(0, 0));
-
-    // simulate the game loop
-    while (game_time != 10 ) {
-        body->move_horizontal(1); // Move the object horizontally by 1 unit
-        REQUIRE(body->get_position().get_x() == expected_position); // The object should have moved 10 units to the right
-        expected_position += 1;
-        game_time += 1;
-    }
-
-    REQUIRE(body->get_position().get_x() == 60); // The object should have moved 10 units to the right
-
-}
-
-TEST_CASE("Update object position using move_vertical", "[DynamicBody]") {
-
-    int game_time = 0; // Assuming the game time is 10 ms
-    int expected_position = 51;
-    auto body = std::make_shared<DynamicBody>(50, 50, 10, 10, Vector2D(1, 1), Vector2D(0, 0));
-
-    // simulate the game loop
-    while (game_time != 10 ) {
-        body->move_vertical(1); // Move the object vertically by 1 unit
-        REQUIRE(body->get_position().get_y() == expected_position); // The object should have moved 1 unit to the vertically
-        expected_position += 1;
-        game_time += 1;
-    }
-
-    REQUIRE(body->get_position().get_y() == 60); // The object should have moved 10 units to the right
-
-}
-
-TEST_CASE("Update object position using parabolic movement", "[DynamicBody]") {
-
-    int game_time = 0; // Assuming the game time is 10 ms
-    Vector2D expected_position = Vector2D(50,50);
-    auto body = std::make_shared<DynamicBody>(50, 50, 10, 10, Vector2D(1, 1), Vector2D(0, 0));
-
-    // simulate the game loop
-    while (game_time != 10 ) {
-        body->move_vertical(1); // Move the object vertically by 1 unit
-        body->move_horizontal(1); // Move the object horizontally by 1 unit
-        expected_position += Vector2D(1,1);
-        REQUIRE(body->get_position() == expected_position); // The object should have moved 1 unit to the vertically
-        game_time += 1;
-    }
-
-    REQUIRE(body->get_position().get_x() == expected_position.get_x());
-    REQUIRE(body->get_position().get_y() == expected_position.get_y());
-}
-
-TEST_CASE("Update object position and see its values updated in collisionManager", "[CollisionManager]") {
-
     CollisionManager collision_manager(1000, 1000);
 
-    auto body = std::make_shared<DynamicBody>(50, 50, 10, 10, Vector2D(1, 1), Vector2D(0, 0), collision_manager);
+    int expected_position = 50;
+    auto body = std::make_shared<DynamicBody>(
+            50, 50, 10, 10, Vector2D(1, 1),
+            Vector2D(0, 0));  // Create a dynamic body at position 50,50
 
-    // add body to collision_manager
-    collision_manager.add_object(body);
+    collision_manager.add_object(body);  // Add the object to the collision manager
 
-    // get value and compare positions
-    auto get_body = collision_manager.get_collision_object_at(50, 50);
+    auto no_body = collision_manager.get_collision_object_at(expected_position + 10, 50);
+    REQUIRE(no_body == nullptr);  // currenty there is nothing at (60, 50), our object is at (50,50)
 
-    REQUIRE(body == get_body);
+    REQUIRE(body->get_position().get_x() == expected_position);  // now our body is at (50,50)
+    body->move_horizontal(
+            10);  // Move the object horizontally by 10 unit, now our body should be at (60,50)
+    REQUIRE(body->get_position().get_x() ==
+            expected_position + 10);  // now our body should be at (60,50)
 
-    // update the position of the object
-    body->move_horizontal(100); // Move the object horizontally by 1 unit
-    //collision_manager.update_object(body);
+    collision_manager.update_dynamic_object(body);  // update the object in the collision manager
 
-    // get value and compare positions
-    auto should_be_empty_body = collision_manager.get_collision_object_at(50, 50);
+    auto get_body = collision_manager.get_collision_object_at(
+            expected_position + 10, 50);  // get the object at the new position
 
-    std::cout << should_be_empty_body << std::endl;
+    REQUIRE(get_body == body);  // make sure that the body i got is the same as my existing body
 
+    REQUIRE(get_body->get_position().get_x() ==
+            expected_position + 10);  // make sure that the body i got is at the correct position
+}
 
+TEST_CASE("Push Dynamic Object into a wall", "[DynamicBody]") {
+
+    CollisionManager collision_manager(1000, 1000);
+    int Y = 10;  // Y axis remains constant because we are only moving horizontally
+    int expected_position = 50;
+    auto dynamic_body = std::make_shared<DynamicBody>(
+            expected_position, Y, 10,
+            10);  // Create a dynamic body at position 50,50 and speed of 1
+    auto static_body = std::make_shared<StaticBody>(expected_position + 10, Y, 10,
+                                                    10);  // Create a static body at position 60,50
+
+    collision_manager.add_object(dynamic_body);  // Add the object to the collision manager
+    collision_manager.add_object(static_body);   // Add the object to the collision manager
+
+    // tracking start!
+    // since i want to move the dynamic body into the wall, i need to make sure that if the DO
+    // toches the wall then it's position sould be in the left index of the wall
+
+    // iterate move_horizontal 1000 times
+    for (int i = 0; i < 10; ++i) {
+        dynamic_body->move_horizontal(1);  // Move the object horizontally by 1 unit
+        collision_manager.update_dynamic_object(
+                dynamic_body);  // update the object in the collision manager
+    }
+
+    REQUIRE(dynamic_body->get_position().get_x() ==
+            expected_position);  // now our body should be at (50,10)
 }
