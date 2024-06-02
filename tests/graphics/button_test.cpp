@@ -44,10 +44,10 @@ int main() {
         Mouse mouse(0, 0);
 
         SDL_Rect rect_label = {300, 200, 100, 100};
-        Label label(font, rect_label, {0, 0, 0}, {255, 255, 255}, "Hello", renderer);
+        Label label(font, rect_label, {0, 0, 0, 255}, {255, 255, 255, 255}, "Hello", renderer);
 
         SDL_Rect rect = {300, 200, 100, 100};
-        Button button(std::move(label), rect, {255, 255, 255}, {0, 0, 0});
+        Button button(std::move(label), rect, {255, 255, 255, 255}, {0, 0, 0, 255});
         mouse.add_on_click_signal_obj(&button);
 
         while (running) {
