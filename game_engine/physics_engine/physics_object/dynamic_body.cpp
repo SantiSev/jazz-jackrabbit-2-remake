@@ -61,6 +61,8 @@ Vector2D DynamicBody::update_position(Vector2D newPosition) {
     return CollisionObject::update_position(newPosition);
 }
 
+void DynamicBody::revert_position() { update_position(old_position_reference); }
+
 void DynamicBody::handle_colision(
         CollisionObject& other) {  // other players cant overlap with other players
 

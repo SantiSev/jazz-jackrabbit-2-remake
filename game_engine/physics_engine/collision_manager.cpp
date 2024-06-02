@@ -61,6 +61,12 @@ void CollisionManager::detect_colisions(std::shared_ptr<DynamicBody> obj) {
     int obj_width = obj->get_hitbox_width();
     int obj_height = obj->get_hitbox_height();
 
+    if (obj_x < 0 || obj_y < 0 || obj_x + obj_width > grid_width ||
+        obj_y + obj_height > grid_height) {
+        obj->revert_position();
+        return;
+    }
+
     for (int i = obj_x; i < obj_x + obj_width; ++i) {
         for (int j = obj_y; j < obj_y + obj_height; ++j) {
             std::shared_ptr<CollisionObject> other = get_collision_object_at(i, j);
@@ -85,6 +91,10 @@ void CollisionManager::update_dynamic_object(std::shared_ptr<DynamicBody> obj) {
         }
     }
 }
+
+int CollisionManager::get_grid_width() const { return grid_width; }
+
+int CollisionManager::get_grid_height() const { return grid_height; }
 
 void CollisionManager::clear() {
     for (auto& column: grid) {

@@ -34,6 +34,8 @@ public:
 
     void set_acceleration(Vector2D newAcceleration);
 
+    void revert_position();
+
     Vector2D stop_movement();
 
     Vector2D get_velocity() const;
