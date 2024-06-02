@@ -6,6 +6,7 @@
 
 #include "../../game_engine/gui/basic/texture.h"
 #include "../../game_engine/gui/widgets/animated_sprite.h"
+#include "../../game_engine/gui/basic/asset_manager.h"
 
 void run(SDL_Renderer*& renderer, SDL_Window*& window) {
     SDL_Event event;
@@ -30,7 +31,11 @@ void run(SDL_Renderer*& renderer, SDL_Window*& window) {
         return;
     }
 
-    auto texture = std::make_shared<Texture>("/home/maxo/Desktop/taller/assets/jazz.png", renderer);
+    AssetManager asset_manager;
+
+    auto texture = std::make_shared<Texture>(
+        asset_manager.get_full_path("assets/jazz.png"),
+        renderer);
     SDL_Rect rect = {0, 420, 53, 50};
     SDL_Rect d_rect = {0, 0, 800, 600};
     AnimatedSprite sprite(texture, rect, d_rect, 13, 8);
