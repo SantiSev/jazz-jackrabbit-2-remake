@@ -4,14 +4,15 @@
 
 #include <arpa/inet.h>
 
+
 ClientProtocol::ClientProtocol(const std::string& hostname, const std::string& servname):
-        CommonProtocol(hostname, servname) {}
+        CommonProtocol(hostname, servname), my_client_id(0) {}
 
 void ClientProtocol::send_close_connection() {}
 void ClientProtocol::send_game_state() {}
 void ClientProtocol::send_finish_match() {}
 void ClientProtocol::send_active_games(uint8_t length, std::vector<MatchDTO>& matches) {}
-void ClientProtocol::send_game_created() {}
+void ClientProtocol::send_game_created(uint16_t id_player) {}
 
 void ClientProtocol::send_message(const std::shared_ptr<Message>& msg) { msg->send_message(*this); }
 
@@ -33,7 +34,13 @@ std::shared_ptr<SendActiveGamesMessage> ClientProtocol::recv_active_games() {
 }
 
 std::shared_ptr<SendGameCreatedMessage> ClientProtocol::recv_game_created() {
-    return std::make_unique<SendGameCreatedMessage>();
+    uint16_t id_player = recv_two_bytes();
+    return std::make_unique<SendGameCreatedMessage>(id_player);
+}
+
+std::shared_ptr<MadeFirstConnection> ClientProtocol::recv_made_connection() {
+    uint16_t id_client = recv_two_bytes();
+    return std::make_shared<MadeFirstConnection>(id_client);
 }
 
 std::shared_ptr<Message> ClientProtocol::recv_message() {
@@ -50,6 +57,8 @@ std::shared_ptr<Message> ClientProtocol::recv_message() {
             return recv_active_games();
         case SEND_GAME_CREATED:
             return recv_game_created();
+        case MADE_CONNECTION:
+            return recv_made_connection();
         default:
             return std::make_unique<InvalidMessage>();
     }
@@ -146,3 +155,16 @@ void ClientProtocol::send_join_match(uint16_t id_player, uint16_t id_match,
     if (was_closed)
         return;
 }
+
+void ClientProtocol::send_first_connection(uint16_t id) {}
+
+void ClientProtocol::set_my_client_id(const uint16_t& new_client_id) {
+    my_client_id = new_client_id;
+}
+
+uint16_t ClientProtocol::get_client_id() const { return my_client_id; }
+
+void ClientProtocol::set_my_player_id(const uint16_t& new_player_id) {
+    my_player_id = new_player_id;
+}
+uint16_t ClientProtocol::get_player_id() const { return my_player_id; }

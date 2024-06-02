@@ -8,6 +8,7 @@
 #include "./messages/common_dto.h"
 
 #define CLOSE_CONNECTION 0x0000
+#define MADE_CONNECTION 0x0001
 
 #define SEND_GAME_STATE 0x0100
 #define RECV_COMMAND 0x0101
@@ -36,7 +37,8 @@ public:
     virtual void send_game_state() = 0;
     virtual void send_finish_match() = 0;
     virtual void send_active_games(uint8_t length, std::vector<MatchDTO>& matches) = 0;
-    virtual void send_game_created() = 0;
+    virtual void send_game_created(uint16_t id_player) = 0;
+    virtual void send_first_connection(uint16_t id_client) = 0;
     virtual void force_shutdown();
     ~CommonProtocol();
 };

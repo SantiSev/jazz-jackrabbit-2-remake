@@ -105,9 +105,25 @@ void ServerProtocol::send_active_games(uint8_t length, std::vector<MatchDTO>& ma
     }
 }
 
-void ServerProtocol::send_game_created() {
+void ServerProtocol::send_game_created(uint16_t id_player) {
     uint16_t header = htons(SEND_GAME_CREATED);
     skt.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+
+    skt.sendall(&id_player, sizeof(id_player), &was_closed);
+    if (was_closed)
+        return;
+}
+
+void ServerProtocol::send_first_connection(uint16_t client_id) {
+    uint16_t header = htons(MADE_CONNECTION);
+    skt.sendall(&header, sizeof(header), &was_closed);
+    if (was_closed)
+        return;
+
+    client_id = htons(client_id);
+    skt.sendall(&client_id, sizeof(client_id), &was_closed);
     if (was_closed)
         return;
 }

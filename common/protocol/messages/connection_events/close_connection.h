@@ -13,8 +13,9 @@ private:
 public:
     CloseConnectionMessage();
     void run() override;
+    void run(ClientProtocol& client_protocol) override;
     void send_message(CommonProtocol& protocol) override;
-    ~CloseConnectionMessage();
+    ~CloseConnectionMessage() override;
 };
 
 #endif

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-//#include "../../common/protocol/common_protocol.h"
+// #include "../../common/protocol/common_protocol.h"
 #include "../../common/protocol/messages/common_message.h"
 #include "../../common/protocol/messages/in_game_events/recv_cheat_command.h"
 #include "../../common/protocol/messages/in_game_events/recv_command.h"
@@ -37,7 +37,9 @@ public:
 
     void send_active_games(uint8_t length, std::vector<MatchDTO>& matches) override;
 
-    void send_game_created() override;
+    void send_game_created(uint16_t player_id) override;
+
+    void send_first_connection(uint16_t client_id) override;
 
     bool is_closed() const;
 };
