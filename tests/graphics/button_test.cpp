@@ -8,6 +8,7 @@
 #include <SDL2/SDL_ttf.h>
 
 #include "../../game_engine/controllers/mouse.h"
+#include "../../game_engine/gui/basic/asset_manager.h"
 #include "../../game_engine/gui/basic/font.h"
 #include "../../game_engine/gui/widgets/label.h"
 
@@ -36,10 +37,11 @@ int main() {
 
     SDL_Event event;
     bool running = true;
+    AssetManager asset_manager;
 
     {
         auto font =
-                std::make_shared<Font>("/home/maxo/Desktop/taller/game_engine/fonts/atus.ttf", 15);
+                std::make_shared<Font>(asset_manager.get_full_path("assets/fonts/atus.ttf"), 15);
 
         Mouse mouse(0, 0);
 

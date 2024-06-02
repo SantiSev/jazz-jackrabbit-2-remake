@@ -14,6 +14,10 @@ if [ $# -eq 0 ]; then
 
   cd build
   cmake ..
+
+  echo "Copying assets"
+  cp -r ../assets .
+
   make
 
 # if ./build.sh tests
@@ -28,5 +32,9 @@ else [ $1 == "tests" ]
 
   cd tests_bin
   cmake -DTESTS=ON ..
+
+  echo "Copying assets"
+  cp -r ../assets .
+  
   make
 fi
