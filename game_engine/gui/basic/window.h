@@ -15,6 +15,12 @@ private:
 public:
     Window(int width, int height, bool img_init, bool ttf_init);
 
+    // Cant copy or move
+    Window(const Window&) = delete;
+    Window& operator=(const Window&) = delete;
+    Window(Window&&) = delete;
+    Window& operator=(Window&&) = delete;
+
     void clear();
     void render();
 
