@@ -1,6 +1,3 @@
-//git@github.com:SantiSev/tp-final-Veiga.git
-// Created by santi on 24/05/24.
-//
 
 #ifndef GAME_ENGINE_COLISION_OBJECT_H_
 #define GAME_ENGINE_COLISION_OBJECT_H_
