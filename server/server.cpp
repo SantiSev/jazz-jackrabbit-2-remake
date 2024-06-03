@@ -5,10 +5,12 @@
 
 #include "game_logic/matches_manager.h"
 
+#include "accepter.h"
+
 void Server::run() {
     try {
-        auto matches_manager = new MatchesManager();
-        matches_manager->start();
+        auto accepter = new ServerAccepter("8080");
+        accepter->start();
 
         std::string serverInput;
         while (true) {
@@ -18,9 +20,9 @@ void Server::run() {
             }
         }
 
-        matches_manager->stop();
-        matches_manager->join();
-        delete matches_manager;
+        accepter->stop();
+        accepter->join();
+        delete accepter;
     } catch (const std::exception& err) {
         std::cerr << "An exception was caught in server_class: " << err.what() << "\n";
     }
