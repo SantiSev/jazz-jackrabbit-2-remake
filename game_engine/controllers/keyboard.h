@@ -9,6 +9,7 @@
 
 #include "controller.h"
 
+namespace engine {
 class Keyboard: public Controller {
 private:
     std::list<CanvasObject*> signal_objs;
@@ -28,6 +29,6 @@ public:
 
     ~Keyboard() override;
 };
-
+}  // namespace engine
 
 #endif  // TP_FINAL_KEYBOARD_H

@@ -1,5 +1,7 @@
 #include "keyboard.h"
 
+using engine::Keyboard;
+
 void Keyboard::update(const SDL_Event& event) {
     if (event.type == SDL_KEYDOWN) {
         for (auto obj: signal_objs) {

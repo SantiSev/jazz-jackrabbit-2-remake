@@ -1,5 +1,7 @@
 #include "mouse.h"
 
+using engine::Mouse;
+
 Mouse::Mouse(int x, int y): cursor({x, y}) {}
 
 void Mouse::update(const SDL_Event& event) {

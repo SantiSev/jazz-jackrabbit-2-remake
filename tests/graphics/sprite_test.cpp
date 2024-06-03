@@ -11,19 +11,19 @@
 #include "../../game_engine/gui/basic/window.h"
 
 int main() {
-    Window window(800, 600, true, false);
+    engine::Window window(800, 600, true, false);
 
     auto renderer = window.getRenderer();
 
-    AssetManager asset_manager;
+    engine::AssetManager asset_manager;
 
     SDL_Event event;
     bool running = true;
-    auto texture =
-            std::make_shared<Texture>(asset_manager.get_full_path("assets/screens.png"), renderer);
+    auto texture = std::make_shared<engine::Texture>(
+            asset_manager.get_full_path("assets/screens.png"), renderer);
     SDL_Rect rect = {16, 16, 640, 480};
     SDL_Rect d_rect = {0, 0, 800, 600};
-    Sprite sprite(texture, rect, d_rect);
+    engine::Sprite sprite(texture, rect, d_rect);
 
     Uint32 frame_start;
     int frame_time;

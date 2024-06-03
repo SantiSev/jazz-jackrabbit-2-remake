@@ -1,5 +1,7 @@
 #include "window.h"
 
+using engine::Window;
+
 Window::Window(int width, int height, bool img_init, bool ttf_init) {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
         throw SDLError("Error initializing SDL:" + std::string(SDL_GetError()));

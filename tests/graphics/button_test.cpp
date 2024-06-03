@@ -37,19 +37,20 @@ int main() {
 
     SDL_Event event;
     bool running = true;
-    AssetManager asset_manager;
+    engine::AssetManager asset_manager;
 
     {
-        auto font =
-                std::make_shared<Font>(asset_manager.get_full_path("assets/fonts/atus.ttf"), 15);
+        auto font = std::make_shared<engine::Font>(
+                asset_manager.get_full_path("assets/fonts/atus.ttf"), 15);
 
-        Mouse mouse(0, 0);
+        engine::Mouse mouse(0, 0);
 
         SDL_Rect rect_label = {300, 200, 100, 100};
-        Label label(font, rect_label, {0, 0, 0, 255}, {255, 255, 255, 255}, "Hello", renderer);
+        engine::Label label(font, rect_label, {0, 0, 0, 255}, {255, 255, 255, 255}, "Hello",
+                            renderer);
 
         SDL_Rect rect = {300, 200, 100, 100};
-        Button button(std::move(label), rect, {255, 255, 255, 255}, {0, 0, 0, 255});
+        engine::Button button(std::move(label), rect, {255, 255, 255, 255}, {0, 0, 0, 255});
         mouse.add_on_click_signal_obj(&button);
 
         while (running) {

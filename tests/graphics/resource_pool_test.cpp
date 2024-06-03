@@ -11,10 +11,10 @@
 #include "../../game_engine/gui/widgets/sprite.h"
 
 int main() {
-    Window window(800, 600, true, false);
+    engine::Window window(800, 600, true, false);
     auto renderer = window.getRenderer();
 
-    ResourcePool resource_pool(renderer);
+    engine::ResourcePool resource_pool(renderer);
     resource_pool.load_texture("assets/screens.png");
 
     SDL_Event event;
@@ -22,11 +22,11 @@ int main() {
 
     SDL_Rect rect = {16, 16, 640, 480};
     SDL_Rect d_rect = {0, 0, 800, 600};
-    Sprite sprite(resource_pool.get_texture("assets/screens.png"), rect, d_rect);
+    engine::Sprite sprite(resource_pool.get_texture("assets/screens.png"), rect, d_rect);
 
     SDL_Rect rect2 = {660, 985, 640, 480};
     SDL_Rect d_rect2 = {0, 0, 400, 300};
-    Sprite sprite2(resource_pool.get_texture("assets/screens.png"), rect2, d_rect2);
+    engine::Sprite sprite2(resource_pool.get_texture("assets/screens.png"), rect2, d_rect2);
 
     Uint32 frame_start;
     int frame_time;

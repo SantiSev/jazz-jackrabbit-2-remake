@@ -7,6 +7,7 @@
 
 #include "../../errors.h"
 
+namespace engine {
 class Font {
 private:
     TTF_Font* font;
@@ -26,6 +27,6 @@ public:
 
     ~Font();
 };
-
+}  // namespace engine
 
 #endif  // TP_FINAL_FONT_H

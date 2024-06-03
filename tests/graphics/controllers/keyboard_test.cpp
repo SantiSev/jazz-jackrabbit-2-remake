@@ -7,7 +7,7 @@
 
 #include "../../../game_engine/gui/widgets/button.h"
 
-class KeyboardTestLabRat: public CanvasObject {
+class KeyboardTestLabRat: public engine::CanvasObject {
 public:
     KeyboardTestLabRat() = default;
     void on_key_press(SDL_Keycode key) override {
@@ -39,7 +39,7 @@ int main() {
     bool running = true;
 
     {
-        Keyboard keyboard;
+        engine::Keyboard keyboard;
         KeyboardTestLabRat lab_rat;
         keyboard.add_on_key_down_signal_obj(&lab_rat);
 

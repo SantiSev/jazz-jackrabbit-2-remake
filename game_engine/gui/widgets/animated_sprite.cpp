@@ -1,5 +1,7 @@
 #include "animated_sprite.h"
 
+using engine::AnimatedSprite;
+
 AnimatedSprite::AnimatedSprite(std::shared_ptr<Texture> texture, SDL_Rect& s_rect, SDL_Rect& d_rect,
                                int frames, int fps):
         texture(texture),

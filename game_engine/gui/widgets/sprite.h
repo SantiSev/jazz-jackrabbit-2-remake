@@ -13,6 +13,7 @@
 #include "../basic/texture.h"
 #include "../canvas_object.h"
 
+namespace engine {
 class Sprite: public CanvasObject {
 private:
     std::shared_ptr<Texture> texture;
@@ -39,6 +40,6 @@ public:
 
     ~Sprite() override;
 };
-
+}  // namespace engine
 
 #endif  // TP_FINAL_SPRITE_H

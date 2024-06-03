@@ -31,13 +31,13 @@ void run(SDL_Renderer*& renderer, SDL_Window*& window) {
         return;
     }
 
-    AssetManager asset_manager;
+    engine::AssetManager asset_manager;
 
-    auto texture =
-            std::make_shared<Texture>(asset_manager.get_full_path("assets/jazz.png"), renderer);
+    auto texture = std::make_shared<engine::Texture>(asset_manager.get_full_path("assets/jazz.png"),
+                                                     renderer);
     SDL_Rect rect = {0, 420, 53, 50};
     SDL_Rect d_rect = {0, 0, 800, 600};
-    AnimatedSprite sprite(texture, rect, d_rect, 13, 8);
+    engine::AnimatedSprite sprite(texture, rect, d_rect, 13, 8);
 
     Uint32 frame_start = 0;
     int frame_time = 0;

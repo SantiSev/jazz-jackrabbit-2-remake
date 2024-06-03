@@ -13,6 +13,7 @@
 #include "../basic/texture.h"
 #include "../canvas_object.h"
 
+namespace engine {
 class Label: public CanvasObject {
 private:
     std::shared_ptr<Font> font;
@@ -50,6 +51,6 @@ public:
 
     ~Label() override;
 };
-
+}  // namespace engine
 
 #endif  // TP_FINAL_LABEL_H

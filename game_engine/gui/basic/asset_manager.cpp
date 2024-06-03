@@ -1,5 +1,7 @@
 #include "asset_manager.h"
 
+using engine::AssetManager;
+
 AssetManager::AssetManager() {
     base_path = SDL_GetBasePath();
     if (base_path == nullptr) {

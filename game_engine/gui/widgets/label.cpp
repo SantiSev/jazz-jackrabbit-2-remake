@@ -1,5 +1,7 @@
 #include "label.h"
 
+using engine::Label;
+
 Label::Label(std::shared_ptr<Font> font, SDL_Rect& rect, const SDL_Color& color,
              const SDL_Color& hover_color, const std::string& text, SDL_Renderer* renderer):
         font(font),

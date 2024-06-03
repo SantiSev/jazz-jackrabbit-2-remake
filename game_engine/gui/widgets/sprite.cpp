@@ -1,5 +1,7 @@
 #include "sprite.h"
 
+using engine::Sprite;
+
 Sprite::Sprite(std::shared_ptr<Texture> texture, SDL_Rect& s_rect, SDL_Rect& d_rect):
         texture(texture), s_rect(s_rect), d_rect(d_rect) {}
 

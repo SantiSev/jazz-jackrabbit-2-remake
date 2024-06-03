@@ -11,6 +11,7 @@
 #include "font.h"
 #include "texture.h"
 
+namespace engine {
 // Uses a path pseudo-relative to the project root directory to load and retrieve resources
 // Example: "assets/images/texture.png"
 class ResourcePool {
@@ -35,6 +36,6 @@ public:
 
     ~ResourcePool();
 };
-
+}  // namespace engine
 
 #endif  // TP_FINAL_RESOURCE_POOL_H

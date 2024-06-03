@@ -8,6 +8,7 @@
 #include "../../errors.h"
 #include "../canvas_object.h"
 
+namespace engine {
 class ColorRect: public CanvasObject {
 private:
     SDL_Color color;
@@ -25,5 +26,6 @@ public:
 
     ~ColorRect() override;
 };
+}  // namespace engine
 
 #endif  // TP_FINAL_COLOR_RECT_H

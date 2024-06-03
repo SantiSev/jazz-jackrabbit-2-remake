@@ -1,5 +1,7 @@
 #include "color_rect.h"
 
+using engine::ColorRect;
+
 ColorRect::ColorRect(const SDL_Color& color, SDL_Rect& rect): color(color), rect(rect) {}
 
 void ColorRect::draw(SDL_Renderer* renderer) {

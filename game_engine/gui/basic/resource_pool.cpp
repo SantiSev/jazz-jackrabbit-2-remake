@@ -1,5 +1,9 @@
 #include "resource_pool.h"
 
+using engine::Font;
+using engine::ResourcePool;
+using engine::Texture;
+
 ResourcePool::ResourcePool(SDL_Renderer* renderer): renderer(renderer) {}
 
 void ResourcePool::load_texture(const std::string& name) {

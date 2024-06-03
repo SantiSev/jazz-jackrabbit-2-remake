@@ -30,7 +30,7 @@ void run(SDL_Renderer*& renderer, SDL_Window*& window) {
 
     SDL_Rect rect = {16, 16, 640, 480};
     SDL_Color color = {255, 255, 255, 255};
-    ColorRect color_rect(color, rect);
+    engine::ColorRect color_rect(color, rect);
 
     Uint32 frame_start;
     int frame_time;

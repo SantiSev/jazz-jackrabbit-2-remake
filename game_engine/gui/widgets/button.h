@@ -13,6 +13,7 @@
 
 #include "label.h"
 
+namespace engine {
 class Button: public CanvasObject {
 protected:
     Label label;
@@ -45,6 +46,6 @@ public:
 
     ~Button() override;
 };
-
+}  // namespace engine
 
 #endif  // TP_FINAL_BUTTON_H

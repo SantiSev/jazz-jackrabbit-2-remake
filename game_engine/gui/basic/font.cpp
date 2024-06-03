@@ -1,5 +1,7 @@
 #include "font.h"
 
+using engine::Font;
+
 Font::Font(const std::string& file, int size) {
     font = TTF_OpenFont(file.c_str(), size);
     if (font == nullptr) {

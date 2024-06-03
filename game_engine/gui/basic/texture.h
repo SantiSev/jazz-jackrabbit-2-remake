@@ -12,6 +12,7 @@
 
 #include "font.h"
 
+namespace engine {
 class Texture {
 private:
     SDL_Texture* texture;
@@ -33,6 +34,6 @@ public:
 
     ~Texture();
 };
-
+}  // namespace engine
 
 #endif  // TP_FINAL_TEXTURE_H

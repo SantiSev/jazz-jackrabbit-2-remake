@@ -9,6 +9,7 @@
 
 #include "../../errors.h"
 
+namespace engine {
 class Window {
 private:
     SDL_Window* window;
@@ -31,5 +32,6 @@ public:
 
     ~Window();
 };
+}  // namespace engine
 
 #endif  // TP_FINAL_WINDOW_H

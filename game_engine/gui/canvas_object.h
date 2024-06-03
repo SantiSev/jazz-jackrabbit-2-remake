@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 
+namespace engine {
 class CanvasObject {
 public:
     virtual void draw(SDL_Renderer* renderer) = 0;
@@ -19,6 +20,6 @@ public:
 
     virtual ~CanvasObject() = default;
 };
-
+}  // namespace engine
 
 #endif  // TP_FINAL_CANVASOBJECT_H

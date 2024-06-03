@@ -9,6 +9,7 @@
 
 #include "controller.h"
 
+namespace engine {
 class Mouse: public Controller {
 private:
     std::list<CanvasObject*> signal_objs;
@@ -29,6 +30,6 @@ public:
 
     ~Mouse() override;
 };
-
+}  // namespace engine
 
 #endif  // TP_FINAL_MOUSE_H

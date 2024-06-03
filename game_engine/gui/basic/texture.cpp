@@ -1,5 +1,7 @@
 #include "texture.h"
 
+using engine::Texture;
+
 Texture::Texture(const std::string& file, SDL_Renderer* renderer): texture(nullptr) {
     texture = IMG_LoadTexture(renderer, file.c_str());
     if (texture == nullptr) {

@@ -7,6 +7,7 @@
 
 #include "../../errors.h"
 
+namespace engine {
 class AssetManager {
 private:
     char* base_path;
@@ -18,5 +19,6 @@ public:
 
     ~AssetManager();
 };
+}  // namespace engine
 
 #endif  // TP_FINAL_ASSET_MANAGER_H
