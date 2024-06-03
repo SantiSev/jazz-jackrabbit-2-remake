@@ -4,15 +4,15 @@
 
 #ifndef STATIC_BODY_H
 #define STATIC_BODY_H
-#include "../colision_object/colision_object.h"
+#include "../colision_object.h"
 
 
-class StaticBody: public ColisionObject {
+class StaticBody: public CollisionObject {
 
 public:
+    void handle_colision(CollisionObject& other) override;
     StaticBody(int width, int height);
-
-    void handle_colision(ColisionObject& other) override;
+    StaticBody(int x, int y, int width, int height);
 };
 
 
