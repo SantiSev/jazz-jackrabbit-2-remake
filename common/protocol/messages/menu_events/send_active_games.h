@@ -1,25 +1,16 @@
 #ifndef _SEND_ACTIVE_GAMES_H
 #define _SEND_ACTIVE_GAMES_H
 
-#include <cstdint>
-#include <string>
-#include <vector>
-
 #include "../common_message.h"
-
-struct Match {
-    std::string name;
-    // cppcheck-suppress unusedStructMember
-    uint8_t players;
-};
 
 class SendActiveGamesMessage: public Message {
 private:
-    std::vector<Match> matches;
+    ActiveGamesDTO active_games;
 
 public:
-    explicit SendActiveGamesMessage(std::vector<Match>&& matches);
+    explicit SendActiveGamesMessage(ActiveGamesDTO& active_games);
     void run() override;
+    void send_message(CommonProtocol& protocol) override;
     ~SendActiveGamesMessage();
 };
 

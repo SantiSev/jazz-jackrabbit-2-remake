@@ -4,32 +4,37 @@
 
 #include <arpa/inet.h>
 
+
 ClientProtocol::ClientProtocol(const std::string& hostname, const std::string& servname):
-        CommonProtocol(hostname, servname) {}
+        CommonProtocol(hostname, servname), my_client_id(0), my_player_id(0) {}
 
 std::shared_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
-    return std::make_shared<SendFinishMatchMessage>();
+    FinishMatchDTO finish_match = {};
+    skt.recvall(&finish_match, sizeof(finish_match), &was_closed);
+    return std::make_shared<SendFinishMatchMessage>(finish_match);
 }
 
 std::shared_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() {
-    return std::make_shared<SendGameStateMessage>();
+    GameStateDTO game_state = {};
+    skt.recvall(&game_state, sizeof(game_state), &was_closed);
+    return std::make_shared<SendGameStateMessage>(game_state);
 }
 
 std::shared_ptr<SendActiveGamesMessage> ClientProtocol::recv_active_games() {
-    const uint8_t match_length = recv_one_byte();
-
-    std::vector<Match> matches(match_length);
-    for (size_t i = 0; i < match_length; i++) {
-        const std::string name = recv_string();
-        const uint8_t players = recv_one_byte();
-        matches.push_back({name, players});
-    }
-
-    return std::make_shared<SendActiveGamesMessage>(std::move(matches));
+    ActiveGamesDTO active_games = {};
+    skt.recvall(&active_games, sizeof(active_games), &was_closed);
+    return std::make_shared<SendActiveGamesMessage>(active_games);
 }
 
 std::shared_ptr<SendGameCreatedMessage> ClientProtocol::recv_game_created() {
-    return std::make_shared<SendGameCreatedMessage>();
+    GameCreatedDTO game_created = {};
+    skt.recvall(&game_created, sizeof(game_created), &was_closed);
+    return std::make_shared<SendGameCreatedMessage>(game_created);
+}
+
+std::shared_ptr<AcptConnection> ClientProtocol::recv_acpt_connection() {
+    uint16_t id_client = recv_two_bytes();
+    return std::make_shared<AcptConnection>(id_client);
 }
 
 std::shared_ptr<Message> ClientProtocol::recv_message() {
@@ -46,96 +51,22 @@ std::shared_ptr<Message> ClientProtocol::recv_message() {
             return recv_active_games();
         case SEND_GAME_CREATED:
             return recv_game_created();
+        case ACPT_CONNECTION:
+            return recv_acpt_connection();
         default:
             return std::make_shared<InvalidMessage>();
     }
 }
 
-void ClientProtocol::send_command(uint16_t id_player, uint8_t id_command) {
-    uint16_t header = htons(RECV_COMMAND);
-    skt.sendall(&header, sizeof(header), &was_closed);
-    if (was_closed)
-        return;
-
-    id_player = htons(id_player);
-    skt.sendall(&id_player, sizeof(id_player), &was_closed);
-    if (was_closed)
-        return;
-
-    skt.sendall(&id_command, sizeof(id_command), &was_closed);
-    if (was_closed)
-        return;
+void ClientProtocol::set_my_client_id(const id_client_t& new_client_id) {
+    my_client_id = new_client_id;
 }
 
-void ClientProtocol::send_cheat_command(uint16_t id_player, uint8_t id_cheat_command) {
-    uint16_t header = htons(RECV_CHEAT_COMMAND);
-    skt.sendall(&header, sizeof(header), &was_closed);
-    if (was_closed)
-        return;
+uint16_t ClientProtocol::get_client_id() const { return my_client_id; }
 
-    id_player = htons(id_player);
-    skt.sendall(&id_player, sizeof(id_player), &was_closed);
-    if (was_closed)
-        return;
-
-    skt.sendall(&id_cheat_command, sizeof(id_cheat_command), &was_closed);
-    if (was_closed)
-        return;
+void ClientProtocol::set_my_player_id(const id_player_t& new_player_id) {
+    my_player_id = new_player_id;
 }
-
-void ClientProtocol::send_leave_match(uint16_t id_player) {
-    uint16_t header = htons(RECV_LEAVE_MATCH);
-    skt.sendall(&header, sizeof(header), &was_closed);
-    if (was_closed)
-        return;
-
-    id_player = htons(id_player);
-    skt.sendall(&id_player, sizeof(id_player), &was_closed);
-    if (was_closed)
-        return;
-}
-
-void ClientProtocol::send_create_game(uint16_t id_player, std::string& match_name) {
-    uint16_t header = htons(RECV_CREATE_GAME);
-    skt.sendall(&header, sizeof(header), &was_closed);
-    if (was_closed)
-        return;
-
-    id_player = htons(id_player);
-    skt.sendall(&id_player, sizeof(id_player), &was_closed);
-    if (was_closed)
-        return;
-
-    uint8_t length = match_name.length();
-    skt.sendall(&length, sizeof(length), &was_closed);
-    if (was_closed)
-        return;
-
-    skt.sendall(match_name.data(), length, &was_closed);
-    if (was_closed)
-        return;
-}
-
-void ClientProtocol::send_join_match(uint16_t id_player, uint16_t id_match,
-                                     uint8_t player_character) {
-    uint16_t header = htons(RECV_JOIN_MATCH);
-    skt.sendall(&header, sizeof(header), &was_closed);
-    if (was_closed)
-        return;
-
-    id_player = htons(id_player);
-    skt.sendall(&id_player, sizeof(id_player), &was_closed);
-    if (was_closed)
-        return;
-
-    id_match = htons(id_match);
-    skt.sendall(&id_match, sizeof(id_match), &was_closed);
-    if (was_closed)
-        return;
-
-    skt.sendall(&player_character, sizeof(player_character), &was_closed);
-    if (was_closed)
-        return;
-}
+uint16_t ClientProtocol::get_player_id() const { return my_player_id; }
 
 ClientProtocol::~ClientProtocol() {}

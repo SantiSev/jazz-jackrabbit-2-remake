@@ -2,15 +2,14 @@
 
 #include <algorithm>
 
-#include "../common/common_socket.h"
-#include "game_logic/matches_manager.h"
+#include "../../common/common_socket.h"
+#include "../game_logic/matches_manager.h"
 
 
 ServerAccepter::ServerAccepter(const std::string& port):
         skt(Socket(port.c_str())), online(true), matches_manager() {}
 
 void ServerAccepter::run() {
-
     try {
         matches_manager.start();
         while (online) {

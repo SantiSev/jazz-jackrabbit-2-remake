@@ -4,10 +4,14 @@
 #include "../common_message.h"
 
 class SendGameCreatedMessage: public Message {
+private:
+    GameCreatedDTO game_created;
+
 public:
-    SendGameCreatedMessage();
-    void run() override;
-    ~SendGameCreatedMessage();
+    explicit SendGameCreatedMessage(GameCreatedDTO& game_created);
+    void run(ClientProtocol& client_protocol) override;
+    void send_message(CommonProtocol& protocol) override;
+    ~SendGameCreatedMessage() override;
 };
 
 #endif

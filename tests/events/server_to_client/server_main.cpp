@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <vector>
 
 #include <arpa/inet.h>
@@ -28,28 +29,21 @@ int main(int argc, const char* argv[]) {
                 break;
 
             if (command.compare(FINISH_MATCH) == 0) {
-                protocol.send_finish_match();
+                FinishMatchDTO finish_match_dto = {};
+                auto message = std::make_shared<SendFinishMatchMessage>(finish_match_dto);
+                protocol.send_message(message);
             } else if (command.compare(GAME_STATE) == 0) {
-                protocol.send_game_state();
+                GameStateDTO game_state_dto = {};
+                auto message = std::make_shared<SendGameStateMessage>(game_state_dto);
+                protocol.send_message(message);
             } else if (command.compare(ACTIVE_GAMES) == 0) {
-                int length;
-                std::cin >> length;
-                std::vector<Match> matches;
-
-                for (int i = 0; i < length; i++) {
-                    std::string name;
-                    int players;
-
-                    std::cin >> name;
-                    std::cin >> players;
-
-                    matches.push_back({name, uint8_t(players)});
-                }
-
-
-                protocol.send_active_games(length, matches);
+                ActiveGamesDTO active_game_dto = {"Partida 1", 5};
+                auto message = std::make_shared<SendActiveGamesMessage>(active_game_dto);
+                protocol.send_message(message);
             } else if (command.compare(GAME_CREATED) == 0) {
-                protocol.send_game_created();
+                GameCreatedDTO game_created_dto = {};
+                auto message = std::make_shared<SendGameCreatedMessage>(game_created_dto);
+                protocol.send_message(message);
             }
         }
     } catch (const std::exception& err) {

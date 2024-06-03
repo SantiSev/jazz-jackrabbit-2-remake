@@ -1,19 +1,19 @@
 #ifndef _RECV_JOIN_MATCH_H
 #define _RECV_JOIN_MATCH_H
 
-#include <cstdint>
-
 #include "../common_message.h"
+
+class MatchesManager;
 
 class RecvJoinMatchMessage: public Message {
 private:
-    uint16_t id_player;
-    uint16_t id_match;
-    uint8_t player_character;
+    JoinMatchDTO join_match;
 
 public:
-    RecvJoinMatchMessage(uint16_t id_player, uint16_t id_match, uint8_t player_character);
+    explicit RecvJoinMatchMessage(JoinMatchDTO& join_match);
     void run() override;
+    void run(MatchesManager& matches_manager) override;
+    void send_message(CommonProtocol& protocol) override;
     ~RecvJoinMatchMessage();
 };
 

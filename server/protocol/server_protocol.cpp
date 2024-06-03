@@ -4,36 +4,45 @@
 
 #include <arpa/inet.h>
 
+#include "../../common/protocol/messages/connection_events/close_connection.h"
+#include "../../common/protocol/messages/invalid_message.h"
+
 ServerProtocol::ServerProtocol(Socket&& skt): CommonProtocol(std::move(skt)) {}
 
 std::shared_ptr<RecvCommandMessage> ServerProtocol::recv_command() {
-    const uint16_t id_player = recv_two_bytes();
-    const uint8_t id_command = recv_one_byte();
-    return std::make_shared<RecvCommandMessage>(id_player, id_command);
+    CommandDTO command = {};
+    skt.sendall(&command, sizeof(command), &was_closed);
+    command.id_player = ntohs(command.id_player);
+    return std::make_shared<RecvCommandMessage>(command);
 }
 
 std::shared_ptr<RecvCheatCommandMessage> ServerProtocol::recv_cheat_command() {
-    const uint16_t id_player = recv_two_bytes();
-    const uint8_t id_cheat_command = recv_one_byte();
-    return std::make_shared<RecvCheatCommandMessage>(id_player, id_cheat_command);
+    CheatCommandDTO cheat_command = {};
+    skt.sendall(&cheat_command, sizeof(cheat_command), &was_closed);
+    cheat_command.id_player = ntohs(cheat_command.id_player);
+    return std::make_shared<RecvCheatCommandMessage>(cheat_command);
 }
 
 std::shared_ptr<RecvLeaveMatchMessage> ServerProtocol::recv_leave_match() {
-    const uint16_t id_player = recv_two_bytes();
-    return std::make_shared<RecvLeaveMatchMessage>(id_player);
+    LeaveMatchDTO leave_match = {};
+    skt.sendall(&leave_match, sizeof(leave_match), &was_closed);
+    leave_match.id_player = ntohs(leave_match.id_player);
+    return std::make_shared<RecvLeaveMatchMessage>(leave_match);
 }
 
 std::shared_ptr<RecvCreateGameMessage> ServerProtocol::recv_create_game() {
-    const uint16_t id_player = recv_two_bytes();
-    std::string match_name = recv_string();
-    return std::make_shared<RecvCreateGameMessage>(id_player, match_name);
+    CreateGameDTO create_game = {};
+    skt.sendall(&create_game, sizeof(create_game), &was_closed);
+    create_game.id_player = ntohs(create_game.id_player);
+    return std::make_shared<RecvCreateGameMessage>(create_game);
 }
 
 std::shared_ptr<RecvJoinMatchMessage> ServerProtocol::recv_join_match() {
-    const uint16_t id_player = recv_two_bytes();
-    const uint16_t id_match = recv_two_bytes();
-    const uint8_t player_character = recv_one_byte();
-    return std::make_shared<RecvJoinMatchMessage>(id_player, id_match, player_character);
+    JoinMatchDTO join_match = {};
+    skt.sendall(&join_match, sizeof(join_match), &was_closed);
+    join_match.id_player = ntohs(join_match.id_player);
+    join_match.id_match = ntohs(join_match.id_match);
+    return std::make_shared<RecvJoinMatchMessage>(join_match);
 }
 
 std::shared_ptr<Message> ServerProtocol::recv_message() {
@@ -56,55 +65,5 @@ std::shared_ptr<Message> ServerProtocol::recv_message() {
             return std::make_shared<InvalidMessage>();
     }
 }
-
-void ServerProtocol::send_close_connection() {
-    uint16_t header = htons(CLOSE_CONNECTION);
-    skt.sendall(&header, sizeof(header), &was_closed);
-    if (was_closed)
-        return;
-}
-
-void ServerProtocol::send_game_state() {
-    uint16_t header = htons(SEND_GAME_STATE);
-    skt.sendall(&header, sizeof(header), &was_closed);
-    if (was_closed)
-        return;
-}
-
-void ServerProtocol::send_finish_match() {
-    uint16_t header = htons(SEND_FINISH_MATCH);
-    skt.sendall(&header, sizeof(header), &was_closed);
-    if (was_closed)
-        return;
-}
-
-void ServerProtocol::send_active_games(uint8_t length, std::vector<Match>& matches) {
-    uint16_t header = htons(SEND_ACTIVE_GAMES);
-    skt.sendall(&header, sizeof(header), &was_closed);
-    if (was_closed)
-        return;
-
-
-    skt.sendall(&length, sizeof(length), &was_closed);
-    if (was_closed)
-        return;
-
-    for (auto& match: matches) {
-        skt.sendall(match.name.data(), match.name.length(), &was_closed);
-        if (was_closed)
-            return;
-        skt.sendall(&(match.players), sizeof(match.players), &was_closed);
-        if (was_closed)
-            return;
-    }
-}
-
-void ServerProtocol::send_game_created() {
-    uint16_t header = htons(SEND_GAME_CREATED);
-    skt.sendall(&header, sizeof(header), &was_closed);
-    if (was_closed)
-        return;
-}
-
 
 bool ServerProtocol::is_closed() const { return was_closed; }

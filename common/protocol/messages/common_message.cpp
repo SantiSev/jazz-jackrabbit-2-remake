@@ -1,5 +1,9 @@
 #include "./common_message.h"
 
-Message::Message() {}
+Message::Message(const uint16_t header): header(header) {}
 
-Message::~Message() {}
+uint16_t Message::get_header() const { return header; }
+
+void Message::run() {}
+
+Message::~Message() = default;

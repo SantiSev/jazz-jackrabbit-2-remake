@@ -8,6 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
+          sudo apt-get update
           mkdir build
           cd build && cmake -DEVENTS=ON .. && make
           cd ..
@@ -25,6 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
+          sudo apt-get update
           mkdir build
           cd build && cmake -DEVENTS=ON .. && make
           cd ..
