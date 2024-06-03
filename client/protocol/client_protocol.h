@@ -35,12 +35,12 @@ public:
 
     std::shared_ptr<Message> recv_message();
 
-    void send_message(const std::shared_ptr<Message>& msg);
-
     void set_my_client_id(const id_client_t& new_client_id);
     void set_my_player_id(const id_player_t& new_player_id);
     id_client_t get_client_id() const;
     id_player_t get_player_id() const;
+
+    ~ClientProtocol();
 };
 
 #endif

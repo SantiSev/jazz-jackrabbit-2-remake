@@ -25,6 +25,12 @@ void CommonProtocol::send_header(const uint16_t header) {
 
 void CommonProtocol::send_close_connection(const uint16_t header) { send_header(header); }
 
+void CommonProtocol::send_acpt_connection(const uint16_t header, const id_client_t id_client) {
+    send_header(header);
+    id_client_t id_client_to_n = htons(id_client);
+    skt.sendall(&id_client_to_n, sizeof(id_client_to_n), &was_closed);
+}
+
 void CommonProtocol::send_cheat_command(const uint16_t header, CheatCommandDTO& cheat_command) {
     send_header(header);
     cheat_command.id_player = htons(cheat_command.id_player);

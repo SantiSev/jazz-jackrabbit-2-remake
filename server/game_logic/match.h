@@ -6,9 +6,9 @@
 #include <string>
 #include <vector>
 
-#include "../common/message/snapshot.h"
-#include "game_logic/client_monitor.h"
-#include "protocol/server_thread_manager.h"
+#include "../../common/message/snapshot.h"
+#include "../protocol/server_thread_manager.h"
+#include "./client_monitor.h"
 
 
 class Match: public Thread {

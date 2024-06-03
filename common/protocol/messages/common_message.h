@@ -6,6 +6,7 @@
 
 #include "../common_protocol.h"
 
+class CommonProtocol;
 class ClientProtocol;
 class MatchesManager;
 class Match;

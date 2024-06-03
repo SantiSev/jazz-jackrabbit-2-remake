@@ -7,7 +7,7 @@
 #include <string>
 #include <utility>
 
-#include "../common/protocol/messages/in_game_events/send_game_state.h"
+#include "../../common/protocol/messages/in_game_events/send_game_state.h"
 
 Match::Match(const std::string& map, std::string match_name, size_t required_players_setting):
         online(true),
@@ -57,8 +57,8 @@ void Match::run() {
 
             create_actual_snapshot(seconds, minutes);
 
-            auto snapshot_message = std::make_shared<SendGameStateMessage>(snapshot);
-            client_monitor.broadcastClients(snapshot_message);
+            // auto snapshot_message = std::make_shared<SendGameStateMessage>(snapshot);
+            // client_monitor.broadcastClients(snapshot_message);
 
             auto frameEnd = std::chrono::system_clock::now();
             delta = frameEnd - frameStart;

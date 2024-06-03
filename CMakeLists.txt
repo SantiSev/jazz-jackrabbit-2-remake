@@ -38,38 +38,52 @@ file(GLOB_RECURSE SOURCES_SERVER "server/*.cpp" "server/game_logic/*.cpp" "serve
 file(GLOB_RECURSE SOURCES_COMMON "common/*.cpp" "common/protocol/*.cpp" "common/protocol/messages/*.cpp" "common_*.cpp")
 file(GLOB_RECURSE SOURCES_GAME_ENGINE "game_engine/*.cpp" "game_engine_*.cpp")
 
-file(GLOB_RECURSE HEADERS_CLIENT "client/*.h" "client_*.h")
-file(GLOB_RECURSE HEADERS_SERVER "server/*.h" "server/game_logic/*.h" "server/protocol/*.h" "server_*.h")
-file(GLOB_RECURSE HEADERS_COMMON "common/*.h" "common/protocol/*.h" "common/protocol/messages/*.h" "common_*.h")
+file(GLOB_RECURSE HEADERS_CLIENT "client/*.h")
+file(GLOB_RECURSE HEADERS_SERVER "server/*.h")
+file(GLOB_RECURSE HEADERS_COMMON "common/*.h")
 file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine_*.h")
 
 # COMMUNICATION - TESTS
-file(GLOB_RECURSE SOURCES_CLIENT_T "client/protocol/*.cpp")
-file(GLOB_RECURSE SOURCES_SERVER_T "server/protocol/*.cpp")
+file(GLOB_RECURSE SOURCES_CLIENT_PROTOCOL "client/protocol/*.cpp")
+file(GLOB_RECURSE SOURCES_SERVER_PROTOCOL "server/protocol/*.cpp")
+
+file(GLOB_RECURSE SOURCES_SERVER_GAME_LOGIC "server/game_logic/*.cpp")
 
 if(EVENTS)
     add_executable(client_test_one tests/events/client_to_server/client_main.cpp 
         ${SOURCES_COMMON} 
-        ${SOURCES_CLIENT_T} 
+        ${SOURCES_CLIENT_PROTOCOL} 
+        ${SOURCES_SERVER_PROTOCOL}
+        ${SOURCES_SERVER_GAME_LOGIC}
         ${HEADERS_CLIENT} 
+        ${HEADERS_SERVER} 
         ${HEADERS_COMMON}
     )
     add_executable(server_test_one tests/events/client_to_server/server_main.cpp 
         ${SOURCES_COMMON} 
-        ${SOURCES_SERVER_T} 
+        ${SOURCES_CLIENT_PROTOCOL} 
+        ${SOURCES_SERVER_PROTOCOL}
+        ${SOURCES_SERVER_GAME_LOGIC}
+        ${HEADERS_CLIENT} 
         ${HEADERS_SERVER} 
         ${HEADERS_COMMON}
     )
 
     add_executable(client_test_two tests/events/server_to_client/client_main.cpp 
         ${SOURCES_COMMON} 
-        ${SOURCES_CLIENT_T} 
+        ${SOURCES_CLIENT_PROTOCOL} 
+        ${SOURCES_SERVER_PROTOCOL}
+        ${SOURCES_SERVER_GAME_LOGIC}
         ${HEADERS_CLIENT} 
+        ${HEADERS_SERVER} 
         ${HEADERS_COMMON}
     )
     add_executable(server_test_two tests/events/server_to_client/server_main.cpp 
         ${SOURCES_COMMON} 
-        ${SOURCES_SERVER_T} 
+        ${SOURCES_CLIENT_PROTOCOL} 
+        ${SOURCES_SERVER_PROTOCOL} 
+        ${SOURCES_SERVER_GAME_LOGIC}
+        ${HEADERS_CLIENT} 
         ${HEADERS_SERVER} 
         ${HEADERS_COMMON}
     )

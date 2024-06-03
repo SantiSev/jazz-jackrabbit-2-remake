@@ -3,6 +3,8 @@
 
 #include "../common_message.h"
 
+class MatchesManager;
+
 class RecvJoinMatchMessage: public Message {
 private:
     JoinMatchDTO join_match;

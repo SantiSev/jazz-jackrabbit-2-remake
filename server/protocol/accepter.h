@@ -10,7 +10,7 @@
 //#include "../common/common_socket.h"
 //#include "../common/common_thread.h"
 //#include "game_logic/client_monitor.h"
-#include "game_logic/matches_manager.h"
+#include "../game_logic/matches_manager.h"
 
 
 class ServerAccepter: public Thread {

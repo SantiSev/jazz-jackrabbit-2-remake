@@ -55,8 +55,8 @@ ServerThreadManager* MatchesManager::get_client_by_id(size_t id) {
     return (it != clients.end()) ? *it : nullptr;
 }
 
-void MatchesManager::join_match(const uint16_t& client_id, const uint16_t& match_id,
-                                const uint8_t& character) {
+void MatchesManager::join_match(const id_player_t& client_id, const id_match_t& match_id,
+                                const character_t& character) {
     auto it = matches.find(match_id);
     if (it != matches.end()) {
         it->second->add_client_to_match(get_client_by_id(client_id), "pepo", character);
