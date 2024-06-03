@@ -48,8 +48,6 @@ public:
 
     void set_x(int x) { this->x = x; }
     void set_y(int y) { this->y = y; }
-
-    void setVector(int x, int y);
 };
 
 #endif  // GAME_ENGINE_MATH_VECTOR2D_H_

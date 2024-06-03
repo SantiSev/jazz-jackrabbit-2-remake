@@ -183,7 +183,7 @@ TEST_CASE("Move multiple dynamic objects", "[DynamicBody]") {
     for (int i = 0; i < 10; ++i) {
 
         dynamic_body_1->move_horizontal(1);  // Move the object horizontally by 1 unit
-        dynamic_body_2->move_vertical(1);  // Move the object horizontally by 1 unit
+        dynamic_body_2->move_vertical(1);    // Move the object horizontally by 1 unit
 
 
         collision_manager.update_dynamic_object(
@@ -197,8 +197,8 @@ TEST_CASE("Move multiple dynamic objects", "[DynamicBody]") {
     REQUIRE(dynamic_body_2->get_position().get_x() == x_2);
     REQUIRE(dynamic_body_2->get_position().get_y() == y_2 + 10);
 
-    auto get_body_1 = collision_manager.get_collision_object_at(x_1+10, y_1);
-    auto get_body_2 = collision_manager.get_collision_object_at(x_2, y_2+10);
+    auto get_body_1 = collision_manager.get_collision_object_at(x_1 + 10, y_1);
+    auto get_body_2 = collision_manager.get_collision_object_at(x_2, y_2 + 10);
 
     REQUIRE(dynamic_body_1 == get_body_1);
     REQUIRE(dynamic_body_2 == get_body_2);
@@ -227,7 +227,7 @@ TEST_CASE("Move dynamic from left to right", "[DynamicBody]") {
                 dynamic_body);  // update the object in the collision manager
     }
 
-    auto get_body_moved_right = collision_manager.get_collision_object_at(x_1+10, y_1);
+    auto get_body_moved_right = collision_manager.get_collision_object_at(x_1 + 10, y_1);
     auto get_body_origin_point = collision_manager.get_collision_object_at(x_1, y_1);
 
     REQUIRE(dynamic_body->get_position().get_x() == x_1 + 10);
@@ -242,13 +242,12 @@ TEST_CASE("Move dynamic from left to right", "[DynamicBody]") {
                 dynamic_body);  // update the object in the collision manager
     }
 
-    auto get_body_moved_left = collision_manager.get_collision_object_at(x_1-10, y_1);
-    auto get_body_new_origin_point = collision_manager.get_collision_object_at(x_1+10, y_1);
+    auto get_body_moved_left = collision_manager.get_collision_object_at(x_1 - 10, y_1);
+    auto get_body_new_origin_point = collision_manager.get_collision_object_at(x_1 + 10, y_1);
 
     REQUIRE(dynamic_body->get_position().get_x() == x_1 - 10);
     REQUIRE(dynamic_body == get_body_moved_left);
     REQUIRE(get_body_new_origin_point == nullptr);
-
 }
 
 TEST_CASE("Crash Dynamic Objects into each other", "[DynamicBody]") {
@@ -284,9 +283,8 @@ TEST_CASE("Crash Dynamic Objects into each other", "[DynamicBody]") {
     }
 
     int x_final_1 = dynamic_body_1->get_position().get_x();
-    int x_final_2 =  dynamic_body_2->get_position().get_x();
+    int x_final_2 = dynamic_body_2->get_position().get_x();
 
     REQUIRE(x_final_1 == 60);
     REQUIRE(x_final_2 == 70);
-
 }
