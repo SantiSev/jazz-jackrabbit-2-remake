@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include "server.h"
+
 int main(int argc, const char* argv[]) {
     try {
         int output = -1;
@@ -12,7 +14,8 @@ int main(int argc, const char* argv[]) {
             return output;
         }
 
-        std::cout << "Hello, server: " << servname << " World!" << std::endl;
+        Server server(servname);
+        server.run();
 
         output = 0;
         return output;
