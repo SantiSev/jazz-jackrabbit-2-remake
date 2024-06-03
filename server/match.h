@@ -6,16 +6,9 @@
 #include <string>
 #include <vector>
 
-#include "../common/common_constants.h"
-#include "../common/common_queue.h"
-#include "../common/common_thread.h"
-#include "../common/message/message.h"
 #include "../common/message/snapshot.h"
-#include "game_logic/characters/enemies.h"
-#include "game_logic/characters/player.h"
 #include "game_logic/client_monitor.h"
-
-#include "test_client_server.h"
+#include "protocol/server_thread_manager.h"
 
 
 class Match: public Thread {
@@ -25,7 +18,7 @@ private:
     std::string match_name;
     int match_time = STARTING_MATCH_TIME;
     std::shared_ptr<Queue<std::shared_ptr<Message>>> event_queue;  // shared with the receiver
-    std::list<TestClientServer*> clients;
+    std::list<ServerThreadManager*> clients;
     std::vector<Player> players;
     std::vector<Enemies> enemies;
     std::vector<std::string> items;
@@ -46,9 +39,9 @@ public:
 
     Player& get_player(size_t id);
 
-    void add_player_to_game(Player& player);
+    void add_player_to_game(const std::string& player_name, const uint8_t& character);
 
-    void create_actual_snapshot(int const seconds, int const minutes);
+    void create_actual_snapshot(int const& seconds, int const& minutes);
 
     bool has_match_ended() const;
 
@@ -68,7 +61,10 @@ public:
 
     void send_end_message_to_players();
 
-    void add_client_to_match(TestClientServer* client);
+    void add_client_to_match(ServerThreadManager* client, const std::string& player_name,
+                             const uint8_t& character);
+
+    std::vector<size_t> get_clients_ids();
 };
 
 #endif

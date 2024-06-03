@@ -1,7 +1,5 @@
 #include "./recv_create_game.h"
 
-#include <iostream>
-
 RecvCreateGameMessage::RecvCreateGameMessage(CreateGameDTO& create_game):
         Message(RECV_CREATE_GAME), create_game(create_game) {}
 

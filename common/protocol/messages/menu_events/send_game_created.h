@@ -9,9 +9,9 @@ private:
 
 public:
     explicit SendGameCreatedMessage(GameCreatedDTO& game_created);
-    void run() override;
+    void run(ClientProtocol& client_protocol) override;
     void send_message(CommonProtocol& protocol) override;
-    ~SendGameCreatedMessage();
+    ~SendGameCreatedMessage() override;
 };
 
 #endif

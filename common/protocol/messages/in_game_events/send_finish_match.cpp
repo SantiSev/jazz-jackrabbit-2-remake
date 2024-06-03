@@ -3,6 +3,7 @@
 SendFinishMatchMessage::SendFinishMatchMessage(FinishMatchDTO& finish_match):
         Message(SEND_FINISH_MATCH), finish_match(finish_match) {}
 
+
 void SendFinishMatchMessage::run() {}
 
 void SendFinishMatchMessage::send_message(CommonProtocol& protocol) {

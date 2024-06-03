@@ -7,6 +7,7 @@
 #include <arpa/inet.h>
 
 #define CLOSE_CONNECTION 0x0000
+#define ACPT_CONNECTION 0x0001
 
 #define SEND_GAME_STATE 0x0100
 #define RECV_COMMAND 0x0101
@@ -19,6 +20,7 @@
 #define SEND_GAME_CREATED 0x0202
 #define RECV_JOIN_MATCH 0x0203
 
+typedef uint16_t id_client_t;
 typedef uint16_t id_player_t;
 typedef uint16_t id_match_t;
 
@@ -76,6 +78,7 @@ struct ActiveGamesDTO {
 } __attribute__((packed));
 
 struct GameCreatedDTO {
+    id_player_t id_player;
 } __attribute__((packed));
 
 #endif

@@ -10,7 +10,6 @@ ServerAccepter::ServerAccepter(const std::string& port):
         skt(Socket(port.c_str())), online(true), matches_manager() {}
 
 void ServerAccepter::run() {
-
     try {
         matches_manager.start();
         while (online) {

@@ -1,10 +1,6 @@
 #ifndef _RECV_CREATE_GAME_H
 #define _RECV_CREATE_GAME_H
 
-#include <cstdint>
-#include <string>
-
-#include "../../common_dto.h"
 #include "../common_message.h"
 
 class RecvCreateGameMessage: public Message {

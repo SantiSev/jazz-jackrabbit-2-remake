@@ -6,13 +6,11 @@
 #include <utility>
 #include <vector>
 
-#include "../common/common_queue.h"
-#include "../common/common_socket.h"
-#include "../common/common_thread.h"
-#include "game_logic/client_monitor.h"
+//#include "../common/common_queue.h"
+//#include "../common/common_socket.h"
+//#include "../common/common_thread.h"
+//#include "game_logic/client_monitor.h"
 #include "game_logic/matches_manager.h"
-
-#include "test_client_server.h"
 
 
 class ServerAccepter: public Thread {

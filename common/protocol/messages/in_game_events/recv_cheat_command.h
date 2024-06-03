@@ -1,9 +1,9 @@
 #ifndef _RECV_CHEAT_COMMAND_H
 #define _RECV_CHEAT_COMMAND_H
 
-#include <cstdint>
-
 #include "../common_message.h"
+
+#define RECV_CHEAT_COMMAND 0x0102
 
 class RecvCheatCommandMessage: public Message {
 private:

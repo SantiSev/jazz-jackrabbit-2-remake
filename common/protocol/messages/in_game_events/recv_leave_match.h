@@ -1,9 +1,9 @@
 #ifndef _RECV_LEAVE_MATCH_H
 #define _RECV_LEAVE_MATCH_H
 
-#include <cstdint>
-
 #include "../common_message.h"
+
+#define RECV_LEAVE_MATCH 0x0103
 
 class RecvLeaveMatchMessage: public Message {
 private:

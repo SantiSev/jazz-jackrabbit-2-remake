@@ -3,6 +3,8 @@
 
 #include "../common_message.h"
 
+#define SEND_FINISH_MATCH 0x0104
+
 class SendFinishMatchMessage: public Message {
 private:
     FinishMatchDTO finish_match;

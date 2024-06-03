@@ -1,10 +1,9 @@
 #ifndef _RECV_COMMAND_H
 #define _RECV_COMMAND_H
 
-#include <cstdint>
-
-#include "../../common_dto.h"
 #include "../common_message.h"
+
+#define RECV_COMMAND 0x0101
 
 class RecvCommandMessage: public Message {
 private:

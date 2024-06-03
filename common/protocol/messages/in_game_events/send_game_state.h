@@ -3,6 +3,8 @@
 
 #include "../common_message.h"
 
+#define SEND_GAME_STATE 0x0100
+
 class SendGameStateMessage: public Message {
 private:
     GameStateDTO game_state;

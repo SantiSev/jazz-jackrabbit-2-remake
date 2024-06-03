@@ -1,5 +1,6 @@
 #include "./common_protocol.h"
 
+#include <iostream>
 #include <vector>
 
 #include <arpa/inet.h>
@@ -13,8 +14,6 @@ const uint16_t CommonProtocol::recv_two_bytes() {
     uint16_t two_bytes;
 
     skt.recvall(&two_bytes, sizeof(two_bytes), &was_closed);
-    if (was_closed)
-        return CLOSE_CONNECTION;
 
     return ntohs(two_bytes);
 }
@@ -81,4 +80,10 @@ void CommonProtocol::send_message(std::shared_ptr<Message> message) {
     message->send_message(*this);
 }
 
-CommonProtocol::~CommonProtocol() {}
+void CommonProtocol::force_shutdown() {
+    was_closed = true;
+    skt.shutdown(2);
+    skt.close();
+}
+
+CommonProtocol::~CommonProtocol() = default;

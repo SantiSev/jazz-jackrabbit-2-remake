@@ -4,6 +4,9 @@
 
 #include <arpa/inet.h>
 
+#include "../../common/protocol/messages/connection_events/close_connection.h"
+#include "../../common/protocol/messages/invalid_message.h"
+
 ServerProtocol::ServerProtocol(Socket&& skt): CommonProtocol(std::move(skt)) {}
 
 std::shared_ptr<RecvCommandMessage> ServerProtocol::recv_command() {
