@@ -36,6 +36,6 @@ jobs:
           sudo cp tiburoncin /usr/bin/
           cd ..
           sudo apt-get install -y valgrind libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev cmake catch2
-          ./tests/events/server_to_client/run_tests.sh build/ tests/events/server_to_client/cases/ single-client no-valgrind 60 10
+          ./tests/events/server_to_client/run_tests.sh tests_bin/ tests/events/server_to_client/cases/ single-client no-valgrind 60 10
           ./tests/events/server_to_client/compare_outputs.sh tests/events/server_to_client/cases/ tests/events/server_to_client/expected/
           rm -r build
