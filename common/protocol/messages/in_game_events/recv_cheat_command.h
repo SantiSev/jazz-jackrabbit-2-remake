@@ -7,12 +7,12 @@
 
 class RecvCheatCommandMessage: public Message {
 private:
-    uint16_t id_player;
-    uint8_t id_cheat_command;
+    CheatCommandDTO cheat_command;
 
 public:
-    RecvCheatCommandMessage(uint16_t id_player, uint8_t id_cheat_command);
+    explicit RecvCheatCommandMessage(CheatCommandDTO& cheat_command);
     void run() override;
+    void send_message(CommonProtocol& protocol) override;
     ~RecvCheatCommandMessage();
 };
 

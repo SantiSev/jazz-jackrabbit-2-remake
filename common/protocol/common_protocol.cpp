@@ -9,16 +9,6 @@ CommonProtocol::CommonProtocol(Socket&& skt): skt(std::move(skt)), was_closed(fa
 CommonProtocol::CommonProtocol(const std::string& hostname, const std::string& servname):
         skt(hostname.c_str(), servname.c_str()), was_closed(false) {}
 
-const uint8_t CommonProtocol::recv_one_byte() {
-    uint8_t one_byte;
-
-    skt.recvall(&one_byte, sizeof(one_byte), &was_closed);
-    if (was_closed)
-        return CLOSE_CONNECTION;
-
-    return one_byte;
-}
-
 const uint16_t CommonProtocol::recv_two_bytes() {
     uint16_t two_bytes;
 
@@ -29,23 +19,66 @@ const uint16_t CommonProtocol::recv_two_bytes() {
     return ntohs(two_bytes);
 }
 
-const std::string CommonProtocol::recv_string() {
-    uint8_t length;
-
-    skt.recvall(&length, sizeof(length), &was_closed);
-
-    std::vector<char> buf(length);
-    skt.recvall(buf.data(), length, &was_closed);
-
-    std::string result(buf.begin(), buf.end());
-
-    return result;
+void CommonProtocol::send_header(const uint16_t header) {
+    const uint16_t header_to_n = htons(header);
+    skt.sendall(&header_to_n, sizeof(header_to_n), &was_closed);
 }
 
-void CommonProtocol::send_message(std::shared_ptr<BaseDTO> message) {
-    skt.sendall(&(*message) + sizeof(BaseDTO) / 8, message->size(), &was_closed);
-    if (was_closed)
-        return;
+void CommonProtocol::send_close_connection(const uint16_t header) { send_header(header); }
+
+void CommonProtocol::send_cheat_command(const uint16_t header, CheatCommandDTO& cheat_command) {
+    send_header(header);
+    cheat_command.id_player = htons(cheat_command.id_player);
+    skt.sendall(&cheat_command, sizeof(cheat_command), &was_closed);
+}
+
+void CommonProtocol::send_command(const uint16_t header, CommandDTO& command) {
+    send_header(header);
+    command.id_player = htons(command.id_player);
+    skt.sendall(&command, sizeof(command), &was_closed);
+}
+
+void CommonProtocol::send_leave_match(const uint16_t header, LeaveMatchDTO& leave_match) {
+    send_header(header);
+    leave_match.id_player = htons(leave_match.id_player);
+    skt.sendall(&leave_match, sizeof(leave_match), &was_closed);
+}
+
+void CommonProtocol::send_create_game(const uint16_t header, CreateGameDTO& create_game) {
+    send_header(header);
+    create_game.id_player = htons(create_game.id_player);
+    skt.sendall(&create_game, sizeof(create_game), &was_closed);
+}
+
+void CommonProtocol::send_join_match(const uint16_t header, JoinMatchDTO& join_match) {
+    send_header(header);
+    join_match.id_player = htons(join_match.id_player);
+    join_match.id_match = htons(join_match.id_match);
+    skt.sendall(&join_match, sizeof(join_match), &was_closed);
+}
+
+void CommonProtocol::send_game_state(const uint16_t header, GameStateDTO& game_state) {
+    send_header(header);
+    skt.sendall(&game_state, sizeof(game_state), &was_closed);
+}
+
+void CommonProtocol::send_finish_match(const uint16_t header, FinishMatchDTO& finish_match) {
+    send_header(header);
+    skt.sendall(&finish_match, sizeof(finish_match), &was_closed);
+}
+
+void CommonProtocol::send_active_games(const uint16_t header, ActiveGamesDTO& active_games) {
+    send_header(header);
+    skt.sendall(&active_games, sizeof(active_games), &was_closed);
+}
+
+void CommonProtocol::send_game_created(const uint16_t header, GameCreatedDTO& game_created) {
+    send_header(header);
+    skt.sendall(&game_created, sizeof(game_created), &was_closed);
+}
+
+void CommonProtocol::send_message(std::shared_ptr<Message> message) {
+    message->send_message(*this);
 }
 
 CommonProtocol::~CommonProtocol() {}

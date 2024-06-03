@@ -4,9 +4,13 @@
 #include "../common_message.h"
 
 class SendFinishMatchMessage: public Message {
+private:
+    FinishMatchDTO finish_match;
+
 public:
-    SendFinishMatchMessage();
+    explicit SendFinishMatchMessage(FinishMatchDTO& finish_match);
     void run() override;
+    void send_message(CommonProtocol& protocol) override;
     ~SendFinishMatchMessage();
 };
 

@@ -7,6 +7,7 @@ class CloseConnectionMessage: public Message {
 public:
     CloseConnectionMessage();
     void run() override;
+    void send_message(CommonProtocol& protocol) override;
     ~CloseConnectionMessage();
 };
 

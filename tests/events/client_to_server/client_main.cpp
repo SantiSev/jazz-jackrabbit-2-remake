@@ -27,45 +27,44 @@ int main(int argc, const char* argv[]) {
                 break;
 
             if (command.compare(CHEAT_COMMAND) == 0) {
-                int id_player;
-                int id_cheat_command;
-
+                id_player_t id_player;
                 std::cin >> id_player;
-                std::cin >> id_cheat_command;
+                cheat_command_t cheat_command = INFINITY_AMMO;
 
-                protocol.send_cheat_command(id_player, id_cheat_command);
+                CheatCommandDTO cheat_command_dto = {id_player, cheat_command};
+                auto message = std::make_shared<RecvCheatCommandMessage>(cheat_command_dto);
+                protocol.send_message(message);
             } else if (command.compare(COMMAND) == 0) {
-                int id_player;
-                int id_command;
-
+                id_player_t id_player;
                 std::cin >> id_player;
-                std::cin >> id_command;
+                command_t command = MOVE_LEFT;
 
-                protocol.send_command(id_player, id_command);
+                CommandDTO command_dto = {id_player, command};
+                auto message = std::make_shared<RecvCommandMessage>(command_dto);
+                protocol.send_message(message);
             } else if (command.compare(CREATE_GAME) == 0) {
-                int id_player;
-                std::string match_name;
-
+                id_player_t id_player;
                 std::cin >> id_player;
-                std::cin >> match_name;
 
-                protocol.send_create_game(id_player, match_name);
+                CreateGameDTO create_game = {id_player, "Partida 1"};
+                auto message = std::make_shared<RecvCreateGameMessage>(create_game);
+                protocol.send_message(message);
             } else if (command.compare(JOIN_MATCH) == 0) {
-                int id_player;
-                int id_match;
-                int player_character;
-
+                id_player_t id_player;
                 std::cin >> id_player;
+                id_match_t id_match;
                 std::cin >> id_match;
-                std::cin >> player_character;
 
-                protocol.send_join_match(id_player, id_match, player_character);
+                JoinMatchDTO join_match = {id_player, id_match, JAZZ_CHARACTER};
+                auto message = std::make_shared<RecvJoinMatchMessage>(join_match);
+                protocol.send_message(message);
             } else if (command.compare(LEAVE_MATCH) == 0) {
-                int id_player;
-
+                id_player_t id_player;
                 std::cin >> id_player;
 
-                protocol.send_leave_match(id_player);
+                LeaveMatchDTO leave_match = {id_player};
+                auto message = std::make_shared<RecvLeaveMatchMessage>(leave_match);
+                protocol.send_message(message);
             }
         }
     } catch (const std::exception& err) {

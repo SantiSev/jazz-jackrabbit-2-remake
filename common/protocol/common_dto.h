@@ -19,7 +19,10 @@
 #define SEND_GAME_CREATED 0x0202
 #define RECV_JOIN_MATCH 0x0203
 
-typedef enum: uint8_t { INFINTY_AMMO } cheat_command_t;
+typedef uint16_t id_player_t;
+typedef uint16_t id_match_t;
+
+typedef enum: uint8_t { INFINITY_AMMO } cheat_command_t;
 
 typedef enum: uint8_t {
     MOVE_LEFT = 0x00,
@@ -36,54 +39,43 @@ typedef enum: uint8_t {
     LORI_CHAARCTER = 0x02
 } character_t;
 
-struct CloseConnection {
-    const uint16_t header = htons(CLOSE_CONNECTION);
-} __attribute__((packed));
-
-struct CheatCommand {
-    const uint16_t header = htons(RECV_CHEAT_COMMAND);
+struct CheatCommandDTO {
+    id_player_t id_player;
     cheat_command_t command;
 } __attribute__((packed));
 
-struct Command {
-    const uint16_t header = htons(RECV_COMMAND);
+struct CommandDTO {
+    id_player_t id_player;
     command_t command;
 } __attribute__((packed));
 
-struct LeaveMatch {
-    const uint16_t header = htons(RECV_LEAVE_MATCH);
-    uint16_t id_player;
+struct LeaveMatchDTO {
+    id_player_t id_player;
 } __attribute__((packed));
 
-struct FinishMatch {
-    const uint16_t header = htons(SEND_FINISH_MATCH);
+struct FinishMatchDTO {
 } __attribute__((packed));
 
-struct GameState {
-    const uint16_t header = htons(SEND_GAME_STATE);
+struct GameStateDTO {
 } __attribute__((packed));
 
-struct CreateGame {
-    const uint16_t header = htons(RECV_CREATE_GAME);
-    uint16_t id_player;
-    char match_name[256];
+struct CreateGameDTO {
+    id_player_t id_player;
+    char match_name[50];
 } __attribute__((packed));
 
-struct JoinMatch {
-    const uint16_t header = htons(RECV_JOIN_MATCH);
-    uint16_t id_player;
-    uint16_t id_match;
+struct JoinMatchDTO {
+    id_player_t id_player;
+    id_match_t id_match;
     character_t player_character;
 } __attribute__((packed));
 
-struct ActiveGames {
-    const uint16_t header = htons(SEND_ACTIVE_GAMES);
-    char name[256];
+struct ActiveGamesDTO {
+    char name[50];
     uint8_t players;
 } __attribute__((packed));
 
-struct GameCreated {
-    const uint16_t header = htons(SEND_GAME_CREATED);
+struct GameCreatedDTO {
 } __attribute__((packed));
 
 #endif

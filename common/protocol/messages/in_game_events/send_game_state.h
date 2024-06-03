@@ -4,9 +4,13 @@
 #include "../common_message.h"
 
 class SendGameStateMessage: public Message {
+private:
+    GameStateDTO game_state;
+
 public:
-    SendGameStateMessage();
+    explicit SendGameStateMessage(GameStateDTO& game_state);
     void run() override;
+    void send_message(CommonProtocol& protocol) override;
     ~SendGameStateMessage();
 };
 

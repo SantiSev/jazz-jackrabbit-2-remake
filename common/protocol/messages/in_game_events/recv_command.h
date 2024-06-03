@@ -3,16 +3,17 @@
 
 #include <cstdint>
 
+#include "../../common_dto.h"
 #include "../common_message.h"
 
 class RecvCommandMessage: public Message {
 private:
-    uint16_t id_player;
-    uint8_t id_command;
+    CommandDTO command;
 
 public:
-    RecvCommandMessage(uint16_t id_player, uint8_t id_command);
+    explicit RecvCommandMessage(CommandDTO& command);
     void run() override;
+    void send_message(CommonProtocol& protocol) override;
     ~RecvCommandMessage();
 };
 

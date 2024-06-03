@@ -7,11 +7,12 @@
 
 class RecvLeaveMatchMessage: public Message {
 private:
-    uint16_t id_player;
+    LeaveMatchDTO leave_match;
 
 public:
-    explicit RecvLeaveMatchMessage(uint16_t id_player);
+    explicit RecvLeaveMatchMessage(LeaveMatchDTO& leave_match);
     void run() override;
+    void send_message(CommonProtocol& protocol) override;
     ~RecvLeaveMatchMessage();
 };
 
