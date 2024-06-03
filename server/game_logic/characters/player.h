@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "../../../common/common_constants.h"
+#include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
 
 #include "weapon.h"
 
@@ -18,6 +19,7 @@
 
 class Player {
 private:
+    // DynamicBody character_body; // Commented by Agus: No compile
     size_t id;
     std::string name;
     size_t health;
@@ -34,6 +36,7 @@ public:
     Player(size_t id, std::string name, const uint8_t& character);
 
     size_t get_id() const;
+    Vector2D get_position() const;
     std::string get_name();
     size_t get_health() const;
     uint8_t get_character() const;

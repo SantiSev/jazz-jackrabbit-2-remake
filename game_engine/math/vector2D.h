@@ -28,8 +28,14 @@ public:
     Vector2D operator/(int scalar) const;
     // Redefinir un vector
     Vector2D& operator=(const Vector2D& other);
-    // crear == operator
+    // Igualar un vector a otro
     bool operator==(const Vector2D& other) const;
+    // Desigualar un vector con otro
+    bool operator!=(const Vector2D& other) const;
+    // Desincrementar vector
+    Vector2D& operator-=(const Vector2D& other);
+    // Incrementar vector
+    Vector2D& operator+=(const Vector2D& other);
 
     // modulo del vector
     int magnitude() const;
@@ -42,8 +48,6 @@ public:
 
     void set_x(int x) { this->x = x; }
     void set_y(int y) { this->y = y; }
-
-    void setVector(int x, int y);
 };
 
 #endif  // GAME_ENGINE_MATH_VECTOR2D_H_

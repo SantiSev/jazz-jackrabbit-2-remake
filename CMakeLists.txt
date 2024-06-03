@@ -46,7 +46,6 @@ file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine_*.h")
 # COMMUNICATION - TESTS
 file(GLOB_RECURSE SOURCES_CLIENT_PROTOCOL "client/protocol/*.cpp")
 file(GLOB_RECURSE SOURCES_SERVER_PROTOCOL "server/protocol/*.cpp")
-
 file(GLOB_RECURSE SOURCES_SERVER_GAME_LOGIC "server/game_logic/*.cpp")
 
 if(EVENTS)
@@ -55,6 +54,8 @@ if(EVENTS)
         ${SOURCES_CLIENT_PROTOCOL} 
         ${SOURCES_SERVER_PROTOCOL}
         ${SOURCES_SERVER_GAME_LOGIC}
+        ${SOURCES_GAME_ENGINE}
+        ${HEADERS_GAME_ENGINE}
         ${HEADERS_CLIENT} 
         ${HEADERS_SERVER} 
         ${HEADERS_COMMON}
@@ -64,6 +65,8 @@ if(EVENTS)
         ${SOURCES_CLIENT_PROTOCOL} 
         ${SOURCES_SERVER_PROTOCOL}
         ${SOURCES_SERVER_GAME_LOGIC}
+        ${SOURCES_GAME_ENGINE}
+        ${HEADERS_GAME_ENGINE}
         ${HEADERS_CLIENT} 
         ${HEADERS_SERVER} 
         ${HEADERS_COMMON}
@@ -74,6 +77,8 @@ if(EVENTS)
         ${SOURCES_CLIENT_PROTOCOL} 
         ${SOURCES_SERVER_PROTOCOL}
         ${SOURCES_SERVER_GAME_LOGIC}
+        ${SOURCES_GAME_ENGINE}
+        ${HEADERS_GAME_ENGINE}
         ${HEADERS_CLIENT} 
         ${HEADERS_SERVER} 
         ${HEADERS_COMMON}
@@ -83,6 +88,8 @@ if(EVENTS)
         ${SOURCES_CLIENT_PROTOCOL} 
         ${SOURCES_SERVER_PROTOCOL} 
         ${SOURCES_SERVER_GAME_LOGIC}
+        ${SOURCES_GAME_ENGINE}
+        ${HEADERS_GAME_ENGINE}
         ${HEADERS_CLIENT} 
         ${HEADERS_SERVER} 
         ${HEADERS_COMMON}
@@ -113,7 +120,10 @@ if (DEFINED TSAN)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=thread")
 
-    add_executable(server-tsan ${SOURCES_SERVER} ${SOURCES_COMMON})
+    add_executable(server-tsan ${SOURCES_SERVER} ${SOURCES_COMMON}
+    game_engine/physics_engine/collision_manager.h
+    game_engine/physics_engine/colision_object.h)
+
 endif()
 
 if (verbose)

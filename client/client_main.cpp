@@ -12,6 +12,10 @@
 #define servname argv[2]
 #define QUIT 'q'
 
+// #include <SDL2pp/SDL2pp.hh>
+//
+//  using namespace SDL2pp;
+
 int main(int argc, const char* argv[]) {
     try {
         if (argc != 3) {
@@ -20,7 +24,7 @@ int main(int argc, const char* argv[]) {
 
         ClientProtocol protocol(hostname, servname);
         std::string message = "match 1";
-        protocol.send_create_game(1, message, 7);
+        // protocol.send_create_game(1, message, 7);
         //        protocol.send_join_match(4, 7, 12);
         //        uint16_t event;
         //        bool was_closed = false;
