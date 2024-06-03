@@ -63,7 +63,6 @@ else ()
     ${HEADERS_SERVER}
     ${HEADERS_COMMON}
     )
-    target_link_libraries(client_test_one SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
     add_executable(server_test_one tests/events/client_to_server/server_main.cpp
     ${SOURCES_COMMON}
     ${SOURCES_CLIENT_PROTOCOL}
@@ -73,7 +72,6 @@ else ()
     ${HEADERS_SERVER}
     ${HEADERS_COMMON}
     )
-    target_link_libraries(server_test_one SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 
     add_executable(client_test_two tests/events/server_to_client/client_main.cpp
     ${SOURCES_COMMON}
@@ -84,7 +82,6 @@ else ()
     ${HEADERS_SERVER}
     ${HEADERS_COMMON}
     )
-    target_link_libraries(client_test_two SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
     add_executable(server_test_two tests/events/server_to_client/server_main.cpp
     ${SOURCES_COMMON}
     ${SOURCES_CLIENT_PROTOCOL}
@@ -94,7 +91,6 @@ else ()
     ${HEADERS_SERVER}
     ${HEADERS_COMMON}
     )
-    target_link_libraries(server_test_two SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 
     # GRAPHICS TEST
     file(GLOB_RECURSE GRAPHIC_TESTS "tests/graphics/*.cpp" "tests/graphics/**/*.cpp")
