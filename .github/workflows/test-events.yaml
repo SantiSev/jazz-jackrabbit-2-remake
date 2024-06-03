@@ -10,7 +10,7 @@ jobs:
       - run: |
           sudo apt-get update
           mkdir build
-          cd build && cmake -DEVENTS=ON .. && make
+          cd build && cmake -DTESTS=ON .. && make
           cd ..
           git clone https://github.com/eldipa/tiburoncin.git
           cd tiburoncin
@@ -34,7 +34,7 @@ jobs:
       - run: |
           sudo apt-get update
           mkdir build
-          cd build && cmake -DEVENTS=ON .. && make
+          cd build && cmake -DTESTS=ON .. && make
           cd ..
           git clone https://github.com/eldipa/tiburoncin.git
           cd tiburoncin
