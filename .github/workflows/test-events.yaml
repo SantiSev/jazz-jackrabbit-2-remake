@@ -6,6 +6,14 @@ jobs:
   test-events:
     runs-on: ubuntu-latest
     steps:
+      - uses: libsdl-org/setup-sdl@main
+        id: sdl
+        with:
+          install-linux-dependencies: true
+          version: 2-latest
+          version-sdl-ttf: 2-latest
+          version-sdl-image: 2-latest
+          version-sdl-mixer: 2-latest
       - uses: actions/checkout@v2
       - run: |
           ./build.sh events
