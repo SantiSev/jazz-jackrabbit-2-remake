@@ -14,7 +14,7 @@ public:
     explicit MatchesManagerMessageHandler(MatchesManager& matches_manager):
             matches_manager(matches_manager) {}
 
-    void handle_recv_create_game(CreateGameDTO dto) override;
+    void handle_recv_create_game(const CreateGameDTO& dto) override;
 
     void handle_recv_join_match(JoinMatchDTO dto) override;
 };

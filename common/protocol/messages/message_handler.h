@@ -7,7 +7,7 @@ class MessageHandler {
 
 public:
     // matches_manager
-    virtual void handle_recv_create_game(CreateGameDTO dto) {}
+    virtual void handle_recv_create_game(const CreateGameDTO& dto) {}
     virtual void handle_recv_join_match(JoinMatchDTO dto) {}
 
     // client

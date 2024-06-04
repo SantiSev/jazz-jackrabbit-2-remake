@@ -2,7 +2,7 @@
 
 #include "../game_logic/matches_manager.h"
 
-void MatchesManagerMessageHandler::handle_recv_create_game(CreateGameDTO dto) {
+void MatchesManagerMessageHandler::handle_recv_create_game(const CreateGameDTO& dto) {
     matches_manager.create_new_match(dto);
 }
 
