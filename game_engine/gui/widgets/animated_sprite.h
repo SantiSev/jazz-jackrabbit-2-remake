@@ -19,6 +19,7 @@ private:
     std::shared_ptr<Texture> texture;
     SDL_Rect s_rect;
     SDL_Rect d_rect;
+    int x_start;
     int frames;
     int current_frame;
     int ms_per_frame;

@@ -7,6 +7,7 @@ AnimatedSprite::AnimatedSprite(std::shared_ptr<Texture> texture, SDL_Rect& s_rec
         texture(texture),
         s_rect(s_rect),
         d_rect(d_rect),
+        x_start(s_rect.x),
         frames(frames),
         current_frame(0),
         elapsed_time(0) {
@@ -25,7 +26,7 @@ void AnimatedSprite::update(int delta) {
 }
 
 void AnimatedSprite::draw(SDL_Renderer* renderer) {
-    s_rect.x = current_frame * s_rect.w;
+    s_rect.x = (current_frame * s_rect.w) + x_start;
     int err = SDL_RenderCopy(renderer, texture->get_texture(), &s_rect, &d_rect);
     if (err < 0) {
         throw SDLError("Error drawing animation: " + std::string(SDL_GetError()));
@@ -51,6 +52,7 @@ AnimatedSprite::AnimatedSprite(AnimatedSprite&& other) noexcept:
         texture(std::move(other.texture)),
         s_rect(other.s_rect),
         d_rect(other.d_rect),
+        x_start(other.x_start),
         frames(other.frames),
         current_frame(other.current_frame),
         ms_per_frame(other.ms_per_frame),
@@ -63,6 +65,7 @@ AnimatedSprite& AnimatedSprite::operator=(AnimatedSprite&& other) noexcept {
     texture = std::move(other.texture);
     s_rect = other.s_rect;
     d_rect = other.d_rect;
+    x_start = other.x_start;
     frames = other.frames;
     current_frame = other.current_frame;
     ms_per_frame = other.ms_per_frame;
