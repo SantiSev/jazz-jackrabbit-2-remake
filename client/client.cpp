@@ -1,9 +1,10 @@
 #include "client.h"
 
 Client::Client(const std::string& host, const std::string& port):
-        // protocol(host, port),
+        recv_message(),
+        event_loop(std::ref(game_running)),
         game_running(true),
-        event_loop(std::ref(game_running)) {}
+        thread_manager(host, port, recv_message, event_loop.send_message) {}
 
 void Client::start() {
     engine::Window window(800, 600, true, true);
