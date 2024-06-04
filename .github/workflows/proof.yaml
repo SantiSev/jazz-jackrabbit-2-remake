@@ -1,0 +1,13 @@
+name: pre-commit
+on:
+  pull_request:
+  push:
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+    - run: |
+        sudo apt-get -y install libsdl2-image-dev
+        dpkg -L libsdl2-image-dev
