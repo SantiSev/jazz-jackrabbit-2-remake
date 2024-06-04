@@ -4,12 +4,13 @@
 #include <utility>
 #include <vector>
 
-#include "../../common/protocol/messages/common_message.h"
+#include "../../common/protocol/messages/menu_events/send_game_joined.h"
 
 MatchesManager::MatchesManager():
         online(true),
         matches_number(0),
-        waiting_server_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()) {}
+        waiting_server_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()),
+        message_handler(*this) {}
 
 void MatchesManager::run() {
     try {
@@ -20,7 +21,7 @@ void MatchesManager::run() {
 
             while (waiting_server_queue->try_pop(client_message)) {
                 if (client_message != nullptr) {
-                    client_message->run(*this);
+                    client_message->run(message_handler);
                 }
             }
 
@@ -37,14 +38,22 @@ void MatchesManager::run() {
     }
 }
 
-void MatchesManager::create_new_match(const uint16_t& id_client, const std::string& match_name,
-                                      const size_t& max_players, const std::string& map_name,
-                                      const uint8_t& character_selected) {
+void MatchesManager::create_new_match(const CreateGameDTO& dto) {
     matches_number++;
-    auto match = std::make_shared<Match>(map_name, match_name, max_players);
+    auto match = std::make_shared<Match>(dto.map_name, dto.match_name, dto.max_players);
     matches.insert({matches_number, match});
     match->start();
-    match->add_client_to_match(get_client_by_id(id_client), "jugador 1", character_selected);
+    match->add_client_to_match(get_client_by_id(dto.id_client), "jugador 1",
+                               dto.character_selected);
+    send_id_player_to_client(dto);
+}
+
+void MatchesManager::send_id_player_to_client(const CreateGameDTO& dto) {
+    GameCreatedDTO game_created = {1};
+    auto send_game_created = std::make_shared<SendGameCreatedMessage>(game_created);
+    get_client_by_id(dto.id_client)
+            ->get_sender_queue()
+            ->push(send_game_created);  // todo ver si funciona así
 }
 
 ServerThreadManager* MatchesManager::get_client_by_id(size_t id) {
@@ -55,12 +64,25 @@ ServerThreadManager* MatchesManager::get_client_by_id(size_t id) {
     return (it != clients.end()) ? *it : nullptr;
 }
 
-void MatchesManager::join_match(const id_player_t& client_id, const id_match_t& match_id,
-                                const character_t& character) {
-    auto it = matches.find(match_id);
+
+void MatchesManager::join_match(const JoinMatchDTO& dto) {
+    auto it = matches.find(dto.id_match);
     if (it != matches.end()) {
-        it->second->add_client_to_match(get_client_by_id(client_id), "pepo", character);
+        it->second->add_client_to_match(get_client_by_id(dto.id_match), "pepo",
+                                        dto.player_character);
+        send_joined_info_to_client(
+                dto,
+                it->second->get_num_players());  // todo ver si funciona y si el numero está bien
     }
+}
+
+void MatchesManager::send_joined_info_to_client(const JoinMatchDTO& dto,
+                                                const uint16_t& player_number) {
+    uint16_t num_players = player_number;
+    num_players++;
+    ClientJoinedMatchDTO joined_dto = {dto.id_match, num_players};
+    auto joined_message = std::make_shared<SendGameJoined>(joined_dto);
+    get_client_by_id(dto.id_match)->get_sender_queue()->push(joined_message);
 }
 
 void MatchesManager::check_matches_status() {
@@ -122,8 +144,8 @@ std::vector<matchesDTO> MatchesManager::return_matches_lists() {
 void MatchesManager::add_new_client(Socket client_socket) {
     clients_connected++;
     auto client = new ServerThreadManager(std::move(client_socket), waiting_server_queue);
-    //    auto message =std::make_shared<ConnectedMessage>(clients_connected);  // le mando su id
-    //    para que lo guarde client->get_sender_queue()->push(message);
+    auto message = std::make_shared<AcptConnection>(clients_connected);  // le mando su id
+    client->get_sender_queue()->push(message);
     client->set_client_id(clients_connected);
     clients.push_back(client);
 }

@@ -4,8 +4,7 @@
 #include <utility>
 
 #include "game_logic/matches_manager.h"
-
-#include "accepter.h"
+#include "protocol/accepter.h"
 
 void Server::run() {
     try {

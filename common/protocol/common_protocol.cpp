@@ -51,13 +51,13 @@ void CommonProtocol::send_leave_match(const uint16_t header, LeaveMatchDTO& leav
 
 void CommonProtocol::send_create_game(const uint16_t header, CreateGameDTO& create_game) {
     send_header(header);
-    create_game.id_player = htons(create_game.id_player);
+    create_game.id_client = htons(create_game.id_client);
     skt.sendall(&create_game, sizeof(create_game), &was_closed);
 }
 
 void CommonProtocol::send_join_match(const uint16_t header, JoinMatchDTO& join_match) {
     send_header(header);
-    join_match.id_player = htons(join_match.id_player);
+    join_match.id_client = htons(join_match.id_client);
     join_match.id_match = htons(join_match.id_match);
     skt.sendall(&join_match, sizeof(join_match), &was_closed);
 }
@@ -80,6 +80,11 @@ void CommonProtocol::send_active_games(const uint16_t header, ActiveGamesDTO& ac
 void CommonProtocol::send_game_created(const uint16_t header, GameCreatedDTO& game_created) {
     send_header(header);
     skt.sendall(&game_created, sizeof(game_created), &was_closed);
+}
+
+void CommonProtocol::send_game_joined(const uint16_t header, ClientJoinedMatchDTO& game_joined) {
+    send_header(header);
+    skt.sendall(&game_joined, sizeof(game_joined), &was_closed);
 }
 
 void CommonProtocol::send_message(std::shared_ptr<Message> message) {

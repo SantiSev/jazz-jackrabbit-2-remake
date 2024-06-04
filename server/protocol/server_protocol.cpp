@@ -33,14 +33,14 @@ std::shared_ptr<RecvLeaveMatchMessage> ServerProtocol::recv_leave_match() {
 std::shared_ptr<RecvCreateGameMessage> ServerProtocol::recv_create_game() {
     CreateGameDTO create_game = {};
     skt.sendall(&create_game, sizeof(create_game), &was_closed);
-    create_game.id_player = ntohs(create_game.id_player);
+    create_game.id_client = ntohs(create_game.id_client);
     return std::make_shared<RecvCreateGameMessage>(create_game);
 }
 
 std::shared_ptr<RecvJoinMatchMessage> ServerProtocol::recv_join_match() {
     JoinMatchDTO join_match = {};
     skt.sendall(&join_match, sizeof(join_match), &was_closed);
-    join_match.id_player = ntohs(join_match.id_player);
+    join_match.id_client = ntohs(join_match.id_client);
     join_match.id_match = ntohs(join_match.id_match);
     return std::make_shared<RecvJoinMatchMessage>(join_match);
 }

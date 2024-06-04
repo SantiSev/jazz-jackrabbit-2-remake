@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "../../common/message/snapshot.h"
+#include "../protocol/match_message_handler.h"
 #include "../protocol/server_thread_manager.h"
 #include "./client_monitor.h"
 
@@ -19,18 +20,19 @@ private:
     int match_time = STARTING_MATCH_TIME;
     std::shared_ptr<Queue<std::shared_ptr<Message>>> event_queue;  // shared with the receiver
     std::list<ServerThreadManager*> clients;
+    MatchMessageHandler message_handler;
     std::vector<Player> players;
     std::vector<Enemies> enemies;
     std::vector<std::string> items;
     size_t players_connected = 0;
     size_t required_players;
     ClientMonitor client_monitor;
-    std::string& map;
+    uint8_t map;
     Snapshot snapshot;
 
 public:
     // Constructor
-    explicit Match(const std::string& map, std::string match_name, size_t required_players);
+    explicit Match(const uint8_t& map, std::string match_name, size_t required_players);
     void run() override;
     // Kill the thread
     void stop() override;

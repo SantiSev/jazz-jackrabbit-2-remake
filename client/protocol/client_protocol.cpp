@@ -4,9 +4,11 @@
 
 #include <arpa/inet.h>
 
+#include "../../common/protocol/messages/menu_events/send_game_joined.h"
+
 
 ClientProtocol::ClientProtocol(const std::string& hostname, const std::string& servname):
-        CommonProtocol(hostname, servname), my_client_id(0), my_player_id(0) {}
+        CommonProtocol(hostname, servname) {}
 
 std::shared_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
     FinishMatchDTO finish_match = {};
@@ -37,6 +39,12 @@ std::shared_ptr<AcptConnection> ClientProtocol::recv_acpt_connection() {
     return std::make_shared<AcptConnection>(id_client);
 }
 
+std::shared_ptr<Message> ClientProtocol::recv_game_joined() {
+    ClientJoinedMatchDTO game_joined = {};
+    skt.recvall(&game_joined, sizeof(game_joined), &was_closed);
+    return std::make_shared<SendGameJoined>(game_joined);
+}
+
 std::shared_ptr<Message> ClientProtocol::recv_message() {
     const uint16_t header = recv_two_bytes();
 
@@ -53,20 +61,11 @@ std::shared_ptr<Message> ClientProtocol::recv_message() {
             return recv_game_created();
         case ACPT_CONNECTION:
             return recv_acpt_connection();
+        case SEND_GAME_JOINED:
+            return recv_game_joined();
         default:
             return std::make_shared<InvalidMessage>();
     }
 }
-
-void ClientProtocol::set_my_client_id(const id_client_t& new_client_id) {
-    my_client_id = new_client_id;
-}
-
-uint16_t ClientProtocol::get_client_id() const { return my_client_id; }
-
-void ClientProtocol::set_my_player_id(const id_player_t& new_player_id) {
-    my_player_id = new_player_id;
-}
-uint16_t ClientProtocol::get_player_id() const { return my_player_id; }
 
 ClientProtocol::~ClientProtocol() {}

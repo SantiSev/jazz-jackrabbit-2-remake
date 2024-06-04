@@ -9,14 +9,16 @@
 
 #include "../../common/protocol/messages/in_game_events/send_game_state.h"
 
-Match::Match(const std::string& map, std::string match_name, size_t required_players_setting):
+
+Match::Match(const uint8_t& map_selected, std::string match_name, size_t required_players_setting):
         online(true),
         match_name(std::move(match_name)),
         event_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()),
+        message_handler(*this),
         players(),
         enemies(),
         required_players(required_players_setting),
-        map(const_cast<std::string&>(map)),
+        map(map_selected),
         snapshot(players, enemies) {}
 
 void Match::run() {
@@ -44,7 +46,7 @@ void Match::run() {
             size_t events = 0;
             while (event_queue->try_pop(next_message) && events < MAX_EVENTS_PER_LOOP) {
                 events++;
-                next_message->run();
+                next_message->run(message_handler);
             }
 
             //            if (get_player(1).get_health() != 0) {

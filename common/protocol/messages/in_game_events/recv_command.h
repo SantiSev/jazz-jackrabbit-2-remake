@@ -10,8 +10,8 @@ private:
     CommandDTO command;
 
 public:
-    explicit RecvCommandMessage(CommandDTO& command);
-    void run() override;
+    explicit RecvCommandMessage(const CommandDTO& command);
+    void run(MessageHandler& handler) override;
     void send_message(CommonProtocol& protocol) override;
     ~RecvCommandMessage();
 };

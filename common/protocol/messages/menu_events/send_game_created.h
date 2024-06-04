@@ -8,8 +8,8 @@ private:
     GameCreatedDTO game_created;
 
 public:
-    explicit SendGameCreatedMessage(GameCreatedDTO& game_created);
-    void run(ClientProtocol& client_protocol) override;
+    explicit SendGameCreatedMessage(const GameCreatedDTO& game_created);
+    void run(MessageHandler& handler) override;
     void send_message(CommonProtocol& protocol) override;
     ~SendGameCreatedMessage() override;
 };

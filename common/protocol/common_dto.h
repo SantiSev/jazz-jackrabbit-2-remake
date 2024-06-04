@@ -19,6 +19,7 @@
 #define RECV_CREATE_GAME 0x0201
 #define SEND_GAME_CREATED 0x0202
 #define RECV_JOIN_MATCH 0x0203
+#define SEND_GAME_JOINED 0x0204
 
 typedef uint16_t id_client_t;
 typedef uint16_t id_player_t;
@@ -62,14 +63,26 @@ struct GameStateDTO {
 } __attribute__((packed));
 
 struct CreateGameDTO {
-    id_player_t id_player;
+    id_client_t id_client;
     char match_name[50];
+    character_t character_selected;
+    uint8_t map_name;  // todo change to enum constant
+    uint8_t max_players;
+} __attribute__((packed));
+
+struct GameCreatedInfoDTO {
+    id_player_t id_player;
 } __attribute__((packed));
 
 struct JoinMatchDTO {
-    id_player_t id_player;
+    id_client_t id_client;
     id_match_t id_match;
     character_t player_character;
+} __attribute__((packed));
+
+struct ClientJoinedMatchDTO {
+    id_client_t id_client;
+    id_player_t id_player;
 } __attribute__((packed));
 
 struct ActiveGamesDTO {

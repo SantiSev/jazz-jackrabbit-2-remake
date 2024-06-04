@@ -12,8 +12,8 @@ private:
 
 public:
     explicit AcptConnection(uint16_t id_client);
-    void run(ClientProtocol& client_protocol) override;
-    void run() override;
+
+    void run(MessageHandler& handler) override;
 
     void send_message(CommonProtocol& protocol) override;
 

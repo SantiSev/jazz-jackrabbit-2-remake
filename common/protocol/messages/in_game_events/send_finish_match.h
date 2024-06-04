@@ -10,10 +10,10 @@ private:
     FinishMatchDTO finish_match;
 
 public:
-    explicit SendFinishMatchMessage(FinishMatchDTO& finish_match);
-    void run() override;
+    explicit SendFinishMatchMessage(const FinishMatchDTO& finish_match);
+    void run(MessageHandler& handler) override;
     void send_message(CommonProtocol& protocol) override;
-    ~SendFinishMatchMessage();
+    ~SendFinishMatchMessage() override;
 };
 
 #endif

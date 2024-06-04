@@ -36,6 +36,8 @@ public:
     void send_message(std::shared_ptr<Message> message);
     void force_shutdown();
     ~CommonProtocol();
+
+    void send_game_joined(const uint16_t header, ClientJoinedMatchDTO& game_joined);
 };
 
 #endif

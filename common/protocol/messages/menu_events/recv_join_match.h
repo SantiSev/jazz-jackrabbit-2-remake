@@ -3,18 +3,15 @@
 
 #include "../common_message.h"
 
-class MatchesManager;
-
 class RecvJoinMatchMessage: public Message {
 private:
     JoinMatchDTO join_match;
 
 public:
-    explicit RecvJoinMatchMessage(JoinMatchDTO& join_match);
-    void run() override;
-    void run(MatchesManager& matches_manager) override;
+    explicit RecvJoinMatchMessage(const JoinMatchDTO& join_match);
+    void run(MessageHandler& handler) override;
     void send_message(CommonProtocol& protocol) override;
-    ~RecvJoinMatchMessage();
+    ~RecvJoinMatchMessage() override;
 };
 
 #endif

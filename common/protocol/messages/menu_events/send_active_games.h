@@ -8,10 +8,10 @@ private:
     ActiveGamesDTO active_games;
 
 public:
-    explicit SendActiveGamesMessage(ActiveGamesDTO& active_games);
-    void run() override;
+    explicit SendActiveGamesMessage(const ActiveGamesDTO& active_games);
+    void run(MessageHandler& handler) override;
     void send_message(CommonProtocol& protocol) override;
-    ~SendActiveGamesMessage();
+    ~SendActiveGamesMessage() override;
 };
 
 #endif
