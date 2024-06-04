@@ -24,6 +24,8 @@ private:
     int current_frame;
     int ms_per_frame;
     int elapsed_time;
+    short next_frame_offset = 1;
+    bool flipped = false;
 
     void next_frame();
 
@@ -43,6 +45,8 @@ public:
     void update(int delta) override;
 
     void set_position(int x, int y) override;
+    void reverse_animation();
+    void flip();
 
     bool is_intersecting(SDL_Point&) const override;
     bool is_intersecting(SDL_Rect&) const override;

@@ -10,7 +10,8 @@ AnimatedSprite::AnimatedSprite(std::shared_ptr<Texture> texture, SDL_Rect& s_rec
         x_start(s_rect.x),
         frames(frames),
         current_frame(0),
-        elapsed_time(0) {
+        elapsed_time(0),
+        next_frame_offset(1) {
     if (fps <= 0) {
         throw BadParams("FPS must be greater than 0");
     }
@@ -27,18 +28,29 @@ void AnimatedSprite::update(int delta) {
 
 void AnimatedSprite::draw(SDL_Renderer* renderer) {
     s_rect.x = (current_frame * s_rect.w) + x_start;
-    int err = SDL_RenderCopy(renderer, texture->get_texture(), &s_rect, &d_rect);
+    int err;
+    if (flipped) {
+        err = SDL_RenderCopyEx(renderer, texture->get_texture(), &s_rect, &d_rect, 0, nullptr,
+                               SDL_FLIP_HORIZONTAL);
+    } else {
+        err = SDL_RenderCopyEx(renderer, texture->get_texture(), &s_rect, &d_rect, 0, nullptr,
+                               SDL_FLIP_HORIZONTAL);
+    }
     if (err < 0) {
         throw SDLError("Error drawing animation: " + std::string(SDL_GetError()));
     }
 }
 
-void AnimatedSprite::next_frame() { current_frame = (current_frame + 1) % frames; }
+void AnimatedSprite::next_frame() { current_frame = (current_frame + next_frame_offset) % frames; }
 
 void AnimatedSprite::set_position(int x, int y) {
     d_rect.x = x;
     d_rect.y = y;
 }
+
+void AnimatedSprite::reverse_animation() { next_frame_offset *= -1; }
+
+void AnimatedSprite::flip() { flipped = !flipped; }
 
 bool AnimatedSprite::is_intersecting(SDL_Point& point) const {
     return SDL_PointInRect(&point, &d_rect);
@@ -56,7 +68,9 @@ AnimatedSprite::AnimatedSprite(AnimatedSprite&& other) noexcept:
         frames(other.frames),
         current_frame(other.current_frame),
         ms_per_frame(other.ms_per_frame),
-        elapsed_time(other.elapsed_time) {}
+        elapsed_time(other.elapsed_time),
+        next_frame_offset(other.next_frame_offset),
+        flipped(other.flipped) {}
 
 AnimatedSprite& AnimatedSprite::operator=(AnimatedSprite&& other) noexcept {
     if (this == &other)
@@ -70,6 +84,8 @@ AnimatedSprite& AnimatedSprite::operator=(AnimatedSprite&& other) noexcept {
     current_frame = other.current_frame;
     ms_per_frame = other.ms_per_frame;
     elapsed_time = other.elapsed_time;
+    next_frame_offset = other.next_frame_offset;
+    flipped = other.flipped;
 
     return *this;
 }
