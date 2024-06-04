@@ -10,10 +10,10 @@ add_definitions(-DDATA_PATH="${PROJECT_SOURCE_DIR}/data")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic -pedantic-errors -O0 -ggdb -DDEBUG -fno-inline -std=${CXXSTD} -D _POSIX_C_SOURCE=200809L")
 
-find_package(SDL2 REQUIRED)
-find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_image REQUIRED)
-find_package(SDL2_mixer REQUIRED)
+find_package(SDL2 REQUIRED CONFIG)
+find_package(SDL2_ttf REQUIRED CONFIG)
+find_package(SDL2_image REQUIRED CONFIG)
+find_package(SDL2_mixer REQUIRED CONFIG)
 
 option(math "Use math.h" ON)
 option(threads "Use threads" ON)
