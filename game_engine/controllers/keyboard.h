@@ -2,6 +2,7 @@
 #define TP_FINAL_KEYBOARD_H
 
 #include <list>
+#include <mutex>
 
 #include <SDL2/SDL.h>
 
@@ -14,6 +15,7 @@ class Keyboard: public Controller {
 private:
     std::list<CanvasObject*> signal_objs;
     bool is_special_key(const SDL_Keycode& key);
+    std::mutex mtx;
 
 public:
     Keyboard() = default;

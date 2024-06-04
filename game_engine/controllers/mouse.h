@@ -2,6 +2,7 @@
 #define TP_FINAL_MOUSE_H
 
 #include <list>
+#include <mutex>
 
 #include <SDL2/SDL.h>
 
@@ -13,6 +14,7 @@ namespace engine {
 class Mouse: public Controller {
 private:
     std::list<CanvasObject*> signal_objs;
+    std::mutex mtx;
 
 public:
     SDL_Point cursor;

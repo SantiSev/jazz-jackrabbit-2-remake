@@ -5,6 +5,7 @@ using engine::Mouse;
 Mouse::Mouse(int x, int y): cursor({x, y}) {}
 
 void Mouse::update(const SDL_Event& event) {
+    std::unique_lock<std::mutex> lock(mtx);
     if (event.type == SDL_MOUSEMOTION) {
         SDL_GetMouseState(&cursor.x, &cursor.y);
         for (auto obj: signal_objs) {
@@ -20,8 +21,14 @@ void Mouse::update(const SDL_Event& event) {
     }
 }
 
-void Mouse::add_on_click_signal_obj(CanvasObject* obj) { signal_objs.push_back(obj); }
+void Mouse::add_on_click_signal_obj(CanvasObject* obj) {
+    std::unique_lock<std::mutex> lock(mtx);
+    signal_objs.push_back(obj);
+}
 
-void Mouse::remove_on_click_signal_obj(CanvasObject* obj) { signal_objs.remove(obj); }
+void Mouse::remove_on_click_signal_obj(CanvasObject* obj) {
+    std::unique_lock<std::mutex> lock(mtx);
+    signal_objs.remove(obj);
+}
 
 Mouse::~Mouse() = default;
