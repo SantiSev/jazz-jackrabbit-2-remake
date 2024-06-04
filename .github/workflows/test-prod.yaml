@@ -1,0 +1,11 @@
+name: test-prod
+on:
+  pull_request:
+  push:
+jobs:
+  test-prod:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          ./build.sh
