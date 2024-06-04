@@ -1,4 +1,15 @@
+#/usr/bash
 
+echo "Installing dependencies"
+sudo apt install -y libsdl2-dev 1> /dev/null
+echo "libsdl2-dev installed"
+
+sudo apt install -y libsdl2-image-dev 1> /dev/null
+echo "libsdl2-image-dev installed"
+sudo apt install -y libsdl2-ttf-dev 1> /dev/null
+echo "libsdl2-ttf-dev installed"
+sudo apt install -y libsdl2-mixer-dev 1> /dev/null
+echo "libsdl2-mixer-dev installed"
 
 # if ./build.sh
 if [ $# -eq 0 ]; then
