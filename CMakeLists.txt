@@ -100,7 +100,7 @@ if (EVENTS)
         ${HEADERS_SERVER}
         ${HEADERS_COMMON}
     )
-    
+
     add_executable(server_test_one tests/events/client_to_server/server_main.cpp
         ${SOURCES_COMMON}
         ${SOURCES_CLIENT_PROTOCOL}
@@ -149,6 +149,34 @@ if (GRAPHICS)
     endforeach()
 endif()
 
+if(PHYSICS) 
+    find_package(Catch2 REQUIRED)
+
+    file(GLOB_RECURSE SOURCES_CLIENT_PROTOCOL "client/protocol/*.cpp")
+    file(GLOB_RECURSE SOURCES_SERVER_PROTOCOL "server/protocol/*.cpp")
+    file(GLOB_RECURSE SOURCES_SERVER_GAME_LOGIC "server/game_logic/*.cpp")
+
+    add_executable(tests tests/unit_tests/physics_test.cpp
+        ${SOURCES_COMMON} 
+        ${SOURCES_GAME_ENGINE} 
+        ${HEADERS_COMMON} 
+        ${HEADERS_GAME_ENGINE} 
+        ${SOURCES_CLIENT_PROTOCOL}
+        ${SOURCES_SERVER_PROTOCOL}
+        ${SOURCES_SERVER_GAME_LOGIC}
+        ${HEADERS_SERVER} 
+        ${HEADERS_CLIENT}
+    )
+    target_link_libraries(tests PRIVATE 
+        Catch2::Catch2WithMain
+        SDL2main 
+        SDL2::SDL2
+        SDL2_image::SDL2_image 
+        SDL2_ttf::SDL2_ttf 
+        SDL2_mixer::SDL2_mixer
+    )
+endif()
+
 if (DEFINED TSAN)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=thread")
@@ -162,9 +190,3 @@ endif()
 if (verbose)
     set(CMAKE_VERBOSE_MAKEFILE ON)
 endif()
-
-#find_package(Catch2 REQUIRED)
-# These tests can use the Catch2-provided main
-#add_executable(tests ${SOURCES_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_COMMON} ${HEADERS_GAME_ENGINE} ${HEADERS_SERVER} ${HEADERS_CLIENT}
-#        tests/unit_tests/physics_test.cpp)
-#target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)

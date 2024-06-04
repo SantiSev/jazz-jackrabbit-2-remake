@@ -1,20 +1,20 @@
 #!/bin/bash
 
-sudo apt-get update 1> /dev/null
+sudo apt-get update > /dev/null
 
 BUILD_DIR="./build"
 TESTS_DIR="./tests_bin"
 TIBURONCIN_SRC="https://github.com/eldipa/tiburoncin.git"
 
 echo "Installing dependencies"
-sudo apt install -y libsdl2-dev 1> /dev/null
+sudo apt install -y libsdl2-dev > /dev/null
 echo "libsdl2-dev installed"
 
-sudo apt install -y libsdl2-image-dev 1> /dev/null
+sudo apt install -y libsdl2-image-dev > /dev/null
 echo "libsdl2-image-dev installed"
-sudo apt install -y libsdl2-ttf-dev 1> /dev/null
+sudo apt install -y libsdl2-ttf-dev > /dev/null
 echo "libsdl2-ttf-dev installed"
-sudo apt install -y libsdl2-mixer-dev 1> /dev/null
+sudo apt install -y libsdl2-mixer-dev > /dev/null
 echo "libsdl2-mixer-dev installed"
 
 # if dir exists remove it
@@ -77,7 +77,7 @@ elif [[ $1 == "graphics" ]]; then
   
   make
 # if ./build.sh events
-else [[ $1 == "events" ]]
+elif [[ $1 == "events" ]]; then
   echo "Building event tests"
   
   check_for_dir $BUILD_DIR
@@ -86,7 +86,7 @@ else [[ $1 == "events" ]]
   install_tiburoncin
 
   echo "Installing valgrind"
-  sudo apt-get install -y valgrind 1> /dev/null
+  sudo apt-get install -y valgrind > /dev/null
 
   cd $BUILD_DIR
   cmake -DEVENTS=ON ..
@@ -97,5 +97,20 @@ else [[ $1 == "events" ]]
   run_event_tests "client_to_server"
   run_event_tests 'server_to_client'
 
+  rm -r $BUILD_DIR
+else [[ $1 == "physics" ]]
+  echo "Building physics tests"
+
+  check_for_dir $BUILD_DIR
+
+  echo "Installing catch2"
+  sudo apt install -y catch2 > /dev/null
+
+  cd $BUILD_DIR
+  cmake -DPHYSICS=ON ..
+  make
+  ./tests
+
+  cd ..
   rm -r $BUILD_DIR
 fi
