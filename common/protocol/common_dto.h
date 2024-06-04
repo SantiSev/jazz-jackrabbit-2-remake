@@ -32,7 +32,9 @@ typedef enum: uint8_t {
     MOVE_LEFT_FAST = 0x02,
     MOVE_RIGHT_FAST = 0x03,
     JUMP = 0x04,
-    ESPECIAL_ATTACK = 0x05
+    ESPECIAL_ATTACK = 0x05,
+    SHOT = 0x06,
+    CHANGE_WEAPON = 0x07
 } command_t;
 
 typedef enum: uint8_t {

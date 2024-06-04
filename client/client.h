@@ -10,6 +10,7 @@
 
 #include <SDL2/SDL.h>
 
+#include "../common/common_queue.h"
 #include "../game_engine/gui/basic/resource_pool.h"
 #include "../game_engine/gui/basic/window.h"
 #include "../game_engine/gui/canvas_object.h"
@@ -19,7 +20,6 @@
 #include "protocol/client_thread_manager.h"
 
 #include "event_loop.h"
-// #include "../common/common_queue.h"
 
 #define QUIT 'q'
 

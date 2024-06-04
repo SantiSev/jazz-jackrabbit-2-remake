@@ -20,7 +20,8 @@ void Client::start() {
     SDL_Rect d_rect = {0, 0, 800, 600};
     engine::AnimatedSprite sprite(resource_pool.get_texture("assets/jazz.png"), rect, d_rect, 13,
                                   8);
-    Player player(std::move(sprite));
+
+    Player player(std::move(sprite), event_loop.send_message);
     objects.push_back(&player);
 
     event_loop.keyboard.add_on_key_down_signal_obj(&player);
@@ -53,6 +54,7 @@ void Client::start() {
             SDL_Delay(frame_delay - frame_time);
         }
     }
+
     event_loop.join();
 }
 

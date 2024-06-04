@@ -2,19 +2,23 @@
 #define TP_FINAL_PLAYER_H
 
 #include <iostream>
+#include <memory>
 #include <utility>
 
 #include <SDL2/SDL.h>
 
+#include "../../common/common_queue.h"
 #include "../../game_engine/gui/canvas_object.h"
 #include "../../game_engine/gui/widgets/animated_sprite.h"
+#include "../protocol/client_protocol.h"
 
 class Player: public engine::CanvasObject {
 private:
     engine::AnimatedSprite sprite;
+    Queue<std::shared_ptr<Message>>& sender_queue;
 
 public:
-    explicit Player(engine::AnimatedSprite&& sprite);
+    Player(engine::AnimatedSprite&& sprite, Queue<std::shared_ptr<Message>>& sender_queue);
 
     void on_click() override;
     void on_key_press(const SDL_Keycode& key) override;
