@@ -19,6 +19,7 @@ public:
     void on_click() override;
     void on_key_press(const SDL_Keycode& key) override;
 
+    void update(int delta_time) override;
     void draw(SDL_Renderer* renderer) override;
 
     void set_position(int x, int y) override;

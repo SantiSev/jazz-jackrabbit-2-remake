@@ -30,6 +30,8 @@ void Player::on_key_press(const SDL_Keycode& key) {
     }
 }
 
+void Player::update(int delta_time) { sprite.update(delta_time); }
+
 void Player::draw(SDL_Renderer* renderer) { sprite.draw(renderer); }
 
 void Player::set_position(int x, int y) { sprite.set_position(x, y); }
