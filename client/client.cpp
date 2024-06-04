@@ -27,8 +27,8 @@ void Client::start() {
 
     event_loop.start();
 
-    Uint32 frame_start;
-    Uint32 frame_time;
+    Uint32 frame_start = 0;
+    Uint32 frame_time = 0;
     const int frame_delay = 1000 / 60;
 
     while (game_running) {
