@@ -10,6 +10,11 @@ add_definitions(-DDATA_PATH="${PROJECT_SOURCE_DIR}/data")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic -pedantic-errors -O0 -ggdb -DDEBUG -fno-inline -std=${CXXSTD} -D _POSIX_C_SOURCE=200809L")
 
+find_package(SDL2 REQUIRED)
+find_package(SDL2_ttf REQUIRED)
+find_package(SDL2_image REQUIRED)
+find_package(SDL2_mixer REQUIRED)
+
 option(math "Use math.h" ON)
 option(threads "Use threads" ON)
 option(static "Static compilation" OFF)
@@ -48,8 +53,20 @@ if (NOT TESTS)
     add_executable(client ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE} ${SERVER_WITHOUT_MAIN})
     add_executable(server ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE} ${CLIENT_WITHOUT_MAIN})
 
-    target_link_libraries(client SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
-    target_link_libraries(server SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
+    target_link_libraries(client 
+        SDL2main 
+        SDL2::SDL2 
+        SDL2_image::SDL2_image 
+        SDL2_ttf::SDL2_ttf 
+        SDL2_mixer
+    )
+    target_link_libraries(server 
+        SDL2main 
+        SDL2::SDL2 
+        SDL2_image::SDL2_image 
+        SDL2_ttf::SDL2_ttf 
+        SDL2_mixer::SDL2_mixer
+    )
 
 else ()
     # COMMUNICATION - TESTS
@@ -102,7 +119,7 @@ else ()
         get_filename_component(target_name ${file} NAME_WE)
 
         add_executable(${target_name} ${file} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
-        target_link_libraries(${target_name} SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
+        target_link_libraries(${target_name} SDL2main SDL2 SDL2_image::SDL2_image SDL2_ttf SDL2_mixer)
     endforeach()
 endif()
 
