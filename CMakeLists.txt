@@ -49,9 +49,25 @@ file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine/**/*.h")
 file(GLOB_RECURSE SERVER_WITHOUT_MAIN "server/game_logic/*.cpp" "server/protocol/*.cpp" "server/match.cpp" "server/match.h")
 file(GLOB_RECURSE CLIENT_WITHOUT_MAIN "client/protocol/*.cpp" "client/protocol/*.h")
 
-if (NOT TESTS)
-    add_executable(client ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE} ${SERVER_WITHOUT_MAIN})
-    add_executable(server ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE} ${CLIENT_WITHOUT_MAIN})
+if (PRODUCTION)
+    add_executable(client 
+        ${SOURCES_COMMON} 
+        ${SOURCES_CLIENT} 
+        ${HEADERS_CLIENT} 
+        ${HEADERS_COMMON} 
+        ${SOURCES_GAME_ENGINE} 
+        ${HEADERS_GAME_ENGINE} 
+        ${SERVER_WITHOUT_MAIN}
+    )
+    add_executable(server 
+        ${SOURCES_COMMON} 
+        ${SOURCES_SERVER} 
+        ${HEADERS_SERVER} 
+        ${HEADERS_COMMON} 
+        ${SOURCES_GAME_ENGINE} 
+        ${HEADERS_GAME_ENGINE} 
+        ${CLIENT_WITHOUT_MAIN}
+    )
 
     target_link_libraries(client 
         SDL2main 
@@ -67,59 +83,69 @@ if (NOT TESTS)
         SDL2_ttf::SDL2_ttf 
         SDL2_mixer::SDL2_mixer
     )
+endif()
 
-else ()
-    # COMMUNICATION - TESTS
+# COMMUNICATION - TESTS
+if (EVENTS)
     file(GLOB_RECURSE SOURCES_CLIENT_PROTOCOL "client/protocol/*.cpp")
     file(GLOB_RECURSE SOURCES_SERVER_PROTOCOL "server/protocol/*.cpp")
     file(GLOB_RECURSE SOURCES_SERVER_GAME_LOGIC "server/game_logic/*.cpp")
 
     add_executable(client_test_one tests/events/client_to_server/client_main.cpp
-    ${SOURCES_COMMON}
-    ${SOURCES_CLIENT_PROTOCOL}
-    ${SOURCES_SERVER_PROTOCOL}
-    ${SOURCES_SERVER_GAME_LOGIC}
-    ${HEADERS_CLIENT}
-    ${HEADERS_SERVER}
-    ${HEADERS_COMMON}
+        ${SOURCES_COMMON}
+        ${SOURCES_CLIENT_PROTOCOL}
+        ${SOURCES_SERVER_PROTOCOL}
+        ${SOURCES_SERVER_GAME_LOGIC}
+        ${HEADERS_CLIENT}
+        ${HEADERS_SERVER}
+        ${HEADERS_COMMON}
     )
+    
     add_executable(server_test_one tests/events/client_to_server/server_main.cpp
-    ${SOURCES_COMMON}
-    ${SOURCES_CLIENT_PROTOCOL}
-    ${SOURCES_SERVER_PROTOCOL}
-    ${SOURCES_SERVER_GAME_LOGIC}
-    ${HEADERS_CLIENT}
-    ${HEADERS_SERVER}
-    ${HEADERS_COMMON}
+        ${SOURCES_COMMON}
+        ${SOURCES_CLIENT_PROTOCOL}
+        ${SOURCES_SERVER_PROTOCOL}
+        ${SOURCES_SERVER_GAME_LOGIC}
+        ${HEADERS_CLIENT}
+        ${HEADERS_SERVER}
+        ${HEADERS_COMMON}
     )
 
     add_executable(client_test_two tests/events/server_to_client/client_main.cpp
-    ${SOURCES_COMMON}
-    ${SOURCES_CLIENT_PROTOCOL}
-    ${SOURCES_SERVER_PROTOCOL}
-    ${SOURCES_SERVER_GAME_LOGIC}
-    ${HEADERS_CLIENT}
-    ${HEADERS_SERVER}
-    ${HEADERS_COMMON}
-    )
-    add_executable(server_test_two tests/events/server_to_client/server_main.cpp
-    ${SOURCES_COMMON}
-    ${SOURCES_CLIENT_PROTOCOL}
-    ${SOURCES_SERVER_PROTOCOL}
-    ${SOURCES_SERVER_GAME_LOGIC}
-    ${HEADERS_CLIENT}
-    ${HEADERS_SERVER}
-    ${HEADERS_COMMON}
+        ${SOURCES_COMMON}
+        ${SOURCES_CLIENT_PROTOCOL}
+        ${SOURCES_SERVER_PROTOCOL}
+        ${SOURCES_SERVER_GAME_LOGIC}
+        ${HEADERS_CLIENT}
+        ${HEADERS_SERVER}
+        ${HEADERS_COMMON}
     )
 
-    # GRAPHICS TEST
+    add_executable(server_test_two tests/events/server_to_client/server_main.cpp
+        ${SOURCES_COMMON}
+        ${SOURCES_CLIENT_PROTOCOL}
+        ${SOURCES_SERVER_PROTOCOL}
+        ${SOURCES_SERVER_GAME_LOGIC}
+        ${HEADERS_CLIENT}
+        ${HEADERS_SERVER}
+        ${HEADERS_COMMON}
+    )
+endif()    
+
+# GRAPHICS TEST
+if (GRAPHICS)
     file(GLOB_RECURSE GRAPHIC_TESTS "tests/graphics/*.cpp" "tests/graphics/**/*.cpp")
     foreach(file ${GRAPHIC_TESTS})
         # Extract the file name without extension to use as the target name
         get_filename_component(target_name ${file} NAME_WE)
 
         add_executable(${target_name} ${file} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
-        target_link_libraries(${target_name} SDL2main SDL2 SDL2_image::SDL2_image SDL2_ttf SDL2_mixer)
+        target_link_libraries(${target_name} 
+            SDL2main 
+            SDL2::SDL2
+            SDL2_image::SDL2_image 
+            SDL2_ttf::SDL2_ttf 
+            SDL2_mixer::SDL2_mixer)
     endforeach()
 endif()
 
