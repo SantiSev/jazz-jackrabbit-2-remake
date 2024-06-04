@@ -11,13 +11,13 @@ void Client::start() {
 
     // Pre-load necessary resources
     engine::ResourcePool resource_pool(renderer);
-    resource_pool.load_texture("assets/screens.png");
+    resource_pool.load_texture("assets/jazz.png");
 
     std::list<engine::CanvasObject*> objects;
 
     SDL_Rect rect = {0, 420, 53, 50};
     SDL_Rect d_rect = {0, 0, 800, 600};
-    engine::AnimatedSprite sprite(resource_pool.get_texture("assets/screens.png"), rect, d_rect, 13,
+    engine::AnimatedSprite sprite(resource_pool.get_texture("assets/jazz.png"), rect, d_rect, 13,
                                   8);
     Player player(std::move(sprite));
     objects.push_back(&player);
