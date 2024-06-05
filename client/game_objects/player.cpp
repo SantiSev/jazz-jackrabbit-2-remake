@@ -1,48 +1,38 @@
 #include "player.h"
 
-Player::Player(engine::AnimatedSprite&& sprite, Queue<std::shared_ptr<Message>>& sender_queue):
-        sprite(std::move(sprite)), sender_queue(sender_queue) {}
+Player::Player(engine::AnimatedSprite&& sprite, ClientMessageHandler& message_handler):
+        sprite(std::move(sprite)), message_handler(message_handler) {}
 
 void Player::on_click() {
     std::cout << "Player shot" << std::endl;
-    CommandDTO dto = {0, SHOT};
-    sender_queue.push(std::make_shared<RecvCommandMessage>(dto));
+    message_handler.send_command(SHOOT);
 }
 
 void Player::on_key_press(const SDL_Keycode& key) {
-    CommandDTO dto;
-    dto.id_player = 0;
-
     switch (key) {
         case SDLK_a:
             std::cout << "Player moved left" << std::endl;
-            dto.command = MOVE_LEFT;
-            sender_queue.push(std::make_shared<RecvCommandMessage>(dto));
+            message_handler.send_command(MOVE_LEFT);
             break;
         case SDLK_d:
             std::cout << "Player moved right" << std::endl;
-            dto.command = MOVE_RIGHT;
-            sender_queue.push(std::make_shared<RecvCommandMessage>(dto));
+            message_handler.send_command(MOVE_RIGHT);
             break;
         case SDLK_SPACE:
             std::cout << "Player jumped" << std::endl;
-            dto.command = JUMP;
-            sender_queue.push(std::make_shared<RecvCommandMessage>(dto));
+            message_handler.send_command(JUMP);
             break;
         case SDLK_LSHIFT:
             std::cout << "Player toggled ran" << std::endl;
-            // dto.command;
-            // sender_queue.push(std::make_shared<RecvCommandMessage>(dto));
+            // message_handler.send_command();
             break;
         case SDLK_e:
             std::cout << "Player activated special attack" << std::endl;
-            dto.command = ESPECIAL_ATTACK;
-            sender_queue.push(std::make_shared<RecvCommandMessage>(dto));
+            message_handler.send_command(ESPECIAL_ATTACK);
             break;
         case SDLK_r:
             std::cout << "Player changed weapon" << std::endl;
-            dto.command = CHANGE_WEAPON;
-            sender_queue.push(std::make_shared<RecvCommandMessage>(dto));
+            message_handler.send_command(CHANGE_WEAPON);
             break;
         default:
             std::cout << "Player pressed unknown key" << key << std::endl;

@@ -10,15 +10,17 @@
 #include "../../common/common_queue.h"
 #include "../../game_engine/gui/canvas_object.h"
 #include "../../game_engine/gui/widgets/animated_sprite.h"
-#include "../protocol/client_protocol.h"
+#include "../protocol/client_message_handler.h"
+
+class ClientMessageHandler;
 
 class Player: public engine::CanvasObject {
 private:
     engine::AnimatedSprite sprite;
-    Queue<std::shared_ptr<Message>>& sender_queue;
+    ClientMessageHandler& message_handler;
 
 public:
-    Player(engine::AnimatedSprite&& sprite, Queue<std::shared_ptr<Message>>& sender_queue);
+    Player(engine::AnimatedSprite&& sprite, ClientMessageHandler& message_handler);
 
     void on_click() override;
     void on_key_press(const SDL_Keycode& key) override;

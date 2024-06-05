@@ -5,7 +5,6 @@
 
 #include "../../common/common_queue.h"
 #include "../../common/common_thread.h"
-//#include "../../common/protocol/messages/common_message.h"
 #include "./client_protocol.h"
 
 class ClientReceiver: public Thread {

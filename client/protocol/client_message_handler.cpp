@@ -4,8 +4,17 @@
 
 #include "client_thread_manager.h"
 
+ClientMessageHandler::ClientMessageHandler(): send_message() {}
+
+void ClientMessageHandler::send_command(command_t command) {
+    CommandDTO dto;
+    dto.id_player = id_player;
+    dto.command = command;
+    send_message.push(std::make_shared<RecvCommandMessage>(dto));
+}
+
 void ClientMessageHandler::handle_acpt_connection(const id_client_t& id_client) {
-    client.set_my_client_id(id_client);
+    this->id_client = id_client;
 }
 
 void ClientMessageHandler::handle_recv_close_connection() {
@@ -13,16 +22,16 @@ void ClientMessageHandler::handle_recv_close_connection() {
 }
 
 void ClientMessageHandler::handle_joined_match(const ClientJoinedMatchDTO& dto) {
-    client.set_my_client_id(dto.id_client);
-    client.set_my_player_id(dto.id_player);
+    // client.set_my_client_id(dto.id_client);
+    // client.set_my_player_id(dto.id_player);
 }
 
 void ClientMessageHandler::handle_game_created(const GameCreatedDTO& dto) {
-    client.set_my_player_id(dto.id_player);
+    // client.set_my_player_id(dto.id_player);
 }
 
 void ClientMessageHandler::handle_recv_active_games(const MatchInfoDTO& dto) {
-    client.set_active_games(dto);
+    // client.set_active_games(dto);
 }
 
 

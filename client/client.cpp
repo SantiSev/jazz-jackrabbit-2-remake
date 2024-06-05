@@ -2,9 +2,10 @@
 
 Client::Client(const std::string& host, const std::string& port):
         recv_message(),
-        event_loop(std::ref(game_running)),
+        message_handler(),
+        event_loop(std::ref(game_running), message_handler),
         game_running(true),
-        thread_manager(host, port, recv_message, event_loop.send_message) {}
+        thread_manager(host, port, event_loop.recv_message, message_handler.send_message) {}
 
 void Client::start() {
     engine::Window window(800, 600, true, true);
@@ -21,7 +22,7 @@ void Client::start() {
     engine::AnimatedSprite sprite(resource_pool.get_texture("assets/jazz.png"), rect, d_rect, 13,
                                   8);
 
-    Player player(std::move(sprite), event_loop.send_message);
+    Player player(std::move(sprite), message_handler);
     objects.push_back(&player);
 
     event_loop.keyboard.add_on_key_down_signal_obj(&player);

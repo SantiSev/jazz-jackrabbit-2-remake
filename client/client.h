@@ -26,6 +26,7 @@
 class Client {
 private:
     Queue<std::shared_ptr<Message>> recv_message;
+    ClientMessageHandler message_handler;
     EventLoop event_loop;
     std::atomic<bool> game_running;
     ClientThreadManager thread_manager;
