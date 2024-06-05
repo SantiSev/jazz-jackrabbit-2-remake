@@ -1,6 +1,6 @@
 #include "./send_game_created.h"
 
-SendGameCreatedMessage::SendGameCreatedMessage(const GameCreatedDTO& game_created):
+SendGameCreatedMessage::SendGameCreatedMessage(const ClientHasConnectedToMatchDTO& game_created):
         Message(SEND_GAME_CREATED), game_created(game_created) {}
 
 

@@ -40,7 +40,7 @@ std::shared_ptr<SendRequestGamesMessage> ClientProtocol::recv_active_games() {
 }
 
 std::shared_ptr<SendGameCreatedMessage> ClientProtocol::recv_game_created() {
-    GameCreatedDTO game_created = {};
+    ClientHasConnectedToMatchDTO game_created = {};
     skt.recvall(&game_created, sizeof(game_created), &was_closed);
     game_created.id_player = ntohs(game_created.id_player);
     return std::make_shared<SendGameCreatedMessage>(game_created);
@@ -52,9 +52,8 @@ std::shared_ptr<AcptConnection> ClientProtocol::recv_acpt_connection() {
 }
 
 std::shared_ptr<Message> ClientProtocol::recv_game_joined() {
-    ClientJoinedMatchDTO game_joined = {};
+    ClientHasConnectedToMatchDTO game_joined = {};
     skt.recvall(&game_joined, sizeof(game_joined), &was_closed);
-    game_joined.id_client = ntohs(game_joined.id_client);
     game_joined.id_player = ntohs(game_joined.id_player);
     return std::make_shared<SendGameJoined>(game_joined);
 }

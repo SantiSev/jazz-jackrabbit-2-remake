@@ -1,6 +1,6 @@
 #include "send_game_joined.h"
 
-SendGameJoined::SendGameJoined(const ClientJoinedMatchDTO& game_joined):
+SendGameJoined::SendGameJoined(const ClientHasConnectedToMatchDTO& game_joined):
         Message(SEND_GAME_JOINED), game_joined(game_joined) {}
 
 void SendGameJoined::SendGameJoined::run(MessageHandler& handler) {

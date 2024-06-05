@@ -32,7 +32,7 @@ const uint8_t PLAYER_EVENT = 0x01;
 
 // Gameloop
 const size_t MAX_EVENTS_PER_LOOP = 4;
-const size_t STARTING_MATCH_TIME = 5;
+const size_t STARTING_MATCH_TIME = 60;
 
 // Player states
 #define STATE_IDLE_RIGHT 0x00

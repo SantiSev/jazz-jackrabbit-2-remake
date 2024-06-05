@@ -50,10 +50,15 @@ typedef enum: uint8_t {
     LORI_CHAARCTER = 0x02
 } character_t;
 
+
+//------Messages send by client to server --------
+
+
 struct CheatCommandDTO {
     id_player_t id_player;
     cheat_command_t command;
 } __attribute__((packed));
+
 
 struct CommandDTO {
     id_player_t id_player;
@@ -63,6 +68,27 @@ struct CommandDTO {
 struct LeaveMatchDTO {
     id_player_t id_player;
 } __attribute__((packed));
+
+struct CreateGameDTO {
+    id_client_t id_client;
+    character_t character_selected;
+    uint8_t map_name;  // todo change to enum constant
+    uint8_t max_players;
+} __attribute__((packed));
+
+struct JoinMatchDTO {
+    id_client_t id_client;
+    id_match_t id_match;
+    character_t player_character;
+} __attribute__((packed));
+
+struct RequestActiveGamesDTO {
+    id_client_t id_client;
+} __attribute__((packed));
+
+
+//------Messages send by server to client --------
+
 
 struct FinishMatchDTO {
 } __attribute__((packed));
@@ -90,30 +116,8 @@ struct GameStateDTO {
     uint16_t minutes;
 } __attribute__((packed));
 
-struct CreateGameDTO {
-    id_client_t id_client;
-    character_t character_selected;
-    uint8_t map_name;  // todo change to enum constant
-    uint8_t max_players;
-} __attribute__((packed));
-
-struct GameCreatedInfoDTO {
+struct ClientHasConnectedToMatchDTO {
     id_player_t id_player;
-} __attribute__((packed));
-
-struct JoinMatchDTO {
-    id_client_t id_client;
-    id_match_t id_match;
-    character_t player_character;
-} __attribute__((packed));
-
-struct ClientJoinedMatchDTO {
-    id_client_t id_client;
-    id_player_t id_player;
-} __attribute__((packed));
-
-struct RequestActiveGamesDTO {
-    id_client_t id_client;
 } __attribute__((packed));
 
 struct ActiveGamesDTO {
@@ -125,10 +129,6 @@ struct ActiveGamesDTO {
 struct MatchInfoDTO {
     uint8_t num_games;
     ActiveGamesDTO active_games[MAX_MATCHES_TO_CREATE];
-} __attribute__((packed));
-
-struct GameCreatedDTO {
-    id_player_t id_player;
 } __attribute__((packed));
 
 #endif
