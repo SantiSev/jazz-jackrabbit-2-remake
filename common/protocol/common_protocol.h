@@ -31,11 +31,15 @@ public:
     void send_game_state(const uint16_t header, GameStateDTO& game_state);
     void send_create_game(const uint16_t header, CreateGameDTO& create_game);
     void send_join_match(const uint16_t header, JoinMatchDTO& join_match);
-    void send_active_games(const uint16_t header, ActiveGamesDTO& active_games);
+    void send_request_active_games(const uint16_t header, RequestActiveGamesDTO& active_games);
     void send_game_created(const uint16_t header, GameCreatedDTO& game_created);
     void send_message(std::shared_ptr<Message> message);
     void force_shutdown();
     ~CommonProtocol();
+
+    void send_game_joined(const uint16_t header, ClientJoinedMatchDTO& game_joined);
+
+    void send_active_games(const uint16_t header, MatchInfoDTO& active_games);
 };
 
 #endif

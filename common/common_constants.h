@@ -3,6 +3,11 @@
 
 #include <cstdint>
 
+// Game Settings
+const uint8_t MAX_MATCHES_TO_CREATE = 16;
+const size_t REQUIRED_PLAYERS_TO_START =
+        1;  // The match doesn't start without this many players connected to the match.
+
 // Type of events
 const uint8_t CONNECTION_EVENT = 0x00;
 const uint8_t IN_GAME_EVENT = 0x01;
@@ -28,7 +33,6 @@ const uint8_t PLAYER_EVENT = 0x01;
 // Gameloop
 const size_t MAX_EVENTS_PER_LOOP = 4;
 const size_t STARTING_MATCH_TIME = 5;
-const size_t REQUIRED_PLAYERS_TO_START = 1;
 
 // Player states
 #define STATE_IDLE_RIGHT 0x00
@@ -46,12 +50,15 @@ const size_t REQUIRED_PLAYERS_TO_START = 1;
 #define STATE_DAMAGED 0X13
 #define STATE_INTOXICATED 0X14
 #define STATE_DEAD 0X15
+#define STATE_ESPECIAL_ATTACKING 0X16
+#define STATE_CROUNCHING 0X17
+#define STATE_TAUNTING 0X18
 
 // Weapons
 #define DEFAULT_WEAPON 0
 #define FIRST_WEAPON 1
 #define SECOND_WEAPON 2
 #define THIRD_WEAPON 3
-#define NUM_OF_WEAPONS 3
+#define NUM_OF_WEAPONS 4
 
 #endif

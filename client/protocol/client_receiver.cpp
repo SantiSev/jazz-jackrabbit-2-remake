@@ -13,11 +13,10 @@ void ClientReceiver::run() {
         while (_keep_running) {
             std::shared_ptr<Message> message = client_protocol.recv_message();
             queue.try_push(message);
-            message->run(client_protocol);  // todo testear esto
         }
     } catch (const ClosedQueue& err) {
         _keep_running = false;
     }
 }
 
-ClientReceiver::~ClientReceiver() {}
+ClientReceiver::~ClientReceiver() = default;

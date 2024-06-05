@@ -6,7 +6,9 @@
 #include <string>
 #include <vector>
 
-#include "../../common/message/snapshot.h"
+#include "../../server/game_logic/characters/enemy.h"
+#include "../../server/game_logic/characters/player.h"
+#include "../protocol/match_message_handler.h"
 #include "../protocol/server_thread_manager.h"
 #include "./client_monitor.h"
 
@@ -15,22 +17,23 @@ class Match: public Thread {
 private:
     bool online;
     bool match_has_ended = false;
-    std::string match_name;
     int match_time = STARTING_MATCH_TIME;
     std::shared_ptr<Queue<std::shared_ptr<Message>>> event_queue;  // shared with the receiver
     std::list<ServerThreadManager*> clients;
+    MatchMessageHandler message_handler;
     std::vector<Player> players;
-    std::vector<Enemies> enemies;
+    std::vector<Enemy> enemies;
     std::vector<std::string> items;
     size_t players_connected = 0;
     size_t required_players;
+    size_t minutes = STARTING_MATCH_TIME / 60;
+    size_t seconds = STARTING_MATCH_TIME % 60;
     ClientMonitor client_monitor;
-    std::string& map;
-    Snapshot snapshot;
+    uint8_t map;
 
 public:
     // Constructor
-    explicit Match(const std::string& map, std::string match_name, size_t required_players);
+    explicit Match(const uint8_t& map, size_t required_players);
     void run() override;
     // Kill the thread
     void stop() override;
@@ -41,7 +44,7 @@ public:
 
     void add_player_to_game(const std::string& player_name, const uint8_t& character);
 
-    void create_actual_snapshot(int const& seconds, int const& minutes);
+    GameStateDTO create_actual_snapshot();
 
     bool has_match_ended() const;
 
@@ -56,8 +59,7 @@ public:
     int get_seconds();
 
     void countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
-                         const std::chrono::time_point<std::chrono::system_clock>& endTime,
-                         int& minutes, int& seconds);
+                         const std::chrono::time_point<std::chrono::system_clock>& endTime);
 
     void send_end_message_to_players();
 
@@ -65,6 +67,18 @@ public:
                              const uint8_t& character);
 
     std::vector<size_t> get_clients_ids();
+
+    uint8_t get_map() const;
+
+    void run_command(const CommandDTO& dto);
+
+    bool is_command_valid(command_t command);
+
+    void update_players();
+
+    void update_enemies();
+
+    void initiate_enemies();
 };
 
 #endif

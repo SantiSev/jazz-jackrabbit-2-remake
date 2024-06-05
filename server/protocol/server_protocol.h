@@ -13,10 +13,11 @@
 #include "../../common/protocol/messages/in_game_events/send_finish_match.h"
 #include "../../common/protocol/messages/in_game_events/send_game_state.h"
 #include "../../common/protocol/messages/invalid_message.h"
+#include "../../common/protocol/messages/menu_events/recv_active_games.h"
 #include "../../common/protocol/messages/menu_events/recv_create_game.h"
 #include "../../common/protocol/messages/menu_events/recv_join_match.h"
-#include "../../common/protocol/messages/menu_events/send_active_games.h"
 #include "../../common/protocol/messages/menu_events/send_game_created.h"
+#include "../../common/protocol/messages/menu_events/send_request_games.h"
 
 class ServerProtocol: public CommonProtocol {
 private:
@@ -33,6 +34,8 @@ public:
     std::shared_ptr<Message> recv_message();
 
     bool is_closed() const;
+
+    std::shared_ptr<Message> recv_req_active_games();
 };
 
 #endif
