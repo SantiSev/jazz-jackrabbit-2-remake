@@ -2,6 +2,7 @@
 #define TP_FINAL_BUTTON_H
 
 #include <iostream>
+#include <memory>
 #include <string>
 #include <utility>
 
@@ -16,14 +17,14 @@
 namespace engine {
 class Button: public CanvasObject {
 protected:
-    Label label;
+    std::unique_ptr<Label> label;
     SDL_Rect rect;
     SDL_Color color;
     SDL_Color hover_color;
     bool is_hovered_m;
 
 public:
-    explicit Button(Label&& label, SDL_Rect& rect, const SDL_Color& color,
+    explicit Button(std::unique_ptr<Label> label, SDL_Rect& rect, const SDL_Color& color,
                     const SDL_Color& hoverColor);
 
     // Cant copy

@@ -1,7 +1,12 @@
 #include "event_loop.h"
 
-EventLoop::EventLoop(std::atomic<bool>& game_running, ClientMessageHandler& message_handler):
-        game_running(game_running), message_handler(message_handler), mouse(0, 0), recv_message() {}
+EventLoop::EventLoop(std::atomic<bool>& game_running, std::atomic<bool>& menu_running,
+                     ClientMessageHandler& message_handler):
+        game_running(game_running),
+        menu_running(menu_running),
+        message_handler(message_handler),
+        mouse(0, 0),
+        recv_message() {}
 
 void EventLoop::run() {
     while (_keep_running) {
@@ -12,8 +17,8 @@ void EventLoop::run() {
                 msg->run(message_handler);
             }
             if (event.type == SDL_QUIT) {
-                game_running = false;
-                this->stop();
+                menu_running.store(false);
+                game_running.store(false);
                 break;
             }
             keyboard.update(event);

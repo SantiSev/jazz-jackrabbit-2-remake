@@ -18,6 +18,9 @@ void ClientSender::run() {
 
 bool ClientSender::is_dead() { return _keep_running; }
 
-void ClientSender::kill() { _keep_running = false; }
+void ClientSender::stop() {
+    _keep_running = false;
+    queue.close();
+}
 
 ClientSender::~ClientSender() {}

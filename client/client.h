@@ -18,7 +18,9 @@
 #include "game_objects/player.h"
 #include "protocol/client_protocol.h"
 #include "protocol/client_thread_manager.h"
+#include "scenes/menu.h"
 
+#include "assets.h"
 #include "event_loop.h"
 
 #define QUIT 'q'
@@ -27,12 +29,27 @@ class Client {
 private:
     Queue<std::shared_ptr<Message>> recv_message;
     ClientMessageHandler message_handler;
-    EventLoop event_loop;
+
+    engine::Window window;
+    std::shared_ptr<engine::ResourcePool> resource_pool;
+
     std::atomic<bool> game_running;
-    ClientThreadManager thread_manager;
+    std::atomic<bool> menu_running;
+    std::atomic<bool> match_running;
+
+    EventLoop* event_loop;
+    ClientThreadManager* thread_manager;
+
+    void pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_pool);
 
 public:
     Client(const std::string& host, const std::string& port);
+
+    // cant copy or move
+    Client(const Client&) = delete;
+    Client& operator=(const Client&) = delete;
+    Client(Client&&) = delete;
+    Client& operator=(Client&&) = delete;
 
     void start();
 

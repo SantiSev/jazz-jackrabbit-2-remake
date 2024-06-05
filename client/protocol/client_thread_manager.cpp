@@ -13,10 +13,11 @@ ClientThreadManager::ClientThreadManager(const std::string& hostname, const std:
 ClientProtocol& ClientThreadManager::get_protocol() { return client_protocol; }
 
 ClientThreadManager::~ClientThreadManager() {
+    client_protocol.force_shutdown();
+    receiver.stop();
     receiver.join();
-    receiver.kill();
+    sender.stop();
     sender.join();
-    sender.kill();
 }
 
 void ClientThreadManager::set_active_games(MatchInfoDTO dto) {

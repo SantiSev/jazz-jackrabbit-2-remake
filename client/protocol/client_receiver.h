@@ -17,7 +17,7 @@ public:
 
     bool is_dead();
 
-    void kill();
+    void stop() override;
 
     void run() override;
 
