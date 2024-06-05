@@ -12,16 +12,16 @@ void ClientMessageHandler::handle_recv_close_connection() {
     //    client.close_connection(); // todo: falta implementar
 }
 
-void ClientMessageHandler::handle_joined_match(ClientJoinedMatchDTO dto) {
+void ClientMessageHandler::handle_joined_match(const ClientJoinedMatchDTO& dto) {
     client.set_my_client_id(dto.id_client);
     client.set_my_player_id(dto.id_player);
 }
 
-void ClientMessageHandler::handle_game_created(GameCreatedDTO dto) {
+void ClientMessageHandler::handle_game_created(const GameCreatedDTO& dto) {
     client.set_my_player_id(dto.id_player);
 }
 
-void ClientMessageHandler::handle_recv_active_games(ActiveGamesDTO dto) {
+void ClientMessageHandler::handle_recv_active_games(const MatchInfoDTO& dto) {
     client.set_active_games(dto);
 }
 

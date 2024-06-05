@@ -49,6 +49,14 @@ void Player::set_name(std::string new_name) { this->name = std::move(new_name); 
 
 void Player::set_health(const size_t new_health) { this->health = new_health; }
 
+void Player::set_state(const uint8_t new_state) { this->state = new_state; }
+
+bool Player::is_facing_to_the_right() const { return is_facing_right; }
+
+bool Player::is_player_jumping() const { return is_jumping; }
+
+bool Player::is_player_intoxicated() const { return is_intoxicated; }
+
 void Player::decrease_health(size_t susbstract_health) {
     if (((int)health - (int)susbstract_health) < MIN_HEALTH) {
         health = MIN_HEALTH;
@@ -110,3 +118,19 @@ void Player::revive() {
 }
 
 uint8_t Player::get_state() const { return state; }
+
+bool Player::is_player_alive() const { return is_alive; }
+
+void Player::kill_player() { is_alive = false; }
+
+void Player::reset_intoxication() { is_intoxicated = false; }
+
+void Player::decrease_intoxication_cooldown() { intoxication_cooldown--; }
+
+size_t Player::get_intoxication_cooldown() const { return intoxication_cooldown; }
+
+bool Player::is_special_available() const { return special_cooldown == 0; }
+
+void Player::decrease_special_attack_cooldown() { special_cooldown--; }
+
+void Player::reset_special_attack() { special_cooldown = SPECIAL_COOLDOWN; }

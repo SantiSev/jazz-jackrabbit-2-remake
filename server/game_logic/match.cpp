@@ -13,11 +13,13 @@ Match::Match(const uint8_t& map_selected, size_t required_players_setting):
         event_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()),
         message_handler(*this),
         players({}),
-        enemies(0),
+        enemies({}),
         items(0),
         required_players(required_players_setting),
         client_monitor(),
-        map(map_selected) {}
+        map(map_selected) {
+    initiate_enemies();
+}
 
 void Match::run() {
     try {
@@ -45,6 +47,9 @@ void Match::run() {
                 events++;
                 next_message->run(message_handler);
             }
+
+            update_enemies();
+            update_players();
 
             countdown_match(runTime, endTime);
 
@@ -171,4 +176,138 @@ void Match::stop() {
     //        client->get_sender_queue()->close();
     //    }
     client_monitor.remove_all_queues();
+}
+
+void Match::run_command(const CommandDTO& dto) {
+    Player& player = get_player(dto.id_player);
+    if (!player.is_player_alive()) {
+        return;
+    }
+    if (!is_command_valid(dto.command)) {
+        return;
+    }
+    switch (dto.command) {
+        case MOVE_LEFT:
+            //            player.move_left();
+            player.set_state(STATE_MOVING_LEFT);
+            break;
+        case MOVE_RIGHT:
+            //            player.move_right();
+            player.set_state(STATE_MOVING_RIGHT);
+            break;
+        case MOVE_LEFT_FAST:
+            //            player.move_left_fast();
+            player.set_state(STATE_SPRINTING_LEFT);
+            break;
+        case MOVE_RIGHT_FAST:
+            //            player.move_right_fast();
+            player.set_state(STATE_SPRINTING_RIGHT);
+            break;
+        case JUMP:
+            if (!player.is_player_jumping()) {
+                //                player.jump();
+            }
+            player.set_state(STATE_JUMPING);
+            break;
+        case ESPECIAL_ATTACK:
+            if (player.is_player_intoxicated() || !player.is_special_available()) {
+                break;
+            }
+            //            player.especial_attack();
+            player.set_state(STATE_ESPECIAL_ATTACKING);  // ver si importa el is_facing_to_the_right
+            player.reset_special_attack();
+            break;
+        case LOOK_UP:
+            //            player.look_up();
+            player.set_state(STATE_AIMING_UP);
+            break;
+        case DUCK_DOWN:
+            //            player.duck_down();
+            player.set_state(STATE_CROUNCHING);
+            break;
+        case SHOOT:
+            if (!player.is_player_intoxicated()) {
+                //                player.shoot();
+                if (player.is_facing_to_the_right()) {
+                    player.set_state(STATE_SHOOTING_RIGHT);
+                } else {
+                    player.set_state(STATE_SHOOTING_LEFT);
+                }
+            }
+            break;
+        case TAUNT:
+            player.set_state(STATE_TAUNTING);
+            break;
+        default:
+            break;
+    }
+}
+
+bool Match::is_command_valid(command_t command) {
+    if (command <= 0x00 || command > 0x12) {
+        return false;
+    }
+    return true;
+}
+
+void Match::update_players() {
+    for (auto& player: players) {
+        if (!player.is_player_alive()) {
+            if (player.can_revive()) {
+                player.revive();
+                player.set_state(STATE_IDLE_RIGHT);
+                // reset_player_pos_to_spawn_point(player);
+            } else {
+                player.decrease_revive_cooldown();
+            }
+        }
+        if (player.is_player_intoxicated()) {
+            player.decrease_intoxication_cooldown();
+            if (player.get_intoxication_cooldown() == 0) {
+                if (player.is_facing_to_the_right()) {
+                    player.set_state(STATE_IDLE_RIGHT);
+                } else {
+                    player.set_state(STATE_IDLE_LEFT);
+                }
+                player.reset_intoxication();
+            }
+        }
+        if (!player.is_special_available()) {
+            player.decrease_special_attack_cooldown();
+        }
+        if (player.is_player_alive() && player.get_health() == MIN_HEALTH) {
+            player.kill_player();
+            player.set_state(STATE_DEAD);
+            // player.set_velocity_to_zero();
+            player.reset_revive_cooldown();
+        }
+    }
+}
+
+void Match::update_enemies() {
+    for (auto& enemy: enemies) {
+        if (!enemy.is_enemy_alive()) {
+            if (enemy.can_revive()) {
+                enemy.revive();
+                enemy.set_state(STATE_IDLE_RIGHT);
+                // reset_player_pos_to_spawn_point(player);
+            } else {
+                enemy.decrease_revive_cooldown();
+            }
+        }
+        if (enemy.is_enemy_alive() && enemy.get_health() == MIN_HEALTH) {
+            enemy.kill();
+            enemy.set_state(STATE_DEAD);
+            // enemy.set_velocity_to_zero();
+            enemy.reset_revive_cooldown();
+        }
+    }
+}
+
+void Match::initiate_enemies() {
+    for (int i = 0; i < 6; i++) {
+        Enemy enemy(20, 20, i % 3, i);
+        // set_spawn_point_to_enemy(enemy);
+        enemies.emplace_back(enemy);
+    }
 }

@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../server/game_logic/characters/enemies.h"
+#include "../../server/game_logic/characters/enemy.h"
 #include "../../server/game_logic/characters/player.h"
 #include "../protocol/match_message_handler.h"
 #include "../protocol/server_thread_manager.h"
@@ -22,7 +22,7 @@ private:
     std::list<ServerThreadManager*> clients;
     MatchMessageHandler message_handler;
     std::vector<Player> players;
-    std::vector<Enemies> enemies;
+    std::vector<Enemy> enemies;
     std::vector<std::string> items;
     size_t players_connected = 0;
     size_t required_players;
@@ -69,6 +69,16 @@ public:
     std::vector<size_t> get_clients_ids();
 
     uint8_t get_map() const;
+
+    void run_command(const CommandDTO& dto);
+
+    bool is_command_valid(command_t command);
+
+    void update_players();
+
+    void update_enemies();
+
+    void initiate_enemies();
 };
 
 #endif

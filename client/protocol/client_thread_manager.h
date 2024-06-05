@@ -29,13 +29,14 @@ public:
     uint16_t get_client_id() const;
 
     void set_my_player_id(const id_player_t& new_player_id);
+
     uint16_t get_player_id() const;
+
+    void set_active_games(MatchInfoDTO dto);
 
     ~ClientThreadManager();
 
     ClientProtocol& get_protocol();
-
-    void set_active_games(ActiveGamesDTO dto);
 };
 
 

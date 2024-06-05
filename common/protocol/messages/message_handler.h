@@ -8,16 +8,16 @@ class MessageHandler {
 public:
     // matches_manager
     virtual void handle_recv_create_game(const CreateGameDTO& dto) {}
-    virtual void handle_recv_join_match(JoinMatchDTO dto) {}
-    virtual void handle_request_active_games(RequestActiveGamesDTO dto) {}
+    virtual void handle_recv_join_match(const JoinMatchDTO& dto) {}
+    virtual void handle_request_active_games(const RequestActiveGamesDTO& dto) {}
 
     // client
     virtual void handle_acpt_connection(const id_client_t& i) {}
     virtual void handle_recv_close_connection() {}
-    virtual void handle_joined_match(ClientJoinedMatchDTO dto) {}
-    virtual void handle_game_created(GameCreatedDTO dto) {}
-    virtual void handle_recv_active_games(MatchInfoDTO dto) {}
-    virtual void handle_recv_active_games(ActiveGamesDTO dto) {}
+    virtual void handle_joined_match(const ClientJoinedMatchDTO& dto) {}
+    virtual void handle_game_created(const GameCreatedDTO& dto) {}
+    virtual void handle_recv_active_games(const MatchInfoDTO& dto) {}
+    virtual void handle_recv_command(const CommandDTO& command) {}
 };
 
 #endif

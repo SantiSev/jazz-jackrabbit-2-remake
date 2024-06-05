@@ -12,6 +12,8 @@ private:
 
 public:
     explicit MatchMessageHandler(Match& match): match(match) {}
+
+    void handle_recv_command(const CommandDTO& command) override;
 };
 
 
