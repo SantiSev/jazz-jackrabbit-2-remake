@@ -29,7 +29,7 @@ Menu::Menu(engine::Window& window, EventLoop* event_loop,
 
     SDL_Rect quit_button_d_rect = {300, 440, 200, 50};
     QuitButton* quit_button = new QuitButton(renderer, resource_pool, quit_button_d_rect,
-                                             game_running, menu_running.message_handler);
+                                             game_running, menu_running, message_handler);
     buttons.push_back(quit_button);
 
     // Add buttons to mouse signal of event loop

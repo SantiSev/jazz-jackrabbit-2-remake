@@ -10,6 +10,9 @@
 #include "../protocol/client_message_handler.h"
 
 class CreateMatchButton: public engine::Button {
+private:
+    ClientMessageHandler& message_handler;
+
 public:
     CreateMatchButton(SDL_Renderer* renderer, std::shared_ptr<engine::ResourcePool> resource_pool,
                       SDL_Rect& d_rect, ClientMessageHandler& message_handler);

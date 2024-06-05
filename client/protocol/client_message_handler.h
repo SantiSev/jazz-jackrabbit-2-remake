@@ -7,8 +7,6 @@
 #include "../../common/protocol/messages/message_handler.h"
 #include "../game_objects/player.h"
 
-class ClientThreadManager;
-
 class ClientMessageHandler: public MessageHandler {
 private:
     id_client_t id_client = 0;

@@ -6,11 +6,12 @@ JoinMatchButton::JoinMatchButton(SDL_Renderer* renderer,
         engine::Button(std::make_unique<engine::Label>(engine::Label(
                                resource_pool->get_font(FONT), d_rect, {255, 255, 255, 255},
                                {0, 0, 0, 255}, "Join Match", renderer)),
-                       d_rect, {0, 0, 0, 255}, {255, 255, 255, 255}) {}
+                       d_rect, {0, 0, 0, 255}, {255, 255, 255, 255}),
+        message_handler(message_handler) {}
 
 void JoinMatchButton::on_click() {
     std::cout << "Joining match." << std::endl;
-    message_handler.join_match(0);
+    message_handler.join_match(0, JAZZ_CHARACTER);
 }
 
 JoinMatchButton::~JoinMatchButton() = default;
