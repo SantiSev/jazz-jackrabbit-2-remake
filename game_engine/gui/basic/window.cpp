@@ -27,9 +27,9 @@ void Window::clear() {
 
 void Window::render() { SDL_RenderPresent(renderer); }
 
-SDL_Window* Window::getWindow() const { return window; }
+SDL_Window* Window::get_window() const { return window; }
 
-SDL_Renderer* Window::getRenderer() const { return renderer; }
+SDL_Renderer* Window::get_renderer() const { return renderer; }
 
 Window::~Window() {
     SDL_DestroyRenderer(renderer);
