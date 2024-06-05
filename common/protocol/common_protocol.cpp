@@ -64,6 +64,16 @@ void CommonProtocol::send_join_match(const uint16_t header, JoinMatchDTO& join_m
 
 void CommonProtocol::send_game_state(const uint16_t header, GameStateDTO& game_state) {
     send_header(header);
+    game_state.minutes = htons(game_state.minutes);
+    game_state.seconds = htons(game_state.seconds);
+    for (int i = 0; i < game_state.num_players; i++) {
+        game_state.players[i].id = htons(game_state.players[i].id);
+        game_state.players[i].health = htons(game_state.players[i].health);
+        game_state.players[i].points = htons(game_state.players[i].points);
+        for (int j = 0; j < NUM_OF_WEAPONS; j++) {
+            game_state.players[i].weapons[j].ammo = htons(game_state.players[i].weapons[j].ammo);
+        }
+    }
     skt.sendall(&game_state, sizeof(game_state), &was_closed);
 }
 
@@ -75,16 +85,20 @@ void CommonProtocol::send_finish_match(const uint16_t header, FinishMatchDTO& fi
 void CommonProtocol::send_request_active_games(const uint16_t header,
                                                RequestActiveGamesDTO& active_games) {
     send_header(header);
+    active_games.id_client = htons(active_games.id_client);
     skt.sendall(&active_games, sizeof(active_games), &was_closed);
 }
 
 void CommonProtocol::send_game_created(const uint16_t header, GameCreatedDTO& game_created) {
     send_header(header);
+    game_created.id_player = htons(game_created.id_player);
     skt.sendall(&game_created, sizeof(game_created), &was_closed);
 }
 
 void CommonProtocol::send_game_joined(const uint16_t header, ClientJoinedMatchDTO& game_joined) {
     send_header(header);
+    game_joined.id_client = htons(game_joined.id_client);
+    game_joined.id_player = htons(game_joined.id_player);
     skt.sendall(&game_joined, sizeof(game_joined), &was_closed);
 }
 

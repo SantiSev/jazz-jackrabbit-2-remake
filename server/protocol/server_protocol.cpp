@@ -40,6 +40,7 @@ std::shared_ptr<RecvCreateGameMessage> ServerProtocol::recv_create_game() {
 std::shared_ptr<Message> ServerProtocol::recv_req_active_games() {
     RequestActiveGamesDTO active_games = {};
     skt.recvall(&active_games, sizeof(active_games), &was_closed);
+    active_games.id_client = ntohs(active_games.id_client);
     return std::make_shared<SendRequestGamesMessage>(active_games);
 }
 

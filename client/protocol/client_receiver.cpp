@@ -19,4 +19,4 @@ void ClientReceiver::run() {
     }
 }
 
-ClientReceiver::~ClientReceiver() {}
+ClientReceiver::~ClientReceiver() = default;

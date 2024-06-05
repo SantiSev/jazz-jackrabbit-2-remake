@@ -19,18 +19,30 @@ std::shared_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
 std::shared_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() {
     GameStateDTO game_state = {};
     skt.recvall(&game_state, sizeof(game_state), &was_closed);
+    game_state.minutes = ntohs(game_state.minutes);
+    game_state.seconds = ntohs(game_state.seconds);
+    for (int i = 0; i < game_state.num_players; i++) {
+        game_state.players[i].id = ntohs(game_state.players[i].id);
+        game_state.players[i].points = ntohs(game_state.players[i].points);
+        game_state.players[i].health = ntohs(game_state.players[i].health);
+        for (int j = 0; j < NUM_OF_WEAPONS; j++) {
+            game_state.players[i].weapons[j].ammo = ntohs(game_state.players[i].weapons[j].ammo);
+        }
+    }
     return std::make_shared<SendGameStateMessage>(game_state);
 }
 
 std::shared_ptr<SendRequestGamesMessage> ClientProtocol::recv_active_games() {
     RequestActiveGamesDTO active_games = {};
     skt.recvall(&active_games, sizeof(active_games), &was_closed);
+    active_games.id_client = ntohs(active_games.id_client);
     return std::make_shared<SendRequestGamesMessage>(active_games);
 }
 
 std::shared_ptr<SendGameCreatedMessage> ClientProtocol::recv_game_created() {
     GameCreatedDTO game_created = {};
     skt.recvall(&game_created, sizeof(game_created), &was_closed);
+    game_created.id_player = ntohs(game_created.id_player);
     return std::make_shared<SendGameCreatedMessage>(game_created);
 }
 
@@ -42,6 +54,8 @@ std::shared_ptr<AcptConnection> ClientProtocol::recv_acpt_connection() {
 std::shared_ptr<Message> ClientProtocol::recv_game_joined() {
     ClientJoinedMatchDTO game_joined = {};
     skt.recvall(&game_joined, sizeof(game_joined), &was_closed);
+    game_joined.id_client = ntohs(game_joined.id_client);
+    game_joined.id_player = ntohs(game_joined.id_player);
     return std::make_shared<SendGameJoined>(game_joined);
 }
 
