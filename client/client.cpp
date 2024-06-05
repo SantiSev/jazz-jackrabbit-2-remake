@@ -6,6 +6,7 @@ Client::Client(const std::string& host, const std::string& port):
         resource_pool(std::make_shared<engine::ResourcePool>(window.get_renderer())),
         game_running(true),
         menu_running(true),
+        match_running(false),
         event_loop(new EventLoop(game_running, menu_running)) {
     // Pre-load necessary resources
     pre_load_resources(resource_pool);
@@ -18,6 +19,10 @@ void Client::start() {
 
     while (game_running) {
         menu.start();
+        if (match_running) {
+            // Match match(window, event_loop, resource_pool, game_running, match_running);
+            // match.start();
+        }
     }
 
     //    std::list<engine::CanvasObject*> objects;

@@ -36,6 +36,7 @@ private:
 
     std::atomic<bool> game_running;
     std::atomic<bool> menu_running;
+    std::atomic<bool> match_running;
 
     EventLoop* event_loop;
 
