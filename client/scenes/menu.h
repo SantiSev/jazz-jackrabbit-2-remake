@@ -12,6 +12,8 @@
 #include "../../game_engine/gui/widgets/sprite.h"
 #include "../assets.h"
 #include "../event_loop.h"
+#include "../menu_objects/create_match_button.h"
+#include "../menu_objects/join_match_button.h"
 #include "../menu_objects/quit_button.h"
 
 class Menu {
