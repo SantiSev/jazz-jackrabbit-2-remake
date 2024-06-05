@@ -48,16 +48,8 @@ file(GLOB_RECURSE HEADERS_COMMON "common/*.h" "common/**/*.h")
 file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine/**/*.h")
 file(GLOB_RECURSE SERVER_WITHOUT_MAIN "server/game_logic/.cpp" "server/game_logic/characters/.cpp" "server/match.cpp" "server/match.h" "server/game_logic/characters/.h")
 
-<<<<<<< HEAD
 file(GLOB_RECURSE SERVER_WITHOUT_MAIN "server/game_logic/*.cpp" "server/protocol/*.cpp" "server/match.cpp" "server/match.h")
 file(GLOB_RECURSE CLIENT_WITHOUT_MAIN "client/protocol/*.cpp" "client/protocol/*.h")
-=======
-#if (NOT TESTS)
-    add_executable(client ${SOURCES_COMMON} ${SOURCES_CLIENT} ${HEADERS_CLIENT} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE}
-#            ${SERVER_WITHOUT_MAIN}
-    )
-    add_executable(server ${SOURCES_COMMON} ${SOURCES_SERVER} ${HEADERS_SERVER} ${HEADERS_COMMON} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
->>>>>>> dev_comms_integration_niko
 
 if (PRODUCTION)
     add_executable(client 
