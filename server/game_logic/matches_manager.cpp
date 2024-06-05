@@ -136,6 +136,7 @@ void MatchesManager::add_new_client(Socket client_socket) {
 
 void MatchesManager::clear_all_waiting_clients() {
     for (auto& client: clients) {
+
         client->stop();
         delete client;
     }

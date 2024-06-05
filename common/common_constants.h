@@ -6,7 +6,7 @@
 // Game Settings
 const uint8_t MAX_MATCHES_TO_CREATE = 16;
 const size_t REQUIRED_PLAYERS_TO_START =
-        2;  // The match doesn't start without this many players connected to the match.
+        1;  // The match doesn't start without this many players connected to the match.
 
 // Type of events
 const uint8_t CONNECTION_EVENT = 0x00;

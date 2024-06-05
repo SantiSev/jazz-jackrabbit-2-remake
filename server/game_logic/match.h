@@ -17,7 +17,6 @@ class Match: public Thread {
 private:
     bool online;
     bool match_has_ended = false;
-    std::string match_name;
     int match_time = STARTING_MATCH_TIME;
     std::shared_ptr<Queue<std::shared_ptr<Message>>> event_queue;  // shared with the receiver
     std::list<ServerThreadManager*> clients;

@@ -2,21 +2,21 @@
 
 #include <algorithm>
 #include <chrono>
+#include <cstring>
 #include <iomanip>
 #include <memory>
 #include <string>
 #include <utility>
 
-#include "../../common/protocol/messages/in_game_events/send_game_state.h"
-
-
 Match::Match(const uint8_t& map_selected, size_t required_players_setting):
         online(true),
         event_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()),
         message_handler(*this),
-        players(),
-        enemies(),
+        players({}),
+        enemies(0),
+        items(0),
         required_players(required_players_setting),
+        client_monitor(),
         map(map_selected) {}
 
 void Match::run() {
@@ -47,18 +47,11 @@ void Match::run() {
                 next_message->run(message_handler);
             }
 
-            //            if (get_player(1).get_health() != 0) {
-            //                get_player(1).decrease_health(10);
-            //                std::cout << get_player(1).get_health() << std::endl;
-            //                std::cout << get_player(1).get_name() << std::endl;
-            //            }
-
             countdown_match(runTime, endTime, minutes, seconds);
 
-            create_actual_snapshot(seconds, minutes);
-
-            // auto snapshot_message = std::make_shared<SendGameStateMessage>(snapshot);
-            // client_monitor.broadcastClients(snapshot_message);
+            auto snapshot = create_actual_snapshot(seconds, minutes);
+            auto snapshot_message = std::make_shared<SendGameStateMessage>(snapshot);
+            client_monitor.broadcastClients(snapshot_message);
 
             auto frameEnd = std::chrono::system_clock::now();
             delta = frameEnd - frameStart;
@@ -116,9 +109,11 @@ GameStateDTO Match::create_actual_snapshot(int const& seconds, int const& minute
 
     game_state.num_players = players.size();
     for (size_t i = 0; i < players.size(); ++i) {
-        game_state.players[i].character = players[i].get_character();
-        game_state.players[i].health = players[i].get_health();
         game_state.players[i].id = players[i].get_id();
+        snprintf(game_state.players[i].name, sizeof(game_state.players[i].name), "%s",
+                 players[i].get_name().c_str());
+        game_state.players[i].health = players[i].get_health();
+        game_state.players[i].character = players[i].get_character();
         game_state.players[i].points = players[i].get_points();
         game_state.players[i].state = players[i].get_state();
         for (size_t j = 0; j < NUM_OF_WEAPONS; ++j) {
@@ -129,15 +124,13 @@ GameStateDTO Match::create_actual_snapshot(int const& seconds, int const& minute
                     (uint8_t)players[i].get_weapon(j).get_weapon_name();
         }
     }
-    game_state.seconds = seconds;
-    game_state.minutes = minutes;
+    game_state.seconds = (uint16_t)seconds;
+    game_state.minutes = (uint16_t)minutes;
 
     return game_state;
 }
 
 bool Match::has_match_ended() const { return match_has_ended; }
-
-std::string Match::get_match_name() const { return match_name; }
 
 uint8_t Match::get_map() const { return map; }
 
@@ -161,7 +154,8 @@ size_t Match::get_num_players() { return players.size(); }
 size_t Match::get_max_players() const { return required_players; }
 
 void Match::send_end_message_to_players() {
-    //        client_monitor.broadcastClients(game_ended_message);
+    auto game_ended_message = std::make_shared<CloseConnectionMessage>();
+    client_monitor.broadcastClients(game_ended_message);
 }
 
 std::vector<size_t> Match::get_clients_ids() {

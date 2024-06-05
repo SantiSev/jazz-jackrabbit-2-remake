@@ -26,7 +26,9 @@ int main(int argc, const char* argv[]) {
         ClientProtocol protocol(hostname, servname);
         std::getline(std::cin, line);
         if (line == "c") {
-            CreateGameDTO dto = {1, static_cast<character_t>(0), 2, 2};
+            //            CreateGameDTO dto = {1, static_cast<character_t>(0), 2, 2};// 2 jugadores,
+            //            conecte este primero
+            CreateGameDTO dto = {1, static_cast<character_t>(1), 2, 1};  // 1 jugador, solo este
             auto message = std::make_shared<RecvCreateGameMessage>(dto);
             protocol.send_message(message);
         }
