@@ -15,6 +15,7 @@
 #include "../menu_objects/create_match_button.h"
 #include "../menu_objects/join_match_button.h"
 #include "../menu_objects/quit_button.h"
+#include "../protocol/client_message_handler.h"
 
 class Menu {
 private:
@@ -30,7 +31,7 @@ private:
 public:
     Menu(engine::Window& window, EventLoop* event_loop,
          std::shared_ptr<engine::ResourcePool> resource_pool, std::atomic<bool>& game_running,
-         std::atomic<bool>& menu_running);
+         std::atomic<bool>& menu_running, ClientMessageHandler& message_handler);
 
     // cant copy
     Menu(const Menu&) = delete;

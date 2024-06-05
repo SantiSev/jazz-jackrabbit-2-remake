@@ -19,6 +19,7 @@ public:
     ClientMessageHandler();
 
     void send_command(command_t command);
+    void join_match(id_match_t id_match, character_t character);
 
     void handle_acpt_connection(const id_client_t& id_client) override;
     void handle_recv_close_connection() override;

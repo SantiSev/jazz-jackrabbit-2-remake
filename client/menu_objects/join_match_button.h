@@ -7,11 +7,13 @@
 #include "../../game_engine/gui/widgets/button.h"
 #include "../../game_engine/gui/widgets/label.h"
 #include "../assets.h"
+#include "../protocol/client_message_handler.h"
+
 
 class JoinMatchButton: public engine::Button {
 public:
     JoinMatchButton(SDL_Renderer* renderer, std::shared_ptr<engine::ResourcePool> resource_pool,
-                    SDL_Rect& d_rect);
+                    SDL_Rect& d_rect, ClientMessageHandler& message_handler);
 
     void on_click() override;
 
