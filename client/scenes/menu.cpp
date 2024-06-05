@@ -1,8 +1,8 @@
 #include "menu.h"
 
-Menu::Menu(engine::Window& window, EventLoop* event_loop,
-           std::shared_ptr<engine::ResourcePool> resource_pool, std::atomic<bool>& game_running,
-           std::atomic<bool>& menu_running):
+MenuScene::MenuScene(engine::Window& window, EventLoop* event_loop,
+                     std::shared_ptr<engine::ResourcePool> resource_pool,
+                     std::atomic<bool>& game_running, std::atomic<bool>& menu_running):
         window(window),
         renderer(window.get_renderer()),
         event_loop(event_loop),
@@ -38,7 +38,7 @@ Menu::Menu(engine::Window& window, EventLoop* event_loop,
     event_loop->mouse.add_on_click_signal_obj(join_match_button);
 }
 
-void Menu::start() {
+void MenuScene::start() {
     Uint32 frame_start = 0;
     Uint32 frame_time = 0;
     const int frame_delay = 1000 / 60;
@@ -68,7 +68,7 @@ void Menu::start() {
     }
 }
 
-Menu::~Menu() {
+MenuScene::~MenuScene() {
     // Disconnect from mouse signals
     for (auto button: buttons) {
         event_loop->mouse.remove_on_click_signal_obj(button);

@@ -13,10 +13,10 @@ public:
     virtual void is_hovered(bool) {}
     virtual void on_key_press(const SDL_Keycode&) {}
 
-    virtual void set_position(int x, int y) = 0;
+    virtual void set_position(int x, int y) {};
 
-    virtual bool is_intersecting(SDL_Point&) const = 0;
-    virtual bool is_intersecting(SDL_Rect&) const = 0;
+    virtual bool is_intersecting(SDL_Point&) const { return false; };
+    virtual bool is_intersecting(SDL_Rect&) const { return false; };
 
     virtual ~CanvasObject() = default;
 };

@@ -18,6 +18,7 @@
 #include "game_objects/player.h"
 #include "protocol/client_protocol.h"
 #include "protocol/client_thread_manager.h"
+#include "scenes/match.h"
 #include "scenes/menu.h"
 
 #include "assets.h"

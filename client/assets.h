@@ -11,4 +11,8 @@
 #define FONT "assets/fonts/atus.ttf"
 #define FONT_SIZE 20
 
+// Maps
+#define MAP1_TILESET "assets/maps/map_1.png"
+#define MAP1_YAML "assets/maps/map_1.yaml"
+
 #endif  // TP_FINAL_ASSETS_H

@@ -15,14 +15,16 @@ Client::Client(const std::string& host, const std::string& port):
 }
 
 void Client::start() {
-    Menu menu(window, event_loop, resource_pool, game_running, menu_running);
+    MenuScene menu(window, event_loop, resource_pool, game_running, menu_running);
+    MatchScene match(window, event_loop, resource_pool, match_running);
 
     event_loop->start();
 
     while (game_running) {
+        match.start();
         menu.start();
         if (match_running) {
-            // Match match(window, event_loop, resource_pool, game_running, match_running);
+            // MatchScene match(window, event_loop, resource_pool, game_running, match_running);
             // match.start();
         }
     }
@@ -73,6 +75,7 @@ void Client::pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_
     // Textures
     resource_pool->load_texture(BACKGROUNDS);
     resource_pool->load_texture(JAZZ);
+    resource_pool->load_texture(MAP1_TILESET);
     resource_pool->load_texture("assets/jazz_test.png");
 
     // Fonts

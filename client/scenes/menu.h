@@ -16,7 +16,7 @@
 #include "../menu_objects/join_match_button.h"
 #include "../menu_objects/quit_button.h"
 
-class Menu {
+class MenuScene {
 private:
     engine::Window& window;
     SDL_Renderer* renderer;
@@ -28,17 +28,17 @@ private:
     std::atomic<bool>& menu_running;
 
 public:
-    Menu(engine::Window& window, EventLoop* event_loop,
-         std::shared_ptr<engine::ResourcePool> resource_pool, std::atomic<bool>& game_running,
-         std::atomic<bool>& menu_running);
+    MenuScene(engine::Window& window, EventLoop* event_loop,
+              std::shared_ptr<engine::ResourcePool> resource_pool, std::atomic<bool>& game_running,
+              std::atomic<bool>& menu_running);
 
     // cant copy
-    Menu(const Menu&) = delete;
-    Menu& operator=(const Menu&) = delete;
+    MenuScene(const MenuScene&) = delete;
+    MenuScene& operator=(const MenuScene&) = delete;
 
     void start();
 
-    ~Menu();
+    ~MenuScene();
 };
 
 
