@@ -16,7 +16,7 @@
 #include "../../common/protocol/messages/menu_events/recv_active_games.h"
 #include "../../common/protocol/messages/menu_events/recv_create_game.h"
 #include "../../common/protocol/messages/menu_events/recv_join_match.h"
-#include "../../common/protocol/messages/menu_events/send_game_created.h"
+#include "../../common/protocol/messages/menu_events/send_connected_to_game.h"
 #include "../../common/protocol/messages/menu_events/send_request_games.h"
 
 class ServerProtocol: public CommonProtocol {

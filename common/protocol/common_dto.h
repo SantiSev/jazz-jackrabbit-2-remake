@@ -100,6 +100,13 @@ struct WeaponDTO {
     uint8_t is_empty;
 } __attribute__((packed));
 
+struct EnemyDTO {
+    uint16_t id;
+    uint16_t health;
+    uint8_t enemy_type;
+    uint8_t state;
+} __attribute__((packed));
+
 struct PlayerDTO {
     uint16_t id;
     char name[50];
@@ -112,9 +119,10 @@ struct PlayerDTO {
 
 struct GameStateDTO {
     uint8_t num_players;
+    uint8_t num_enemies;
     PlayerDTO players[REQUIRED_PLAYERS_TO_START];
+    EnemyDTO enemies[MAX_ENEMIES];
     uint16_t seconds;
-    uint16_t minutes;
 } __attribute__((packed));
 
 struct ClientHasConnectedToMatchDTO {

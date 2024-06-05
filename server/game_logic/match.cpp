@@ -129,7 +129,6 @@ GameStateDTO Match::create_actual_snapshot() {
         }
     }
     game_state.seconds = (uint16_t)seconds;
-    game_state.minutes = (uint16_t)minutes;
 
     return game_state;
 }
@@ -306,7 +305,7 @@ void Match::update_enemies() {
 }
 
 void Match::initiate_enemies() {
-    for (int i = 0; i < 6; i++) {
+    for (size_t i = 0; i < MAX_ENEMIES; i++) {
         Enemy enemy(20, 20, i % 3, i);
         // set_spawn_point_to_enemy(enemy);
         enemies.emplace_back(enemy);

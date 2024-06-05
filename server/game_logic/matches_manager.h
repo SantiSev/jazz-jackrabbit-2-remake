@@ -39,7 +39,7 @@ public:
 
     void create_new_match(const CreateGameDTO& dto);
 
-    void add_new_client(Socket client_socket);
+    void add_new_client_to_manager(Socket client_socket);
 
     void send_match_lists(RequestActiveGamesDTO dto);
 

@@ -40,6 +40,7 @@ Menu::Menu(engine::Window& window, EventLoop* event_loop,
 
 void Menu::start() {
     Uint32 frame_start = 0;
+    // cppcheck-suppress unreadVariable
     Uint32 frame_time = 0;
     const int frame_delay = 1000 / 60;
 
