@@ -1,6 +1,6 @@
 #include "player.h"
 
-Player::Player(engine::AnimatedSprite&& sprite): sprite(std::move(sprite)) { sprite.flip(); }
+Player::Player(engine::AnimatedSprite&& sprite): sprite(std::move(sprite)) {}
 
 void Player::on_click() { std::cout << "Player shot" << std::endl; }
 

@@ -25,7 +25,7 @@ private:
     int ms_per_frame;
     int elapsed_time;
     short next_frame_offset = 1;
-    bool flipped = false;
+    bool flipped;
 
     void next_frame();
 

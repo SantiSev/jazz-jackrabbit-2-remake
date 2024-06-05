@@ -11,7 +11,8 @@ AnimatedSprite::AnimatedSprite(std::shared_ptr<Texture> texture, SDL_Rect& s_rec
         frames(frames),
         current_frame(0),
         elapsed_time(0),
-        next_frame_offset(1) {
+        next_frame_offset(1),
+        flipped(false) {
     if (fps <= 0) {
         throw BadParams("FPS must be greater than 0");
     }
@@ -33,8 +34,7 @@ void AnimatedSprite::draw(SDL_Renderer* renderer) {
         err = SDL_RenderCopyEx(renderer, texture->get_texture(), &s_rect, &d_rect, 0, nullptr,
                                SDL_FLIP_HORIZONTAL);
     } else {
-        err = SDL_RenderCopyEx(renderer, texture->get_texture(), &s_rect, &d_rect, 0, nullptr,
-                               SDL_FLIP_HORIZONTAL);
+        err = SDL_RenderCopy(renderer, texture->get_texture(), &s_rect, &d_rect);
     }
     if (err < 0) {
         throw SDLError("Error drawing animation: " + std::string(SDL_GetError()));
