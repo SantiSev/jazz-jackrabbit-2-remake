@@ -1,6 +1,8 @@
 #ifndef TP_FINAL_CREATE_MATCH_BUTTON_H
 #define TP_FINAL_CREATE_MATCH_BUTTON_H
 
+#include <memory>
+
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/gui/widgets/button.h"
 #include "../../game_engine/gui/widgets/label.h"
