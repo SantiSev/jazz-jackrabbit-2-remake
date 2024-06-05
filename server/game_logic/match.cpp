@@ -26,14 +26,13 @@ void Match::run() {
             std::cout << "Match map: " << map << " Waiting for all players to connect to start..."
                       << std::endl;
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
         auto startTime = std::chrono::system_clock::now();
         auto runTime = startTime;
 
         const double FPSMAX = 1000.0 / 60.0;
         std::shared_ptr<Message> next_message;
-        int minutes;
-        int seconds;
-
         while (online) {
             auto endTime = std::chrono::system_clock::now();
             std::chrono::duration<double, std::milli> delta = endTime - startTime;
@@ -47,9 +46,9 @@ void Match::run() {
                 next_message->run(message_handler);
             }
 
-            countdown_match(runTime, endTime, minutes, seconds);
+            countdown_match(runTime, endTime);
 
-            auto snapshot = create_actual_snapshot(seconds, minutes);
+            auto snapshot = create_actual_snapshot();
             auto snapshot_message = std::make_shared<SendGameStateMessage>(snapshot);
             client_monitor.broadcastClients(snapshot_message);
 
@@ -75,8 +74,7 @@ void Match::run() {
 }
 
 void Match::countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
-                            const std::chrono::time_point<std::chrono::system_clock>& endTime,
-                            int& minutes, int& seconds) {
+                            const std::chrono::time_point<std::chrono::system_clock>& endTime) {
     if (match_time != 0 && !match_has_ended) {
         if (std::chrono::duration_cast<std::chrono::seconds>(endTime - runTime).count() >= 1) {
             match_time--;
@@ -104,7 +102,7 @@ Player& Match::get_player(size_t id) {
     }
 }
 
-GameStateDTO Match::create_actual_snapshot(int const& seconds, int const& minutes) {
+GameStateDTO Match::create_actual_snapshot() {
     GameStateDTO game_state{};
 
     game_state.num_players = players.size();

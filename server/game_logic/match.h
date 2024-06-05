@@ -26,6 +26,8 @@ private:
     std::vector<std::string> items;
     size_t players_connected = 0;
     size_t required_players;
+    size_t minutes = STARTING_MATCH_TIME / 60;
+    size_t seconds = STARTING_MATCH_TIME % 60;
     ClientMonitor client_monitor;
     uint8_t map;
 
@@ -42,7 +44,7 @@ public:
 
     void add_player_to_game(const std::string& player_name, const uint8_t& character);
 
-    GameStateDTO create_actual_snapshot(int const& seconds, int const& minutes);
+    GameStateDTO create_actual_snapshot();
 
     bool has_match_ended() const;
 
@@ -57,8 +59,7 @@ public:
     int get_seconds();
 
     void countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
-                         const std::chrono::time_point<std::chrono::system_clock>& endTime,
-                         int& minutes, int& seconds);
+                         const std::chrono::time_point<std::chrono::system_clock>& endTime);
 
     void send_end_message_to_players();
 
