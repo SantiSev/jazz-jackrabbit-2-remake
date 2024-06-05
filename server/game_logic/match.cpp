@@ -23,11 +23,12 @@ Match::Match(const uint8_t& map_selected, size_t required_players_setting):
 
 void Match::run() {
     try {
-        while (online && players.size() != required_players) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-            std::cout << "Match map: " << map << " Waiting for all players to connect to start..."
-                      << std::endl;
-        }
+        //        while (online && players.size() != required_players) {
+        //            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        //            std::cout << "Match map: " << map << " Waiting for all players to connect to
+        //            start..."
+        //                      << std::endl;
+        //        }
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
         auto startTime = std::chrono::system_clock::now();

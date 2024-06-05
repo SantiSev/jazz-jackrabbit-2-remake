@@ -89,15 +89,16 @@ void CommonProtocol::send_request_active_games(const uint16_t header,
     skt.sendall(&active_games, sizeof(active_games), &was_closed);
 }
 
-void CommonProtocol::send_game_created(const uint16_t header, GameCreatedDTO& game_created) {
+void CommonProtocol::send_game_created(const uint16_t header,
+                                       ClientHasConnectedToMatchDTO& game_created) {
     send_header(header);
     game_created.id_player = htons(game_created.id_player);
     skt.sendall(&game_created, sizeof(game_created), &was_closed);
 }
 
-void CommonProtocol::send_game_joined(const uint16_t header, ClientJoinedMatchDTO& game_joined) {
+void CommonProtocol::send_game_joined(const uint16_t header,
+                                      ClientHasConnectedToMatchDTO& game_joined) {
     send_header(header);
-    game_joined.id_client = htons(game_joined.id_client);
     game_joined.id_player = htons(game_joined.id_player);
     skt.sendall(&game_joined, sizeof(game_joined), &was_closed);
 }

@@ -5,10 +5,10 @@
 
 class SendGameCreatedMessage: public Message {
 private:
-    GameCreatedDTO game_created;
+    ClientHasConnectedToMatchDTO game_created;
 
 public:
-    explicit SendGameCreatedMessage(const GameCreatedDTO& game_created);
+    explicit SendGameCreatedMessage(const ClientHasConnectedToMatchDTO& game_created);
     void run(MessageHandler& handler) override;
     void send_message(CommonProtocol& protocol) override;
     ~SendGameCreatedMessage() override;

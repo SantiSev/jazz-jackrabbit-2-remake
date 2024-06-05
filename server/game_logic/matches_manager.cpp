@@ -49,7 +49,7 @@ void MatchesManager::create_new_match(const CreateGameDTO& dto) {
 }
 
 void MatchesManager::send_id_player_to_client(const CreateGameDTO& dto) {
-    GameCreatedDTO game_created = {1};
+    ClientHasConnectedToMatchDTO game_created = {1};
     auto send_game_created = std::make_shared<SendGameCreatedMessage>(game_created);
     get_client_by_id(dto.id_client)
             ->get_sender_queue()
@@ -80,7 +80,7 @@ void MatchesManager::send_joined_info_to_client(const JoinMatchDTO& dto,
                                                 const uint16_t& player_number) {
     uint16_t num_players = player_number;
     num_players++;
-    ClientJoinedMatchDTO joined_dto = {dto.id_match, num_players};
+    ClientHasConnectedToMatchDTO joined_dto = {num_players};
     auto joined_message = std::make_shared<SendGameJoined>(joined_dto);
     get_client_by_id(dto.id_match)->get_sender_queue()->push(joined_message);
 }
