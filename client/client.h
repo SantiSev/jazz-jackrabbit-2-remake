@@ -12,7 +12,11 @@
 #include "../game_engine/gui/basic/window.h"
 #include "../game_engine/gui/canvas_object.h"
 #include "../game_engine/gui/widgets/animated_sprite.h"
+#include "scenes/menu.h"
+
+#include "assets.h"
 //#include "protocol/client_protocol.h"
+#include <memory>
 #include <utility>
 
 #include "game_objects/player.h"
@@ -28,10 +32,18 @@ private:
     // Queue<std::string> messages;
 
     std::atomic<bool> game_running;
-    EventLoop event_loop;
+    EventLoop* event_loop;
+
+    void pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_pool);
 
 public:
     Client(const std::string& host, const std::string& port);
+
+    // cant copy or move
+    Client(const Client&) = delete;
+    Client& operator=(const Client&) = delete;
+    Client(Client&&) = delete;
+    Client& operator=(Client&&) = delete;
 
     void start();
 

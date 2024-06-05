@@ -7,7 +7,6 @@ void EventLoop::run() {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 game_running = false;
-                this->stop();
                 break;
             }
             keyboard.update(event);
