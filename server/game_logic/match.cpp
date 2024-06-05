@@ -10,23 +10,21 @@
 #include "../../common/protocol/messages/in_game_events/send_game_state.h"
 
 
-Match::Match(const uint8_t& map_selected, std::string match_name, size_t required_players_setting):
+Match::Match(const uint8_t& map_selected, size_t required_players_setting):
         online(true),
-        match_name(std::move(match_name)),
         event_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()),
         message_handler(*this),
         players(),
         enemies(),
         required_players(required_players_setting),
-        map(map_selected),
-        snapshot(players, enemies) {}
+        map(map_selected) {}
 
 void Match::run() {
     try {
         while (online && players.size() != required_players) {
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-            std::cout << "Match: " << match_name
-                      << " Waiting for all players to connect to start..." << std::endl;
+            std::cout << "Match map: " << map << " Waiting for all players to connect to start..."
+                      << std::endl;
         }
         auto startTime = std::chrono::system_clock::now();
         auto runTime = startTime;
@@ -113,16 +111,35 @@ Player& Match::get_player(size_t id) {
     }
 }
 
-void Match::create_actual_snapshot(int const& seconds, int const& minutes) {
-    snapshot.set_enemies(enemies);
-    snapshot.set_players(players);
-    snapshot.set_seconds(seconds);
-    snapshot.set_minutes(minutes);
+GameStateDTO Match::create_actual_snapshot(int const& seconds, int const& minutes) {
+    GameStateDTO game_state{};
+
+    game_state.num_players = players.size();
+    for (size_t i = 0; i < players.size(); ++i) {
+        game_state.players[i].character = players[i].get_character();
+        game_state.players[i].health = players[i].get_health();
+        game_state.players[i].id = players[i].get_id();
+        game_state.players[i].points = players[i].get_points();
+        game_state.players[i].state = players[i].get_state();
+        for (size_t j = 0; j < NUM_OF_WEAPONS; ++j) {
+            game_state.players[i].weapons[j].ammo = players[i].get_weapon(j).get_ammo();
+            game_state.players[i].weapons[j].is_empty =
+                    players[i].get_weapon(j).is_weapon_empty() ? (uint8_t)1 : (uint8_t)0;
+            game_state.players[i].weapons[j].weapon_name =
+                    (uint8_t)players[i].get_weapon(j).get_weapon_name();
+        }
+    }
+    game_state.seconds = seconds;
+    game_state.minutes = minutes;
+
+    return game_state;
 }
 
 bool Match::has_match_ended() const { return match_has_ended; }
 
 std::string Match::get_match_name() const { return match_name; }
+
+uint8_t Match::get_map() const { return map; }
 
 void Match::add_player_to_game(const std::string& player_name, const uint8_t& character) {
     players_connected++;
@@ -142,10 +159,6 @@ void Match::add_client_to_match(ServerThreadManager* client, const std::string& 
 size_t Match::get_num_players() { return players.size(); }
 
 size_t Match::get_max_players() const { return required_players; }
-
-int Match::get_minutes() { return snapshot.get_minutes(); }
-
-int Match::get_seconds() { return snapshot.get_seconds(); }
 
 void Match::send_end_message_to_players() {
     //        client_monitor.broadcastClients(game_ended_message);

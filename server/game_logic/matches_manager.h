@@ -8,7 +8,6 @@
 #include <string>
 #include <vector>
 
-#include "../../common/common_dto.h"
 #include "../protocol/manager_message_handler.h"
 #include "../protocol/server_thread_manager.h"
 #include "./match.h"
@@ -36,13 +35,13 @@ public:
     void check_matches_status();
     void stop_finished_match(Match* match);
 
-    std::vector<matchesDTO> return_matches_lists();
+    MatchInfoDTO return_matches_lists();
 
     void create_new_match(const CreateGameDTO& dto);
 
     void add_new_client(Socket client_socket);
 
-    void send_match_lists(ServerThreadManager* client);
+    void send_match_lists(RequestActiveGamesDTO dto);
 
     void clear_all_waiting_clients();
 

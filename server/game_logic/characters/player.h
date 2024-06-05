@@ -29,7 +29,7 @@ private:
     // bool is_facing_right; (?)
     bool is_alive = true;
     size_t revive_cooldown = REVIVE_COOLDOWN;
-    std::vector<Weapon> weapons{};
+    std::vector<Weapon> weapons;
     size_t selected_weapon = DEFAULT_WEAPON;
 
 public:
@@ -54,10 +54,12 @@ public:
     bool can_revive() const;
     void select_weapon(size_t weapon_number);
     void shoot_selected_weapon();
-    void get_weapon_ammo(size_t ammo, size_t weapon);
+    void add_weapon_ammo(size_t ammo, size_t weapon);
     void reset_revive_cooldown();
     uint8_t get_state() const;
     void set_starting_weapon();
+
+    Weapon get_weapon(size_t weapon);
 };
 
 

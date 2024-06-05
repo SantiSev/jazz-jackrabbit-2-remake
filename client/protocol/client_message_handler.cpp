@@ -21,6 +21,10 @@ void ClientMessageHandler::handle_game_created(GameCreatedDTO dto) {
     client.set_my_player_id(dto.id_player);
 }
 
+void ClientMessageHandler::handle_recv_active_games(ActiveGamesDTO dto) {
+    client.set_active_games(dto);
+}
+
 
 // void ClientMessageHandler::handle_message(const std::shared_ptr<Message>& message) {
 //     const uint16_t header = message->get_header();

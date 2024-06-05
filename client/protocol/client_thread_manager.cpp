@@ -32,3 +32,8 @@ void ClientThreadManager::set_my_player_id(const id_player_t& new_player_id) {
     my_player_id = new_player_id;
 }
 uint16_t ClientThreadManager::get_player_id() const { return my_player_id; }
+
+void ClientThreadManager::set_active_games(ActiveGamesDTO dto) {
+    std::cout << "primera partida-> mapa:" << dto.map << " max players:" << dto.players_max
+              << " players_ingame:" << dto.players_ingame << std::endl;
+}

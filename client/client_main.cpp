@@ -22,10 +22,21 @@ int main(int argc, const char* argv[]) {
             std::cerr << "Expected format: ./client <hostname> <port>\n";
         }
 
+        std::string line;
         ClientProtocol protocol(hostname, servname);
-        std::string message = "match 1";
-        // protocol.send_create_game(1, message, 7);
-        //        protocol.send_join_match(4, 7, 12);
+        std::getline(std::cin, line);
+        if (line == "c") {
+            CreateGameDTO dto = {1, static_cast<character_t>(0), 2, 2};
+            auto message = std::make_shared<RecvCreateGameMessage>(dto);
+            protocol.send_message(message);
+        }
+        if (line == "j") {
+            JoinMatchDTO dto = {2, 1, static_cast<character_t>(0)};
+            auto message = std::make_shared<RecvJoinMatchMessage>(dto);
+            protocol.send_message(message);
+        }
+        //         protocol.send_create_game(1, message, 7);
+        //         protocol.send_join_match(4, 7, 12);
         //        uint16_t event;
         //        bool was_closed = false;
 

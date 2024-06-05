@@ -17,6 +17,8 @@ public:
     void handle_recv_create_game(const CreateGameDTO& dto) override;
 
     void handle_recv_join_match(JoinMatchDTO dto) override;
+
+    void handle_request_active_games(RequestActiveGamesDTO dto) override;
 };
 
 

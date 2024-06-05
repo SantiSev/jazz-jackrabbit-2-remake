@@ -34,6 +34,8 @@ public:
     ~ClientThreadManager();
 
     ClientProtocol& get_protocol();
+
+    void set_active_games(ActiveGamesDTO dto);
 };
 
 

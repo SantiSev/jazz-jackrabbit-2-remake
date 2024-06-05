@@ -22,10 +22,10 @@ std::shared_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() {
     return std::make_shared<SendGameStateMessage>(game_state);
 }
 
-std::shared_ptr<SendActiveGamesMessage> ClientProtocol::recv_active_games() {
-    ActiveGamesDTO active_games = {};
+std::shared_ptr<SendRequestGamesMessage> ClientProtocol::recv_active_games() {
+    RequestActiveGamesDTO active_games = {};
     skt.recvall(&active_games, sizeof(active_games), &was_closed);
-    return std::make_shared<SendActiveGamesMessage>(active_games);
+    return std::make_shared<SendRequestGamesMessage>(active_games);
 }
 
 std::shared_ptr<SendGameCreatedMessage> ClientProtocol::recv_game_created() {
@@ -55,7 +55,7 @@ std::shared_ptr<Message> ClientProtocol::recv_message() {
             return recv_finish_match();
         case SEND_GAME_STATE:
             return recv_game_state();
-        case SEND_ACTIVE_GAMES:
+        case RECV_ACTIVE_GAMES:
             return recv_active_games();
         case SEND_GAME_CREATED:
             return recv_game_created();
@@ -68,4 +68,4 @@ std::shared_ptr<Message> ClientProtocol::recv_message() {
     }
 }
 
-ClientProtocol::~ClientProtocol() {}
+ClientProtocol::~ClientProtocol() = default;

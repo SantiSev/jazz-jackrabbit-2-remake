@@ -6,7 +6,8 @@
 #include <string>
 #include <vector>
 
-#include "../../common/message/snapshot.h"
+#include "../../server/game_logic/characters/enemies.h"
+#include "../../server/game_logic/characters/player.h"
 #include "../protocol/match_message_handler.h"
 #include "../protocol/server_thread_manager.h"
 #include "./client_monitor.h"
@@ -28,11 +29,10 @@ private:
     size_t required_players;
     ClientMonitor client_monitor;
     uint8_t map;
-    Snapshot snapshot;
 
 public:
     // Constructor
-    explicit Match(const uint8_t& map, std::string match_name, size_t required_players);
+    explicit Match(const uint8_t& map, size_t required_players);
     void run() override;
     // Kill the thread
     void stop() override;
@@ -43,7 +43,7 @@ public:
 
     void add_player_to_game(const std::string& player_name, const uint8_t& character);
 
-    void create_actual_snapshot(int const& seconds, int const& minutes);
+    GameStateDTO create_actual_snapshot(int const& seconds, int const& minutes);
 
     bool has_match_ended() const;
 
@@ -67,6 +67,8 @@ public:
                              const uint8_t& character);
 
     std::vector<size_t> get_clients_ids();
+
+    uint8_t get_map() const;
 };
 
 #endif

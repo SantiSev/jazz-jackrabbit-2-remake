@@ -1,7 +1,5 @@
 #include "./send_game_created.h"
 
-#include "../../../../client/protocol/client_protocol.h"
-
 SendGameCreatedMessage::SendGameCreatedMessage(const GameCreatedDTO& game_created):
         Message(SEND_GAME_CREATED), game_created(game_created) {}
 

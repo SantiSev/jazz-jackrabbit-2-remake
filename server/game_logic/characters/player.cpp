@@ -11,7 +11,8 @@ Player::Player(size_t id, std::string name, const uint8_t& character):
         health(MAX_HEALTH),
         character(character),
         points(STARTING_POINTS),
-        state(STATE_IDLE_RIGHT) {
+        state(STATE_IDLE_RIGHT),
+        weapons(NUM_OF_WEAPONS) {
     set_starting_weapon();
 }
 void Player::set_starting_weapon() {
@@ -73,10 +74,12 @@ void Player::decrease_revive_cooldown() { this->revive_cooldown--; }
 
 void Player::reset_revive_cooldown() { this->revive_cooldown = REVIVE_COOLDOWN; }
 
-void Player::get_weapon_ammo(size_t ammo, size_t weapon) {
+void Player::add_weapon_ammo(size_t ammo, size_t weapon) {
     this->weapons[weapon].add_ammo(ammo);
     this->weapons[weapon].set_is_empty(false);
 }
+
+Weapon Player::get_weapon(size_t weapon) { return weapons[weapon]; }
 
 void Player::shoot_selected_weapon() {
     if (selected_weapon == DEFAULT_WEAPON) {

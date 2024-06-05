@@ -72,7 +72,8 @@ void CommonProtocol::send_finish_match(const uint16_t header, FinishMatchDTO& fi
     skt.sendall(&finish_match, sizeof(finish_match), &was_closed);
 }
 
-void CommonProtocol::send_active_games(const uint16_t header, ActiveGamesDTO& active_games) {
+void CommonProtocol::send_request_active_games(const uint16_t header,
+                                               RequestActiveGamesDTO& active_games) {
     send_header(header);
     skt.sendall(&active_games, sizeof(active_games), &was_closed);
 }
@@ -85,6 +86,11 @@ void CommonProtocol::send_game_created(const uint16_t header, GameCreatedDTO& ga
 void CommonProtocol::send_game_joined(const uint16_t header, ClientJoinedMatchDTO& game_joined) {
     send_header(header);
     skt.sendall(&game_joined, sizeof(game_joined), &was_closed);
+}
+
+void CommonProtocol::send_active_games(const uint16_t header, MatchInfoDTO& active_games) {
+    send_header(header);
+    skt.sendall(&active_games, sizeof(active_games), &was_closed);
 }
 
 void CommonProtocol::send_message(std::shared_ptr<Message> message) {
