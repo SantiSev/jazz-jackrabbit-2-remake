@@ -15,14 +15,14 @@
 #include "scenes/menu.h"
 
 #include "assets.h"
-//#include "protocol/client_protocol.h"
+// #include "protocol/client_protocol.h"
 #include <memory>
 #include <utility>
 
 #include "game_objects/player.h"
 
 #include "event_loop.h"
-//#include "../common/common_queue.h"
+// #include "../common/common_queue.h"
 
 #define QUIT 'q'
 
@@ -31,7 +31,12 @@ private:
     // ClientProtocol protocol;
     // Queue<std::string> messages;
 
+    engine::Window window;
+    std::shared_ptr<engine::ResourcePool> resource_pool;
+
     std::atomic<bool> game_running;
+    std::atomic<bool> menu_running;
+
     EventLoop* event_loop;
 
     void pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_pool);

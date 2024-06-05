@@ -22,12 +22,13 @@ private:
     std::shared_ptr<engine::ResourcePool> resource_pool;
     engine::Sprite* background;
     std::list<engine::Button*> buttons;
-    // TODO atomic game running to quit on quit button click
-    bool menu_running;
+    std::atomic<bool>& game_running;
+    std::atomic<bool>& menu_running;
 
 public:
     Menu(engine::Window& window, EventLoop* event_loop,
-         std::shared_ptr<engine::ResourcePool> resource_pool);
+         std::shared_ptr<engine::ResourcePool> resource_pool, std::atomic<bool>& game_running,
+         std::atomic<bool>& menu_running);
 
     // cant copy
     Menu(const Menu&) = delete;

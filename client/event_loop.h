@@ -10,13 +10,14 @@
 class EventLoop: public Thread {
 private:
     std::atomic<bool>& game_running;
+    std::atomic<bool>& menu_running;
     SDL_Event event;
 
 public:
     engine::Keyboard keyboard;
     engine::Mouse mouse;
 
-    explicit EventLoop(std::atomic<bool>& game_running);
+    explicit EventLoop(std::atomic<bool>& game_running, std::atomic<bool>& menu_running);
 
     void run() override;
 

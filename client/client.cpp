@@ -2,20 +2,23 @@
 
 Client::Client(const std::string& host, const std::string& port):
         // protocol(host, port),
+        window(800, 600, true, true),
+        resource_pool(std::make_shared<engine::ResourcePool>(window.get_renderer())),
         game_running(true),
-        event_loop(new EventLoop(std::ref(game_running))) {}
+        menu_running(true),
+        event_loop(new EventLoop(game_running, menu_running)) {
+    // Pre-load necessary resources
+    pre_load_resources(resource_pool);
+}
 
 void Client::start() {
-    engine::Window window(800, 600, true, true);
-    auto renderer = window.get_renderer();
+    Menu menu(window, event_loop, resource_pool, game_running, menu_running);
 
-    // Pre-load necessary resources
-    auto resource_pool = std::make_shared<engine::ResourcePool>(renderer);
-    pre_load_resources(resource_pool);
-
-    Menu menu(window, event_loop, resource_pool);
     event_loop->start();
-    menu.start();
+
+    while (game_running) {
+        menu.start();
+    }
 
     //    std::list<engine::CanvasObject*> objects;
     //
