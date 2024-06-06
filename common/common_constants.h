@@ -43,6 +43,11 @@ const size_t STARTING_MATCH_TIME = 60;
 #define INTOXICATON_COOLDOWN 4
 #define SPECIAL_COOLDOWN 3
 
+// Object Sizes
+#define PLAYER_WIDTH 50
+#define PLAYER_HEIGHT 50
+
+
 // Player states
 #define STATE_IDLE_RIGHT 0x00
 #define STATE_IDLE_LEFT 0X01

@@ -96,9 +96,10 @@ void CollisionManager::handle_out_of_bounds(std::shared_ptr<DynamicBody> obj) {
     }
 }
 
-void CollisionManager::update() {
+void CollisionManager::update() {  // create to update specific object
     // Use an iterator to iterate over the dynamic_bodies tuple
     for (auto it = dynamic_bodies.begin(); it != dynamic_bodies.end();) {
+
         auto& obj = std::get<0>(*it);
 
         if (obj != nullptr) {
@@ -115,7 +116,6 @@ void CollisionManager::update() {
                 place_object_in_grid(obj);
                 old_position_ref = obj->position;  // Update the old position
             }
-
 
             ++it;  // Move to the next element
         } else {

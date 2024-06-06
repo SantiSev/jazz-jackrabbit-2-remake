@@ -10,34 +10,51 @@
 
 #include "weapon.h"
 
-class Player {
+class Player: public DynamicBody {
 private:
-    // DynamicBody character_body; // Commented by Agus: No compile
+    // game info
+
     size_t id;
     std::string name;
     size_t health;
-    uint8_t character;
+    uint8_t character;  // handle de personaje
     size_t points;
     uint8_t state;
-    bool is_facing_right = true;
+
+    // game statuses
+
     bool is_alive = true;
     bool is_intoxicated = false;
+
+    // game cooldowns
+
     size_t special_cooldown = 0;
     size_t intoxication_cooldown = INTOXICATON_COOLDOWN;
     size_t revive_cooldown = REVIVE_COOLDOWN;
+
+    // game weapons
+
     std::vector<Weapon> weapons;
     size_t selected_weapon = DEFAULT_WEAPON;
+
+    // game logic
+
+    bool is_facing_right = true;
     bool is_jumping = false;
 
 public:
     Player(size_t id, std::string name, const uint8_t& character);
 
+    //------- Getters --------
+
     size_t get_id() const;
-    Vector2D get_position() const;
     std::string get_name();
     size_t get_health() const;
     uint8_t get_character() const;
     size_t get_points() const;
+
+    //------- Setters --------
+
     void set_id(size_t id);
     void set_name(std::string name);
     void set_health(size_t health);
