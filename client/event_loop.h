@@ -16,6 +16,7 @@ class EventLoop: public Thread {
 private:
     std::atomic<bool>& game_running;
     std::atomic<bool>& menu_running;
+    std::atomic<bool>& match_running;
     SDL_Event event;
     ClientMessageHandler& message_handler;
 
@@ -25,7 +26,7 @@ public:
     Queue<std::shared_ptr<Message>> recv_message;
 
     explicit EventLoop(std::atomic<bool>& game_running, std::atomic<bool>& menu_running,
-                       ClientMessageHandler& message_handler);
+                       std::atomic<bool>& match_running, ClientMessageHandler& message_handler);
 
     void run() override;
 
