@@ -2,14 +2,16 @@
 
 MenuScene::MenuScene(engine::Window& window, EventLoop* event_loop,
                      std::shared_ptr<engine::ResourcePool> resource_pool,
-                     std::atomic<bool>& game_running, std::atomic<bool>& menu_running):
+                     std::atomic<bool>& game_running, std::atomic<bool>& menu_running,
+                     std::atomic<bool>& match_running):
         window(window),
         renderer(window.get_renderer()),
         event_loop(event_loop),
         resource_pool(resource_pool),
         background(nullptr),
         game_running(game_running),
-        menu_running(menu_running) {
+        menu_running(menu_running),
+        match_running(match_running) {
     // Create background
     SDL_Rect background_s_rect = {16, 16, 640, 480};
     SDL_Rect background_d_rect = {0, 0, 800, 600};
@@ -18,13 +20,13 @@ MenuScene::MenuScene(engine::Window& window, EventLoop* event_loop,
 
     // Create buttons
     SDL_Rect create_match_button_d_rect = {300, 300, 200, 50};
-    CreateMatchButton* create_match_button =
-            new CreateMatchButton(renderer, resource_pool, create_match_button_d_rect);
+    CreateMatchButton* create_match_button = new CreateMatchButton(
+            renderer, resource_pool, create_match_button_d_rect, menu_running, match_running);
     buttons.push_back(create_match_button);
 
     SDL_Rect join_match_button_d_rect = {300, 370, 200, 50};
-    JoinMatchButton* join_match_button =
-            new JoinMatchButton(renderer, resource_pool, join_match_button_d_rect);
+    JoinMatchButton* join_match_button = new JoinMatchButton(
+            renderer, resource_pool, join_match_button_d_rect, menu_running, match_running);
     buttons.push_back(join_match_button);
 
     SDL_Rect quit_button_d_rect = {300, 440, 200, 50};

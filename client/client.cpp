@@ -7,7 +7,7 @@ Client::Client(const std::string& host, const std::string& port):
         game_running(true),
         menu_running(true),
         match_running(false),
-        event_loop(new EventLoop(game_running, menu_running, message_handler)),
+        event_loop(new EventLoop(game_running, menu_running, match_running, message_handler)),
         thread_manager(new ClientThreadManager(host, port, event_loop->recv_message,
                                                message_handler.send_message)) {
     // Pre-load necessary resources
@@ -15,7 +15,7 @@ Client::Client(const std::string& host, const std::string& port):
 }
 
 void Client::start() {
-    MenuScene menu(window, event_loop, resource_pool, game_running, menu_running);
+    MenuScene menu(window, event_loop, resource_pool, game_running, menu_running, match_running);
     MatchScene match(window, event_loop, resource_pool, match_running);
 
     event_loop->start();
