@@ -10,7 +10,7 @@
 class KeyboardTestLabRat: public engine::CanvasObject {
 public:
     KeyboardTestLabRat() = default;
-    void on_key_press(SDL_Keycode key) override {
+    void on_key_press(const SDL_Keycode& key) override {
         std::cout << "Key pressed: " << key << std::endl;
     }
 

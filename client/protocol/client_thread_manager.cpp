@@ -13,8 +13,15 @@ ClientThreadManager::ClientThreadManager(const std::string& hostname, const std:
 ClientProtocol& ClientThreadManager::get_protocol() { return client_protocol; }
 
 ClientThreadManager::~ClientThreadManager() {
+    client_protocol.force_shutdown();
+    receiver.stop();
     receiver.join();
-    receiver.kill();
+    sender.stop();
     sender.join();
-    sender.kill();
+}
+
+void ClientThreadManager::set_active_games(MatchInfoDTO dto) {
+    std::cout << "primera partida-> mapa:" << dto.active_games[0].map
+              << " max players:" << dto.active_games[0].players_max
+              << " players_ingame:" << dto.active_games[0].players_ingame << std::endl;
 }

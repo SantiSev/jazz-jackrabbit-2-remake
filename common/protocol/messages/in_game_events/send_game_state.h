@@ -10,10 +10,10 @@ private:
     GameStateDTO game_state;
 
 public:
-    explicit SendGameStateMessage(GameStateDTO& game_state);
-    void run() override;
+    explicit SendGameStateMessage(const GameStateDTO& game_state);
+    void run(MessageHandler& handler) override;
     void send_message(CommonProtocol& protocol) override;
-    ~SendGameStateMessage();
+    ~SendGameStateMessage() override;
 };
 
 #endif

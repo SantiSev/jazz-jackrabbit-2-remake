@@ -52,37 +52,37 @@ file(GLOB_RECURSE SERVER_WITHOUT_MAIN "server/game_logic/*.cpp" "server/protocol
 file(GLOB_RECURSE CLIENT_WITHOUT_MAIN "client/protocol/*.cpp" "client/protocol/*.h")
 
 if (PRODUCTION)
-    add_executable(client
-        ${SOURCES_COMMON}
-        ${SOURCES_CLIENT}
-        ${HEADERS_CLIENT}
-        ${HEADERS_COMMON}
-        ${SOURCES_GAME_ENGINE}
-        ${HEADERS_GAME_ENGINE}
+    add_executable(client 
+        ${SOURCES_COMMON} 
+        ${SOURCES_CLIENT} 
+        ${HEADERS_CLIENT} 
+        ${HEADERS_COMMON} 
+        ${SOURCES_GAME_ENGINE} 
+        ${HEADERS_GAME_ENGINE} 
         ${SERVER_WITHOUT_MAIN}
     )
-    add_executable(server
-        ${SOURCES_COMMON}
-        ${SOURCES_SERVER}
-        ${HEADERS_SERVER}
-        ${HEADERS_COMMON}
-        ${SOURCES_GAME_ENGINE}
-        ${HEADERS_GAME_ENGINE}
+    add_executable(server 
+        ${SOURCES_COMMON} 
+        ${SOURCES_SERVER} 
+        ${HEADERS_SERVER} 
+        ${HEADERS_COMMON} 
+        ${SOURCES_GAME_ENGINE} 
+        ${HEADERS_GAME_ENGINE} 
         ${CLIENT_WITHOUT_MAIN}
     )
 
-    target_link_libraries(client
-        SDL2main
-        SDL2::SDL2
-        SDL2_image::SDL2_image
-        SDL2_ttf::SDL2_ttf
+    target_link_libraries(client 
+        SDL2main 
+        SDL2::SDL2 
+        SDL2_image::SDL2_image 
+        SDL2_ttf::SDL2_ttf 
         SDL2_mixer
     )
-    target_link_libraries(server
-        SDL2main
-        SDL2::SDL2
-        SDL2_image::SDL2_image
-        SDL2_ttf::SDL2_ttf
+    target_link_libraries(server 
+        SDL2main 
+        SDL2::SDL2 
+        SDL2_image::SDL2_image 
+        SDL2_ttf::SDL2_ttf 
         SDL2_mixer::SDL2_mixer
     )
 endif()
@@ -132,6 +132,7 @@ if (EVENTS)
         ${HEADERS_SERVER}
         ${HEADERS_COMMON}
     )
+endif()    
 
 
 # GRAPHICS TEST
@@ -151,7 +152,9 @@ if (GRAPHICS)
     endforeach()
 endif()
 
+
 if(PHYSICS)
+
     find_package(Catch2 REQUIRED)
 
     file(GLOB_RECURSE SOURCES_CLIENT_PROTOCOL "client/protocol/*.cpp")
@@ -175,6 +178,22 @@ if(PHYSICS)
         SDL2::SDL2
         SDL2_image::SDL2_image
         SDL2_ttf::SDL2_ttf
+        ${SOURCES_COMMON} 
+        ${SOURCES_GAME_ENGINE} 
+        ${HEADERS_COMMON} 
+        ${HEADERS_GAME_ENGINE} 
+        ${SOURCES_CLIENT_PROTOCOL}
+        ${SOURCES_SERVER_PROTOCOL}
+        ${SOURCES_SERVER_GAME_LOGIC}
+        ${HEADERS_SERVER} 
+        ${HEADERS_CLIENT}
+    )
+    target_link_libraries(tests PRIVATE 
+        Catch2::Catch2WithMain
+        SDL2main 
+        SDL2::SDL2
+        SDL2_image::SDL2_image 
+        SDL2_ttf::SDL2_ttf 
         SDL2_mixer::SDL2_mixer
     )
 endif()
@@ -192,7 +211,4 @@ endif()
 if (verbose)
     set(CMAKE_VERBOSE_MAKEFILE ON)
 endif()
-
-endif()
-
 

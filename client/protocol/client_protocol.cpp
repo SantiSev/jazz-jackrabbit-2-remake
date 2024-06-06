@@ -4,9 +4,11 @@
 
 #include <arpa/inet.h>
 
+#include "../../common/protocol/messages/menu_events/send_game_joined.h"
+
 
 ClientProtocol::ClientProtocol(const std::string& hostname, const std::string& servname):
-        CommonProtocol(hostname, servname), my_client_id(0), my_player_id(0) {}
+        CommonProtocol(hostname, servname) {}
 
 std::shared_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
     FinishMatchDTO finish_match = {};
@@ -17,24 +19,43 @@ std::shared_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
 std::shared_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() {
     GameStateDTO game_state = {};
     skt.recvall(&game_state, sizeof(game_state), &was_closed);
+    game_state.minutes = ntohs(game_state.minutes);
+    game_state.seconds = ntohs(game_state.seconds);
+    for (int i = 0; i < game_state.num_players; i++) {
+        game_state.players[i].id = ntohs(game_state.players[i].id);
+        game_state.players[i].points = ntohs(game_state.players[i].points);
+        game_state.players[i].health = ntohs(game_state.players[i].health);
+        for (int j = 0; j < NUM_OF_WEAPONS; j++) {
+            game_state.players[i].weapons[j].ammo = ntohs(game_state.players[i].weapons[j].ammo);
+        }
+    }
     return std::make_shared<SendGameStateMessage>(game_state);
 }
 
-std::shared_ptr<SendActiveGamesMessage> ClientProtocol::recv_active_games() {
-    ActiveGamesDTO active_games = {};
+std::shared_ptr<SendRequestGamesMessage> ClientProtocol::recv_active_games() {
+    RequestActiveGamesDTO active_games = {};
     skt.recvall(&active_games, sizeof(active_games), &was_closed);
-    return std::make_shared<SendActiveGamesMessage>(active_games);
+    active_games.id_client = ntohs(active_games.id_client);
+    return std::make_shared<SendRequestGamesMessage>(active_games);
 }
 
 std::shared_ptr<SendGameCreatedMessage> ClientProtocol::recv_game_created() {
-    GameCreatedDTO game_created = {};
+    ClientHasConnectedToMatchDTO game_created = {};
     skt.recvall(&game_created, sizeof(game_created), &was_closed);
+    game_created.id_player = ntohs(game_created.id_player);
     return std::make_shared<SendGameCreatedMessage>(game_created);
 }
 
 std::shared_ptr<AcptConnection> ClientProtocol::recv_acpt_connection() {
     uint16_t id_client = recv_two_bytes();
     return std::make_shared<AcptConnection>(id_client);
+}
+
+std::shared_ptr<Message> ClientProtocol::recv_game_joined() {
+    ClientHasConnectedToMatchDTO game_joined = {};
+    skt.recvall(&game_joined, sizeof(game_joined), &was_closed);
+    game_joined.id_player = ntohs(game_joined.id_player);
+    return std::make_shared<SendGameJoined>(game_joined);
 }
 
 std::shared_ptr<Message> ClientProtocol::recv_message() {
@@ -47,26 +68,17 @@ std::shared_ptr<Message> ClientProtocol::recv_message() {
             return recv_finish_match();
         case SEND_GAME_STATE:
             return recv_game_state();
-        case SEND_ACTIVE_GAMES:
+        case RECV_ACTIVE_GAMES:
             return recv_active_games();
         case SEND_GAME_CREATED:
             return recv_game_created();
         case ACPT_CONNECTION:
             return recv_acpt_connection();
+        case SEND_GAME_JOINED:
+            return recv_game_joined();
         default:
             return std::make_shared<InvalidMessage>();
     }
 }
 
-void ClientProtocol::set_my_client_id(const id_client_t& new_client_id) {
-    my_client_id = new_client_id;
-}
-
-uint16_t ClientProtocol::get_client_id() const { return my_client_id; }
-
-void ClientProtocol::set_my_player_id(const id_player_t& new_player_id) {
-    my_player_id = new_player_id;
-}
-uint16_t ClientProtocol::get_player_id() const { return my_player_id; }
-
-ClientProtocol::~ClientProtocol() {}
+ClientProtocol::~ClientProtocol() = default;

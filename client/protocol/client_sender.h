@@ -1,3 +1,6 @@
+#ifndef TP_FINAL_CLIENT_SENDER_H
+#define TP_FINAL_CLIENT_SENDER_H
+
 #include <memory>
 
 #include "../../common/common_queue.h"
@@ -17,7 +20,9 @@ public:
 
     bool is_dead();
 
-    void kill();
+    void stop() override;
 
     ~ClientSender();
 };
+
+#endif

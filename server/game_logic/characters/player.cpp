@@ -16,7 +16,7 @@ Player::Player(size_t id, std::string name, const uint8_t& character):
         name(std::move(name)),
         health(MAX_HEALTH),
         character(character),
-        points(0),
+        points(STARTING_POINTS),
         state(STATE_IDLE_RIGHT),
         weapons(NUM_OF_WEAPONS) {
     set_starting_weapon();

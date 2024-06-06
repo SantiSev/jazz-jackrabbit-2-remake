@@ -11,7 +11,7 @@ public:
 
     virtual void on_click() {}
     virtual void is_hovered(bool) {}
-    virtual void on_key_press(SDL_Keycode) {}
+    virtual void on_key_press(const SDL_Keycode&) {}
 
     virtual void set_position(int x, int y) = 0;
 

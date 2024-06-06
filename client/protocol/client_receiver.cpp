@@ -6,18 +6,20 @@ ClientReceiver::ClientReceiver(ClientProtocol& client_protocol,
 
 bool ClientReceiver::is_dead() { return _keep_running; }
 
-void ClientReceiver::kill() { _keep_running = false; }
+void ClientReceiver::stop() {
+    _keep_running = false;
+    queue.close();
+}
 
 void ClientReceiver::run() {
     try {
         while (_keep_running) {
             std::shared_ptr<Message> message = client_protocol.recv_message();
             queue.try_push(message);
-            message->run(client_protocol);  // todo testear esto
         }
     } catch (const ClosedQueue& err) {
         _keep_running = false;
     }
 }
 
-ClientReceiver::~ClientReceiver() {}
+ClientReceiver::~ClientReceiver() = default;

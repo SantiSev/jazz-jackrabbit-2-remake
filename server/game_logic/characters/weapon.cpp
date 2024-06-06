@@ -1,6 +1,5 @@
 #include "weapon.h"
 
-
 void Weapon::set_weapon_name(size_t name) { this->weapon_name = name; }
 
 size_t Weapon::get_weapon_name() const { return weapon_name; }

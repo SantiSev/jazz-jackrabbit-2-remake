@@ -12,7 +12,7 @@
 
 int main() {
     engine::Window window(800, 600, true, false);
-    auto renderer = window.getRenderer();
+    auto renderer = window.get_renderer();
 
     engine::ResourcePool resource_pool(renderer);
     resource_pool.load_texture("assets/screens.png");

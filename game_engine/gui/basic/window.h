@@ -27,8 +27,8 @@ public:
     void clear();
     void render();
 
-    SDL_Window* getWindow() const;
-    SDL_Renderer* getRenderer() const;
+    SDL_Window* get_window() const;
+    SDL_Renderer* get_renderer() const;
 
     ~Window();
 };
