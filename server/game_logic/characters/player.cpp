@@ -161,10 +161,25 @@ void Player::update_db() {
 
 void Player::handle_colision(CollisionObject& other) {
 
-    if (is_touching_bool(other)) {
-        velocity.y = 10;
+    CollisionFace face = is_touching(other);
+
+    if (face == CollisionFace::LEFT ||
+        face == CollisionFace::RIGHT) {  // if im touching something on my side, then i cant move
+                                         // into it
+        velocity.x = 0;
+    } else if (face == CollisionFace::TOP) {  // if i touch something on top, then i cant move into
+                                              // it and i stop moving up
+        velocity.y = 0;
+    } else if (face == CollisionFace::BOTTOM) {
+        position.y = other.get_bottom_hitbox_side();
+        velocity.y = 10;  // set a small value to avoid getting stuck in the air while walking off
+                          // platform
         on_floor = true;
+    } else if (face == CollisionFace::NONE) {
+        on_floor = false;
     }
+
+    other.handle_colision(*this);
 }
 
 bool Player::is_on_floor() const { return on_floor; }
