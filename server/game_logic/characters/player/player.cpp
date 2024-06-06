@@ -119,7 +119,11 @@ uint8_t Player::get_state() const { return state; }
 
 bool Player::is_player_alive() const { return is_alive; }
 
-void Player::kill_player() { is_alive = false; }
+void Player::kill_player() {
+    is_alive = false;
+    velocity.x = 0;
+    velocity.y = 0;
+}
 
 void Player::reset_intoxication() { is_intoxicated = false; }
 
@@ -202,4 +206,9 @@ Bullet Player::shoot() {
         Bullet bullet(*this);
         return bullet;
     }
+}
+
+bool Player::is_doing_action_state() const {
+    return (state == STATE_SHOOTING_LEFT || state == STATE_SHOOTING_RIGHT ||
+            state == STATE_ESPECIAL_RIGHT || state == STATE_ESPECIAL_LEFT);
 }

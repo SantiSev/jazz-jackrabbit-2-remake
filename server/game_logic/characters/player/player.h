@@ -125,6 +125,8 @@ public:
     void jump();
 
     int get_direction() const;
+
+    bool is_doing_action_state() const;
 };
 
 

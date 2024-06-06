@@ -197,47 +197,63 @@ void Match::run_command(const CommandDTO& dto) {
     switch (dto.command) {
         case MOVE_LEFT:
             player->move_left();
-            player->set_state(STATE_MOVING_LEFT);
+            if (player->is_on_floor()) {
+                if (player->is_player_intoxicated()) {
+                    player->set_state(STATE_INTOXICATED_MOV_LEFT);
+                } else {
+                    player->set_state(STATE_MOVING_LEFT);
+                }
+            }
             break;
         case MOVE_RIGHT:
             player->move_right();
-            player->set_state(STATE_MOVING_RIGHT);
+            if (player->is_on_floor()) {
+                if (player->is_player_intoxicated()) {
+                    player->set_state(STATE_INTOXICATED_MOV_RIGHT);
+                } else {
+                    player->set_state(STATE_MOVING_RIGHT);
+                }
+            }
             break;
         case MOVE_LEFT_FAST:
-            //                        player.move_left_fast();
-            player->set_state(STATE_SPRINTING_LEFT);
+            if (player->is_on_floor()) {
+                // player.move_left_fast();
+                player->set_state(STATE_SPRINTING_LEFT);
+            }
             break;
         case MOVE_RIGHT_FAST:
-            //            player.move_right_fast();
-            player->set_state(STATE_SPRINTING_RIGHT);
+            if (player->is_on_floor()) {
+                // player.move_right_fast();
+                player->set_state(STATE_SPRINTING_RIGHT);
+            }
             break;
         case JUMP:
-            if (player->is_on_floor()) {
-                player->jump();
+            if (!player->is_on_floor()) {
+                break;
             }
-            player->set_state(STATE_JUMPING);
+
+            player->jump();
+            if (player->is_facing_right()) {
+                player->set_state(STATE_JUMPING_RIGHT);
+            } else {
+                player->set_state(STATE_JUMPING_LEFT);
+            }
             break;
         case SPECIAL_ATTACK:
             if (player->is_player_intoxicated() || !player->is_special_available()) {
                 break;
             }
             //            player.especial_attack();
-            player->set_state(
-                    STATE_ESPECIAL_ATTACKING);  // ver si importa el is_facing_to_the_right
+            if (player->is_facing_right()) {
+                player->set_state(STATE_ESPECIAL_RIGHT);
+            } else {
+                player->set_state(STATE_ESPECIAL_LEFT);
+            }
             player->reset_special_attack();
-            break;
-        case LOOK_UP:
-            //            player.look_up();
-            player->set_state(STATE_AIMING_UP);
-            break;
-        case DUCK_DOWN:
-            //            player.duck_down();
-            player->set_state(STATE_CROUNCHING);
             break;
         case SHOOT:
             if (!player->is_player_intoxicated()) {
                 player->shoot();
-
 
                 Bullet bullet = player->shoot();
                 collision_manager.add_dynamic_body(bullet);
@@ -249,9 +265,6 @@ void Match::run_command(const CommandDTO& dto) {
                     player->set_state(STATE_SHOOTING_LEFT);
                 }
             }
-            break;
-        case TAUNT:
-            player->set_state(STATE_TAUNTING);
             break;
         default:
             break;
@@ -279,11 +292,6 @@ void Match::update_players() {
         if (player->is_player_intoxicated()) {
             player->decrease_intoxication_cooldown();
             if (player->get_intoxication_cooldown() == 0) {
-                if (player->is_facing_right()) {
-                    player->set_state(STATE_IDLE_RIGHT);
-                } else {
-                    player->set_state(STATE_IDLE_LEFT);
-                }
                 player->reset_intoxication();
             }
         }
@@ -293,8 +301,17 @@ void Match::update_players() {
         if (player->is_player_alive() && player->get_health() == MIN_HEALTH) {
             player->kill_player();
             player->set_state(STATE_DEAD);
-            // player.set_velocity_to_zero();
             player->reset_revive_cooldown();
+        }
+        if (player->is_on_floor() && (player->get_state() == STATE_FALLING)) {
+            if (player->is_facing_right()) {
+                player->set_state(STATE_IDLE_RIGHT);
+            } else {
+                player->set_state(STATE_IDLE_LEFT);
+            }
+        }
+        if (!player->is_on_floor() && (player->velocity.y > 0) && player->is_doing_action_state()) {
+            player->set_state(STATE_FALLING);
         }
     }
 }
