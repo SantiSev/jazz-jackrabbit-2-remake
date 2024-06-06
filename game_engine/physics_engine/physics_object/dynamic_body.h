@@ -16,11 +16,11 @@ public:
     DynamicBody(int x, int y, int width, int height, Vector2D base_speed);
 
 
-    void virtual update_db();
+    virtual void update_db();
 
     void handle_colision(CollisionObject& other) override;
 
-    void virtual print_info();
+    virtual void print_info();
 };
 
 

@@ -147,7 +147,7 @@ void Player::jump() {
     velocity.y = -JUMP_SPEED;
 }
 
-void Player::update_db() override {
+void Player::update_db() {
     if (!on_floor) {
         velocity.y += GRAVITY;
 
@@ -159,3 +159,7 @@ void Player::update_db() override {
 
     print_info();
 }
+
+bool Player::is_on_floor() const { return on_floor; }
+
+bool Player::is_facing_right() const { return direction == 1; }

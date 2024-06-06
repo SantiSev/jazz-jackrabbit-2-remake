@@ -142,7 +142,11 @@ if (GRAPHICS)
         # Extract the file name without extension to use as the target name
         get_filename_component(target_name ${file} NAME_WE)
 
-        add_executable(${target_name} ${file} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
+        add_executable(${target_name} ${file} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE}
+                server/game_logic/areaObjects/bullet.cpp
+                server/game_logic/areaObjects/bullet.h
+                server/game_logic/platforms/box_platform.cpp
+                server/game_logic/platforms/box_platform.h)
         target_link_libraries(${target_name}
             SDL2main
             SDL2::SDL2

@@ -107,6 +107,8 @@ public:
 
     //------- Game Logic Methods --------
 
+    bool is_on_floor() const;
+    bool is_facing_right() const;
     void kill_player();
 
     //------- Movement Methods --------
