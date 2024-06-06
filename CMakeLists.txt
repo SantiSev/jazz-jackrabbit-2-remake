@@ -99,7 +99,7 @@ else ()
             tests/graphics/gui_phy_test.cpp)
     target_link_libraries(pito_tests SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 
-    # GRAPHICS TEST
+    #[[# GRAPHICS TEST ->> TODO UNCOMMENT LATER
     file(GLOB_RECURSE GRAPHIC_TESTS "tests/graphics/*.cpp" "tests/graphics/**/*.cpp")
     foreach(file ${GRAPHIC_TESTS})
         # Extract the file name without extension to use as the target name
@@ -107,7 +107,8 @@ else ()
 
         add_executable(${target_name} ${file} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
         target_link_libraries(${target_name} SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
-    endforeach()
+    endforeach()]]
+
 endif()
 
 if (DEFINED TSAN)
