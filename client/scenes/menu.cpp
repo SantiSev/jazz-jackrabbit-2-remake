@@ -33,14 +33,14 @@ MenuScene::MenuScene(engine::Window& window, EventLoop* event_loop,
     QuitButton* quit_button =
             new QuitButton(renderer, resource_pool, quit_button_d_rect, game_running, menu_running);
     buttons.push_back(quit_button);
-
-    // Add buttons to mouse signal of event loop
-    event_loop->mouse.add_on_click_signal_obj(quit_button);
-    event_loop->mouse.add_on_click_signal_obj(create_match_button);
-    event_loop->mouse.add_on_click_signal_obj(join_match_button);
 }
 
 void MenuScene::start() {
+    // Add buttons to mouse signal of event loop
+    for (auto button: buttons) {
+        event_loop->mouse.add_on_click_signal_obj(button);
+    }
+
     Uint32 frame_start = 0;
     Uint32 frame_time = 0;
     const int frame_delay = 1000 / 60;
@@ -68,14 +68,14 @@ void MenuScene::start() {
             SDL_Delay(frame_delay - frame_time);
         }
     }
-}
 
-MenuScene::~MenuScene() {
     // Disconnect from mouse signals
     for (auto button: buttons) {
         event_loop->mouse.remove_on_click_signal_obj(button);
     }
+}
 
+MenuScene::~MenuScene() {
     // Free memory
     delete background;
     for (auto button: buttons) {
