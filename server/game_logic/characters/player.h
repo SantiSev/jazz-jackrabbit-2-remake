@@ -6,11 +6,10 @@
 #include <vector>
 
 #include "../../../common/common_constants.h"
-#include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
 
 #include "weapon.h"
 
-class Player: public DynamicBody {
+class Player {
 private:
     // game info
 
