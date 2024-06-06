@@ -65,7 +65,7 @@ Client::Client(const std::string& host, const std::string& port):
 // }
 
 void Client::start() {
-    Menu menu(window, event_loop, resource_pool, game_running, menu_running);
+    Menu menu(window, event_loop, resource_pool, game_running, menu_running, message_handler);
 
     event_loop->start();
 

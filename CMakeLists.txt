@@ -134,6 +134,7 @@ if (EVENTS)
     )
 endif()    
 
+
 # GRAPHICS TEST
 if (GRAPHICS)
     file(GLOB_RECURSE GRAPHIC_TESTS "tests/graphics/*.cpp" "tests/graphics/**/*.cpp")
@@ -142,16 +143,18 @@ if (GRAPHICS)
         get_filename_component(target_name ${file} NAME_WE)
 
         add_executable(${target_name} ${file} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
-        target_link_libraries(${target_name} 
-            SDL2main 
+        target_link_libraries(${target_name}
+            SDL2main
             SDL2::SDL2
-            SDL2_image::SDL2_image 
-            SDL2_ttf::SDL2_ttf 
+            SDL2_image::SDL2_image
+            SDL2_ttf::SDL2_ttf
             SDL2_mixer::SDL2_mixer)
     endforeach()
 endif()
 
-if(PHYSICS) 
+
+if(PHYSICS)
+
     find_package(Catch2 REQUIRED)
 
     file(GLOB_RECURSE SOURCES_CLIENT_PROTOCOL "client/protocol/*.cpp")
@@ -159,6 +162,22 @@ if(PHYSICS)
     file(GLOB_RECURSE SOURCES_SERVER_GAME_LOGIC "server/game_logic/*.cpp")
 
     add_executable(tests tests/unit_tests/physics_test.cpp
+        ${SOURCES_COMMON}
+        ${SOURCES_GAME_ENGINE}
+        ${HEADERS_COMMON}
+        ${HEADERS_GAME_ENGINE}
+        ${SOURCES_CLIENT_PROTOCOL}
+        ${SOURCES_SERVER_PROTOCOL}
+        ${SOURCES_SERVER_GAME_LOGIC}
+        ${HEADERS_SERVER}
+        ${HEADERS_CLIENT}
+    )
+    target_link_libraries(tests PRIVATE
+        Catch2::Catch2WithMain
+        SDL2main
+        SDL2::SDL2
+        SDL2_image::SDL2_image
+        SDL2_ttf::SDL2_ttf
         ${SOURCES_COMMON} 
         ${SOURCES_GAME_ENGINE} 
         ${HEADERS_COMMON} 
@@ -192,3 +211,4 @@ endif()
 if (verbose)
     set(CMAKE_VERBOSE_MAKEFILE ON)
 endif()
+

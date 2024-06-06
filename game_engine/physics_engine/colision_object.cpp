@@ -9,15 +9,13 @@ CollisionObject::CollisionObject(int hitbox_width, int hitbox_height):
 CollisionObject::CollisionObject(int x, int y, int hitbox_width, int hitbox_height):
         GameObject(x, y), hitbox_width(hitbox_width), hitbox_height(hitbox_height) {}
 
-int CollisionObject::get_left_hitbox_side() const { return get_position().get_x(); }
+int CollisionObject::get_left_hitbox_side() const { return position.x; }
 
-int CollisionObject::get_right_hitbox_side() const { return get_position().get_x() + hitbox_width; }
+int CollisionObject::get_right_hitbox_side() const { return position.x + hitbox_width; }
 
-int CollisionObject::get_top_hitbox_side() const { return get_position().get_y(); }
+int CollisionObject::get_top_hitbox_side() const { return position.y; }
 
-int CollisionObject::get_bottom_hitbox_side() const {
-    return get_position().get_y() + hitbox_height;
-}
+int CollisionObject::get_bottom_hitbox_side() const { return position.y + hitbox_height; }
 
 int CollisionObject::get_hitbox_width() const { return hitbox_width; }
 
