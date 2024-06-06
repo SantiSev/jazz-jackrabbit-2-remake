@@ -3,15 +3,9 @@
 #include <cstdint>
 #include <utility>
 
-#include "../../../common/common_constants.h"
 
-#define MAX_HEALTH 100
-#define MIN_HEALTH 0
-#define STARTING_POINTS 0
-#define REVIVE_COOLDOWN 5
-#define SPECIAL_COOLDOWN 10
-
-Player::Player(size_t id, std::string name, const uint8_t& character):
+Player::Player(size_t id, std::string name, const uint8_t& character, int x, int y):
+        DynamicBody(x, y, PLAYER_WIDTH, PLAYER_HEIGHT, Vector2D(0, DEFAULT_SPEED)),
         id(id),
         name(std::move(name)),
         health(MAX_HEALTH),
@@ -57,9 +51,6 @@ void Player::set_health(const size_t new_health) { this->health = new_health; }
 
 void Player::set_state(const uint8_t new_state) { this->state = new_state; }
 
-bool Player::is_facing_to_the_right() const { return is_facing_right; }
-
-bool Player::is_player_jumping() const { return is_jumping; }
 
 bool Player::is_player_intoxicated() const { return is_intoxicated; }
 
@@ -141,9 +132,30 @@ void Player::decrease_special_attack_cooldown() { special_cooldown--; }
 
 void Player::reset_special_attack() { special_cooldown = SPECIAL_COOLDOWN; }
 
+void Player::move_left() {
+    direction = -1;
+    velocity.x = -DEFAULT_SPEED_X;
+}
 
-void Player::move_left() {}
+void Player::move_right() {
+    direction = 1;
+    velocity.x = DEFAULT_SPEED_X;
+}
 
-void Player::move_right() {}
+void Player::jump() {
+    on_floor = false;
+    velocity.y = -JUMP_SPEED;
+}
 
-void Player::jump() {}
+void Player::update_db() override {
+    if (!on_floor) {
+        velocity.y += GRAVITY;
+
+    } else {
+        velocity.x -= FRICCTION * direction;
+    }
+
+    position += velocity;
+
+    print_info();
+}

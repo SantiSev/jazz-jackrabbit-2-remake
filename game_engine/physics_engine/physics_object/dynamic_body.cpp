@@ -4,6 +4,8 @@
 
 #include "dynamic_body.h"
 
+#include <iostream>
+
 DynamicBody::DynamicBody(int width, int height): CollisionObject(width, height) {}
 
 DynamicBody::DynamicBody(int x, int y, int width, int height):
@@ -13,6 +15,13 @@ DynamicBody::DynamicBody(int x, int y, int width, int height, Vector2D base_spee
         CollisionObject(x, y, width, height), velocity(base_speed) {}
 
 void DynamicBody::update_db() {}
+
+void DynamicBody::print_info() {
+    // also print current time
+    std::cout << "--------------------------------" << std::endl;
+    std::cout << "| Position: " << position.x << " , " << position.y << " |" << std::endl;
+    std::cout << "| Velocity: " << velocity.x << " , " << velocity.y << " |" << std::endl;
+}
 
 void DynamicBody::handle_colision(
         CollisionObject& other) {  // other players cant overlap with other players

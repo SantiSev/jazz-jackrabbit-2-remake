@@ -42,6 +42,13 @@ const size_t STARTING_MATCH_TIME = 60;
 #define REVIVE_COOLDOWN 5
 #define INTOXICATON_COOLDOWN 4
 #define SPECIAL_COOLDOWN 3
+#define PLAYER_WIDTH 50
+#define PLAYER_HEIGHT 50
+#define DEFAULT_SPEED_Y 10
+#define DEFAULT_SPEED_X 10
+#define JUMP_SPEED 25
+#define GRAVITY 1
+#define FRICCTION 0.1
 
 // Player states
 #define STATE_IDLE_RIGHT 0x00

@@ -2,7 +2,6 @@
 #define TP_FINAL_PLAYER_H
 
 #include <cstdint>
-#include <cstdio>
 #include <string>
 #include <vector>
 
@@ -11,83 +10,109 @@
 
 #include "weapon.h"
 
-class Player {
+class Player: public DynamicBody {
 private:
-    // DynamicBody character_body; // Commented by Agus: No compile
+    // game info
+
     size_t id;
     std::string name;
     size_t health;
-    uint8_t character;
+    uint8_t character;  // handle de personaje
     size_t points;
     uint8_t state;
-    bool is_facing_right = true;
+
+    // game statuses
+
     bool is_alive = true;
     bool is_intoxicated = false;
+
+    // game cooldowns
+
     size_t special_cooldown = 0;
     size_t intoxication_cooldown = INTOXICATON_COOLDOWN;
     size_t revive_cooldown = REVIVE_COOLDOWN;
+
+    // game weapons
+
     std::vector<Weapon> weapons;
     size_t selected_weapon = DEFAULT_WEAPON;
-    bool is_jumping = false;
+
+    // game logic
+    bool on_floor = true;
+    int direction = 1;
+
 
 public:
-    Player(size_t id, std::string name, const uint8_t& character);
+    Player(size_t id, std::string name, const uint8_t& character, int x, int y);
+
+
+    void update_db() override;
+
+    //------- Getters --------
 
     size_t get_id() const;
-    Vector2D get_position() const;
     std::string get_name();
     size_t get_health() const;
     uint8_t get_character() const;
     size_t get_points() const;
+    uint8_t get_state() const;
+    Weapon get_weapon(size_t weapon);
+
+    //------- Setters --------
+
     void set_id(size_t id);
     void set_name(std::string name);
     void set_health(size_t health);
     void set_character(uint8_t new_character);
+    void set_state(const uint8_t new_state);
+    void set_starting_weapon();
+
+    //------- Point Methods --------
+
     void add_points(size_t points);
     void increase_points(size_t new_points);
+
+    //------- Health Methods --------
+
     void decrease_health(size_t susbstract_health);
     void increase_health(size_t add_health);
+
+    //------- Revive Methods --------
+
     void revive();
     void decrease_revive_cooldown();
     bool can_revive() const;
+    void reset_revive_cooldown();
     bool is_player_alive() const;
+
+    //------- Weapon Methods --------
+
     void select_weapon(size_t weapon_number);
     void shoot_selected_weapon();
     void add_weapon_ammo(size_t ammo, size_t weapon);
-    void reset_revive_cooldown();
-    uint8_t get_state() const;
-    void set_starting_weapon();
 
-    Weapon get_weapon(size_t weapon);
+    //------- Intoxication Methods --------
 
-    void set_state(const uint8_t new_state);
-
-    bool is_facing_to_the_right() const;
-
-    bool is_player_jumping() const;
-
+    void reset_intoxication();
     bool is_player_intoxicated() const;
+    void decrease_intoxication_cooldown();
+    size_t get_intoxication_cooldown() const;
+
+    //------- Special Attack Methods --------
+
+    int get_special_cooldown();
+    bool is_special_available() const;
+    void decrease_special_attack_cooldown();
+    void reset_special_attack();
+
+    //------- Game Logic Methods --------
 
     void kill_player();
 
-    void reset_intoxication();
-
-    void decrease_intoxication_cooldown();
-
-    size_t get_intoxication_cooldown() const;
-
-    int get_special_cooldown();
-
-    bool is_special_available() const;
-
-    void decrease_special_attack_cooldown();
-
-    void reset_special_attack();
+    //------- Movement Methods --------
 
     void move_left();
-
     void move_right();
-
     void jump();
 };
 
