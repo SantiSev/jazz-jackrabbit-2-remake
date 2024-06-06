@@ -4,7 +4,7 @@
 #include <utility>
 
 Player::Player(size_t id, std::string name, const uint8_t& character, int x, int y):
-        DynamicBody(x, y, PLAYER_WIDTH, PLAYER_HEIGHT, Vector2D(0, DEFAULT_SPEED_Y)),
+        DynamicBody(x, y, PLAYER_WIDTH, PLAYER_HEIGHT, Vector2D(NO_SPEED, DEFAULT_SPEED_Y)),
         id(id),
         name(std::move(name)),
         health(MAX_HEALTH),
@@ -170,3 +170,5 @@ void Player::handle_colision(CollisionObject& other) {
 bool Player::is_on_floor() const { return on_floor; }
 
 bool Player::is_facing_right() const { return direction == 1; }
+
+int Player::get_direction() const { return direction; }

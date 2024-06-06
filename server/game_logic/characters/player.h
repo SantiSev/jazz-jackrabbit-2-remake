@@ -117,6 +117,8 @@ public:
     void move_left();
     void move_right();
     void jump();
+
+    int get_direction() const;
 };
 
 

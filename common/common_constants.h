@@ -47,6 +47,7 @@ const size_t STARTING_MATCH_TIME = 60;
 #define JUMP_SPEED 25
 #define GRAVITY 1
 #define FRICCTION 0.1f
+#define NO_SPEED 0
 
 // Size configs
 #define ENEMY_WIDTH 50
@@ -80,5 +81,10 @@ const size_t STARTING_MATCH_TIME = 60;
 #define SECOND_WEAPON 2
 #define THIRD_WEAPON 3
 #define NUM_OF_WEAPONS 4
+
+// Bullet config
+#define BULLET_WIDTH 10
+#define BULLET_HEIGHT 10
+#define BULLET_SPEED 20
 
 #endif
