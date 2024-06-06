@@ -2,7 +2,6 @@
 #define TP_FINAL_PLAYER_H
 
 #include <cstdint>
-#include <cstdio>
 #include <string>
 #include <vector>
 
@@ -10,12 +9,6 @@
 #include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
 
 #include "weapon.h"
-
-#define MAX_HEALTH 100
-#define MIN_HEALTH 0
-#define STARTING_POINTS 0
-#define REVIVE_COOLDOWN 5
-
 
 class Player {
 private:
@@ -26,11 +19,15 @@ private:
     uint8_t character;
     size_t points;
     uint8_t state;
-    // bool is_facing_right; (?)
+    bool is_facing_right = true;
     bool is_alive = true;
+    bool is_intoxicated = false;
+    size_t special_cooldown = 0;
+    size_t intoxication_cooldown = INTOXICATON_COOLDOWN;
     size_t revive_cooldown = REVIVE_COOLDOWN;
-    std::vector<Weapon> weapons{};
+    std::vector<Weapon> weapons;
     size_t selected_weapon = DEFAULT_WEAPON;
+    bool is_jumping = false;
 
 public:
     Player(size_t id, std::string name, const uint8_t& character);
@@ -52,12 +49,39 @@ public:
     void revive();
     void decrease_revive_cooldown();
     bool can_revive() const;
+    bool is_player_alive() const;
     void select_weapon(size_t weapon_number);
     void shoot_selected_weapon();
-    void get_weapon_ammo(size_t ammo, size_t weapon);
+    void add_weapon_ammo(size_t ammo, size_t weapon);
     void reset_revive_cooldown();
     uint8_t get_state() const;
     void set_starting_weapon();
+
+    Weapon get_weapon(size_t weapon);
+
+    void set_state(const uint8_t new_state);
+
+    bool is_facing_to_the_right() const;
+
+    bool is_player_jumping() const;
+
+    bool is_player_intoxicated() const;
+
+    void kill_player();
+
+    void reset_intoxication();
+
+    void decrease_intoxication_cooldown();
+
+    size_t get_intoxication_cooldown() const;
+
+    int get_special_cooldown();
+
+    bool is_special_available() const;
+
+    void decrease_special_attack_cooldown();
+
+    void reset_special_attack();
 };
 
 

@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "../../server/game_logic/characters/enemies.h"
+#include "../../server/game_logic/characters/enemy.h"
 #include "../../server/game_logic/characters/player.h"
 #include "../../server/game_logic/characters/weapon.h"
 
