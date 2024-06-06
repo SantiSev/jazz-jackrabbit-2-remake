@@ -3,7 +3,6 @@
 #include <cstdint>
 #include <utility>
 
-
 Player::Player(size_t id, std::string name, const uint8_t& character, int x, int y):
         DynamicBody(x, y, PLAYER_WIDTH, PLAYER_HEIGHT, Vector2D(0, DEFAULT_SPEED_Y)),
         id(id),

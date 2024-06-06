@@ -22,8 +22,8 @@ private:
     std::shared_ptr<Queue<std::shared_ptr<Message>>> event_queue;  // shared with the receiver
     std::list<ServerThreadManager*> clients;
     MatchMessageHandler message_handler;
-    std::vector<Player> players;
-    std::vector<Enemy> enemies;
+    std::vector<std::shared_ptr<Player>> players;
+    std::vector<std::shared_ptr<Enemy>> enemies;
     //    std::vector<Proyectile> proyectiles;
     std::vector<std::string> items;
     size_t players_connected = 0;
@@ -32,7 +32,7 @@ private:
     size_t seconds = STARTING_MATCH_TIME % 60;
     ClientMonitor client_monitor;
     uint8_t map;
-    //    CollisionManager collision_manager;
+    CollisionManager collision_manager;
 
 public:
     // Constructor
@@ -41,9 +41,9 @@ public:
     // Kill the thread
     void stop() override;
     // Destroyer
-    ~Match() = default;
+    ~Match() override = default;
 
-    Player& get_player(size_t id);
+    std::shared_ptr<Player> get_player(size_t id);
 
     void add_player_to_game(const std::string& player_name, const uint8_t& character);
 
@@ -56,10 +56,6 @@ public:
     size_t get_num_players();
 
     size_t get_max_players() const;
-
-    int get_minutes();
-
-    int get_seconds();
 
     void countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
                          const std::chrono::time_point<std::chrono::system_clock>& endTime);
@@ -83,7 +79,9 @@ public:
 
     void initiate_enemies();
 
-    void update_proyectiles();
+    Vector2D select_spawn_point();
+
+    void patrol_move_enemies();
 };
 
 #endif

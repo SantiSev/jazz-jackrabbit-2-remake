@@ -24,13 +24,12 @@ private:
     uint8_t enemy_type;
     bool is_alive = true;
     size_t revive_cooldown = REVIVE_COOLDOWN;
-    bool is_facing_right = true;
-    bool is_intoxicated = false;
-    size_t selected_weapon = DEFAULT_WEAPON;
-    bool is_jumping = false;
+    Vector2D spawn_position = Vector2D(0, 0);
 
 public:
-    Enemy(int width, int height, const uint8_t& enemy_type, const size_t& id);
+    Enemy(const uint8_t& enemy_type, const size_t& id, int x, int y);
+
+    void update_db() override;
 
     //--------Getters--------
 
@@ -41,7 +40,6 @@ public:
 
     bool is_enemy_alive() const;
     bool is_enemy_jumping() const;
-    bool is_enemy_facing_to_the_right() const;
 
     //--------Setters--------
 
@@ -70,11 +68,26 @@ public:
     void move_right();
     void jump();
 
+    // game logic
+    bool on_floor = true;
+    int direction = 1;
+
+    //------- Game Logic Methods --------
+
+    bool is_on_floor() const;
+    bool is_facing_right() const;
+    void kill_enemy();
+
+
     ~Enemy() override = default;
 
     void kill();
 
     void set_state(const uint8_t new_state);
+
+    void set_spawn_point(const Vector2D& new_spawn_point);
+
+    Vector2D get_spawn_point();
 };
 
 
