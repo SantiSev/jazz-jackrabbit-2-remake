@@ -16,9 +16,10 @@ catch2
 ## Devs requirements
 
 ```bash
-sudo apt install \
+sudo apt install -y \
 pre-commit \
-cppcheck
+cppcheck \
+valgrind
 
 pre-commit install
 ```
