@@ -7,12 +7,16 @@ Map::Map(const std::string& tileset_name, const std::string& yaml_name,
     auto texture = resource_pool->get_texture(tileset_name);
     for (auto obj: map["objects"]) {
         auto s_rect_yaml = obj["s_rect"];
-        auto d_rect_yaml = obj["d_rect"];
         SDL_Rect s_rect = {s_rect_yaml["x"].as<int>(), s_rect_yaml["y"].as<int>(),
                            s_rect_yaml["w"].as<int>(), s_rect_yaml["h"].as<int>()};
-        SDL_Rect d_rect = {d_rect_yaml["x"].as<int>(), d_rect_yaml["y"].as<int>(),
-                           d_rect_yaml["w"].as<int>(), d_rect_yaml["h"].as<int>()};
-        sprites.emplace_back(texture, s_rect, d_rect);
+
+        auto d_rect_list_yaml = obj["d_rect_list"];
+        for (auto d_rect_obj: d_rect_list_yaml) {
+            auto d_rect_yaml = d_rect_obj["d_rect"];
+            SDL_Rect d_rect = {d_rect_yaml["x"].as<int>(), d_rect_yaml["y"].as<int>(),
+                               d_rect_yaml["w"].as<int>(), d_rect_yaml["h"].as<int>()};
+            sprites.emplace_back(texture, s_rect, d_rect);
+        }
     }
 }
 
