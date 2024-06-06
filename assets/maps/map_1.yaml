@@ -1,23 +1,28 @@
 objects:
     - name: "background_1"
-      - s_rect:
-        x: 256
-        y: 0
-        w: 32
-        h: 32
-      - d_rect:
-        x: 0
-        y: 0
-        w: 800
-        h: 600
+      repeat_h: 1
+      repeat_v: 1
+      s_rect:
+          x: 0
+          y: 768
+          w: 255
+          h: 158
+      d_rect:
+          x: 0
+          y: 0
+          w: 800
+          h: 600
+
     - name: "wooden_block_1"
-      - s_rect:
-        x: 0
-        y: 768
-        w: 255
-        h: 158
-      - d_rect:
-        x: 0
-        y: 0
-        w: 800
-        h: 600
+      repeat_h: 30
+      repeat_v: 1
+      s_rect:
+          x: 256
+          y: 0
+          w: 32
+          h: 32
+      d_rect:
+          x: 0
+          y: 568
+          w: 32
+          h: 32
