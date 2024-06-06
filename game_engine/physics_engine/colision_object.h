@@ -6,6 +6,8 @@
 
 #include "colision_face.h"
 
+class Bullet;
+
 /*
  * For every ColisionObject, its fundamental to take into account
  * 1. This class is the base class for all objects that can collide
@@ -54,6 +56,7 @@ public:
      * and act upon it, i can override this method and implement it.
      */
     virtual void handle_colision(CollisionObject& other) = 0;
+    virtual void handle_impact(Bullet& bullet) {}
 
 
     virtual ~CollisionObject() = default;

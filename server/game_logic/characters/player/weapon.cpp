@@ -12,5 +12,20 @@ void Weapon::set_is_empty(bool is_weapon_empty) { this->is_empty = is_weapon_emp
 bool Weapon::is_weapon_empty() const { return is_empty; }
 
 void Weapon::decrease_ammo() { this->ammo--; }
+
+bool Weapon::shoot() {
+    bool can_shoot = !is_empty;
+    if (can_shoot) {
+        if (weapon_name != DEFAULT_WEAPON) {
+            this->ammo--;
+        }
+        if (ammo == 0) {
+            this->is_empty = true;
+        }
+        return true;
+    }
+    return false;
+}
+
 Weapon::Weapon() = default;
 Weapon::~Weapon() = default;

@@ -8,8 +8,7 @@
 
 #include "../../../common/common_constants.h"
 #include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
-
-#include "weapon.h"
+#include "player/weapon.h"
 
 #define MAX_HEALTH 100
 #define MIN_HEALTH 0
@@ -89,6 +88,8 @@ public:
     void set_spawn_point(const Vector2D& new_spawn_point);
 
     Vector2D get_spawn_point();
+
+    void handle_impact(Bullet& bullet) override;
 };
 
 

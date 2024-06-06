@@ -6,24 +6,29 @@
 #include <memory>
 
 #include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
-#include "../../game_logic/characters/player.h"
+#include "../characters/player/player.h"
 
 
 class Bullet: public DynamicBody {
 private:
-    std::shared_ptr<Player>& player_owner;
+    Player& player_owner;
     size_t life_span = 10;
-    bool impacted = false;
+    bool is_active = true;
+    int bullet_damage = 1;
+    uint8_t bullet_type = 0x00;
 
 
 public:
-    explicit Bullet(std::shared_ptr<Player>& player_owner);
+    explicit Bullet(Player& player_owner);
 
-    void decrease_life_span();
     size_t get_life_span() const;
 
     void update_db() override;
     void handle_colision(CollisionObject& other) override;
+
+    size_t get_damage() const;
+
+    void get_player_points(size_t points);
 };
 
 

@@ -8,10 +8,11 @@
 
 #include "../../game_engine/physics_engine/collision_manager.h"
 #include "../../server/game_logic/characters/enemy.h"
-#include "../../server/game_logic/characters/player.h"
 #include "../protocol/match_message_handler.h"
 #include "../protocol/server_thread_manager.h"
 #include "./client_monitor.h"
+#include "areaObjects/bullet.h"
+#include "characters/player/player.h"
 
 
 class Match: public Thread {
@@ -24,7 +25,7 @@ private:
     MatchMessageHandler message_handler;
     std::vector<std::shared_ptr<Player>> players;
     std::vector<std::shared_ptr<Enemy>> enemies;
-    //    std::vector<Proyectile> proyectiles;
+    std::vector<std::shared_ptr<Bullet>> bullets;
     std::vector<std::string> items;
     size_t players_connected = 0;
     size_t required_players;

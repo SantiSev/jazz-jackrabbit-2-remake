@@ -3,8 +3,12 @@
 #include <cstdint>
 #include <utility>
 
-Player::Player(size_t id, std::string name, const uint8_t& character, int x, int y):
+#include "../../areaObjects/bullet.h"
+
+Player::Player(size_t id, std::string name, const uint8_t& character, int x, int y,
+               CollisionManager& collision_manager):
         DynamicBody(x, y, PLAYER_WIDTH, PLAYER_HEIGHT, Vector2D(NO_SPEED, DEFAULT_SPEED_Y)),
+        collision_manager(collision_manager),
         id(id),
         name(std::move(name)),
         health(MAX_HEALTH),
@@ -48,8 +52,8 @@ void Player::set_name(std::string new_name) { this->name = std::move(new_name); 
 
 void Player::set_health(const size_t new_health) { this->health = new_health; }
 
-void Player::set_state(const uint8_t new_state) { this->state = new_state; }
 
+void Player::set_state(const uint8_t new_state) { this->state = new_state; }
 
 bool Player::is_player_intoxicated() const { return is_intoxicated; }
 
@@ -69,10 +73,8 @@ void Player::increase_health(size_t add_health) {
     }
 }
 
+
 void Player::set_character(uint8_t new_character) { this->character = new_character; }
-
-
-void Player::increase_points(size_t new_points) { this->points += new_points; }
 
 void Player::decrease_revive_cooldown() { this->revive_cooldown--; }
 
@@ -187,3 +189,17 @@ bool Player::is_on_floor() const { return on_floor; }
 bool Player::is_facing_right() const { return direction == 1; }
 
 int Player::get_direction() const { return direction; }
+
+void Player::handle_impact(Bullet& bullet) {
+    decrease_health(bullet.get_damage());
+    if (health == 0) {
+        bullet.get_player_points(PLAYER_KILL_POINTS);
+    }
+}
+
+Bullet Player::shoot() {
+    weapons[selected_weapon].shoot() {
+        Bullet bullet(*this);
+        return bullet;
+    }
+}

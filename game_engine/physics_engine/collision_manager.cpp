@@ -133,4 +133,5 @@ void CollisionManager::clear() {
     for (auto& column: grid) {
         std::fill(column.begin(), column.end(), nullptr);
     }
+    dynamic_bodies.clear();
 }

@@ -50,6 +50,7 @@ void Match::run() {
                 next_message->run(message_handler);
             }
 
+            patrol_move_enemies();
             collision_manager.update();
             update_enemies();
             update_players();
@@ -145,7 +146,7 @@ void Match::add_player_to_game(const std::string& player_name, const uint8_t& ch
     Vector2D pos = select_spawn_point();
     auto new_player =
             std::make_shared<Player>(players_connected, player_name, character, pos.x, pos.y);
-    new_player->set_id(players_connected);
+    new_player->set_id(players_connected);  // todo integrar a player
     collision_manager.add_dynamic_body(new_player);
     players.push_back(new_player);
 }
@@ -176,6 +177,7 @@ std::vector<size_t> Match::get_clients_ids() {
 
 void Match::stop() {
     online = false;
+    collision_manager.clear();
     //    event_queue->close();
     send_end_message_to_players();
     //    for (auto& client: clients) {
@@ -234,7 +236,13 @@ void Match::run_command(const CommandDTO& dto) {
             break;
         case SHOOT:
             if (!player->is_player_intoxicated()) {
-                //                player.shoot();
+                player->shoot();
+
+
+                Bullet bullet = player->shoot();
+                collision_manager.add_dynamic_body(bullet);
+                bullets.emplace_back(bullet);
+
                 if (player->is_facing_right()) {
                     player->set_state(STATE_SHOOTING_RIGHT);
                 } else {

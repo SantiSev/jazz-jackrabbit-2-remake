@@ -1,5 +1,6 @@
 #include "enemy.h"
 
+#include "../areaObjects/bullet.h"
 
 Enemy::Enemy(const uint8_t& enemy_type, const size_t& id, int x, int y):
         DynamicBody(x, y, ENEMY_WIDTH, ENEMY_HEIGHT),
@@ -86,5 +87,12 @@ void Enemy::handle_colision(CollisionObject& other) {
     if (is_touching_bool(other)) {
         velocity.y = 10;
         on_floor = true;
+    }
+}
+
+void Enemy::handle_impact(Bullet& bullet) {
+    decrease_health(bullet.get_damage());
+    if (health == 0) {
+        bullet.get_player_points(ENEMY_KILL_POINTS);
     }
 }

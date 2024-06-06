@@ -2,16 +2,21 @@
 #define TP_FINAL_PLAYER_H
 
 #include <cstdint>
+#include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
-#include "../../../common/common_constants.h"
-#include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
+#include "../../../../common/common_constants.h"
+#include "../../../../game_engine/physics_engine/collision_manager.h"
+#include "../../../../game_engine/physics_engine/physics_object/dynamic_body.h"
 
 #include "weapon.h"
 
 class Player: public DynamicBody {
 private:
+    CollisionManager& collision_manager;
+
     // game info
 
     size_t id;
@@ -43,11 +48,12 @@ private:
 
 
 public:
-    Player(size_t id, std::string name, const uint8_t& character, int x, int y);
-
+    Player(size_t id, std::string name, const uint8_t& character, int x, int y,
+           CollisionManager& collision_manager);
 
     void update_db() override;
     void handle_colision(CollisionObject& other) override;
+    void handle_impact(Bullet& bullet) override;
 
     //------- Getters --------
 
@@ -71,7 +77,6 @@ public:
     //------- Point Methods --------
 
     void add_points(size_t points);
-    void increase_points(size_t new_points);
 
     //------- Health Methods --------
 
@@ -91,6 +96,7 @@ public:
     void select_weapon(size_t weapon_number);
     void shoot_selected_weapon();
     void add_weapon_ammo(size_t ammo, size_t weapon);
+    std::optional<Bullet> shoot();
 
     //------- Intoxication Methods --------
 
