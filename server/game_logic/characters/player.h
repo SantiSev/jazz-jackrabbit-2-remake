@@ -2,58 +2,51 @@
 #define TP_FINAL_PLAYER_H
 
 #include <cstdint>
+#include <cstdio>
 #include <string>
 #include <vector>
 
 #include "../../../common/common_constants.h"
+#include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
 
 #include "weapon.h"
 
+#define MAX_HEALTH 100
+#define MIN_HEALTH 0
+#define STARTING_POINTS 0
+#define REVIVE_COOLDOWN 5
+#define INTOXICATON_COOLDOWN 4
+#define SPECIAL_COOLDOWN 3
+
+
 class Player {
 private:
-    // game info
-
+    // DynamicBody character_body; // Commented by Agus: No compile
     size_t id;
     std::string name;
     size_t health;
-    uint8_t character;  // handle de personaje
+    uint8_t character;
     size_t points;
     uint8_t state;
-
-    // game statuses
-
+    bool is_facing_right = true;
     bool is_alive = true;
     bool is_intoxicated = false;
-
-    // game cooldowns
-
     size_t special_cooldown = 0;
     size_t intoxication_cooldown = INTOXICATON_COOLDOWN;
     size_t revive_cooldown = REVIVE_COOLDOWN;
-
-    // game weapons
-
     std::vector<Weapon> weapons;
     size_t selected_weapon = DEFAULT_WEAPON;
-
-    // game logic
-
-    bool is_facing_right = true;
     bool is_jumping = false;
 
 public:
     Player(size_t id, std::string name, const uint8_t& character);
 
-    //------- Getters --------
-
     size_t get_id() const;
+    Vector2D get_position() const;
     std::string get_name();
     size_t get_health() const;
     uint8_t get_character() const;
     size_t get_points() const;
-
-    //------- Setters --------
-
     void set_id(size_t id);
     void set_name(std::string name);
     void set_health(size_t health);
