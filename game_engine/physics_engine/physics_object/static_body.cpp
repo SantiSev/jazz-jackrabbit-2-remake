@@ -17,27 +17,24 @@ void StaticBody::handle_colision(CollisionObject& other) {
 
     // cast to dynamic_body
 
-
     switch (face) {
-        case CollisionFace::TOP:  // other object is under this object
-                                  // Move other object to be just below this object
-            other.update_position(other.get_position().get_x(),
-                                  get_position().get_y() - other.get_hitbox_height());
+        case CollisionFace::TOP:
+
+            other.position = Vector2D(other.position.x, position.y + get_hitbox_height());
             break;
         case CollisionFace::LEFT:  // other object is on the left of this object
                                    // Move other object to be just to the left of this object
-            other.update_position(get_position().get_x() + other.get_hitbox_width(),
-                                  other.get_position().get_y());
+            other.position = Vector2D(position.x + get_hitbox_width(), other.position.y);
             break;
         case CollisionFace::RIGHT:  // other object is on the right of this object
                                     // Move other object to be just to the right of this object
-            other.update_position(get_position().get_x() - get_hitbox_width(),
-                                  other.get_position().get_y());
+
+            other.position = Vector2D(position.x - other.get_hitbox_width(), other.position.y);
             break;
-        case CollisionFace::BOTTOM:  // other object is above this object
-                                     // Move other object to be just above this object
-            other.update_position(other.get_position().get_x(),
-                                  get_position().get_y() + get_hitbox_height());
+        case CollisionFace::BOTTOM:
+
+            other.position = Vector2D(other.position.x, position.y - other.get_hitbox_height());
+            other.handle_colision(*this);
             break;
         default:
             // No collision detected
