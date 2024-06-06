@@ -47,6 +47,7 @@ public:
 
 
     void update_db() override;
+    void handle_colision(CollisionObject& other) override;
 
     //------- Getters --------
 
