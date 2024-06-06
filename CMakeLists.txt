@@ -10,10 +10,10 @@ add_definitions(-DDATA_PATH="${PROJECT_SOURCE_DIR}/data")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic -pedantic-errors -O0 -ggdb -DDEBUG -fno-inline -std=${CXXSTD} -D _POSIX_C_SOURCE=200809L")
 
-#find_package(SDL2 REQUIRED)
-#find_package(SDL2_ttf REQUIRED)
-#find_package(SDL2_image REQUIRED)
-#find_package(SDL2_mixer REQUIRED)
+find_package(SDL2 REQUIRED)
+find_package(SDL2_ttf REQUIRED)
+find_package(SDL2_image REQUIRED)
+find_package(SDL2_mixer REQUIRED)
 
 option(math "Use math.h" ON)
 option(threads "Use threads" ON)
@@ -73,19 +73,17 @@ if (PRODUCTION)
 
     target_link_libraries(client 
         SDL2main 
-        SDL2 
-        SDL2_image 
-        SDL2_ttf 
+        SDL2::SDL2 
+        SDL2_image::SDL2_image 
+        SDL2_ttf::SDL2_ttf 
         SDL2_mixer
-        yaml-cpp
     )
     target_link_libraries(server 
         SDL2main 
-        SDL2 
-        SDL2_image 
-        SDL2_ttf 
-        SDL2_mixer
-        yaml-cpp
+        SDL2::SDL2 
+        SDL2_image::SDL2_image 
+        SDL2_ttf::SDL2_ttf 
+        SDL2_mixer::SDL2_mixer
     )
 endif()
 
@@ -136,6 +134,7 @@ if (EVENTS)
     )
 endif()    
 
+
 # GRAPHICS TEST
 if (GRAPHICS)
     file(GLOB_RECURSE GRAPHIC_TESTS "tests/graphics/*.cpp" "tests/graphics/**/*.cpp")
@@ -144,18 +143,18 @@ if (GRAPHICS)
         get_filename_component(target_name ${file} NAME_WE)
 
         add_executable(${target_name} ${file} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
-        target_link_libraries(${target_name} 
-            SDL2main 
-            SDL2
-            SDL2_image 
-            SDL2_ttf 
-            SDL2_mixer
-            yaml-cpp
-            )
+        target_link_libraries(${target_name}
+            SDL2main
+            SDL2::SDL2
+            SDL2_image::SDL2_image
+            SDL2_ttf::SDL2_ttf
+            SDL2_mixer::SDL2_mixer)
     endforeach()
 endif()
 
-if(PHYSICS) 
+
+if(PHYSICS)
+
     find_package(Catch2 REQUIRED)
 
     file(GLOB_RECURSE SOURCES_CLIENT_PROTOCOL "client/protocol/*.cpp")
@@ -163,6 +162,22 @@ if(PHYSICS)
     file(GLOB_RECURSE SOURCES_SERVER_GAME_LOGIC "server/game_logic/*.cpp")
 
     add_executable(tests tests/unit_tests/physics_test.cpp
+        ${SOURCES_COMMON}
+        ${SOURCES_GAME_ENGINE}
+        ${HEADERS_COMMON}
+        ${HEADERS_GAME_ENGINE}
+        ${SOURCES_CLIENT_PROTOCOL}
+        ${SOURCES_SERVER_PROTOCOL}
+        ${SOURCES_SERVER_GAME_LOGIC}
+        ${HEADERS_SERVER}
+        ${HEADERS_CLIENT}
+    )
+    target_link_libraries(tests PRIVATE
+        Catch2::Catch2WithMain
+        SDL2main
+        SDL2::SDL2
+        SDL2_image::SDL2_image
+        SDL2_ttf::SDL2_ttf
         ${SOURCES_COMMON} 
         ${SOURCES_GAME_ENGINE} 
         ${HEADERS_COMMON} 
@@ -174,13 +189,12 @@ if(PHYSICS)
         ${HEADERS_CLIENT}
     )
     target_link_libraries(tests PRIVATE 
-        Catch2WithMain
+        Catch2::Catch2WithMain
         SDL2main 
-        SDL2
-        SDL2_image 
-        SDL2_ttf 
-        SDL2_mixer
-        yaml-cpp
+        SDL2::SDL2
+        SDL2_image::SDL2_image 
+        SDL2_ttf::SDL2_ttf 
+        SDL2_mixer::SDL2_mixer
     )
 endif()
 
