@@ -31,6 +31,8 @@ void ClientMessageHandler::join_match(id_match_t id_match, character_t character
     send_message.push(std::make_shared<RecvJoinMatchMessage>(dto));
 }
 
+void ClientMessageHandler::quit() { send_message.push(std::make_shared<CloseConnectionMessage>()); }
+
 void ClientMessageHandler::handle_acpt_connection(const id_client_t& id_client) {
     this->id_client = id_client;
 }
