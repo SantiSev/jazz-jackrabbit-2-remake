@@ -159,7 +159,7 @@ void Player::update_db() {
     print_info();
 }
 
-void Player::handle_colision(CollisionObject& other) override {
+void Player::handle_colision(CollisionObject& other) {
 
     if (is_touching_bool(other)) {
         velocity.y = 10;

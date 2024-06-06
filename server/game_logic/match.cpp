@@ -339,12 +339,6 @@ void Match::patrol_move_enemies() {
                     enemy->move_right();
                     enemy->set_state(STATE_MOVING_RIGHT);
                 }
-            } else if (enemy->is_enemy_facing_to_the_right()) {
-                enemy->move_right();
-                enemy->set_state(STATE_MOVING_RIGHT);
-            } else {
-                enemy->move_left();
-                enemy->set_state(STATE_MOVING_LEFT);
             }
         }
     }

@@ -30,6 +30,7 @@ public:
     Enemy(const uint8_t& enemy_type, const size_t& id, int x, int y);
 
     void update_db() override;
+    void handle_colision(CollisionObject& other) override;
 
     //--------Getters--------
 

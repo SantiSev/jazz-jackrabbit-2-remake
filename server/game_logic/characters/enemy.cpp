@@ -72,11 +72,7 @@ void Enemy::jump() {
 void Enemy::update_db() {
     if (!on_floor) {
         velocity.y += GRAVITY;
-
-    } else {
-        velocity.x -= FRICCTION * direction;
     }
-
     position += velocity;
 
     print_info();
@@ -85,3 +81,10 @@ void Enemy::update_db() {
 bool Enemy::is_on_floor() const { return on_floor; }
 
 bool Enemy::is_facing_right() const { return direction == 1; }
+
+void Enemy::handle_colision(CollisionObject& other) {
+    if (is_touching_bool(other)) {
+        velocity.y = 10;
+        on_floor = true;
+    }
+}
