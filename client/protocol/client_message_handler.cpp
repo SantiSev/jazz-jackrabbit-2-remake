@@ -2,12 +2,14 @@
 
 #include <iostream>
 
+#include "../../common/protocol/messages/menu_events/recv_active_games.h"
+
 #include "client_thread_manager.h"
 
 ClientMessageHandler::ClientMessageHandler(): send_message() {}
 
 void ClientMessageHandler::send_command(command_t command) {
-    CommandDTO dto;
+    CommandDTO dto{};
     dto.id_player = id_player;
     dto.command = command;
     send_message.push(std::make_shared<RecvCommandMessage>(dto));
@@ -41,18 +43,14 @@ void ClientMessageHandler::handle_recv_close_connection() {
     //    client.close_connection(); // todo: falta implementar
 }
 
-void ClientMessageHandler::handle_joined_match(const ClientHasConnectedToMatchDTO& dto) {
-    this->id_player = dto.id_player;
-}
-
-void ClientMessageHandler::handle_game_created(const ClientHasConnectedToMatchDTO& dto) {
-    this->id_player = dto.id_player;
+void ClientMessageHandler::handle_connected_to_match(const ClientHasConnectedToMatchDTO& dto) {
+    send_message.push(std::make_shared<SendConnectedToGameMessage>(dto));
 }
 
 void ClientMessageHandler::handle_recv_active_games(const MatchInfoDTO& dto) {
-    //    client.set_active_games(dto);
+    send_message.push(std::make_shared<RecvActiveGames>(dto));
 }
 
 void ClientMessageHandler::handle_recv_game_state(const GameStateDTO& dto) {
-    // client.set_game_state(dto);
+    game_state_q.push(std::make_shared<GameStateDTO>(dto));
 }

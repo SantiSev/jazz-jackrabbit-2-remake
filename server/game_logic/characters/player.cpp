@@ -140,3 +140,10 @@ bool Player::is_special_available() const { return special_cooldown == 0; }
 void Player::decrease_special_attack_cooldown() { special_cooldown--; }
 
 void Player::reset_special_attack() { special_cooldown = SPECIAL_COOLDOWN; }
+
+
+void Player::move_left() {}
+
+void Player::move_right() {}
+
+void Player::jump() {}

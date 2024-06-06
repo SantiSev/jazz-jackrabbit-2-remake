@@ -28,7 +28,7 @@ void Player::on_key_press(const SDL_Keycode& key) {
             break;
         case SDLK_e:
             std::cout << "Player activated special attack" << std::endl;
-            message_handler.send_command(ESPECIAL_ATTACK);
+            message_handler.send_command(SPECIAL_ATTACK);
             break;
         case SDLK_r:
             std::cout << "Player changed weapon" << std::endl;

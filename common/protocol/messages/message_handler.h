@@ -14,8 +14,7 @@ public:
     // client
     virtual void handle_acpt_connection(const id_client_t& i) {}
     virtual void handle_recv_close_connection() {}
-    virtual void handle_joined_match(const ClientHasConnectedToMatchDTO& dto) {}
-    virtual void handle_game_created(const ClientHasConnectedToMatchDTO& dto) {}
+    virtual void handle_connected_to_match(const ClientHasConnectedToMatchDTO& dto) {}
     virtual void handle_recv_active_games(const MatchInfoDTO& dto) {}
     virtual void handle_recv_command(const CommandDTO& command) {}
     virtual void handle_recv_game_state(const GameStateDTO& dto) {}

@@ -64,7 +64,6 @@ void CommonProtocol::send_join_match(const uint16_t header, JoinMatchDTO& join_m
 
 void CommonProtocol::send_game_state(const uint16_t header, GameStateDTO& game_state) {
     send_header(header);
-    game_state.minutes = htons(game_state.minutes);
     game_state.seconds = htons(game_state.seconds);
     for (int i = 0; i < game_state.num_players; i++) {
         game_state.players[i].id = htons(game_state.players[i].id);
@@ -73,6 +72,10 @@ void CommonProtocol::send_game_state(const uint16_t header, GameStateDTO& game_s
         for (int j = 0; j < NUM_OF_WEAPONS; j++) {
             game_state.players[i].weapons[j].ammo = htons(game_state.players[i].weapons[j].ammo);
         }
+    }
+    for (int i = 0; i < game_state.num_enemies; i++) {
+        game_state.enemies[i].id = htons(game_state.enemies[i].id);
+        game_state.enemies[i].health = htons(game_state.enemies[i].health);
     }
     skt.sendall(&game_state, sizeof(game_state), &was_closed);
 }

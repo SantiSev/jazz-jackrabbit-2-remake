@@ -11,14 +11,6 @@
 
 #include "weapon.h"
 
-#define MAX_HEALTH 100
-#define MIN_HEALTH 0
-#define STARTING_POINTS 0
-#define REVIVE_COOLDOWN 5
-#define INTOXICATON_COOLDOWN 4
-#define SPECIAL_COOLDOWN 3
-
-
 class Player {
 private:
     // DynamicBody character_body; // Commented by Agus: No compile
@@ -91,6 +83,12 @@ public:
     void decrease_special_attack_cooldown();
 
     void reset_special_attack();
+
+    void move_left();
+
+    void move_right();
+
+    void jump();
 };
 
 

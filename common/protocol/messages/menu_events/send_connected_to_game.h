@@ -3,15 +3,15 @@
 
 #include "../common_message.h"
 
-class SendGameCreatedMessage: public Message {
+class SendConnectedToGameMessage: public Message {
 private:
     ClientHasConnectedToMatchDTO game_created;
 
 public:
-    explicit SendGameCreatedMessage(const ClientHasConnectedToMatchDTO& game_created);
+    explicit SendConnectedToGameMessage(const ClientHasConnectedToMatchDTO& game_created);
     void run(MessageHandler& handler) override;
     void send_message(CommonProtocol& protocol) override;
-    ~SendGameCreatedMessage() override;
+    ~SendConnectedToGameMessage() override;
 };
 
 #endif
