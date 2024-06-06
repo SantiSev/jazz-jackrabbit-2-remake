@@ -93,6 +93,13 @@ else ()
     )
 
     # GRAPHICS TEST
+    file(GLOB_RECURSE PHYSICS_GUI_TESTS "tests/graphics/gui_phy_test.cpp" )
+    get_filename_component(pito_tests ${PHYSICS_GUI_TESTS} NAME_WE)
+    add_executable(pito_tests ${PHYSICS_GUI_TESTS} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE}
+            tests/graphics/gui_phy_test.cpp)
+    target_link_libraries(pito_tests SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
+
+    # GRAPHICS TEST
     file(GLOB_RECURSE GRAPHIC_TESTS "tests/graphics/*.cpp" "tests/graphics/**/*.cpp")
     foreach(file ${GRAPHIC_TESTS})
         # Extract the file name without extension to use as the target name

@@ -1,6 +1,8 @@
 //
 // Created by santi on 25/05/24.
 //
+// THIS IS OUTDATED, PLEASE REFER TO THE LATEST IMPLEMENTATION
+/*
 #define CATCH_CONFIG_MAIN
 #include <iostream>
 
@@ -288,3 +290,4 @@ TEST_CASE("Crash Dynamic Objects into each other", "[DynamicBody]") {
     REQUIRE(x_final_1 == 60);
     REQUIRE(x_final_2 == 70);
 }
+*/
