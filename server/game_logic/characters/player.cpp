@@ -160,6 +160,14 @@ void Player::update_db() {
     print_info();
 }
 
+void Player::handle_colision(CollisionObject& other) override {
+
+    if (is_touching_bool(other)) {
+        velocity.y = 10;
+        on_floor = true;
+    }
+}
+
 bool Player::is_on_floor() const { return on_floor; }
 
 bool Player::is_facing_right() const { return direction == 1; }
