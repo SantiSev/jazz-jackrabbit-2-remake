@@ -36,7 +36,7 @@ typedef enum: uint8_t {
     MOVE_LEFT_FAST = 0x02,
     MOVE_RIGHT_FAST = 0x03,
     JUMP = 0x04,
-    ESPECIAL_ATTACK = 0x05,
+    SPECIAL_ATTACK = 0x05,
     CHANGE_WEAPON = 0x06,
     LOOK_UP = 0x07,
     DUCK_DOWN = 0x08,

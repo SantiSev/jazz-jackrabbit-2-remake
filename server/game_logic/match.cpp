@@ -188,15 +188,15 @@ void Match::run_command(const CommandDTO& dto) {
     }
     switch (dto.command) {
         case MOVE_LEFT:
-            //            player.move_left();
+            player.move_left();
             player.set_state(STATE_MOVING_LEFT);
             break;
         case MOVE_RIGHT:
-            //            player.move_right();
+            player.move_right();
             player.set_state(STATE_MOVING_RIGHT);
             break;
         case MOVE_LEFT_FAST:
-            //            player.move_left_fast();
+            //                        player.move_left_fast();
             player.set_state(STATE_SPRINTING_LEFT);
             break;
         case MOVE_RIGHT_FAST:
@@ -205,11 +205,11 @@ void Match::run_command(const CommandDTO& dto) {
             break;
         case JUMP:
             if (!player.is_player_jumping()) {
-                //                player.jump();
+                player.jump();
             }
             player.set_state(STATE_JUMPING);
             break;
-        case ESPECIAL_ATTACK:
+        case SPECIAL_ATTACK:
             if (player.is_player_intoxicated() || !player.is_special_available()) {
                 break;
             }

@@ -83,6 +83,12 @@ public:
     void decrease_special_attack_cooldown();
 
     void reset_special_attack();
+
+    void move_left();
+
+    void move_right();
+
+    void jump();
 };
 
 
