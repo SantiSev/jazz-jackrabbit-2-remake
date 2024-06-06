@@ -2,6 +2,8 @@
 #define TP_FINAL_MAP_H
 
 #include <list>
+#include <memory>
+#include <string>
 
 #include <yaml-cpp/yaml.h>
 
