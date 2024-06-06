@@ -5,6 +5,12 @@
 
 #include "../../../common/common_constants.h"
 
+#define MAX_HEALTH 100
+#define MIN_HEALTH 0
+#define STARTING_POINTS 0
+#define REVIVE_COOLDOWN 5
+#define SPECIAL_COOLDOWN 10
+
 Player::Player(size_t id, std::string name, const uint8_t& character):
         id(id),
         name(std::move(name)),

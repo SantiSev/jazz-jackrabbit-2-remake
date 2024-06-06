@@ -5,16 +5,12 @@
 #ifndef GAME_ENGINE_MATH_VECTOR2D_H_
 #define GAME_ENGINE_MATH_VECTOR2D_H_
 
-#include <cmath>
-#include <vector>
-
 // Vector2D class for basic vector operations
 class Vector2D {
 
-private:
+public:
     int x, y;
 
-public:
     // Constructor
     explicit Vector2D(int x = 0, int y = 0);
 
@@ -36,18 +32,6 @@ public:
     Vector2D& operator-=(const Vector2D& other);
     // Incrementar vector
     Vector2D& operator+=(const Vector2D& other);
-
-    // modulo del vector
-    int magnitude() const;
-
-    // angulo del vector
-    int angle() const;
-
-    int get_x() const { return x; }
-    int get_y() const { return y; }
-
-    void set_x(int x) { this->x = x; }
-    void set_y(int y) { this->y = y; }
 };
 
 #endif  // GAME_ENGINE_MATH_VECTOR2D_H_
