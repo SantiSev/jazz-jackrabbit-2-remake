@@ -9,6 +9,9 @@ CreateMatchButton::CreateMatchButton(SDL_Renderer* renderer,
                        d_rect, {0, 0, 0, 255}, {255, 255, 255, 255}),
         message_handler(message_handler) {}
 
-void CreateMatchButton::on_click() { std::cout << "Creating match." << std::endl; }
+void CreateMatchButton::on_click() {
+    std::cout << "Creating match." << std::endl;
+    message_handler.create_match(JAZZ_CHARACTER, 1, 2);
+}
 
 CreateMatchButton::~CreateMatchButton() = default;
