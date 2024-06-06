@@ -39,34 +39,33 @@ Menu::Menu(engine::Window& window, EventLoop* event_loop,
 }
 
 void Menu::start() {
-    Uint32 frame_start = 0;
-    // cppcheck-suppress unreadVariable
-    Uint32 frame_time = 0;
-    const int frame_delay = 1000 / 60;
-
-    while (menu_running) {
-        // Updates
-        int delta_time = SDL_GetTicks() - frame_start;
-        background->update(delta_time);
-        for (auto button: buttons) {
-            button->update(delta_time);
-        }
-
-        frame_start = SDL_GetTicks();
-
-        // Draw
-        window.clear();
-        background->draw(renderer);
-        for (auto button: buttons) {
-            button->draw(renderer);
-        }
-        window.render();
-
-        frame_time = SDL_GetTicks() - frame_start;
-        if (frame_delay > frame_time) {  // Delay to achieve desired fps
-            SDL_Delay(frame_delay - frame_time);
-        }
-    }
+    //    Uint32 frame_start = 0;
+    //    Uint32 frame_time = 0;
+    //    const int frame_delay = 1000 / 60;
+    //
+    //    while (menu_running) {
+    //        // Updates
+    //        int delta_time = SDL_GetTicks() - frame_start;
+    //        background->update(delta_time);
+    //        for (auto button: buttons) {
+    //            button->update(delta_time);
+    //        }
+    //
+    //        frame_start = SDL_GetTicks();
+    //
+    //        // Draw
+    //        window.clear();
+    //        background->draw(renderer);
+    //        for (auto button: buttons) {
+    //            button->draw(renderer);
+    //        }
+    //        window.render();
+    //
+    //        frame_time = SDL_GetTicks() - frame_start;
+    //        if (frame_delay > frame_time) {  // Delay to achieve desired fps
+    //            SDL_Delay(frame_delay - frame_time);
+    //        }
+    //    }
 }
 
 Menu::~Menu() {
