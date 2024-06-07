@@ -6,7 +6,7 @@
 
 #include "client_thread_manager.h"
 
-ClientMessageHandler::ClientMessageHandler(): send_message() {}
+ClientMessageHandler::ClientMessageHandler() {}
 
 void ClientMessageHandler::send_command(command_t command) {
     CommandDTO dto{};
