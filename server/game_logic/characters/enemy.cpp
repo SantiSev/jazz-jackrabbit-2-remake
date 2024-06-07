@@ -76,7 +76,7 @@ void Enemy::update_db() {
     }
     position += velocity;
 
-    print_info();
+    // print_info(); TODO SACAR
 }
 
 bool Enemy::is_on_floor() const { return on_floor; }

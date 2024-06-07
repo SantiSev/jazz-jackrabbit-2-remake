@@ -162,7 +162,7 @@ void Player::update_db() {
 
     position += velocity;
 
-    print_info();
+    // print_info(); TODO SACAR
 }
 
 void Player::handle_colision(CollisionObject& other) {
@@ -201,12 +201,12 @@ void Player::handle_impact(Bullet& bullet) {
     }
 }
 
-Bullet Player::shoot() {
-    weapons[selected_weapon].shoot() {
-        Bullet bullet(*this);
-        return bullet;
-    }
-}
+// Bullet Player::shoot() {
+//     weapons[selected_weapon].shoot() {
+//         Bullet bullet(*this);
+//         return bullet;
+//     }
+// }
 
 bool Player::is_doing_action_state() const {
     return (state == STATE_SHOOTING_LEFT || state == STATE_SHOOTING_RIGHT ||

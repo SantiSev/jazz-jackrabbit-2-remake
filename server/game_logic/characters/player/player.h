@@ -96,7 +96,7 @@ public:
     void select_weapon(size_t weapon_number);
     void shoot_selected_weapon();
     void add_weapon_ammo(size_t ammo, size_t weapon);
-    std::optional<Bullet> shoot();
+    // std::optional<Bullet> shoot();
 
     //------- Intoxication Methods --------
 
