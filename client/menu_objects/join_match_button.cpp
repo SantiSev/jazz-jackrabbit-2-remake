@@ -4,7 +4,7 @@ JoinMatchButton::JoinMatchButton(SDL_Renderer* renderer,
                                  std::shared_ptr<engine::ResourcePool> resource_pool,
                                  SDL_Rect& d_rect, std::atomic<bool>& menu_running,
                                  std::atomic<bool>& match_running,
-                                 SDL_Rect& d_rect, ClientMessageHandler& message_handler):
+                                 ClientMessageHandler& message_handler):
         engine::Button(std::make_unique<engine::Label>(engine::Label(
                                resource_pool->get_font(FONT), d_rect, {255, 255, 255, 255},
                                {0, 0, 0, 255}, "Join Match", renderer)),

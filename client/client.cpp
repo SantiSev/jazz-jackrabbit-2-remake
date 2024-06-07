@@ -65,7 +65,8 @@ Client::Client(const std::string& host, const std::string& port):
 // }
 
 void Client::start() {
-    MenuScene menu(window, event_loop, resource_pool, game_running, menu_running, match_running);
+    MenuScene menu(window, event_loop, resource_pool, game_running, menu_running, match_running,
+                   message_handler);
 
     event_loop->start();
 
@@ -78,7 +79,7 @@ void Client::start() {
             Queue<std::shared_ptr<GameStateDTO>> game_state_q;
             std::shared_ptr<GameStateDTO> game_state;
             game_state_q.try_pop(game_state);
-          
+
             MatchScene match(window, event_loop, resource_pool, match_running);
             match.start();
         }
