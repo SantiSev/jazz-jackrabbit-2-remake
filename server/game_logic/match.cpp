@@ -160,8 +160,8 @@ uint8_t Match::get_map() const { return map; }
 void Match::add_player_to_game(const std::string& player_name, const uint8_t& character) {
     players_connected++;
     Vector2D pos = select_spawn_point();
-    auto new_player =
-            std::make_shared<Player>(players_connected, player_name, character, pos.x, pos.y);
+    auto new_player = std::make_shared<Player>(players_connected, player_name, character, pos.x,
+                                               pos.y, collision_manager);
     new_player->set_id(players_connected);  // todo integrar a player
     collision_manager.add_dynamic_body(new_player);
     players.push_back(new_player);
@@ -267,21 +267,21 @@ void Match::run_command(const CommandDTO& dto) {
             }
             player->reset_special_attack();
             break;
-        case SHOOT:
-            if (!player->is_player_intoxicated()) {
-                player->shoot();
+        // case SHOOT:
+        //     if (!player->is_player_intoxicated()) {
+        //         player->shoot();
 
-                Bullet bullet = player->shoot();
-                collision_manager.add_dynamic_body(bullet);
-                bullets.emplace_back(bullet);
+        //         Bullet bullet = player->shoot();
+        //         collision_manager.add_dynamic_body(bullet);
+        //         bullets.emplace_back(bullet);
 
-                if (player->is_facing_right()) {
-                    player->set_state(STATE_SHOOTING_RIGHT);
-                } else {
-                    player->set_state(STATE_SHOOTING_LEFT);
-                }
-            }
-            break;
+        //         if (player->is_facing_right()) {
+        //             player->set_state(STATE_SHOOTING_RIGHT);
+        //         } else {
+        //             player->set_state(STATE_SHOOTING_LEFT);
+        //         }
+        //     }
+        //     break;
         default:
             break;
     }
