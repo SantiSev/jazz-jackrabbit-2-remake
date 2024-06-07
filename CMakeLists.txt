@@ -36,8 +36,7 @@ endif()
 # define targets
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LDFLAGS}")
-set(CMAKE_PREFIX_PATH "${SDL2_INCLUDE_DIRS} ${SDL2_ttf_INCLUDE_DIRS} ${SDL2_image_INCLUDE_DIRS} ${SDL2_mixer
-yaml-cpp_INCLUDE_DIRS}")
+set(CMAKE_PREFIX_PATH "${SDL2_INCLUDE_DIRS} ${SDL2_ttf_INCLUDE_DIRS} ${SDL2_image_INCLUDE_DIRS} ${SDL2_mixer_INCLUDE_DIRS}")
 
 file(GLOB_RECURSE SOURCES_CLIENT "client/*.cpp" "client/**/*.cpp")
 file(GLOB_RECURSE SOURCES_SERVER "server/*.cpp" "sever/**/*.cpp")
