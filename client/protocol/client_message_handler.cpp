@@ -17,7 +17,7 @@ void ClientMessageHandler::send_command(command_t command) {
 
 void ClientMessageHandler::create_match(character_t character, map_list_t map_name,
                                         uint8_t max_players) {
-    CreateGameDTO dto;
+    CreateGameDTO dto{};
     dto.id_client = id_client;
     dto.character_selected = character;
     dto.map_name = map_name;
@@ -26,7 +26,7 @@ void ClientMessageHandler::create_match(character_t character, map_list_t map_na
 }
 
 void ClientMessageHandler::join_match(id_match_t id_match, character_t character) {
-    JoinMatchDTO dto;
+    JoinMatchDTO dto{};
     dto.id_client = id_client;
     dto.id_match = id_match;
     dto.player_character = character;

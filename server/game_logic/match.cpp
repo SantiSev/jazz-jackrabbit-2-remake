@@ -19,6 +19,7 @@ Match::Match(const map_list_t& map_selected, size_t required_players_setting):
         client_monitor(),
         map(map_selected),
         collision_manager(800, 600) {
+    load_spawn_points();
     initiate_enemies();
 }
 
@@ -159,7 +160,7 @@ map_list_t Match::get_map() const { return map; }
 
 void Match::add_player_to_game(const std::string& player_name, const uint8_t& character) {
     players_connected++;
-    Vector2D pos = select_spawn_point();
+    Vector2D pos = select_player_spawn_point();
     auto new_player = std::make_shared<Player>(players_connected, player_name, character, pos.x,
                                                pos.y, collision_manager);
     new_player->set_id(players_connected);  // todo integrar a player
@@ -298,9 +299,7 @@ void Match::update_players() {
     for (auto& player: players) {
         if (!player->is_player_alive()) {
             if (player->can_revive()) {
-                player->revive();
-                player->set_state(STATE_IDLE_RIGHT);
-                // reset_player_pos_to_spawn_point(player);
+                player->revive(select_player_spawn_point());
             } else {
                 player->decrease_revive_cooldown();
             }
@@ -337,7 +336,7 @@ void Match::update_enemies() {
         if (!enemy->is_enemy_alive()) {
             if (enemy->can_revive()) {
                 enemy->revive();
-                enemy->set_state(STATE_IDLE_RIGHT);
+
                 // reset_player_pos_to_spawn_point(player);
             } else {
                 enemy->decrease_revive_cooldown();
@@ -346,26 +345,25 @@ void Match::update_enemies() {
         if (enemy->is_enemy_alive() && enemy->get_health() == MIN_HEALTH) {
             enemy->kill();
             enemy->set_state(STATE_DEAD);
-            // enemy.set_velocity_to_zero();
             enemy->reset_revive_cooldown();
         }
     }
 }
 
 void Match::initiate_enemies() {
-    for (size_t i = 0; i < MAX_ENEMIES; i++) {
-        auto new_enemy =
-                std::make_shared<Enemy>(i % 3, i, select_spawn_point().x, select_spawn_point().y);
-        new_enemy->set_spawn_point(select_spawn_point());
+    int i = 1;
+    for (auto& spawn_point: enemy_spawn_points) {
+        auto new_enemy = std::make_shared<Enemy>(i % 3, i, spawn_point.x, spawn_point.y);
+        new_enemy->set_spawn_point(spawn_point);
         collision_manager.add_dynamic_body(new_enemy);
         enemies.emplace_back(new_enemy);
+        i++;
     }
 }
 
-// ver si se puede implementar este solo para enemies y players. info depende del mapa.
-Vector2D Match::select_spawn_point() {  // todo falta armar lista de spawnpoints posible, y esto lo
-                                        // randomiza entre ellos
-    return Vector2D(10, 10);
+Vector2D Match::select_player_spawn_point() {
+    int i = rand() % player_spawn_points.size();
+    return player_spawn_points[i];
 }
 
 
@@ -382,5 +380,23 @@ void Match::patrol_move_enemies() {
                 }
             }
         }
+    }
+}
+
+void Match::load_spawn_points() {
+    YAML::Node yaml = YAML::LoadFile("../../assets/maps/spawn_points.yaml");
+    if (yaml.IsNull()) {
+        std::cerr << "Error loading yaml file" << std::endl;
+        exit(1);
+    }
+    for (auto obj: yaml["player_spawnpoints"]) {
+        auto x = obj["x"].as<int>();
+        auto y = obj["y"].as<int>();
+        player_spawn_points.emplace_back(x, y);
+    }
+    for (auto obj: yaml["enemy_spawnpoints"]) {
+        auto x = obj["x"].as<int>();
+        auto y = obj["y"].as<int>();
+        enemy_spawn_points.emplace_back(x, y);
     }
 }

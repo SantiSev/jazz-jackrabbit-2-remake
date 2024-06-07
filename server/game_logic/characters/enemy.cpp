@@ -36,6 +36,8 @@ void Enemy::increase_health(size_t add_health) {
 
 void Enemy::revive() {
     health = MAX_HEALTH * 0.75;
+    set_state(STATE_IDLE_RIGHT);
+    position = spawn_position;
     is_alive = true;
 }
 
@@ -47,7 +49,10 @@ void Enemy::reset_revive_cooldown() { revive_cooldown = REVIVE_COOLDOWN; }
 
 void Enemy::shoot() {}
 
-void Enemy::kill() { is_alive = false; }
+void Enemy::kill() {
+    velocity = Vector2D(0, 0);
+    is_alive = false;
+}
 
 void Enemy::set_state(const uint8_t new_state) { this->state = new_state; }
 

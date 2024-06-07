@@ -108,11 +108,12 @@ void Player::select_weapon(size_t weapon_number) {
 
 bool Player::can_revive() const { return (!is_alive && revive_cooldown == 0); }
 
-void Player::revive() {
+void Player::revive(Vector2D pos) {
     this->health = MAX_HEALTH;
     this->revive_cooldown = REVIVE_COOLDOWN;
     this->state = STATE_IDLE_RIGHT;
-    // posicionar en spawn
+    position = pos;
+    is_alive = true;
 }
 
 uint8_t Player::get_state() const { return state; }

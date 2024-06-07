@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include <yaml-cpp/yaml.h>
+
 #include "../../game_engine/physics_engine/collision_manager.h"
 #include "../../server/game_logic/characters/enemy.h"
 #include "../protocol/match_message_handler.h"
@@ -34,6 +36,8 @@ private:
     ClientMonitor client_monitor;
     map_list_t map;
     CollisionManager collision_manager;
+    std::vector<Vector2D> player_spawn_points;
+    std::vector<Vector2D> enemy_spawn_points;
 
 public:
     // Constructor
@@ -80,9 +84,13 @@ public:
 
     void initiate_enemies();
 
-    Vector2D select_spawn_point();
+    Vector2D select_enemy_spawn_point();
 
     void patrol_move_enemies();
+
+    void load_spawn_points();
+
+    Vector2D select_player_spawn_point();
 };
 
 #endif
