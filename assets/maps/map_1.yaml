@@ -37,10 +37,15 @@ objects:
                 y: 568
                 w: 32
                 h: 32
-spawnpoints:
+player_spawnpoints:
     - x: 100
       y: 100
-    - x: 600
+    - x: 800
       y: 100
     - x: 1100
+      y: 100
+enemy_spawnpoints:
+    - x: 500
+      y: 100
+    - x: 300
       y: 100
