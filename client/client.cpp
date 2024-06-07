@@ -21,11 +21,9 @@ void Client::start() {
     event_loop->start();
 
     while (game_running) {
-        match.start();
         menu.start();
         if (match_running) {
-            // MatchScene match(window, event_loop, resource_pool, game_running, match_running);
-            // match.start();
+            match.start();
         }
     }
 
