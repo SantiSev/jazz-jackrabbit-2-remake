@@ -10,7 +10,7 @@ Client::Client(const std::string& host, const std::string& port):
         game_running(true),
         menu_running(true),
         match_running(false),
-        event_loop(new EventLoop(game_running, menu_running, message_handler)),
+        event_loop(new EventLoop(game_running, menu_running, match_running, message_handler)),
         thread_manager(new ClientThreadManager(host, port, event_loop->recv_message,
                                                message_handler.send_message)) {
     // Pre-load necessary resources
@@ -65,7 +65,7 @@ Client::Client(const std::string& host, const std::string& port):
 // }
 
 void Client::start() {
-    Menu menu(window, event_loop, resource_pool, game_running, menu_running, message_handler);
+    MenuScene menu(window, event_loop, resource_pool, game_running, menu_running, match_running);
 
     event_loop->start();
 
@@ -78,11 +78,9 @@ void Client::start() {
             Queue<std::shared_ptr<GameStateDTO>> game_state_q;
             std::shared_ptr<GameStateDTO> game_state;
             game_state_q.try_pop(game_state);
-
-
-            //             Match match(window, event_loop, resource_pool, game_running,
-            //             match_running, game_state_q);
-            // match.start();
+          
+            MatchScene match(window, event_loop, resource_pool, match_running);
+            match.start();
         }
     }
 
@@ -132,6 +130,7 @@ void Client::pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_
     // Textures
     resource_pool->load_texture(BACKGROUNDS);
     resource_pool->load_texture(JAZZ);
+    resource_pool->load_texture(MAP1_TILESET);
     resource_pool->load_texture("assets/jazz_test.png");
 
     // Fonts
