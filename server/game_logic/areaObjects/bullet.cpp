@@ -35,3 +35,5 @@ void Bullet::handle_colision(CollisionObject& other) {
 size_t Bullet::get_damage() const { return bullet_damage; }
 
 void Bullet::get_player_points(size_t points) { player_owner.add_points(points); }
+
+uint8_t Bullet::get_bullet_type() const { return bullet_type; }

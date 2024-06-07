@@ -35,6 +35,8 @@ public:
 
     size_t get_id() const;
     size_t get_health() const;
+    uint8_t get_enemy_type() const;
+    uint8_t get_state() const;
 
     //-------Statuses--------
 

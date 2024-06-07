@@ -29,6 +29,8 @@ public:
     size_t get_damage() const;
 
     void get_player_points(size_t points);
+
+    uint8_t get_bullet_type() const;
 };
 
 

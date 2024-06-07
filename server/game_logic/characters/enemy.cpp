@@ -96,3 +96,7 @@ void Enemy::handle_impact(Bullet& bullet) {
         bullet.get_player_points(ENEMY_KILL_POINTS);
     }
 }
+
+uint8_t Enemy::get_enemy_type() const { return enemy_type; }
+
+uint8_t Enemy::get_state() const { return state; }

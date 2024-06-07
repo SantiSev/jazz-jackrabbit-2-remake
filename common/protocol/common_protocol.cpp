@@ -69,13 +69,15 @@ void CommonProtocol::send_game_state(const uint16_t header, GameStateDTO& game_s
         game_state.players[i].id = htons(game_state.players[i].id);
         game_state.players[i].health = htons(game_state.players[i].health);
         game_state.players[i].points = htons(game_state.players[i].points);
+        game_state.players[i].x_pos = htons(game_state.players[i].x_pos);
+        game_state.players[i].y_pos = htons(game_state.players[i].y_pos);
         for (int j = 0; j < NUM_OF_WEAPONS; j++) {
             game_state.players[i].weapons[j].ammo = htons(game_state.players[i].weapons[j].ammo);
         }
     }
     for (int i = 0; i < game_state.num_enemies; i++) {
-        game_state.enemies[i].id = htons(game_state.enemies[i].id);
-        game_state.enemies[i].health = htons(game_state.enemies[i].health);
+        game_state.enemies[i].x_pos = htons(game_state.enemies[i].x_pos);
+        game_state.enemies[i].y_pos = htons(game_state.enemies[i].y_pos);
     }
     skt.sendall(&game_state, sizeof(game_state), &was_closed);
 }
@@ -111,7 +113,7 @@ void CommonProtocol::send_active_games(const uint16_t header, MatchInfoDTO& acti
     skt.sendall(&active_games, sizeof(active_games), &was_closed);
 }
 
-void CommonProtocol::send_message(std::shared_ptr<Message> message) {
+void CommonProtocol::send_message(const std::shared_ptr<Message>& message) {
     message->send_message(*this);
 }
 

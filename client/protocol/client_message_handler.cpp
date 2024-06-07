@@ -35,8 +35,8 @@ void ClientMessageHandler::join_match(id_match_t id_match, character_t character
 
 void ClientMessageHandler::quit() { send_message.push(std::make_shared<CloseConnectionMessage>()); }
 
-void ClientMessageHandler::handle_acpt_connection(const id_client_t& id_client) {
-    this->id_client = id_client;
+void ClientMessageHandler::handle_acpt_connection(const id_client_t& client_id) {
+    this->id_client = client_id;
 }
 
 void ClientMessageHandler::handle_recv_close_connection() {

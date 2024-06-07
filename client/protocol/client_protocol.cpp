@@ -22,15 +22,17 @@ std::shared_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() {
     game_state.seconds = ntohs(game_state.seconds);
     for (int i = 0; i < game_state.num_players; i++) {
         game_state.players[i].id = ntohs(game_state.players[i].id);
-        game_state.players[i].points = ntohs(game_state.players[i].points);
         game_state.players[i].health = ntohs(game_state.players[i].health);
+        game_state.players[i].points = ntohs(game_state.players[i].points);
+        game_state.players[i].x_pos = ntohs(game_state.players[i].x_pos);
+        game_state.players[i].y_pos = ntohs(game_state.players[i].y_pos);
         for (int j = 0; j < NUM_OF_WEAPONS; j++) {
             game_state.players[i].weapons[j].ammo = ntohs(game_state.players[i].weapons[j].ammo);
         }
     }
     for (int i = 0; i < game_state.num_enemies; i++) {
-        game_state.enemies[i].id = ntohs(game_state.enemies[i].id);
-        game_state.enemies[i].health = ntohs(game_state.enemies[i].health);
+        game_state.enemies[i].x_pos = ntohs(game_state.enemies[i].x_pos);
+        game_state.enemies[i].y_pos = ntohs(game_state.enemies[i].y_pos);
     }
     return std::make_shared<SendGameStateMessage>(game_state);
 }
