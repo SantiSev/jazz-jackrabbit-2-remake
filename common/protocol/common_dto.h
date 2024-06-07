@@ -7,6 +7,7 @@
 #include <arpa/inet.h>
 
 #include "../common_constants.h"
+#include "../map_enum.h"
 
 #define CLOSE_CONNECTION 0x0000
 #define ACPT_CONNECTION 0x0001
@@ -73,7 +74,7 @@ struct LeaveMatchDTO {
 struct CreateGameDTO {
     id_client_t id_client;
     character_t character_selected;
-    uint8_t map_name;  // todo change to enum constant
+    map_list_t map_name;  // todo change to enum constant
     uint8_t max_players;
 } __attribute__((packed));
 
@@ -129,18 +130,19 @@ struct GameStateDTO {
     uint8_t num_players;
     uint8_t num_enemies;
     uint8_t num_bullets;
-    PlayerDTO players[REQUIRED_PLAYERS_TO_START];
+    PlayerDTO players[MAX_PLAYERS];
     EnemyDTO enemies[MAX_ENEMIES];
-    BulletDTO bullets[50 * REQUIRED_PLAYERS_TO_START];
+    BulletDTO bullets[50 * MAX_PLAYERS];
     uint16_t seconds;
 } __attribute__((packed));
 
 struct ClientHasConnectedToMatchDTO {
     id_player_t id_player;
+    map_list_t map;
 } __attribute__((packed));
 
 struct ActiveGamesDTO {
-    uint8_t map;
+    map_list_t map;
     uint8_t players_ingame;
     uint8_t players_max;
 } __attribute__((packed));

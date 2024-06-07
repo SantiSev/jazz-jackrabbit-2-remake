@@ -18,7 +18,7 @@ public:
     ClientMessageHandler();
 
     void send_command(command_t command);
-    void create_match(character_t character, uint8_t map_name, uint8_t max_players);
+    void create_match(character_t character, map_list_t map_name, uint8_t max_players);
     void join_match(id_match_t id_match, character_t character);
     void quit();
 

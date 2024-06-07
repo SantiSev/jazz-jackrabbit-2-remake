@@ -32,12 +32,12 @@ private:
     size_t minutes = STARTING_MATCH_TIME / 60;
     size_t seconds = STARTING_MATCH_TIME % 60;
     ClientMonitor client_monitor;
-    uint8_t map;
+    map_list_t map;
     CollisionManager collision_manager;
 
 public:
     // Constructor
-    explicit Match(const uint8_t& map, size_t required_players);
+    explicit Match(const map_list_t& map_selected, size_t required_players_setting);
     void run() override;
     // Kill the thread
     void stop() override;
@@ -68,7 +68,7 @@ public:
 
     std::vector<size_t> get_clients_ids();
 
-    uint8_t get_map() const;
+    map_list_t get_map() const;
 
     void run_command(const CommandDTO& dto);
 

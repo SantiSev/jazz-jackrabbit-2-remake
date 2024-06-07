@@ -15,13 +15,13 @@ void ClientMessageHandler::send_command(command_t command) {
     send_message.push(std::make_shared<RecvCommandMessage>(dto));
 }
 
-void ClientMessageHandler::create_match(character_t character, uint8_t map_name,
+void ClientMessageHandler::create_match(character_t character, map_list_t map_name,
                                         uint8_t max_players) {
     CreateGameDTO dto;
     dto.id_client = id_client;
     dto.character_selected = character;
-    dto.map_name = character;
-    dto.max_players = character;
+    dto.map_name = map_name;
+    dto.max_players = max_players;
     send_message.push(std::make_shared<RecvCreateGameMessage>(dto));
 }
 

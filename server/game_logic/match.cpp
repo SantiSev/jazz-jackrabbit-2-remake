@@ -8,7 +8,7 @@
 #include <string>
 #include <utility>
 
-Match::Match(const uint8_t& map_selected, size_t required_players_setting):
+Match::Match(const map_list_t& map_selected, size_t required_players_setting):
         online(true),
         event_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()),
         message_handler(*this),
@@ -155,7 +155,7 @@ GameStateDTO Match::create_actual_snapshot() {
 
 bool Match::has_match_ended() const { return match_has_ended; }
 
-uint8_t Match::get_map() const { return map; }
+map_list_t Match::get_map() const { return map; }
 
 void Match::add_player_to_game(const std::string& player_name, const uint8_t& character) {
     players_connected++;
