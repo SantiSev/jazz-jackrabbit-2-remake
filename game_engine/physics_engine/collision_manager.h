@@ -41,13 +41,13 @@ public:
 
     std::shared_ptr<CollisionObject> get_collision_object_at(int x, int y) const;
     void add_object(std::shared_ptr<CollisionObject> obj);
-    void add_dynamic_body(std::shared_ptr<DynamicBody> obj);
+    void track_dynamic_body(std::shared_ptr<DynamicBody> obj);
+    bool can_be_placed(std::shared_ptr<CollisionObject> obj);
     void remove_object(std::shared_ptr<CollisionObject> obj);
     void update_object(std::shared_ptr<CollisionObject> obj);
     void update();
     int get_grid_width() const;
     int get_grid_height() const;
-
 
     void clear();
 };

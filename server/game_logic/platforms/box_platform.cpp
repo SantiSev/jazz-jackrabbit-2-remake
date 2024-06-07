@@ -4,12 +4,16 @@
 
 #include "box_platform.h"
 
+#include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
+
 BoxPLatoform::BoxPLatoform(int x, int y, int width, int height): StaticBody(x, y, width, height) {}
 
-void BoxPLatoform::handle_colision(CollisionObject& other) {
+void BoxPLatoform::handle_colision(CollisionObject* other) {
     // This is a static body, so it does not move.
     // Therefore, it does not need to handle colisions.
     CollisionFace face = this->is_touching(other);
+
+    DynamicBody dynamic_body = dynamic_cast<DynamicBody*>(&other);
 
     switch (face) {
         case CollisionFace::TOP:  // other object is on top of me

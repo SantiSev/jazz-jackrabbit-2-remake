@@ -10,10 +10,10 @@ add_definitions(-DDATA_PATH="${PROJECT_SOURCE_DIR}/data")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic -pedantic-errors -O0 -ggdb -DDEBUG -fno-inline -std=${CXXSTD} -D _POSIX_C_SOURCE=200809L")
 
-find_package(SDL2 REQUIRED)
+#[[find_package(SDL2 REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_image REQUIRED)
-find_package(SDL2_mixer REQUIRED)
+find_package(SDL2_mixer REQUIRED)]]
 
 option(math "Use math.h" ON)
 option(threads "Use threads" ON)
@@ -60,6 +60,8 @@ if (PRODUCTION)
         ${SOURCES_GAME_ENGINE} 
         ${HEADERS_GAME_ENGINE} 
         ${SERVER_WITHOUT_MAIN}
+            game_engine/physics_engine/physics_object/area_body.cpp
+            game_engine/physics_engine/physics_object/area_body.h
     )
     add_executable(server 
         ${SOURCES_COMMON} 
@@ -69,6 +71,10 @@ if (PRODUCTION)
         ${SOURCES_GAME_ENGINE} 
         ${HEADERS_GAME_ENGINE} 
         ${CLIENT_WITHOUT_MAIN}
+            server/game_logic/characters/character.cpp
+            server/game_logic/characters/character.h
+            server/game_logic/characters/player.h
+            server/game_logic/characters/player.cpp
     )
 
     target_link_libraries(client 
@@ -143,10 +149,12 @@ if (GRAPHICS)
         get_filename_component(target_name ${file} NAME_WE)
 
         add_executable(${target_name} ${file} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE}
-                server/game_logic/areaObjects/bullet.cpp
-                server/game_logic/areaObjects/bullet.h
+                server/game_logic/area_objects/bullet.cpp
+                server/game_logic/area_objects/bullet.h
                 server/game_logic/platforms/box_platform.cpp
-                server/game_logic/platforms/box_platform.h)
+                server/game_logic/platforms/box_platform.h
+                server/game_logic/characters/character.h
+                server/game_logic/characters/player.cpp)
         target_link_libraries(${target_name}
             SDL2main
             SDL2::SDL2

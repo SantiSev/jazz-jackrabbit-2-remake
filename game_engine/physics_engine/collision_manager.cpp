@@ -37,11 +37,24 @@ void CollisionManager::remove_object_from_grid(std::shared_ptr<CollisionObject> 
     }
 }
 
+// ----------------- public methods ---------------------
+
+bool CollisionManager::can_be_placed(std::shared_ptr<CollisionObject> obj) {
+    for (int i = obj->position.x; i < obj->position.x + obj->get_hitbox_width(); ++i) {
+        for (int j = obj->position.y; j < obj->position.y + obj->get_hitbox_height(); ++j) {
+            if (grid[i][j] != nullptr) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void CollisionManager::add_object(std::shared_ptr<CollisionObject> obj) {
     place_object_in_grid(obj);
 }
 
-void CollisionManager::add_dynamic_body(std::shared_ptr<DynamicBody> obj) {
+void CollisionManager::track_dynamic_body(std::shared_ptr<DynamicBody> obj) {
     dynamic_bodies.emplace_back(obj, obj->position);
     place_object_in_grid(obj);
 }
@@ -71,8 +84,7 @@ void CollisionManager::detect_colisions(std::shared_ptr<DynamicBody> obj) {
         for (int j = obj_y; j < obj_y + obj_height; ++j) {
             std::shared_ptr<CollisionObject> other = get_collision_object_at(i, j);
             if (other != nullptr && other.get() != obj.get()) {
-                obj->handle_colision(
-                        *other);  // Handle the collision with respect to me and all others
+                other->handle_colision(obj.get());  // Handle collision with other object
             }
         }
     }

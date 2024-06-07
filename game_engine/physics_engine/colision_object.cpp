@@ -9,6 +9,12 @@ CollisionObject::CollisionObject(int hitbox_width, int hitbox_height):
 CollisionObject::CollisionObject(int x, int y, int hitbox_width, int hitbox_height):
         GameObject(x, y), hitbox_width(hitbox_width), hitbox_height(hitbox_height) {}
 
+CollisionObject::CollisionObject(int x, int y, int hitbox_width, int hitbox_height, bool has_mass):
+        GameObject(x, y),
+        hitbox_width(hitbox_width),
+        hitbox_height(hitbox_height),
+        has_mass(has_mass) {}
+
 int CollisionObject::get_left_hitbox_side() const { return position.x; }
 
 int CollisionObject::get_right_hitbox_side() const { return position.x + hitbox_width; }
@@ -42,6 +48,8 @@ bool CollisionObject::is_touching_bool(const CollisionObject& other) const {
     return touching_left || touching_right || touching_top || touching_bottom;
 }
 
+bool CollisionObject::is_area_object() { return !has_mass; }
+
 
 CollisionFace CollisionObject::is_touching(const CollisionObject& other) const {
 
@@ -56,6 +64,7 @@ CollisionFace CollisionObject::is_touching(const CollisionObject& other) const {
     int other_right = other.get_right_hitbox_side();
     int other_top = other.get_top_hitbox_side();
     int other_bottom = other.get_bottom_hitbox_side();
+
 
     // Check for collision and determine the face being touched
 

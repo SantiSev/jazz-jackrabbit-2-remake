@@ -1,6 +1,6 @@
 #include "enemy.h"
 
-#include "../areaObjects/bullet.h"
+#include "../area_objects/bullet.h"
 
 Enemy::Enemy(const uint8_t& enemy_type, const size_t& id, int x, int y):
         DynamicBody(x, y, ENEMY_WIDTH, ENEMY_HEIGHT),

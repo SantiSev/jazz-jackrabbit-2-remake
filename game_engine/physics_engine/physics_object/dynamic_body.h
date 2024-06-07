@@ -11,10 +11,9 @@ public:
     DynamicBody(int x, int y, int width, int height);
     DynamicBody(int x, int y, int width, int height, Vector2D base_speed);
 
-
     virtual void update_db();
 
-    void handle_colision(CollisionObject& other) override;
+    void handle_colision(CollisionObject* other) override;
 
     virtual void print_info();
 };

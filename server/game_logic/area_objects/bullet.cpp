@@ -25,10 +25,11 @@ void Bullet::update_db() {
     }
 }
 
-void Bullet::handle_colision(CollisionObject& other) {
+void Bullet::handle_colision(CollisionObject* other) {
+
+
     if (is_touching_bool(other)) {
         is_active = false;
-        other.handle_impact(*this);
     }
 }
 

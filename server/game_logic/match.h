@@ -11,8 +11,8 @@
 #include "../protocol/match_message_handler.h"
 #include "../protocol/server_thread_manager.h"
 #include "./client_monitor.h"
-#include "areaObjects/bullet.h"
-#include "characters/player/player.h"
+#include "area_objects/bullet.h"
+#include "characters/character.h"
 
 
 class Match: public Thread {

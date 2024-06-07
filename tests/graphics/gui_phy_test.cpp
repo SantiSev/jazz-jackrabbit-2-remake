@@ -46,9 +46,9 @@ public:
     }
 
 
-    void handle_colision(CollisionObject& other) override {
+    void handle_colision(CollisionObject* other) override {
 
-        if (is_touching_bool(other)) {
+        if (is_touching_bool(*other)) {
             velocity.y = 10;
             on_floor = true;
         }

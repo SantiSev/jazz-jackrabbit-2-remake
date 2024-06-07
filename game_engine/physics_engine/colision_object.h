@@ -5,8 +5,6 @@
 
 #include "colision_face.h"
 
-class Bullet;
-
 /*
  * For every ColisionObject, its fundamental to take into account
  * 1. This class is the base class for all objects that can collide
@@ -21,6 +19,7 @@ class CollisionObject: public GameObject {
 private:
     int hitbox_width;
     int hitbox_height;
+    bool has_mass = true;
 
 protected:
     /*
@@ -39,6 +38,7 @@ protected:
 public:
     CollisionObject(int width, int height);
     CollisionObject(int x, int y, int width, int height);
+    CollisionObject(int x, int y, int width, int height, bool has_mass);
 
     int get_left_hitbox_side() const;
     int get_right_hitbox_side() const;
@@ -50,13 +50,13 @@ public:
     void set_hitbox_width(int new_width);
     void set_hitbox_height(int new_height);
 
+    bool is_area_object();
+
     /*
      * In case of being nececary, if i need to detect a collision
      * and act upon it, i can override this method and implement it.
      */
-    virtual void handle_colision(CollisionObject& other) = 0;
-    virtual void handle_impact(Bullet& bullet) {}
-
+    virtual void handle_colision(CollisionObject* other) = 0;
 
     virtual ~CollisionObject() = default;
 };

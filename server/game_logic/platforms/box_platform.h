@@ -12,7 +12,7 @@ class BoxPLatoform: public StaticBody {
 
 public:
     BoxPLatoform(int x, int y, int width, int height);
-    void handle_colision(CollisionObject& other) override;
+    void handle_colision(CollisionObject* other) override;
 };
 
 
