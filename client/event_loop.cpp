@@ -18,6 +18,7 @@ void EventLoop::run() {
                 msg->run(message_handler);
             }
             if (event.type == SDL_QUIT) {
+                message_handler.quit();
                 menu_running.store(false);
                 game_running.store(false);
                 match_running.store(false);
