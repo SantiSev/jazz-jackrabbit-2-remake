@@ -5,6 +5,12 @@
 
 #include "../../../common/common_constants.h"
 
+#define MAX_HEALTH 100
+#define MIN_HEALTH 0
+#define STARTING_POINTS 0
+#define REVIVE_COOLDOWN 5
+#define SPECIAL_COOLDOWN 10
+
 Player::Player(size_t id, std::string name, const uint8_t& character):
         id(id),
         name(std::move(name)),
@@ -134,3 +140,10 @@ bool Player::is_special_available() const { return special_cooldown == 0; }
 void Player::decrease_special_attack_cooldown() { special_cooldown--; }
 
 void Player::reset_special_attack() { special_cooldown = SPECIAL_COOLDOWN; }
+
+
+void Player::move_left() {}
+
+void Player::move_right() {}
+
+void Player::jump() {}

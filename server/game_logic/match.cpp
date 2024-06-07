@@ -23,11 +23,12 @@ Match::Match(const uint8_t& map_selected, size_t required_players_setting):
 
 void Match::run() {
     try {
-        while (online && players.size() != required_players) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-            std::cout << "Match map: " << map << " Waiting for all players to connect to start..."
-                      << std::endl;
-        }
+        //        while (online && players.size() != required_players) {
+        //            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        //            std::cout << "Match map: " << map << " Waiting for all players to connect to
+        //            start..."
+        //                      << std::endl;
+        //        }
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
         auto startTime = std::chrono::system_clock::now();
@@ -128,7 +129,6 @@ GameStateDTO Match::create_actual_snapshot() {
         }
     }
     game_state.seconds = (uint16_t)seconds;
-    game_state.minutes = (uint16_t)minutes;
 
     return game_state;
 }
@@ -188,15 +188,15 @@ void Match::run_command(const CommandDTO& dto) {
     }
     switch (dto.command) {
         case MOVE_LEFT:
-            //            player.move_left();
+            player.move_left();
             player.set_state(STATE_MOVING_LEFT);
             break;
         case MOVE_RIGHT:
-            //            player.move_right();
+            player.move_right();
             player.set_state(STATE_MOVING_RIGHT);
             break;
         case MOVE_LEFT_FAST:
-            //            player.move_left_fast();
+            //                        player.move_left_fast();
             player.set_state(STATE_SPRINTING_LEFT);
             break;
         case MOVE_RIGHT_FAST:
@@ -205,11 +205,11 @@ void Match::run_command(const CommandDTO& dto) {
             break;
         case JUMP:
             if (!player.is_player_jumping()) {
-                //                player.jump();
+                player.jump();
             }
             player.set_state(STATE_JUMPING);
             break;
-        case ESPECIAL_ATTACK:
+        case SPECIAL_ATTACK:
             if (player.is_player_intoxicated() || !player.is_special_available()) {
                 break;
             }
@@ -305,7 +305,7 @@ void Match::update_enemies() {
 }
 
 void Match::initiate_enemies() {
-    for (int i = 0; i < 6; i++) {
+    for (size_t i = 0; i < MAX_ENEMIES; i++) {
         Enemy enemy(20, 20, i % 3, i);
         // set_spawn_point_to_enemy(enemy);
         enemies.emplace_back(enemy);

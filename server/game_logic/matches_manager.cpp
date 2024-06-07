@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../common/protocol/messages/menu_events/send_game_joined.h"
+#include "../../common/protocol/messages/menu_events/send_connected_to_game.h"
 
 MatchesManager::MatchesManager():
         online(true),
@@ -49,8 +49,8 @@ void MatchesManager::create_new_match(const CreateGameDTO& dto) {
 }
 
 void MatchesManager::send_id_player_to_client(const CreateGameDTO& dto) {
-    GameCreatedDTO game_created = {1};
-    auto send_game_created = std::make_shared<SendGameCreatedMessage>(game_created);
+    ClientHasConnectedToMatchDTO game_created = {1};
+    auto send_game_created = std::make_shared<SendConnectedToGameMessage>(game_created);
     get_client_by_id(dto.id_client)
             ->get_sender_queue()
             ->push(send_game_created);  // todo ver si funciona así
@@ -68,7 +68,7 @@ ServerThreadManager* MatchesManager::get_client_by_id(size_t id) {
 void MatchesManager::join_match(const JoinMatchDTO& dto) {
     auto it = matches.find(dto.id_match);
     if (it != matches.end()) {
-        it->second->add_client_to_match(get_client_by_id(dto.id_match), "pepo",
+        it->second->add_client_to_match(get_client_by_id(dto.id_match), "pepo_joineado",
                                         dto.player_character);
         send_joined_info_to_client(
                 dto,
@@ -80,9 +80,45 @@ void MatchesManager::send_joined_info_to_client(const JoinMatchDTO& dto,
                                                 const uint16_t& player_number) {
     uint16_t num_players = player_number;
     num_players++;
-    ClientJoinedMatchDTO joined_dto = {dto.id_match, num_players};
-    auto joined_message = std::make_shared<SendGameJoined>(joined_dto);
+    ClientHasConnectedToMatchDTO joined_dto = {num_players};
+    auto joined_message = std::make_shared<SendConnectedToGameMessage>(joined_dto);
     get_client_by_id(dto.id_match)->get_sender_queue()->push(joined_message);
+}
+
+void MatchesManager::add_new_client_to_manager(Socket client_socket) {
+    clients_connected++;
+    auto client = new ServerThreadManager(std::move(client_socket), waiting_server_queue);
+    auto message = std::make_shared<AcptConnection>(clients_connected);  // le mando su id
+    client->get_sender_queue()->push(message);
+    client->set_client_id(clients_connected);
+    clients.push_back(client);
+}
+
+void MatchesManager::clear_all_waiting_clients() {
+    for (auto& client: clients) {
+
+        client->stop();
+        delete client;
+    }
+    clients.clear();
+}
+
+MatchInfoDTO MatchesManager::return_matches_lists() {
+    MatchInfoDTO matches_lists{};
+    matches_lists.num_games = matches.size();
+    size_t i = 0;
+    for (auto& match: matches) {
+        matches_lists.active_games[i].map = match.second->get_map();
+        matches_lists.active_games[i].players_ingame = match.second->get_num_players();
+        matches_lists.active_games[i].players_max = match.second->get_max_players();
+    }
+    return matches_lists;
+}
+
+void MatchesManager::send_match_lists(RequestActiveGamesDTO dto) {
+    auto matches_lists = return_matches_lists();
+    auto matches_message = std::make_shared<RecvActiveGames>(matches_lists);
+    get_client_by_id(dto.id_client)->get_sender_queue()->push(matches_message);
 }
 
 void MatchesManager::check_matches_status() {
@@ -123,42 +159,6 @@ void MatchesManager::stop_all_matches() {
         match.second->join();
     }
     matches.clear();
-}
-
-void MatchesManager::add_new_client(Socket client_socket) {
-    clients_connected++;
-    auto client = new ServerThreadManager(std::move(client_socket), waiting_server_queue);
-    auto message = std::make_shared<AcptConnection>(clients_connected);  // le mando su id
-    client->get_sender_queue()->push(message);
-    client->set_client_id(clients_connected);
-    clients.push_back(client);
-}
-
-void MatchesManager::clear_all_waiting_clients() {
-    for (auto& client: clients) {
-
-        client->stop();
-        delete client;
-    }
-    clients.clear();
-}
-
-MatchInfoDTO MatchesManager::return_matches_lists() {
-    MatchInfoDTO matches_lists{};
-    matches_lists.num_games = matches.size();
-    size_t i = 0;
-    for (auto& match: matches) {
-        matches_lists.active_games[i].map = match.second->get_map();
-        matches_lists.active_games[i].players_ingame = match.second->get_num_players();
-        matches_lists.active_games[i].players_max = match.second->get_max_players();
-    }
-    return matches_lists;
-}
-
-void MatchesManager::send_match_lists(RequestActiveGamesDTO dto) {
-    auto matches_lists = return_matches_lists();
-    auto matches_message = std::make_shared<RecvActiveGames>(matches_lists);
-    get_client_by_id(dto.id_client)->get_sender_queue()->push(matches_message);
 }
 
 void MatchesManager::stop() { online = false; }

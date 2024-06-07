@@ -17,7 +17,7 @@ void ServerAccepter::run() {
             if (!online) {
                 break;
             }
-            matches_manager.add_new_client(std::move(peer));
+            matches_manager.add_new_client_to_manager(std::move(peer));
         }
     } catch (const std::exception& err) {
         if (online) {

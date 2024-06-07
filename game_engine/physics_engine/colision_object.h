@@ -55,6 +55,7 @@ public:
      */
     virtual void handle_colision(CollisionObject& other) = 0;
 
+
     virtual ~CollisionObject() = default;
 };
 

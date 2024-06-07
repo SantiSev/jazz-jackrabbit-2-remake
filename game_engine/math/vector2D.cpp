@@ -47,7 +47,3 @@ Vector2D& Vector2D::operator-=(const Vector2D& other) {
     this->y -= other.y;
     return *this;
 }
-
-int Vector2D::magnitude() const { return std::sqrt(x * x + y * y); }
-
-int Vector2D::angle() const { return std::atan2(y, x); }

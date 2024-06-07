@@ -1,5 +1,8 @@
 #include "client.h"
 
+#include "game_objects/GameEnemy.h"
+#include "game_objects/GamePlayer.h"
+
 Client::Client(const std::string& host, const std::string& port):
         message_handler(),
         window(800, 600, true, true),
@@ -14,15 +17,69 @@ Client::Client(const std::string& host, const std::string& port):
     pre_load_resources(resource_pool);
 }
 
+// le pasas los atributos lista de players y enemies o despues reemplazas dentro de la funcion
+// directamente los atributos. tambien falta agregarle delante de cada nombre de funcion el Match::
+
+// void initiate_match(GameStateDTO& dto, std::vector<GamePlayer>& players, std::vector<GameEnemy>&
+// enemies) {
+//     GamePlayer player = GamePlayer(dto.players[0].id, dto.players[0].character,
+//     dto.players[0].state, dto.players[0].name); players.push_back(player); for(int i = 1; i <
+//     dto.num_enemies; i++) {
+//         GameEnemy enemy = GameEnemy(dto.enemies[i].enemy_type, dto.enemies[i].id,
+//         dto.enemies[i].state); enemies.push_back(enemy);
+//     }
+//     this->seconds = dto.seconds;
+// }
+//
+// void check_for_new_players(GameStateDTO& dto, std::vector<GamePlayer>& players) {
+//     if (players.size() == dto.num_players) return;
+//     for(size_t i = players.size(); i < dto.num_players; i++) {
+//         GamePlayer player = GamePlayer(dto.players[i].id, dto.players[i].character,
+//         dto.players[i].state, dto.players[i].name); players.push_back(player);
+//     }
+// }
+//
+// GamePlayer get_player_by_id(uint8_t id, std::vector<GamePlayer>& players) {
+//     for(auto& player : players) {
+//         if(player.get_id() == id) {
+//             return player;
+//         }
+//     }
+//     throw std::runtime_error("Player with the given ID not found");
+// }
+//
+// void update_match(GameStateDTO& dto, std::vector<GamePlayer>& players, std::vector<GameEnemy>&
+// enemies) {
+//     for(int i = 0; i < dto.num_players; i++) {
+//         GamePlayer player = get_player_by_id(dto.players[i].id, players);
+//         player.set_health(dto.players[i].health);
+//         player.set_points(dto.players[i].points);
+//         player.set_state(dto.players[i].state);
+//     }
+//     int j = 0;
+//     for(auto& enemy : enemies) {
+//         enemy.set_health(dto.players[j].health);
+//         enemy.set_state(dto.players[j].state);
+//         j++;
+//     }
+// }
+
 void Client::start() {
     MenuScene menu(window, event_loop, resource_pool, game_running, menu_running, match_running);
-    MatchScene match(window, event_loop, resource_pool, match_running);
 
     event_loop->start();
 
     while (game_running) {
         menu.start();
         if (match_running) {
+            // TODO agregar como atributo match la cola game_state_q, para poder pasarle la info de
+            // game state. y agregar lo siguiente dentro para ejecutar el mensaje:
+            //
+            Queue<std::shared_ptr<GameStateDTO>> game_state_q;
+            std::shared_ptr<GameStateDTO> game_state;
+            game_state_q.try_pop(game_state);
+          
+            MatchScene match(window, event_loop, resource_pool, match_running);
             match.start();
         }
     }

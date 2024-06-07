@@ -1,4 +1,11 @@
-# Tp_final_Veiga
+# tp-final-veiga (Jazz Jackrabbit 2)
+
+## Participants
+
+- Maximo Damian Utrera - 109651 - <mutrera@fi.uba.ar>
+- Agustín Barbalase - 109071 - <abarbalase@fi.uba.ar>
+- Santiago Sevitz - 107520 - <ssevitz@fi.uba.ar>
+- Nicolas Ramiro Sanchez - 998792 - <nrsanchez@fi.uba.ar>
 
 ## Game requirements
 
@@ -11,6 +18,27 @@ libsdl2-mixer-dev \
 libyaml-cpp-dev \
 cmake \
 catch2
+```
+
+Para instalar y compilar el juego se puede usar el script `build.sh` o los comandos son:
+
+```bash
+mkdir build
+cd build
+cmake -DPRODUCTION=ON ..
+make
+```
+
+Esta secuencia compilara dos archivos: `server` y `client`. Para ejecutar `server` es
+
+```bash
+./server <port>
+```
+
+Para ejecutar uno o varios `client` es
+
+```bash
+./client <servname> <port>
 ```
 
 ## Devs requirements

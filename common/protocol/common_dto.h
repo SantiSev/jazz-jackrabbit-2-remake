@@ -36,7 +36,7 @@ typedef enum: uint8_t {
     MOVE_LEFT_FAST = 0x02,
     MOVE_RIGHT_FAST = 0x03,
     JUMP = 0x04,
-    ESPECIAL_ATTACK = 0x05,
+    SPECIAL_ATTACK = 0x05,
     CHANGE_WEAPON = 0x06,
     LOOK_UP = 0x07,
     DUCK_DOWN = 0x08,
@@ -51,10 +51,15 @@ typedef enum: uint8_t {
     LORI_CHAARCTER = 0x02
 } character_t;
 
+
+//------Messages send by client to server --------
+
+
 struct CheatCommandDTO {
     id_player_t id_player;
     cheat_command_t command;
 } __attribute__((packed));
+
 
 struct CommandDTO {
     id_player_t id_player;
@@ -65,6 +70,27 @@ struct LeaveMatchDTO {
     id_player_t id_player;
 } __attribute__((packed));
 
+struct CreateGameDTO {
+    id_client_t id_client;
+    character_t character_selected;
+    uint8_t map_name;  // todo change to enum constant
+    uint8_t max_players;
+} __attribute__((packed));
+
+struct JoinMatchDTO {
+    id_client_t id_client;
+    id_match_t id_match;
+    character_t player_character;
+} __attribute__((packed));
+
+struct RequestActiveGamesDTO {
+    id_client_t id_client;
+} __attribute__((packed));
+
+
+//------Messages send by server to client --------
+
+
 struct FinishMatchDTO {
 } __attribute__((packed));
 
@@ -72,6 +98,13 @@ struct WeaponDTO {
     uint8_t weapon_name;
     uint16_t ammo;
     uint8_t is_empty;
+} __attribute__((packed));
+
+struct EnemyDTO {
+    uint16_t id;
+    uint16_t health;
+    uint8_t enemy_type;
+    uint8_t state;
 } __attribute__((packed));
 
 struct PlayerDTO {
@@ -86,35 +119,14 @@ struct PlayerDTO {
 
 struct GameStateDTO {
     uint8_t num_players;
+    uint8_t num_enemies;
     PlayerDTO players[REQUIRED_PLAYERS_TO_START];
+    EnemyDTO enemies[MAX_ENEMIES];
     uint16_t seconds;
-    uint16_t minutes;
 } __attribute__((packed));
 
-struct CreateGameDTO {
-    id_client_t id_client;
-    character_t character_selected;
-    uint8_t map_name;  // todo change to enum constant
-    uint8_t max_players;
-} __attribute__((packed));
-
-struct GameCreatedInfoDTO {
+struct ClientHasConnectedToMatchDTO {
     id_player_t id_player;
-} __attribute__((packed));
-
-struct JoinMatchDTO {
-    id_client_t id_client;
-    id_match_t id_match;
-    character_t player_character;
-} __attribute__((packed));
-
-struct ClientJoinedMatchDTO {
-    id_client_t id_client;
-    id_player_t id_player;
-} __attribute__((packed));
-
-struct RequestActiveGamesDTO {
-    id_client_t id_client;
 } __attribute__((packed));
 
 struct ActiveGamesDTO {
@@ -126,10 +138,6 @@ struct ActiveGamesDTO {
 struct MatchInfoDTO {
     uint8_t num_games;
     ActiveGamesDTO active_games[MAX_MATCHES_TO_CREATE];
-} __attribute__((packed));
-
-struct GameCreatedDTO {
-    id_player_t id_player;
 } __attribute__((packed));
 
 #endif

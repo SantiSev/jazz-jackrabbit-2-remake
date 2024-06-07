@@ -7,6 +7,7 @@
 const uint8_t MAX_MATCHES_TO_CREATE = 16;
 const size_t REQUIRED_PLAYERS_TO_START =
         1;  // The match doesn't start without this many players connected to the match.
+const size_t MAX_ENEMIES = 6;
 
 // Type of events
 const uint8_t CONNECTION_EVENT = 0x00;
@@ -32,7 +33,15 @@ const uint8_t PLAYER_EVENT = 0x01;
 
 // Gameloop
 const size_t MAX_EVENTS_PER_LOOP = 4;
-const size_t STARTING_MATCH_TIME = 5;
+const size_t STARTING_MATCH_TIME = 60;
+
+// Player config
+#define MAX_HEALTH 100
+#define MIN_HEALTH 0
+#define STARTING_POINTS 0
+#define REVIVE_COOLDOWN 5
+#define INTOXICATON_COOLDOWN 4
+#define SPECIAL_COOLDOWN 3
 
 // Player states
 #define STATE_IDLE_RIGHT 0x00

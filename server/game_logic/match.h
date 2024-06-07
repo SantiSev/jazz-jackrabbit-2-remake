@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "../../game_engine/physics_engine/collision_manager.h"
 #include "../../server/game_logic/characters/enemy.h"
 #include "../../server/game_logic/characters/player.h"
 #include "../protocol/match_message_handler.h"
@@ -23,6 +24,7 @@ private:
     MatchMessageHandler message_handler;
     std::vector<Player> players;
     std::vector<Enemy> enemies;
+    //    std::vector<Proyectile> proyectiles;
     std::vector<std::string> items;
     size_t players_connected = 0;
     size_t required_players;
@@ -30,6 +32,7 @@ private:
     size_t seconds = STARTING_MATCH_TIME % 60;
     ClientMonitor client_monitor;
     uint8_t map;
+    //    CollisionManager collision_manager;
 
 public:
     // Constructor
@@ -79,6 +82,8 @@ public:
     void update_enemies();
 
     void initiate_enemies();
+
+    void update_proyectiles();
 };
 
 #endif
