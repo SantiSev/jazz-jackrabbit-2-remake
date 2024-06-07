@@ -35,7 +35,7 @@ const uint8_t PLAYER_EVENT = 0x01;
 
 // Gameloop
 const size_t MAX_EVENTS_PER_LOOP = 4;
-const size_t STARTING_MATCH_TIME = 60;
+const size_t STARTING_MATCH_TIME = 120;  // TODO match duration?
 
 // Player config
 #define MAX_HEALTH 100
