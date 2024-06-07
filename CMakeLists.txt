@@ -10,10 +10,11 @@ add_definitions(-DDATA_PATH="${PROJECT_SOURCE_DIR}/data")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic -pedantic-errors -O0 -ggdb -DDEBUG -fno-inline -std=${CXXSTD} -D _POSIX_C_SOURCE=200809L")
 
-find_package(SDL2 REQUIRED)
-find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_image REQUIRED)
-find_package(SDL2_mixer REQUIRED)
+# find_package(SDL2 REQUIRED)
+# find_package(SDL2_ttf REQUIRED)
+# find_package(SDL2_image REQUIRED)
+# find_package(SDL2_mixer REQUIRED)
+# find_package(YamlCpp REQUIRED)
 
 option(math "Use math.h" ON)
 option(threads "Use threads" ON)
@@ -35,7 +36,8 @@ endif()
 # define targets
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LDFLAGS}")
-set(CMAKE_PREFIX_PATH "${SDL2_INCLUDE_DIRS} ${SDL2_ttf_INCLUDE_DIRS} ${SDL2_image_INCLUDE_DIRS} ${SDL2_mixer_INCLUDE_DIRS}")
+set(CMAKE_PREFIX_PATH "${SDL2_INCLUDE_DIRS} ${SDL2_ttf_INCLUDE_DIRS} ${SDL2_image_INCLUDE_DIRS} ${SDL2_mixer
+yaml-cpp_INCLUDE_DIRS}")
 
 file(GLOB_RECURSE SOURCES_CLIENT "client/*.cpp" "client/**/*.cpp")
 file(GLOB_RECURSE SOURCES_SERVER "server/*.cpp" "sever/**/*.cpp")
@@ -73,17 +75,19 @@ if (PRODUCTION)
 
     target_link_libraries(client 
         SDL2main 
-        SDL2::SDL2 
-        SDL2_image::SDL2_image 
-        SDL2_ttf::SDL2_ttf 
+        SDL2 
+        SDL2_image 
+        SDL2_ttf 
         SDL2_mixer
+        yaml-cpp
     )
     target_link_libraries(server 
         SDL2main 
-        SDL2::SDL2 
-        SDL2_image::SDL2_image 
-        SDL2_ttf::SDL2_ttf 
-        SDL2_mixer::SDL2_mixer
+        SDL2 
+        SDL2_image 
+        SDL2_ttf 
+        SDL2_mixer
+        yaml-cpp
     )
 endif()
 
@@ -149,10 +153,11 @@ if (GRAPHICS)
                 server/game_logic/platforms/box_platform.h)
         target_link_libraries(${target_name}
             SDL2main
-            SDL2::SDL2
-            SDL2_image::SDL2_image
-            SDL2_ttf::SDL2_ttf
-            SDL2_mixer::SDL2_mixer)
+            SDL2
+            SDL2_image
+            SDL2_ttf
+            SDL2_mixer
+            yaml-cpp)
     endforeach()
 endif()
 
@@ -177,11 +182,11 @@ if(PHYSICS)
         ${HEADERS_CLIENT}
     )
     target_link_libraries(tests PRIVATE
-        Catch2::Catch2WithMain
+        Catch2WithMain
         SDL2main
-        SDL2::SDL2
-        SDL2_image::SDL2_image
-        SDL2_ttf::SDL2_ttf
+        SDL2
+        SDL2_image
+        SDL2_ttf
         ${SOURCES_COMMON} 
         ${SOURCES_GAME_ENGINE} 
         ${HEADERS_COMMON} 
@@ -193,12 +198,13 @@ if(PHYSICS)
         ${HEADERS_CLIENT}
     )
     target_link_libraries(tests PRIVATE 
-        Catch2::Catch2WithMain
+        Catch2WithMain
         SDL2main 
-        SDL2::SDL2
-        SDL2_image::SDL2_image 
-        SDL2_ttf::SDL2_ttf 
-        SDL2_mixer::SDL2_mixer
+        SDL2
+        SDL2_image 
+        SDL2_ttf 
+        SDL2_mixer
+        yaml-cpp
     )
 endif()
 
