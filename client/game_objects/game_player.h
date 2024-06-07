@@ -1,5 +1,5 @@
-#ifndef TP_FINAL_GAMEPLAYER_H
-#define TP_FINAL_GAMEPLAYER_H
+#ifndef TP_FINAL_GAME_PLAYER_H
+#define TP_FINAL_GAME_PLAYER_H
 
 #include <cstdint>
 #include <string>
@@ -16,6 +16,8 @@ private:
     uint16_t points = STARTING_POINTS;
     uint8_t state;
     //    WeaponDTO weapons[NUM_OF_WEAPONS];
+    int position_x = 0;
+    int position_y = 0;
 
 public:
     GamePlayer(const uint16_t& id, const uint8_t& character, const uint8_t& state,
@@ -28,6 +30,8 @@ public:
     void set_points(uint16_t i);
 
     void set_state(uint8_t points_updated);
+
+    void set_position(int x, int y);
 };
 
 

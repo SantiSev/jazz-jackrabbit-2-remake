@@ -1,10 +1,11 @@
-
 #ifndef GAME_ENGINE_COLISION_OBJECT_H_
 #define GAME_ENGINE_COLISION_OBJECT_H_
 
 #include "../game_object.h"
 
 #include "colision_face.h"
+
+class Bullet;
 
 /*
  * For every ColisionObject, its fundamental to take into account
@@ -54,6 +55,7 @@ public:
      * and act upon it, i can override this method and implement it.
      */
     virtual void handle_colision(CollisionObject& other) = 0;
+    virtual void handle_impact(Bullet& bullet) {}
 
 
     virtual ~CollisionObject() = default;

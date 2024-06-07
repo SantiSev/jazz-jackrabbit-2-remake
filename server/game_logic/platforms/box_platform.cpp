@@ -1,16 +1,12 @@
 //
-// Created by santi on 24/05/24.
+// Created by santi on 06/06/24.
 //
 
-#include "static_body.h"
+#include "box_platform.h"
 
+BoxPLatoform::BoxPLatoform(int x, int y, int width, int height): StaticBody(x, y, width, height) {}
 
-StaticBody::StaticBody(int width, int height): CollisionObject(width, height) {}
-
-StaticBody::StaticBody(int x, int y, int width, int height): CollisionObject(x, y, width, height) {}
-
-
-void StaticBody::handle_colision(CollisionObject& other) {
+void BoxPLatoform::handle_colision(CollisionObject& other) {
     // This is a static body, so it does not move.
     // Therefore, it does not need to handle colisions.
     CollisionFace face = this->is_touching(other);

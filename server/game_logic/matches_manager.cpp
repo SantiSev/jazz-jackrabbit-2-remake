@@ -4,8 +4,6 @@
 #include <utility>
 #include <vector>
 
-#include "../../common/protocol/messages/menu_events/send_connected_to_game.h"
-
 MatchesManager::MatchesManager():
         online(true),
         matches_number(0),

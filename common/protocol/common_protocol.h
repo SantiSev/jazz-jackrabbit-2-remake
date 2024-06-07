@@ -33,7 +33,7 @@ public:
     void send_join_match(const uint16_t header, JoinMatchDTO& join_match);
     void send_request_active_games(const uint16_t header, RequestActiveGamesDTO& active_games);
     void send_game_created(const uint16_t header, ClientHasConnectedToMatchDTO& game_created);
-    void send_message(std::shared_ptr<Message> message);
+    void send_message(const std::shared_ptr<Message>& message);
     void force_shutdown();
     ~CommonProtocol();
 

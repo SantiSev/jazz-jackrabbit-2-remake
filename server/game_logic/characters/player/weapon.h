@@ -2,6 +2,9 @@
 #define TP_FINAL_WEAPON_H
 
 #include <cstdio>
+
+#include "../../../../common/common_constants.h"
+
 class Weapon {
 private:
     size_t weapon_name = 0;
@@ -19,6 +22,8 @@ public:
     void set_is_empty(bool is_weapon_empty);
     bool is_weapon_empty() const;
     void decrease_ammo();
+
+    bool shoot();
 };
 
 #endif

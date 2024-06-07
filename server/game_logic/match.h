@@ -8,10 +8,11 @@
 
 #include "../../game_engine/physics_engine/collision_manager.h"
 #include "../../server/game_logic/characters/enemy.h"
-#include "../../server/game_logic/characters/player.h"
 #include "../protocol/match_message_handler.h"
 #include "../protocol/server_thread_manager.h"
 #include "./client_monitor.h"
+#include "areaObjects/bullet.h"
+#include "characters/player/player.h"
 
 
 class Match: public Thread {
@@ -22,9 +23,9 @@ private:
     std::shared_ptr<Queue<std::shared_ptr<Message>>> event_queue;  // shared with the receiver
     std::list<ServerThreadManager*> clients;
     MatchMessageHandler message_handler;
-    std::vector<Player> players;
-    std::vector<Enemy> enemies;
-    //    std::vector<Proyectile> proyectiles;
+    std::vector<std::shared_ptr<Player>> players;
+    std::vector<std::shared_ptr<Enemy>> enemies;
+    std::vector<std::shared_ptr<Bullet>> bullets;
     std::vector<std::string> items;
     size_t players_connected = 0;
     size_t required_players;
@@ -32,7 +33,7 @@ private:
     size_t seconds = STARTING_MATCH_TIME % 60;
     ClientMonitor client_monitor;
     uint8_t map;
-    //    CollisionManager collision_manager;
+    CollisionManager collision_manager;
 
 public:
     // Constructor
@@ -41,9 +42,9 @@ public:
     // Kill the thread
     void stop() override;
     // Destroyer
-    ~Match() = default;
+    ~Match() override = default;
 
-    Player& get_player(size_t id);
+    std::shared_ptr<Player> get_player(size_t id);
 
     void add_player_to_game(const std::string& player_name, const uint8_t& character);
 
@@ -56,10 +57,6 @@ public:
     size_t get_num_players();
 
     size_t get_max_players() const;
-
-    int get_minutes();
-
-    int get_seconds();
 
     void countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
                          const std::chrono::time_point<std::chrono::system_clock>& endTime);
@@ -83,7 +80,9 @@ public:
 
     void initiate_enemies();
 
-    void update_proyectiles();
+    Vector2D select_spawn_point();
+
+    void patrol_move_enemies();
 };
 
 #endif

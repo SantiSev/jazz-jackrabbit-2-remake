@@ -100,11 +100,17 @@ struct WeaponDTO {
     uint8_t is_empty;
 } __attribute__((packed));
 
+struct BulletDTO {
+    uint8_t bullet_type;
+    uint16_t x_pos;
+    uint16_t y_pos;
+} __attribute__((packed));
+
 struct EnemyDTO {
-    uint16_t id;
-    uint16_t health;
     uint8_t enemy_type;
     uint8_t state;
+    uint16_t x_pos;
+    uint16_t y_pos;
 } __attribute__((packed));
 
 struct PlayerDTO {
@@ -114,14 +120,18 @@ struct PlayerDTO {
     uint8_t character;
     uint16_t points;
     uint8_t state;
+    uint16_t x_pos;
+    uint16_t y_pos;
     WeaponDTO weapons[NUM_OF_WEAPONS];
 } __attribute__((packed));
 
 struct GameStateDTO {
     uint8_t num_players;
     uint8_t num_enemies;
+    uint8_t num_bullets;
     PlayerDTO players[REQUIRED_PLAYERS_TO_START];
     EnemyDTO enemies[MAX_ENEMIES];
+    BulletDTO bullets[50 * REQUIRED_PLAYERS_TO_START];
     uint16_t seconds;
 } __attribute__((packed));
 

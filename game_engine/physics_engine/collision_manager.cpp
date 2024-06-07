@@ -1,7 +1,3 @@
-//
-// Created by santi on 28/05/24->
-//
-
 #include "collision_manager.h"
 
 #include <algorithm>
@@ -75,8 +71,8 @@ void CollisionManager::detect_colisions(std::shared_ptr<DynamicBody> obj) {
         for (int j = obj_y; j < obj_y + obj_height; ++j) {
             std::shared_ptr<CollisionObject> other = get_collision_object_at(i, j);
             if (other != nullptr && other.get() != obj.get()) {
-                other->handle_colision(*obj);
-                // obj->handle_colision(*other); todo --> check to implement like this
+                obj->handle_colision(
+                        *other);  // Handle the collision with respect to me and all others
             }
         }
     }
@@ -133,4 +129,5 @@ void CollisionManager::clear() {
     for (auto& column: grid) {
         std::fill(column.begin(), column.end(), nullptr);
     }
+    dynamic_bodies.clear();
 }

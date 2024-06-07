@@ -1,7 +1,10 @@
 #include "client.h"
 
-#include "game_objects/GameEnemy.h"
-#include "game_objects/GamePlayer.h"
+#include <algorithm>
+
+#include "game_objects/game_bullets.h"
+#include "game_objects/game_enemy.h"
+#include "game_objects/game_player.h"
 
 Client::Client(const std::string& host, const std::string& port):
         message_handler(),
@@ -23,21 +26,22 @@ Client::Client(const std::string& host, const std::string& port):
 // void initiate_match(GameStateDTO& dto, std::vector<GamePlayer>& players, std::vector<GameEnemy>&
 // enemies) {
 //     GamePlayer player = GamePlayer(dto.players[0].id, dto.players[0].character,
-//     dto.players[0].state, dto.players[0].name); players.push_back(player); for(int i = 1; i <
-//     dto.num_enemies; i++) {
-//         GameEnemy enemy = GameEnemy(dto.enemies[i].enemy_type, dto.enemies[i].id,
-//         dto.enemies[i].state); enemies.push_back(enemy);
+//     dto.players[0].state, dto.players[0].name);
+//
+//     players.push_back(player); for(int i = 1; i < dto.num_enemies; i++) {
+//         GameEnemy enemy = GameEnemy(dto.enemies[i].enemy_type,dto.enemies[i].state);
+//         enemies.push_back(enemy);
 //     }
-//     this->seconds = dto.seconds;
+////     this->seconds = dto.seconds;
 // }
 //
-// void check_for_new_players(GameStateDTO& dto, std::vector<GamePlayer>& players) {
-//     if (players.size() == dto.num_players) return;
-//     for(size_t i = players.size(); i < dto.num_players; i++) {
-//         GamePlayer player = GamePlayer(dto.players[i].id, dto.players[i].character,
-//         dto.players[i].state, dto.players[i].name); players.push_back(player);
-//     }
-// }
+// void check_for_new_bullets(GameStateDTO& dto, std::vector<GameBullets>& bullets) {
+//    if (bullets.size() == dto.num_players) return;
+//    for(size_t i = bullets.size(); i < dto.num_players; i++) {
+//        GameBullets bullet = GameBullets(dto.bullets[i].x_pos, dto.bullets[i].y_pos,
+//        dto.bullets[i].bullet_type); bullets.push_back(bullet);
+//    }
+//}
 //
 // GamePlayer get_player_by_id(uint8_t id, std::vector<GamePlayer>& players) {
 //     for(auto& player : players) {
@@ -48,6 +52,37 @@ Client::Client(const std::string& host, const std::string& port):
 //     throw std::runtime_error("Player with the given ID not found");
 // }
 //
+// bool playerExistsInMatch(const GamePlayer& player, const GameStateDTO& gameState) {
+//    for (int i = 0; i < gameState.num_players; ++i) {
+//        if (gameState.players[i].id == player.get_id()) {
+//            return true;
+//        }
+//    }
+//    return false;
+//}
+//
+// void removeDisconnectedPlayers(std::vector<GamePlayer>& currentPlayers, const GameStateDTO&
+// gameState) {
+//    auto newEnd = std::remove_if(currentPlayers.begin(), currentPlayers.end(),
+//                                 [&gameState](const GamePlayer& player) {
+//                                     return !playerExistsInMatch(player, gameState);
+//                                 });
+//    if (newEnd != currentPlayers.end()) {
+//        std::cout << "Removing disconnected players..." << std::endl;
+//        currentPlayers.erase(newEnd, currentPlayers.end());
+//    }
+//}
+//
+// void check_for_new_players(GameStateDTO& dto, std::vector<GamePlayer>& players) {
+//    if (players.size() == dto.num_players) return;
+//    for(size_t i = players.size(); i < dto.num_players; i++) {
+//        GamePlayer player = GamePlayer(dto.players[i].id, dto.players[i].character,
+//                                       dto.players[i].state, dto.players[i].name);
+//        player.set_position(dto.players[i].x_pos, dto.players[i].y_pos);
+//        players.push_back(player);
+//    }
+//}
+//
 // void update_match(GameStateDTO& dto, std::vector<GamePlayer>& players, std::vector<GameEnemy>&
 // enemies) {
 //     for(int i = 0; i < dto.num_players; i++) {
@@ -55,11 +90,13 @@ Client::Client(const std::string& host, const std::string& port):
 //         player.set_health(dto.players[i].health);
 //         player.set_points(dto.players[i].points);
 //         player.set_state(dto.players[i].state);
+//         player.set_position(dto.players[i].x_pos, dto.players[i].y_pos);
 //     }
 //     int j = 0;
 //     for(auto& enemy : enemies) {
 //         enemy.set_health(dto.players[j].health);
 //         enemy.set_state(dto.players[j].state);
+//         enemy.set_position(dto.players[j].x_pos, dto.players[j].y_pos);
 //         j++;
 //     }
 // }
