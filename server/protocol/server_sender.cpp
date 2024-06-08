@@ -5,7 +5,7 @@ ServerSender::ServerSender(ServerProtocol& protocol):
 
 bool ServerSender::is_dead() { return _keep_running; }
 
-void ServerSender::kill() {
+void ServerSender::stop() {
     _keep_running = false;
     queue->close();
     server_protocol.force_shutdown();

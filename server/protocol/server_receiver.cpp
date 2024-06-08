@@ -6,7 +6,10 @@ ServerReceiver::ServerReceiver(ServerProtocol& protocol,
 
 bool ServerReceiver::is_dead() { return _keep_running; }
 
-void ServerReceiver::kill() { _keep_running = false; }
+void ServerReceiver::stop() {
+    _keep_running = false;
+    queue->close();
+}
 
 void ServerReceiver::run() {
     try {

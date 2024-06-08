@@ -30,9 +30,9 @@ void ServerThreadManager::set_sender_queue(
 }
 
 void ServerThreadManager::stop() {
-    sender.kill();
+    sender.stop();
     sender.join();
-    receiver.kill();
+    receiver.stop();
     receiver.join();
 }
 
