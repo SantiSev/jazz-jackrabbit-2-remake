@@ -38,4 +38,4 @@ void ServerThreadManager::stop() {
 
 void ServerThreadManager::set_client_id(const size_t& new_id) { this->client_id = new_id; }
 
-size_t ServerThreadManager::get_client_id() const { return client_id; }
+id_client_t ServerThreadManager::get_client_id() const { return client_id; }

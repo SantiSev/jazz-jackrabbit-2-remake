@@ -29,7 +29,7 @@ public:
     void quit();
 
     void handle_acpt_connection(const id_client_t& id_client) override;
-    void handle_recv_close_connection() override;
+    void handle_recv_close_connection(const CloseConnectionDTO& dto) override;
     void handle_connected_to_match(const ClientHasConnectedToMatchDTO& dto) override;
     void handle_recv_active_games(const MatchInfoDTO& dto) override;
     void handle_recv_game_state(const GameStateDTO& dto) override;

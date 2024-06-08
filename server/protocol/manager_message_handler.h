@@ -19,6 +19,8 @@ public:
     void handle_recv_join_match(const JoinMatchDTO& dto) override;
 
     void handle_request_active_games(const RequestActiveGamesDTO& dto) override;
+
+    void handle_recv_close_connection(const CloseConnectionDTO& dto) override;
 };
 
 

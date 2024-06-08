@@ -5,6 +5,8 @@
 
 #include <arpa/inet.h>
 
+#include "messages/connection_events/close_connection.h"
+
 CommonProtocol::CommonProtocol(Socket&& skt): skt(std::move(skt)), was_closed(false) {}
 
 CommonProtocol::CommonProtocol(const std::string& hostname, const std::string& servname):
@@ -82,10 +84,7 @@ void CommonProtocol::send_game_state(const uint16_t header, GameStateDTO& game_s
     skt.sendall(&game_state, sizeof(game_state), &was_closed);
 }
 
-void CommonProtocol::send_finish_match(const uint16_t header, FinishMatchDTO& finish_match) {
-    send_header(header);
-    skt.sendall(&finish_match, sizeof(finish_match), &was_closed);
-}
+void CommonProtocol::send_finish_match(const uint16_t header) { send_header(header); }
 
 void CommonProtocol::send_request_active_games(const uint16_t header,
                                                RequestActiveGamesDTO& active_games) {
@@ -97,14 +96,12 @@ void CommonProtocol::send_request_active_games(const uint16_t header,
 void CommonProtocol::send_game_created(const uint16_t header,
                                        ClientHasConnectedToMatchDTO& game_created) {
     send_header(header);
-    game_created.id_player = htons(game_created.id_player);
     skt.sendall(&game_created, sizeof(game_created), &was_closed);
 }
 
 void CommonProtocol::send_game_joined(const uint16_t header,
                                       ClientHasConnectedToMatchDTO& game_joined) {
     send_header(header);
-    game_joined.id_player = htons(game_joined.id_player);
     skt.sendall(&game_joined, sizeof(game_joined), &was_closed);
 }
 
@@ -121,6 +118,13 @@ void CommonProtocol::force_shutdown() {
     was_closed = true;
     skt.shutdown(2);
     skt.close();
+}
+
+std::shared_ptr<Message> CommonProtocol::recv_closed_connection() {
+    CloseConnectionDTO dto = {};
+    skt.recvall(&dto, sizeof(dto), &was_closed);
+    dto.id_client = ntohs(dto.id_client);
+    return std::make_shared<CloseConnectionMessage>(dto);
 }
 
 CommonProtocol::~CommonProtocol() = default;

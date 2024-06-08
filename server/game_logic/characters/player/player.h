@@ -85,7 +85,7 @@ public:
 
     //------- Revive Methods --------
 
-    void revive();
+    void revive(Vector2D pos);
     void decrease_revive_cooldown();
     bool can_revive() const;
     void reset_revive_cooldown();

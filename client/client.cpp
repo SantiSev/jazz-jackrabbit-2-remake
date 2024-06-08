@@ -11,8 +11,7 @@ Client::Client(const std::string& host, const std::string& port):
         thread_manager(new ClientThreadManager(host, port, event_loop->recv_message,
                                                message_handler.send_message)),
         map_enum(NO_MAP),
-        id_client(0),
-        id_player(0) {
+        id_client(0) {
     // Pre-load necessary resources
     pre_load_resources(resource_pool);
 }

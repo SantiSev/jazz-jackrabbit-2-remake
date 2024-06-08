@@ -41,13 +41,12 @@ private:
     EventLoop* event_loop;
     ClientThreadManager* thread_manager;
 
-    map_list_t map_enum;
 
     void pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_pool);
 
 public:
+    std::atomic<map_list_t> map_enum;
     std::atomic<id_client_t> id_client;
-    std::atomic<id_player_t> id_player;
 
     Client(const std::string& host, const std::string& port);
 

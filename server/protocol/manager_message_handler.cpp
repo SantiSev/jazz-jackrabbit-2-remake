@@ -13,3 +13,7 @@ void MatchesManagerMessageHandler::handle_recv_join_match(const JoinMatchDTO& dt
 void MatchesManagerMessageHandler::handle_request_active_games(const RequestActiveGamesDTO& dto) {
     matches_manager.send_match_lists(dto);
 }
+
+void MatchesManagerMessageHandler::handle_recv_close_connection(const CloseConnectionDTO& dto) {
+    matches_manager.delete_disconnected_client(dto.id_client);
+}

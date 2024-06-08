@@ -52,7 +52,6 @@ typedef enum: uint8_t {
     LORI_CHAARCTER = 0x02
 } character_t;
 
-
 //------Messages send by client to server --------
 
 
@@ -137,7 +136,6 @@ struct GameStateDTO {
 } __attribute__((packed));
 
 struct ClientHasConnectedToMatchDTO {
-    id_player_t id_player;
     map_list_t map;
 } __attribute__((packed));
 
@@ -150,6 +148,13 @@ struct ActiveGamesDTO {
 struct MatchInfoDTO {
     uint8_t num_games;
     ActiveGamesDTO active_games[MAX_MATCHES_TO_CREATE];
+} __attribute__((packed));
+
+
+//------Messages sended by both client and server --------
+
+struct CloseConnectionDTO {
+    uint16_t id_client;
 } __attribute__((packed));
 
 #endif

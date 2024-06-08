@@ -4,16 +4,13 @@
 
 #include <arpa/inet.h>
 
-#include "../../common/protocol/messages/menu_events/send_connected_to_game.h"
-
-
 ClientProtocol::ClientProtocol(const std::string& hostname, const std::string& servname):
         CommonProtocol(hostname, servname) {}
 
 std::shared_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
     FinishMatchDTO finish_match = {};
     skt.recvall(&finish_match, sizeof(finish_match), &was_closed);
-    return std::make_shared<SendFinishMatchMessage>(finish_match);
+    return std::make_shared<SendFinishMatchMessage>();
 }
 
 std::shared_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() {
@@ -47,7 +44,6 @@ std::shared_ptr<SendRequestGamesMessage> ClientProtocol::recv_active_games() {
 std::shared_ptr<SendConnectedToGameMessage> ClientProtocol::recv_game_created() {
     ClientHasConnectedToMatchDTO game_created = {};
     skt.recvall(&game_created, sizeof(game_created), &was_closed);
-    game_created.id_player = ntohs(game_created.id_player);
     return std::make_shared<SendConnectedToGameMessage>(game_created);
 }
 
@@ -59,7 +55,6 @@ std::shared_ptr<AcptConnection> ClientProtocol::recv_acpt_connection() {
 std::shared_ptr<Message> ClientProtocol::recv_game_joined() {
     ClientHasConnectedToMatchDTO game_joined = {};
     skt.recvall(&game_joined, sizeof(game_joined), &was_closed);
-    game_joined.id_player = ntohs(game_joined.id_player);
     return std::make_shared<SendConnectedToGameMessage>(game_joined);
 }
 
@@ -68,7 +63,7 @@ std::shared_ptr<Message> ClientProtocol::recv_message() {
 
     switch (header) {
         case CLOSE_CONNECTION:
-            return std::make_shared<CloseConnectionMessage>();
+            return recv_closed_connection();
         case SEND_FINISH_MATCH:
             return recv_finish_match();
         case SEND_GAME_STATE:

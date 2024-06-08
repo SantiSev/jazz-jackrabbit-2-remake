@@ -10,7 +10,7 @@ private:
     ServerProtocol server_protocol;
     ServerReceiver receiver;
     ServerSender sender;
-    size_t client_id = 0;
+    id_client_t client_id = 0;
 
 
 public:
@@ -27,7 +27,7 @@ public:
 
     void set_client_id(const size_t& client_id);
 
-    size_t get_client_id() const;
+    id_client_t get_client_id() const;
 
     void stop();
 
