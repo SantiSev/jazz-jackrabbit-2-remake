@@ -110,7 +110,7 @@ void CollisionManager::update() {  // create to update specific object
 
         auto& obj = std::get<0>(*it);
 
-        if (obj != nullptr) {
+        if (obj != nullptr || !obj->is_active_object()) {
             auto& old_position_ref = std::get<1>(*it);
 
             obj->update_db();

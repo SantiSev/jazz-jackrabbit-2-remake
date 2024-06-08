@@ -23,9 +23,6 @@ private:
     std::vector<std::vector<std::shared_ptr<CollisionObject>>>
             grid;  // grid: [x][y] stores a vector of shared pointers to CollisionObjects
 
-    // create a tuple of dynamic bodies that stores their shared pointer and their current position
-    std::vector<std::tuple<std::shared_ptr<DynamicBody>, Vector2D>> dynamic_bodies;
-
     void handle_out_of_bounds(std::shared_ptr<DynamicBody> obj);
     void place_object_in_grid(std::shared_ptr<CollisionObject> obj);
     void remove_object_from_grid(std::shared_ptr<CollisionObject> obj, Vector2D position);
@@ -37,6 +34,7 @@ private:
     void detect_colisions(std::shared_ptr<DynamicBody> obj);
 
 public:
+    std::vector<std::tuple<std::shared_ptr<DynamicBody>, Vector2D>> dynamic_bodies;
     CollisionManager(int levelWidth, int levelHeight);
 
     std::shared_ptr<CollisionObject> get_collision_object_at(int x, int y) const;

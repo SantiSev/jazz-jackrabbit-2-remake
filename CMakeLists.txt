@@ -156,6 +156,17 @@ if (GRAPHICS)
     endforeach()
 endif()
 
+# GRAPHICS TEST
+if (GP_TESTS)
+        add_executable(GPTEST "tests/graphics/gui_phy_test.cpp"
+        ${HEADERS_GAME_ENGINE} 
+        ${SOURCES_GAME_ENGINE} 
+        ${SOURCES_COMMON} 
+        ${HEADERS_COMMON}  
+        ${SERVER_WITHOUT_MAIN}) 
+        target_link_libraries(GPTEST SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
+endif()
+
 
 if(PHYSICS)
 

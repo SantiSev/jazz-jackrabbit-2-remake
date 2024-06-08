@@ -45,7 +45,7 @@ void Bullet::handle_colision(CollisionObject* other) {
         if (character) {
             character->take_damage(bullet_damage);
             player_owner.add_points(BULLET_POINTS);
-            if (!character->is_alive()) {
+            if (character->is_dead()) {
                 player_owner.add_points(BULLET_BONUS_POINTS);
             }
         }

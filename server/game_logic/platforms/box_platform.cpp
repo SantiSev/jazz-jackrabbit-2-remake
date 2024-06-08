@@ -6,9 +6,9 @@
 
 #include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
 
-BoxPLatoform::BoxPLatoform(int x, int y, int width, int height): StaticBody(x, y, width, height) {}
+BoxPlatform::BoxPlatform(int x, int y, int width, int height): StaticBody(x, y, width, height) {}
 
-void BoxPLatoform::handle_colision(CollisionObject* other) {
+void BoxPlatform::handle_colision(CollisionObject* other) {
 
     CollisionFace face = this->is_touching(other);
     DynamicBody* dynamic_body = dynamic_cast<DynamicBody*>(other);

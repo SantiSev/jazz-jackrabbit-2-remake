@@ -37,6 +37,7 @@ public:
     //------- Overrided Methods --------
 
     void update_db() override;
+    void handle_colision(CollisionObject* other) override;
 
     //------- Getters --------
 
@@ -63,6 +64,7 @@ public:
 
     void reset_intoxication();
     bool is_player_intoxicated() const;
+
     void decrease_intoxication_cooldown();
     size_t get_intoxication_cooldown() const;
 
@@ -75,7 +77,7 @@ public:
 
     //------- Movement Methods --------
 
-    virtual void do_special_attack() = 0;
+    virtual void do_special_attack();
     void move_left() override;
     void move_right() override;
     void jump() override;

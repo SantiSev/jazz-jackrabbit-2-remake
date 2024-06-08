@@ -10,6 +10,7 @@
 #include "../../../common/common_constants.h"
 #include "../../../game_engine/physics_engine/collision_manager.h"
 #include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
+#include "../collectables/collectable.h"
 
 class CharacterBody: public DynamicBody {
 protected:
@@ -40,7 +41,7 @@ public:
     size_t get_health() const;
     uint8_t get_character() const;
     uint8_t get_state() const;
-    bool is_alive() const;
+    bool is_dead() const;
 
     //------- Setters --------
 

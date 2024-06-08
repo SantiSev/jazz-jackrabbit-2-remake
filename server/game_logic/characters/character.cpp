@@ -3,8 +3,6 @@
 #include <cstdint>
 #include <utility>
 
-#include "../collectables/collectable.h"
-
 CharacterBody::CharacterBody(size_t id, const uint8_t& character, int x, int y, int w, int h,
                              Vector2D velocity, size_t health, uint8_t state,
                              size_t revive_cooldown):
@@ -25,7 +23,7 @@ uint8_t CharacterBody::get_character() const { return character_reference; }
 
 uint8_t CharacterBody::get_state() const { return state; }
 
-bool CharacterBody::is_alive() const { return health == 0; }
+bool CharacterBody::is_dead() const { return health == 0; }
 
 //------- Setters --------
 

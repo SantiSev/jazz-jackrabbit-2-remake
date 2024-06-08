@@ -5,10 +5,12 @@
 
 #include "../weapons/guns.h"
 
+#define MAX_FALL_SPEED 10
+
 Player::Player(size_t id, std::string name, const uint8_t& character, int x, int y,
                CollisionManager& collision_manager):
         CharacterBody(id, character, x, y, PLAYER_WIDTH, PLAYER_HEIGHT,
-                      Vector2D(NO_SPEED, DEFAULT_SPEED_Y), MAX_HEALTH, STATE_IDLE_RIGHT,
+                      Vector2D(NO_SPEED, MAX_FALL_SPEED), MAX_HEALTH, STATE_IDLE_RIGHT,
                       REVIVE_COOLDOWN),
         name(std::move(name)),
         points(STARTING_POINTS),
@@ -94,20 +96,28 @@ void Player::move_right() {
 }
 
 void Player::jump() {
-    on_floor = false;
-    velocity.y = -JUMP_SPEED;
+    if (on_floor) {
+        on_floor = false;
+        velocity.y = -JUMP_SPEED;
+    }
 }
 
 // ------------ Override Methods --------------
 
 void Player::update_db() {
 
-    if (is_alive()) {  // if the player is dead, then it shouldnt move
+    // print on_floor
+    std::cout << on_floor << std::endl;
+
+
+    if (is_dead()) {  // if the player is dead, then it shouldnt move
         return;
     }
 
     if (!on_floor) {
-        velocity.y += GRAVITY;
+        if (velocity.y < MAX_FALL_SPEED) {
+            velocity.y += GRAVITY;
+        }
 
     } else {
         velocity.x -= FRICCTION * direction;
@@ -119,5 +129,39 @@ void Player::update_db() {
 
     position += velocity;
 
-    // print_info();
+    velocity.x = 0;
+
+    print_info();
+}
+
+void Player::handle_colision(CollisionObject* other) {
+
+    on_floor = true;
+
+    CollisionFace face = is_touching(other);
+
+    // cast to Collectable
+    Collectable* collectable = dynamic_cast<Collectable*>(other);
+
+    if (!collectable) {
+        std::cout << "NOT COLLECTABLE!" << std::endl;
+    }
+
+    if (face == CollisionFace::LEFT ||
+        face == CollisionFace::RIGHT) {  // if im touching something on my side, then i cant
+        // move
+        // into it
+        velocity.x = 0;
+    } else if (face == CollisionFace::TOP) {  // if i touch something on top, then i cant move into
+        std::cout << "TOUCHING TOP" << std::endl;
+        // it and i stop moving up
+        velocity.y = 0;
+    } else if (face == CollisionFace::BOTTOM) {
+        std::cout << "TOUCHING FLOOR" << std::endl;
+        velocity.y = 10;  // set a small value to avoid getting stuck in the air while walking off
+        // platform
+        on_floor = true;
+    } else if (face == CollisionFace::NONE) {
+        on_floor = false;
+    }
 }
