@@ -6,11 +6,11 @@
 
 #include <SDL2/SDL.h>
 
+#include "../../common/assets.h"
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/gui/basic/window.h"
 #include "../../game_engine/gui/widgets/button.h"
 #include "../../game_engine/gui/widgets/sprite.h"
-#include "../assets.h"
 #include "../event_loop.h"
 #include "../menu_objects/create_match_button.h"
 #include "../menu_objects/join_match_button.h"

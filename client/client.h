@@ -11,6 +11,7 @@
 
 #include <SDL2/SDL.h>
 
+#include "../common/assets.h"
 #include "../common/common_queue.h"
 #include "../game_engine/gui/basic/resource_pool.h"
 #include "../game_engine/gui/basic/window.h"
@@ -25,7 +26,6 @@
 #include "scenes/match.h"
 #include "scenes/menu.h"
 
-#include "assets.h"
 #include "event_loop.h"
 
 class Client {
@@ -40,6 +40,8 @@ private:
     ClientMessageHandler message_handler;
     EventLoop* event_loop;
     ClientThreadManager* thread_manager;
+
+    map_list_t map_enum;
 
     void pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_pool);
 

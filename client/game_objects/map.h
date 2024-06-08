@@ -7,11 +7,12 @@
 
 #include <yaml-cpp/yaml.h>
 
+#include "../../common/assets.h"
+#include "../../common/map_enum.h"
 #include "../../game_engine/gui/basic/asset_manager.h"
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/gui/canvas_object.h"
 #include "../../game_engine/gui/widgets/sprite.h"
-#include "../assets.h"
 
 class Map: public engine::CanvasObject {
 private:
@@ -22,8 +23,7 @@ private:
     void load_map(const std::string& tileset_name, const std::string& yaml_name);
 
 public:
-    Map(const std::string& tileset_name, const std::string& yaml_name,
-        std::shared_ptr<engine::ResourcePool> resource_pool);
+    Map(const map_list_t& map_enum, std::shared_ptr<engine::ResourcePool> resource_pool);
 
     void draw(SDL_Renderer* renderer) override;
 

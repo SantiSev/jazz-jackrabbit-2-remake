@@ -1,9 +1,9 @@
 #include "map.h"
 
-Map::Map(const std::string& tileset_name, const std::string& yaml_name,
-         std::shared_ptr<engine::ResourcePool> resource_pool):
+Map::Map(const map_list_t& map_enum, std::shared_ptr<engine::ResourcePool> resource_pool):
         resource_pool(resource_pool) {
-    load_map(tileset_name, yaml_name);
+    std::string map_name = map_list_to_string.at(map_enum);
+    load_map(map_name + PNG_EXTENSION, map_name + YAML_EXTENSION);
 }
 
 void Map::draw(SDL_Renderer* renderer) {
