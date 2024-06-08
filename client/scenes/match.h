@@ -6,9 +6,9 @@
 
 #include <SDL2/SDL.h>
 
+#include "../../common/assets.h"
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/gui/basic/window.h"
-#include "../assets.h"
 #include "../event_loop.h"
 #include "../game_objects/map.h"
 
@@ -19,18 +19,24 @@ private:
     EventLoop* event_loop;
     std::shared_ptr<engine::ResourcePool> resource_pool;
     std::atomic<bool>& match_running;
-    Map map;
+    std::unique_ptr<Map> map;
+    Queue<std::shared_ptr<GameStateDTO>>& game_state_q;
+
+    void create_objects();
+    void update_objects();
 
 public:
     MatchScene(engine::Window& window, EventLoop* event_loop,
                std::shared_ptr<engine::ResourcePool> resource_pool,
-               std::atomic<bool>& match_running);
+               std::atomic<bool>& match_running, ClientMessageHandler& message_handler);
 
     // cant copy
     MatchScene(const MatchScene&) = delete;
     MatchScene& operator=(const MatchScene&) = delete;
 
     void start();
+
+    void load_map(const map_list_t& map_enum);
 
     ~MatchScene();
 };

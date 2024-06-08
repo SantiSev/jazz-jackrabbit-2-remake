@@ -15,4 +15,8 @@
 #define MAP1_TILESET "assets/maps/map_1.png"
 #define MAP1_YAML "assets/maps/map_1.yaml"
 
+// Formats
+#define YAML_EXTENSION ".yaml"
+#define PNG_EXTENSION ".png"
+
 #endif  // TP_FINAL_ASSETS_H

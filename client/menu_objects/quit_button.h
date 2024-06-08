@@ -6,10 +6,10 @@
 
 #include <SDL2/SDL.h>
 
+#include "../../common/assets.h"
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/gui/widgets/button.h"
 #include "../../game_engine/gui/widgets/label.h"
-#include "../assets.h"
 #include "../protocol/client_message_handler.h"
 
 

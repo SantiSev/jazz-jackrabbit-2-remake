@@ -1,3 +1,5 @@
+map_width: 1280
+map_height: 600
 objects:
     - name: "background_1"
       collision: false
@@ -48,4 +50,9 @@ enemy_spawnpoints:
     - x: 500
       y: 100
     - x: 300
+      y: 100
+item_spawnpoints:
+    - x: 700
+      y: 100
+    - x: 900
       y: 100

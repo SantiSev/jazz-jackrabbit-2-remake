@@ -1,21 +1,18 @@
 #include "client.h"
 
-#include <algorithm>
-
-#include "game_objects/game_bullets.h"
-#include "game_objects/game_enemy.h"
-#include "game_objects/game_player.h"
-
 Client::Client(const std::string& host, const std::string& port):
-        message_handler(),
         window(800, 600, true, true),
         resource_pool(std::make_shared<engine::ResourcePool>(window.get_renderer())),
         game_running(true),
         menu_running(true),
         match_running(false),
+        message_handler(*this),
         event_loop(new EventLoop(game_running, menu_running, match_running, message_handler)),
         thread_manager(new ClientThreadManager(host, port, event_loop->recv_message,
-                                               message_handler.send_message)) {
+                                               message_handler.send_message)),
+        map_enum(NO_MAP),
+        id_client(0),
+        id_player(0) {
     // Pre-load necessary resources
     pre_load_resources(resource_pool);
 }
@@ -102,24 +99,21 @@ Client::Client(const std::string& host, const std::string& port):
 // }
 
 void Client::start() {
-    MenuScene menu(window, event_loop, resource_pool, game_running, menu_running, match_running,
-                   message_handler);
-
+    MenuScene menu_scene(window, event_loop, resource_pool, game_running, menu_running,
+                         match_running, message_handler);
+    MatchScene match_scene(window, event_loop, resource_pool, match_running, message_handler);
     event_loop->start();
 
     while (game_running) {
-        menu.start();
+        menu_scene.start();
         if (match_running) {
-            // TODO agregar como atributo match la cola game_state_q, para poder pasarle la info de
-            // game state. y agregar lo siguiente dentro para ejecutar el mensaje:
-            //
-            Queue<std::shared_ptr<GameStateDTO>> game_state_q;
-            std::shared_ptr<GameStateDTO> game_state;
-            game_state_q.try_pop(game_state);
-
-            MatchScene match(window, event_loop, resource_pool, match_running);
-            match.start();
+            // match_scene.load_map(map_enum);
+            match_scene.load_map(MAP_1);
+            match_scene.start();
         }
+        // if (editor_running) {
+        //     editor_scene.start();
+        // }
     }
 
     //    std::list<engine::CanvasObject*> objects;
@@ -168,11 +162,17 @@ void Client::pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_
     // Textures
     resource_pool->load_texture(BACKGROUNDS);
     resource_pool->load_texture(JAZZ);
-    resource_pool->load_texture(MAP1_TILESET);
+    resource_pool->load_texture(map_list_to_string.at(MAP_1) + PNG_EXTENSION);
     resource_pool->load_texture("assets/jazz_test.png");
 
     // Fonts
     resource_pool->load_font(FONT, FONT_SIZE);
+}
+
+void Client::close() {
+    game_running.store(false);
+    menu_running.store(false);
+    match_running.store(false);
 }
 
 Client::~Client() {
