@@ -14,8 +14,9 @@
 #include "../../server/game_logic/weapons/bullet.h"
 #include "../protocol/match_message_handler.h"
 #include "../protocol/server_thread_manager.h"
-#include "./client_monitor.h"
 #include "characters/character.h"
+
+#include "client_monitor.h"
 
 class Match: public Thread {
 private:

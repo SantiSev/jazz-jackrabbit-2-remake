@@ -1,6 +1,4 @@
 
-/*
-
 #include "match.h"
 
 #include <algorithm>
@@ -24,6 +22,8 @@ Match::Match(const uint8_t& map_selected, size_t required_players_setting):
         collision_manager(800, 600) {
     initiate_enemies();
 }
+
+/*
 
 void Match::run() {
     try {
@@ -388,5 +388,70 @@ void Match::patrol_move_enemies() {
     }
 }
 
-
  */
+
+
+// Run the match
+void Match::run() {}
+
+// Stop the match
+void Match::stop() {}
+
+// Get a player by ID
+std::shared_ptr<Player> Match::get_player(size_t id) { return nullptr; }
+
+// Add a player to the game
+void Match::add_player_to_game(const std::string& player_name, const uint8_t& character) {}
+
+// Create actual game state snapshot
+GameStateDTO Match::create_actual_snapshot() { return GameStateDTO(); }
+
+// Check if match has ended
+bool Match::has_match_ended() const { return false; }
+
+// Get the match name
+std::string Match::get_match_name() const { return ""; }
+
+// Get number of players
+size_t Match::get_num_players() { return 0; }
+
+// Get maximum players
+size_t Match::get_max_players() const { return 0; }
+
+// Countdown match time
+void Match::countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
+                            const std::chrono::time_point<std::chrono::system_clock>& endTime) {}
+
+// Send end message to players
+void Match::send_end_message_to_players() {}
+
+// Add a client to the match
+void Match::add_client_to_match(ServerThreadManager* client, const std::string& player_name,
+                                const uint8_t& character) {}
+
+// Get clients' IDs
+std::vector<size_t> Match::get_clients_ids() { return std::vector<size_t>(); }
+
+// Get map
+uint8_t Match::get_map() const { return map; }
+
+// Run a command
+void Match::run_command(const CommandDTO& dto) {}
+
+// Check if command is valid
+bool Match::is_command_valid(command_t command) { return false; }
+
+// Update players
+void Match::update_players() {}
+
+// Update enemies
+void Match::update_enemies() {}
+
+// Initiate enemies
+void Match::initiate_enemies() {}
+
+// Select spawn point
+Vector2D Match::select_spawn_point() { return Vector2D(0, 0); }
+
+// Patrol move enemies
+void Match::patrol_move_enemies() {}
