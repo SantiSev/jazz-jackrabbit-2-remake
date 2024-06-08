@@ -1,3 +1,5 @@
+map_width: 1280
+map_height: 600
 objects:
     - name: "background_1"
       collision: false
