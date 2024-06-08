@@ -5,6 +5,7 @@
 #include <string>
 
 typedef enum: uint8_t {
+    NO_MAP = 0x00,
     MAP_1 = 0x01,
     MAP_2 = 0x02,
     MAP_3 = 0x03,
