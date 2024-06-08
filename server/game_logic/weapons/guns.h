@@ -1,3 +1,4 @@
+
 #include "weapon.h"
 
 class GunOne: public Weapon {
@@ -13,4 +14,10 @@ public:
 class GunThree: public Weapon {
 public:
     GunThree(size_t weapon_id, Player& player_owner, CollisionManager& collision_manager);
+};
+
+class DefaultGun: public Weapon {
+public:
+    DefaultGun(size_t weapon_id, Player& player_owner, CollisionManager& collision_manager);
+    void shoot() override;
 };

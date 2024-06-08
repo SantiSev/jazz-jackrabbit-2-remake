@@ -5,7 +5,7 @@
 
 Player::Player(size_t id, std::string name, const uint8_t& character, int x, int y,
                CollisionManager& collision_manager):
-        CharacterBody(id, name, character, x, y, PLAYER_WIDTH, PLAYER_HEIGHT,
+        CharacterBody(id, character, x, y, PLAYER_WIDTH, PLAYER_HEIGHT,
                       Vector2D(NO_SPEED, DEFAULT_SPEED_Y), MAX_HEALTH, STATE_IDLE_RIGHT,
                       REVIVE_COOLDOWN),
         name(std::move(name)),
@@ -27,8 +27,11 @@ std::string Player::get_name() { return name; }
 
 void Player::set_name(std::string new_name) { this->name = std::move(new_name); }
 
-void Player::set_starting_weapon() {  // todo change
-    // TODO create
+void Player::set_starting_weapon() {  // todo check if its needed to be in config
+    weapons.push_back(DefaultGun(0, *this, collision_manager));
+    weapons.push_back(GunOne(1, *this, collision_manager));
+    weapons.push_back(GunTwo(2, *this, collision_manager));
+    weapons.push_back(GunThree(3, *this, collision_manager));
 }
 
 // ------------ Point Methods --------------

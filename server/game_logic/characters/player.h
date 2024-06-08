@@ -9,7 +9,7 @@
 
 #include "../../../common/common_constants.h"
 #include "../../../game_engine/physics_engine/collision_manager.h"
-#include "../weapons/weapon.h"
+#include "../weapons/guns.h"
 
 #include "character.h"
 

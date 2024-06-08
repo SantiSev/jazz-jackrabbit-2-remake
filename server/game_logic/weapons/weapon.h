@@ -9,7 +9,7 @@
 #include "../area_objects/bullet.h"
 
 class Weapon {
-private:
+protected:
     size_t weapon_id = 0;
     int weapon_damage = 0;
     size_t ammo = 0;
@@ -33,8 +33,8 @@ private:
     bool is_weapon_empty() const;
 
 public:
-    Weapon(size_t weapon_id, size_t ammo, size_t max_ammo, int weapon_damage, int shoot_rate,
-           Player& player_owner, CollisionManager& collision_manager);
+    Weapon(size_t weapon_id, Player& player_owner, CollisionManager& collision_manager, size_t ammo,
+           size_t max_ammo, int weapon_damage, int shoot_rate);
 
     void add_ammo(size_t added_ammo);
 

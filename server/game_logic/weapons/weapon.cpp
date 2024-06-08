@@ -1,15 +1,15 @@
 #include "weapon.h"
 
 // create constructor
-Weapon::Weapon(size_t weapon_id, size_t ammo, size_t max_ammo, int weapon_damage, int shoot_rate,
-               Player& player_owner, CollisionManager& collision_manager):
+Weapon::Weapon(size_t weapon_id, Player& player_owner, CollisionManager& collision_manager,
+               size_t ammo, size_t max_ammo, int weapon_damage, int shoot_rate):
         weapon_id(weapon_id),
+        player_owner(player_owner),
+        collision_manager(collision_manager),
         ammo(ammo),
         max_ammo(max_ammo),
         weapon_damage(weapon_damage),
-        shoot_rate(shoot_rate),
-        player_owner(player_owner),
-        collision_manager(collision_manager) {}
+        shoot_rate(shoot_rate) {}
 
 //---------- Getters ---------
 
