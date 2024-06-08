@@ -20,6 +20,7 @@ class CollisionObject: public GameObject {
 private:
     int hitbox_width;
     int hitbox_height;
+    bool is_active = true;
 
 protected:
     /*
@@ -43,13 +44,13 @@ public:
     int get_right_hitbox_side() const;
     int get_top_hitbox_side() const;
     int get_bottom_hitbox_side() const;
+    bool is_active_object() const;
 
     int get_hitbox_width() const;
     int get_hitbox_height() const;
     void set_hitbox_width(int new_width);
     void set_hitbox_height(int new_height);
-
-    bool is_area_object();
+    void set_active_status(bool status);
 
     /*
      * In case of being nececary, if i need to detect a collision

@@ -27,6 +27,11 @@ void CollisionObject::set_hitbox_height(int new_hitbox_height) {
     hitbox_height = new_hitbox_height;
 }
 
+bool CollisionObject::is_active_object() const { return is_active; }
+
+void CollisionObject::set_active_status(bool status) { is_active = status; }
+
+
 bool CollisionObject::is_touching_bool(const CollisionObject* other) const {
 
     if (other == nullptr) {

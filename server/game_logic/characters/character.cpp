@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <utility>
 
+#include "../collectables/collectable.h"
+
 CharacterBody::CharacterBody(size_t id, const uint8_t& character, int x, int y, int w, int h,
                              Vector2D velocity, size_t health, uint8_t state,
                              size_t revive_cooldown):
@@ -29,7 +31,11 @@ bool CharacterBody::is_alive() const { return health == 0; }
 
 void CharacterBody::set_id(size_t new_id) { this->id = new_id; }
 
-void CharacterBody::set_health(const size_t new_health) { this->health = new_health; }
+void CharacterBody::set_health(const size_t new_health) {
+    this->health = new_health;
+    if (new_health == 0)
+        set_active_status(false);
+}
 
 void CharacterBody::set_character(uint8_t new_character) {
     this->character_reference = new_character;
@@ -45,6 +51,7 @@ void CharacterBody::set_revival_cooldown(const size_t new_cooldown) {
 
 void CharacterBody::take_damage(size_t susbstract_health) {
     if (((int)health - (int)susbstract_health) < MIN_HEALTH) {
+        set_active_status(false);
         health = MIN_HEALTH;
     } else {
         health -= susbstract_health;
@@ -102,6 +109,8 @@ void CharacterBody::jump() {
     velocity.y = -JUMP_SPEED;
 }
 
+void CharacterBody::knockback(int force) { position -= Vector2D(direction * force); }
+
 void CharacterBody::update_db() {
     if (!on_floor) {
         velocity.y += GRAVITY;
@@ -117,8 +126,12 @@ void CharacterBody::handle_colision(CollisionObject* other) {
 
     CollisionFace face = is_touching(other);
 
-    if (!other->is_area_object()) {  // if its not an area object, then it should be able to enter
-                                     // the hitbox
+    // cast to Collectable
+    Collectable* collectable = dynamic_cast<Collectable*>(other);
+
+    if (!collectable) {  // if its a collectable, i want to go through it without stopping my
+                         // movement
+
         if (face == CollisionFace::LEFT ||
             face == CollisionFace::RIGHT) {  // if im touching something on my side, then i cant
             // move

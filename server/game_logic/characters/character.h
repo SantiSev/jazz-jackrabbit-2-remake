@@ -73,6 +73,7 @@ public:
     void virtual move_left();
     void virtual move_right();
     void virtual jump();
+    void virtual knockback(int force);
 };
 
 

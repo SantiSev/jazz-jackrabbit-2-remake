@@ -20,7 +20,7 @@ Bullet::Bullet(Player& player_owner, int bullet_damage, int bullet_speed):
 size_t Bullet::get_life_span() const { return life_span; }
 
 void Bullet::update_db() {
-    if (is_active) {
+    if (is_active_object()) {
         position += velocity;
         life_span--;
         print_info();
@@ -30,7 +30,7 @@ void Bullet::update_db() {
 void Bullet::handle_colision(CollisionObject* other) {
 
     if (is_touching_bool(other)) {
-        is_active = false;
+        set_active_status(false);
 
         CharacterBody* character = dynamic_cast<CharacterBody*>(other);
 
@@ -47,10 +47,10 @@ void Bullet::handle_colision(CollisionObject* other) {
 
 void Bullet::update_db() {
 
-    if (is_active) {
+    if (is_active_object()) {
         life_span--;
         if (life_span == 0) {
-            is_active = false;
+            set_active_status(false);
             return;
         }
         position += velocity;

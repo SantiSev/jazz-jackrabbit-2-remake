@@ -14,7 +14,6 @@ private:
     Player& player_owner;
     int bullet_damage = 1;
     size_t life_span = 25;
-    bool is_active = true;
 
 public:
     explicit Bullet(Player& player_owner, int bullet_damage, int bullet_speed);

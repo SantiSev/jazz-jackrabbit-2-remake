@@ -75,7 +75,7 @@ public:
 
     //------- Movement Methods --------
 
-    virtual void do_special_attack();
+    virtual void do_special_attack() = 0;
     void move_left() override;
     void move_right() override;
     void jump() override;

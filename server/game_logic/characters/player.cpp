@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <utility>
 
+
 Player::Player(size_t id, std::string name, const uint8_t& character, int x, int y,
                CollisionManager& collision_manager):
         CharacterBody(id, character, x, y, PLAYER_WIDTH, PLAYER_HEIGHT,
@@ -98,6 +99,11 @@ void Player::jump() {
 // ------------ Override Methods --------------
 
 void Player::update_db() {
+
+    if (!is_alive) {  // if the player is dead, then it shouldnt move
+        return;
+    }
+
     if (!on_floor) {
         velocity.y += GRAVITY;
 
@@ -112,30 +118,4 @@ void Player::update_db() {
     position += velocity;
 
     // print_info();
-}
-
-void Player::handle_colision(CollisionObject* other) {
-
-    CollisionFace face = is_touching(*other);
-
-    if (!other->is_area_object()) {  // if its not an area object, then it should be able to enter
-                                     // the hitbox
-        if (face == CollisionFace::LEFT ||
-            face == CollisionFace::RIGHT) {  // if im touching something on my side, then i cant
-            // move
-            // into it
-            velocity.x = 0;
-        } else if (face ==
-                   CollisionFace::TOP) {  // if i touch something on top, then i cant move into
-            // it and i stop moving up
-            velocity.y = 0;
-        } else if (face == CollisionFace::BOTTOM) {
-            velocity.y =
-                    10;  // set a small value to avoid getting stuck in the air while walking off
-            // platform
-            on_floor = true;
-        } else if (face == CollisionFace::NONE) {
-            on_floor = false;
-        }
-    }
 }
