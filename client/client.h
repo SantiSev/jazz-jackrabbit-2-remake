@@ -37,17 +37,18 @@ private:
     std::atomic<bool> menu_running;
     std::atomic<bool> match_running;
 
+    std::atomic<map_list_t> map_enum;
+    std::atomic<id_client_t> id_client;
+
     ClientMessageHandler message_handler;
     EventLoop* event_loop;
     ClientThreadManager* thread_manager;
 
-
     void pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_pool);
 
-public:
-    std::atomic<map_list_t> map_enum;
-    std::atomic<id_client_t> id_client;
+    friend class ClientMessageHandler;
 
+public:
     Client(const std::string& host, const std::string& port);
 
     // cant copy or move
@@ -57,7 +58,6 @@ public:
     Client& operator=(Client&&) = delete;
 
     void start();
-    void close();  // thread safe close
 
     ~Client();
 };

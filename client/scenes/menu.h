@@ -27,13 +27,11 @@ private:
     std::list<engine::Button*> buttons;
     std::atomic<bool>& game_running;
     std::atomic<bool>& menu_running;
-    std::atomic<bool>& match_running;
 
 public:
     MenuScene(engine::Window& window, EventLoop* event_loop,
               std::shared_ptr<engine::ResourcePool> resource_pool, std::atomic<bool>& game_running,
-              std::atomic<bool>& menu_running, std::atomic<bool>& match_running,
-              ClientMessageHandler& message_handler);
+              std::atomic<bool>& menu_running, ClientMessageHandler& message_handler);
 
     // cant copy
     MenuScene(const MenuScene&) = delete;

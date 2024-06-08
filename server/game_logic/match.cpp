@@ -385,8 +385,7 @@ void Match::patrol_move_enemies() {
 
 
 void Match::load_spawn_points() {
-    YAML::Node yaml =
-            YAML::LoadFile("/home/abarbalase/Desktop/tp-final-Veiga/assets/maps/map_1.yaml");
+    YAML::Node yaml = YAML::LoadFile("/home/maxo/Desktop/taller/assets/maps/grass_map.yaml");
     if (yaml.IsNull()) {
         std::cerr << "Error loading yaml file" << std::endl;
         exit(1);

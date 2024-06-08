@@ -6,12 +6,12 @@ Client::Client(const std::string& host, const std::string& port):
         game_running(true),
         menu_running(true),
         match_running(false),
+        map_enum(NO_MAP),
+        id_client(0),
         message_handler(*this),
         event_loop(new EventLoop(game_running, menu_running, match_running, message_handler)),
         thread_manager(new ClientThreadManager(host, port, event_loop->recv_message,
-                                               message_handler.send_message)),
-        map_enum(NO_MAP),
-        id_client(0) {
+                                               message_handler.send_message)) {
     // Pre-load necessary resources
     pre_load_resources(resource_pool);
 }
@@ -99,15 +99,15 @@ Client::Client(const std::string& host, const std::string& port):
 
 void Client::start() {
     MenuScene menu_scene(window, event_loop, resource_pool, game_running, menu_running,
-                         match_running, message_handler);
+                         message_handler);
     MatchScene match_scene(window, event_loop, resource_pool, match_running, message_handler);
     event_loop->start();
 
     while (game_running) {
         menu_scene.start();
-        if (match_running) {
+        if (match_running && map_enum != NO_MAP) {
             // match_scene.load_map(map_enum);
-            match_scene.load_map(MAP_1);
+            match_scene.load_map(map_enum);
             match_scene.start();
         }
         // if (editor_running) {
@@ -166,12 +166,6 @@ void Client::pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_
 
     // Fonts
     resource_pool->load_font(FONT, FONT_SIZE);
-}
-
-void Client::close() {
-    game_running.store(false);
-    menu_running.store(false);
-    match_running.store(false);
 }
 
 Client::~Client() {
