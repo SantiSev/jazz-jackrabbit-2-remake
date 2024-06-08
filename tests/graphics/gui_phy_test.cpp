@@ -109,6 +109,7 @@ int main() {
     int frame_time = 0;
     const int frame_delay = 1000 / 60;
 
+
     while (running) {
         frame_start = SDL_GetTicks();
 
@@ -136,6 +137,8 @@ int main() {
         if (frame_delay > frame_time) {  // Delay to achieve 60 fps
             SDL_Delay(frame_delay - frame_time);
         }
+
+        // player->print_position();
     }
 
     return 0;

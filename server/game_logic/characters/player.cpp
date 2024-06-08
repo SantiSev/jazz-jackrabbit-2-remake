@@ -106,9 +106,6 @@ void Player::jump() {
 
 void Player::update_db() {
 
-    // print on_floor
-    std::cout << on_floor << std::endl;
-
 
     if (is_dead()) {  // if the player is dead, then it shouldnt move
         return;
@@ -128,15 +125,12 @@ void Player::update_db() {
     }
 
     position += velocity;
-
-    velocity.x = 0;
-
-    print_info();
 }
 
 void Player::handle_colision(CollisionObject* other) {
 
     on_floor = true;
+
 
     CollisionFace face = is_touching(other);
 
@@ -144,24 +138,23 @@ void Player::handle_colision(CollisionObject* other) {
     Collectable* collectable = dynamic_cast<Collectable*>(other);
 
     if (!collectable) {
-        std::cout << "NOT COLLECTABLE!" << std::endl;
-    }
+        if (face == CollisionFace::LEFT ||
+            face == CollisionFace::RIGHT) {  // if im touching something on my side, then i cant
+            std::cout << "wal touch!" << std::endl;
+            // move
+            // into it
+            velocity.x = 0;
+        } else if (face ==
+                   CollisionFace::TOP) {  // if i touch something on top, then i cant move into
 
-    if (face == CollisionFace::LEFT ||
-        face == CollisionFace::RIGHT) {  // if im touching something on my side, then i cant
-        // move
-        // into it
-        velocity.x = 0;
-    } else if (face == CollisionFace::TOP) {  // if i touch something on top, then i cant move into
-        std::cout << "TOUCHING TOP" << std::endl;
-        // it and i stop moving up
-        velocity.y = 0;
-    } else if (face == CollisionFace::BOTTOM) {
-        std::cout << "TOUCHING FLOOR" << std::endl;
-        velocity.y = 10;  // set a small value to avoid getting stuck in the air while walking off
-        // platform
-        on_floor = true;
-    } else if (face == CollisionFace::NONE) {
-        on_floor = false;
+            // it and i stop moving up
+            velocity.y = 10;
+        } else if (face == CollisionFace::BOTTOM) {
+
+            velocity.y =
+                    10;  // set a small value to avoid getting stuck in the air while walking off
+            // platform
+            on_floor = true;
+        }
     }
 }

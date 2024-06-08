@@ -85,6 +85,7 @@ void CollisionManager::detect_colisions(std::shared_ptr<DynamicBody> obj) {
             std::shared_ptr<CollisionObject> other = get_collision_object_at(i, j);
             if (other != nullptr && other.get() != obj.get()) {
                 other->handle_colision(obj.get());  // Handle collision with other object
+                obj->handle_colision(other.get());  // Handle collision with other object
             }
         }
     }

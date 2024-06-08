@@ -4,6 +4,8 @@
 
 #include "box_platform.h"
 
+#include <iostream>
+
 #include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
 
 BoxPlatform::BoxPlatform(int x, int y, int width, int height): StaticBody(x, y, width, height) {}
@@ -19,10 +21,12 @@ void BoxPlatform::handle_colision(CollisionObject* other) {
                 other->position.y = get_top_hitbox_side() - other->get_hitbox_height();
                 break;
             case CollisionFace::LEFT:  // other object is on my left side
-                other->position.x = get_left_hitbox_side() - other->get_hitbox_width();
+                std::cout << "left" << std::endl;
+                other->position.x = get_left_hitbox_side() - other->get_hitbox_width() - 1;
                 break;
             case CollisionFace::RIGHT:  // other object is on the right of this object
-                other->position.x = get_right_hitbox_side();
+                std::cout << "right" << std::endl;
+                other->position.x = get_right_hitbox_side() + 1;
                 break;
             case CollisionFace::BOTTOM:  // other object is below me
                 other->position.y = get_bottom_hitbox_side();
