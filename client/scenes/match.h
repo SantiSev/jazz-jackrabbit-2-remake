@@ -7,6 +7,8 @@
 #include <SDL2/SDL.h>
 
 #include "../../common/assets.h"
+#include "../../common/common_queue.h"
+#include "../../common/protocol/common_dto.h"
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/gui/basic/window.h"
 #include "../event_loop.h"

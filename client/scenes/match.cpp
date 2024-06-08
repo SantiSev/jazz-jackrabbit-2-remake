@@ -9,7 +9,9 @@ MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
         resource_pool(resource_pool),
         match_running(match_running),
         map(nullptr),
-        game_state_q(message_handler.game_state_q) {}
+        game_state_q(message_handler.game_state_q) {
+    // std::shared_ptr<GameStateDTO> first_state = game_state_q.pop();
+}
 
 void MatchScene::start() {
 
