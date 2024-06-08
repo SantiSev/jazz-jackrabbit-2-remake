@@ -51,3 +51,8 @@ enemy_spawnpoints:
       y: 100
     - x: 300
       y: 100
+item_spawnpoints:
+    - x: 700
+      y: 100
+    - x: 900
+      y: 100
