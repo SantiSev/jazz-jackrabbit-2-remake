@@ -1,5 +1,7 @@
 #include "./client_receiver.h"
 
+#include "../../common/common_liberror.h"
+
 ClientReceiver::ClientReceiver(ClientProtocol& client_protocol,
                                Queue<std::shared_ptr<Message>>& queue):
         client_protocol(client_protocol), queue(queue) {}
@@ -19,6 +21,10 @@ void ClientReceiver::run() {
         }
     } catch (const ClosedQueue& err) {
         _keep_running = false;
+    } catch (const LibError& err) {
+        if (_keep_running) {
+            throw LibError(err);
+        }
     }
 }
 

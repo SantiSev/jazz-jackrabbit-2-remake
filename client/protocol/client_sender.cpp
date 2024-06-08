@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "../../common/common_liberror.h"
+
 ClientSender::ClientSender(ClientProtocol& client_protocol, Queue<std::shared_ptr<Message>>& queue):
         client_protocol(client_protocol), queue(queue) {}
 
@@ -13,6 +15,10 @@ void ClientSender::run() {
         }
     } catch (const ClosedQueue& err) {
         _keep_running = false;
+    } catch (const LibError& err) {
+        if (_keep_running) {
+            throw LibError(err);
+        }
     }
 }
 

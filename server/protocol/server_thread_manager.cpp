@@ -31,8 +31,9 @@ void ServerThreadManager::set_sender_queue(
 
 void ServerThreadManager::stop() {
     sender.stop();
-    sender.join();
     receiver.stop();
+    server_protocol.force_shutdown();
+    sender.join();
     receiver.join();
 }
 

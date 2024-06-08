@@ -1,5 +1,7 @@
 #include "./server_sender.h"
 
+#include "../../common/common_liberror.h"
+
 ServerSender::ServerSender(ServerProtocol& protocol):
         server_protocol(protocol), queue(std::make_shared<Queue<std::shared_ptr<Message>>>()) {}
 
@@ -8,7 +10,6 @@ bool ServerSender::is_dead() { return _keep_running; }
 void ServerSender::stop() {
     _keep_running = false;
     queue->close();
-    server_protocol.force_shutdown();
 }
 
 void ServerSender::run() {
@@ -19,6 +20,10 @@ void ServerSender::run() {
         }
     } catch (const ClosedQueue& err) {
         _keep_running = false;
+    } catch (const LibError& err) {
+        if (_keep_running) {
+            throw LibError(err);
+        }
     }
 }
 

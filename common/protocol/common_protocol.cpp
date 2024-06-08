@@ -116,7 +116,7 @@ void CommonProtocol::send_message(const std::shared_ptr<Message>& message) {
 
 void CommonProtocol::force_shutdown() {
     was_closed = true;
-    skt.shutdown(2);
+    skt.shutdown(SHUT_RDWR);
     skt.close();
 }
 
