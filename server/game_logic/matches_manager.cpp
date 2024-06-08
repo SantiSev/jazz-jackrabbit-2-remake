@@ -51,7 +51,7 @@ void MatchesManager::send_id_player_to_client(const CreateGameDTO& dto) {
     auto send_game_created = std::make_shared<SendConnectedToGameMessage>(game_created);
     get_client_by_id(dto.id_client)
             ->get_sender_queue()
-            ->push(send_game_created);  // todo ver si funciona así
+            ->push(send_game_created);  // TODO ver si funciona así
 }
 
 ServerThreadManager* MatchesManager::get_client_by_id(size_t id) {
