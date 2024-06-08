@@ -3,6 +3,7 @@
 
 
 #include <cstring>
+#include <iostream>
 #include <memory>
 
 #include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"

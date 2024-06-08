@@ -13,7 +13,7 @@ StaticBody::StaticBody(int x, int y, int width, int height): CollisionObject(x, 
 void StaticBody::handle_colision(CollisionObject* other) {
     // This is a static body, so it does not move.
     // Therefore, it does not need to handle colisions.
-    CollisionFace face = this->is_touching(*other);
+    CollisionFace face = this->is_touching(other);
 
     switch (face) {
         case CollisionFace::TOP:  // other object is on top of me

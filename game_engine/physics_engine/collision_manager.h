@@ -13,7 +13,7 @@
 #include "../math/vector2D.h"
 #include "physics_object/dynamic_body.h"
 
-#include "colision_object.h"
+#include "collision_object.h"
 
 
 class CollisionManager {

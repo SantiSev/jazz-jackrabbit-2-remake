@@ -6,7 +6,8 @@
 
 #include "../../../common/common_constants.h"
 #include "../../../game_engine/physics_engine/collision_manager.h"
-#include "../area_objects/bullet.h"
+
+#include "bullet.h"
 
 class Weapon {
 protected:

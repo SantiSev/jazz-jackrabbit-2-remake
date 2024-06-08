@@ -20,9 +20,9 @@ void DynamicBody::print_info() {
 }
 
 void DynamicBody::handle_colision(
-        CollisionObject* other) override {  // other players cant overlap with other players
+        CollisionObject* other) {  // other players cant overlap with other players
 
-    CollisionFace face = is_touching(*other);
+    CollisionFace face = is_touching(other);
     switch (face) {
         case CollisionFace::TOP:  // other object is on top of me
             other->position.y = get_top_hitbox_side() - other->get_hitbox_height();

@@ -19,7 +19,6 @@ protected:
     size_t health;
     uint8_t character_reference;  // tipo de personaje TODO: cambiar a enum
     uint8_t state;                // estado del personaje TODO: cambiar a enum
-    bool is_alive = true;
 
     // game cooldowns
     size_t revive_cooldown;
@@ -42,7 +41,7 @@ public:
     size_t get_health() const;
     uint8_t get_character() const;
     uint8_t get_state() const;
-    bool check_if_alive() const;
+    bool is_alive() const;
 
     //------- Setters --------
 
@@ -54,7 +53,7 @@ public:
 
     //------- Health Methods --------
 
-    void decrease_health(size_t susbstract_health);
+    void take_damage(size_t susbstract_health);
     void increase_health(size_t add_health);
 
     //------- Revive Methods --------

@@ -3,7 +3,8 @@
 
 #include "../game_object.h"
 
-#include "colision_face.h"
+#include "collision_face.h"
+#include "collision_object.h"
 
 /*
  * For every ColisionObject, its fundamental to take into account
@@ -19,7 +20,6 @@ class CollisionObject: public GameObject {
 private:
     int hitbox_width;
     int hitbox_height;
-    bool has_mass = true;
 
 protected:
     /*
@@ -27,18 +27,17 @@ protected:
      * CollisionObject instance (i.e., *this or self)
      * is being touched by the other collision object.
      */
-    CollisionFace is_touching(const CollisionObject& other) const;
+    CollisionFace is_touching(const CollisionObject* other) const;
 
     /*
      * This code is identical to the is_touching method,
      * but it returns a boolean value instead of a CollisionFace.
      */
-    bool is_touching_bool(const CollisionObject& other) const;
+    bool is_touching_bool(const CollisionObject* other) const;
 
 public:
     CollisionObject(int width, int height);
     CollisionObject(int x, int y, int width, int height);
-    CollisionObject(int x, int y, int width, int height, bool has_mass);
 
     int get_left_hitbox_side() const;
     int get_right_hitbox_side() const;

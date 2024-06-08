@@ -23,7 +23,7 @@ uint8_t CharacterBody::get_character() const { return character_reference; }
 
 uint8_t CharacterBody::get_state() const { return state; }
 
-bool CharacterBody::check_if_alive() const { return is_alive; }
+bool CharacterBody::is_alive() const { return health == 0; }
 
 //------- Setters --------
 
@@ -43,7 +43,7 @@ void CharacterBody::set_revival_cooldown(const size_t new_cooldown) {
 
 // ------- Health Methods --------
 
-void CharacterBody::decrease_health(size_t susbstract_health) {
+void CharacterBody::take_damage(size_t susbstract_health) {
     if (((int)health - (int)susbstract_health) < MIN_HEALTH) {
         health = MIN_HEALTH;
     } else {
@@ -115,7 +115,7 @@ void CharacterBody::update_db() {
 
 void CharacterBody::handle_colision(CollisionObject* other) {
 
-    CollisionFace face = is_touching(*other);
+    CollisionFace face = is_touching(other);
 
     if (!other->is_area_object()) {  // if its not an area object, then it should be able to enter
                                      // the hitbox

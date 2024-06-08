@@ -1,7 +1,7 @@
 #ifndef CHARACTER_BODY_H
 #define CHARACTER_BODY_H
 
-#include "../colision_object.h"
+#include "../collision_object.h"
 
 class DynamicBody: public CollisionObject {
 public:
