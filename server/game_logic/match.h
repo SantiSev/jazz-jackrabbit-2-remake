@@ -31,8 +31,6 @@ private:
     std::vector<std::string> items;
     size_t players_connected = 0;
     size_t required_players;
-    size_t minutes = STARTING_MATCH_TIME / 60;
-    size_t seconds = STARTING_MATCH_TIME % 60;
     ClientMonitor client_monitor;
     map_list_t map;
     CollisionManager collision_manager;
@@ -50,7 +48,8 @@ public:
 
     std::shared_ptr<Player> get_player(size_t id);
 
-    void add_player_to_game(const std::string& player_name, const uint8_t& character);
+    void add_player_to_game(const std::string& player_name, const uint8_t& character,
+                            uint16_t client_id);
 
     GameStateDTO create_actual_snapshot();
 
@@ -91,6 +90,8 @@ public:
     void load_spawn_points();
 
     Vector2D select_player_spawn_point();
+
+    void delete_disconnected_player(id_client_t id_client);
 };
 
 #endif

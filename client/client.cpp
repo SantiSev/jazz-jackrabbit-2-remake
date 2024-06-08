@@ -1,21 +1,17 @@
 #include "client.h"
 
-#include <algorithm>
-
-#include "game_objects/game_bullets.h"
-#include "game_objects/game_enemy.h"
-#include "game_objects/game_player.h"
-
 Client::Client(const std::string& host, const std::string& port):
-        message_handler(),
         window(800, 600, true, true),
         resource_pool(std::make_shared<engine::ResourcePool>(window.get_renderer())),
         game_running(true),
         menu_running(true),
         match_running(false),
+        message_handler(*this),
         event_loop(new EventLoop(game_running, menu_running, match_running, message_handler)),
         thread_manager(new ClientThreadManager(host, port, event_loop->recv_message,
-                                               message_handler.send_message)) {
+                                               message_handler.send_message)),
+        id_client(0),
+        id_player(0) {
     // Pre-load necessary resources
     pre_load_resources(resource_pool);
 }

@@ -1,6 +1,7 @@
 #ifndef TP_FINAL_CLIENT_H
 #define TP_FINAL_CLIENT_H
 
+#include <algorithm>
 #include <atomic>
 #include <iostream>
 #include <list>
@@ -24,13 +25,8 @@
 #include "assets.h"
 #include "event_loop.h"
 
-#define QUIT 'q'
-
 class Client {
 private:
-    Queue<std::shared_ptr<Message>> recv_message;
-    ClientMessageHandler message_handler;
-
     engine::Window window;
     std::shared_ptr<engine::ResourcePool> resource_pool;
 
@@ -38,12 +34,16 @@ private:
     std::atomic<bool> menu_running;
     std::atomic<bool> match_running;
 
+    ClientMessageHandler message_handler;
     EventLoop* event_loop;
     ClientThreadManager* thread_manager;
 
     void pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_pool);
 
 public:
+    std::atomic<id_client_t> id_client;
+    std::atomic<id_player_t> id_player;
+
     Client(const std::string& host, const std::string& port);
 
     // cant copy or move
@@ -53,6 +53,7 @@ public:
     Client& operator=(Client&&) = delete;
 
     void start();
+    void close();  // thread safe close
 
     ~Client();
 };

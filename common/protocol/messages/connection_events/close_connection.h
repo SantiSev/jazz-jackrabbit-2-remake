@@ -8,8 +8,11 @@
 
 
 class CloseConnectionMessage: public Message {
+private:
+    CloseConnectionDTO dto;
+
 public:
-    CloseConnectionMessage();
+    explicit CloseConnectionMessage(const CloseConnectionDTO& closed_con_dto);
     void run(MessageHandler& handler) override;
     void send_message(CommonProtocol& protocol) override;
     ~CloseConnectionMessage() override;

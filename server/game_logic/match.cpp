@@ -89,8 +89,8 @@ void Match::countdown_match(std::chrono::time_point<std::chrono::system_clock>& 
         if (std::chrono::duration_cast<std::chrono::seconds>(endTime - runTime).count() >= 1) {
             match_time--;
             runTime = endTime;
-            minutes = match_time / 60;
-            seconds = match_time % 60;
+            size_t minutes = match_time / 60;
+            size_t seconds = match_time % 60;
             std::cout << "Time Remaining: " << std::setw(2) << std::setfill('0') << minutes << ":"
                       << std::setw(2) << std::setfill('0') << seconds << std::endl;
         }
@@ -115,7 +115,7 @@ std::shared_ptr<Player> Match::get_player(size_t id) {
 
 GameStateDTO Match::create_actual_snapshot() {
     GameStateDTO game_state{};
-    game_state.seconds = (uint16_t)seconds;
+    game_state.seconds = (uint16_t)match_time % 60;
     game_state.num_players = players.size();
     game_state.num_enemies = enemies.size();
     game_state.num_bullets = bullets.size();
@@ -158,11 +158,12 @@ bool Match::has_match_ended() const { return match_has_ended; }
 
 map_list_t Match::get_map() const { return map; }
 
-void Match::add_player_to_game(const std::string& player_name, const uint8_t& character) {
+void Match::add_player_to_game(const std::string& player_name, const uint8_t& character,
+                               uint16_t client_id) {
     players_connected++;
     Vector2D pos = select_player_spawn_point();
-    auto new_player = std::make_shared<Player>(players_connected, player_name, character, pos.x,
-                                               pos.y, collision_manager);
+    auto new_player = std::make_shared<Player>(client_id, player_name, character, pos.x, pos.y,
+                                               collision_manager);
     new_player->set_id(players_connected);  // todo integrar a player
     collision_manager.add_dynamic_body(new_player);
     players.push_back(new_player);
@@ -173,7 +174,7 @@ void Match::add_client_to_match(ServerThreadManager* client, const std::string& 
     client_monitor.addClient(client->get_sender_queue());
     client->set_receiver_queue(event_queue);
     clients.push_back(client);
-    add_player_to_game(player_name, character);
+    add_player_to_game(player_name, character, client->get_client_id());
 }
 
 size_t Match::get_num_players() { return players.size(); }
@@ -181,7 +182,7 @@ size_t Match::get_num_players() { return players.size(); }
 size_t Match::get_max_players() const { return required_players; }
 
 void Match::send_end_message_to_players() {
-    auto game_ended_message = std::make_shared<CloseConnectionMessage>();
+    auto game_ended_message = std::make_shared<SendFinishMatchMessage>();
     client_monitor.broadcastClients(game_ended_message);
 }
 
@@ -366,7 +367,6 @@ Vector2D Match::select_player_spawn_point() {
     return player_spawn_points[i];
 }
 
-
 void Match::patrol_move_enemies() {
     for (auto& enemy: enemies) {
         if (enemy->is_enemy_alive()) {
@@ -383,6 +383,7 @@ void Match::patrol_move_enemies() {
     }
 }
 
+
 void Match::load_spawn_points() {
     YAML::Node yaml = YAML::LoadFile("../../assets/maps/spawn_points.yaml");
     if (yaml.IsNull()) {
@@ -398,5 +399,14 @@ void Match::load_spawn_points() {
         auto x = obj["x"].as<int>();
         auto y = obj["y"].as<int>();
         enemy_spawn_points.emplace_back(x, y);
+    }
+}
+
+void Match::delete_disconnected_player(id_client_t id_client) {
+    for (auto player = players.begin(); player != players.end(); ++player) {
+        if (id_client == (*player)->get_id()) {
+            players.erase(player);
+            break;
+        }
     }
 }
