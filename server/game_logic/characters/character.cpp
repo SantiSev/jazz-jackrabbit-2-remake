@@ -76,7 +76,7 @@ void CharacterBody::revive() {
 
 void CharacterBody::decrease_revive_cooldown() { this->revive_cooldown--; }
 
-bool CharacterBody::can_revive() const { return (!is_alive && revive_cooldown == 0); }
+bool CharacterBody::can_revive() const { return (is_active_object() && revive_cooldown == 0); }
 
 void CharacterBody::reset_revive_cooldown() { this->revive_cooldown = REVIVE_COOLDOWN; }
 

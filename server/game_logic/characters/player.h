@@ -9,15 +9,16 @@
 
 #include "../../../common/common_constants.h"
 #include "../../../game_engine/physics_engine/collision_manager.h"
-#include "../weapons/guns.h"
 
 #include "character.h"
+
+class Weapon;
 
 class Player: public CharacterBody {
 private:
     std::string name;
     size_t points;
-    std::vector<Weapon> weapons;
+    std::vector<Weapon*> weapons;
     size_t selected_weapon = DEFAULT_WEAPON;
     CollisionManager& collision_manager;  // reference to the collision manager
 
@@ -41,7 +42,7 @@ public:
     //------- Getters --------
 
     size_t get_points();
-    Weapon get_weapon(size_t weapon);
+    Weapon* get_weapon(size_t weapon);
     std::string get_name();
 
     //------- Setters --------

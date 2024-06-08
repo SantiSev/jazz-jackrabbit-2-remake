@@ -10,10 +10,11 @@ add_definitions(-DDATA_PATH="${PROJECT_SOURCE_DIR}/data")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic -pedantic-errors -O0 -ggdb -DDEBUG -fno-inline -std=${CXXSTD} -D _POSIX_C_SOURCE=200809L")
 
-#[[find_package(SDL2 REQUIRED)
-find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_image REQUIRED)
-find_package(SDL2_mixer REQUIRED)]]
+# find_package(SDL2 REQUIRED)
+# find_package(SDL2_ttf REQUIRED)
+# find_package(SDL2_image REQUIRED)
+# find_package(SDL2_mixer REQUIRED)
+# find_package(YamlCpp REQUIRED)
 
 option(math "Use math.h" ON)
 option(threads "Use threads" ON)
@@ -42,14 +43,14 @@ file(GLOB_RECURSE SOURCES_SERVER "server/*.cpp" "sever/**/*.cpp")
 file(GLOB_RECURSE SOURCES_COMMON "common/*.cpp" "common/**/*.cpp")
 file(GLOB_RECURSE SOURCES_GAME_ENGINE "game_engine/*.cpp" "game_engine/**/*.cpp")
 
+
 file(GLOB_RECURSE HEADERS_CLIENT "client/*.h" "client/**/*.h")
 file(GLOB_RECURSE HEADERS_SERVER "server/*.h" "server/**/*.h")
 file(GLOB_RECURSE HEADERS_COMMON "common/*.h" "common/**/*.h")
 file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine/**/*.h")
-file(GLOB_RECURSE SERVER_WITHOUT_MAIN "server/game_logic/.cpp" "server/game_logic/characters/.cpp" "server/match.cpp" "server/match.h" "server/game_logic/characters/.h")
 
-file(GLOB_RECURSE SERVER_WITHOUT_MAIN "server/game_logic/*.cpp" "server/protocol/*.cpp" "server/match.cpp" "server/match.h")
-file(GLOB_RECURSE CLIENT_WITHOUT_MAIN "client/protocol/*.cpp" "client/protocol/*.h")
+file(GLOB_RECURSE SERVER_WITHOUT_MAIN "server.cpp" "server.h" "server/protocol/*.cpp" "server/protocol/*.h" "server/game_logic/*.cpp" "server/game_logic/*.h" "server/protocol/**/*.cpp" "server/protocol/**/*.h" "server/game_logic/**/*.cpp" "server/game_logic/**/*.h")
+file(GLOB_RECURSE CLIENT_WITHOUT_MAIN "client.cpp" "client.h" "event_loop.cpp" "event_loop.h" "assets.h" "client/protocol/*.cpp" "client/protocol/*.h" "client/protocol/**/*.cpp" "client/protocol/**/*.h" "client/game_objects/*.cpp" "client/game_objects/*.h" "client/game_objects/**/*.cpp" "client/game_objects/**/*.h" "client/menu_objects/*.cpp" "client/menu_objects/*.h" "client/menu_objects/**/*.cpp" "client/menu_objects/**/*.h" "client/scenes/*.cpp" "client/scenes/*.h" "client/scenes/**/*.cpp" "client/scenes/**/*.h")
 
 if (PRODUCTION)
     add_executable(client 
@@ -60,8 +61,6 @@ if (PRODUCTION)
         ${SOURCES_GAME_ENGINE} 
         ${HEADERS_GAME_ENGINE} 
         ${SERVER_WITHOUT_MAIN}
-            game_engine/physics_engine/physics_object/area_body.cpp
-            game_engine/physics_engine/physics_object/area_body.h
     )
     add_executable(server 
         ${SOURCES_COMMON} 
@@ -71,25 +70,23 @@ if (PRODUCTION)
         ${SOURCES_GAME_ENGINE} 
         ${HEADERS_GAME_ENGINE} 
         ${CLIENT_WITHOUT_MAIN}
-            server/game_logic/characters/character.cpp
-            server/game_logic/characters/character.h
-            server/game_logic/characters/player.h
-            server/game_logic/characters/player.cpp
     )
 
     target_link_libraries(client 
         SDL2main 
-        SDL2::SDL2 
-        SDL2_image::SDL2_image 
-        SDL2_ttf::SDL2_ttf 
+        SDL2
+        SDL2_image
+        SDL2_ttf
         SDL2_mixer
+        yaml-cpp
     )
     target_link_libraries(server 
         SDL2main 
-        SDL2::SDL2 
-        SDL2_image::SDL2_image 
-        SDL2_ttf::SDL2_ttf 
-        SDL2_mixer::SDL2_mixer
+        SDL2
+        SDL2_image
+        SDL2_ttf
+        SDL2_mixer
+        yaml-cpp
     )
 endif()
 
@@ -148,19 +145,14 @@ if (GRAPHICS)
         # Extract the file name without extension to use as the target name
         get_filename_component(target_name ${file} NAME_WE)
 
-        add_executable(${target_name} ${file} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE}
-                server/game_logic/area_objects/bullet.cpp
-                server/game_logic/area_objects/bullet.h
-                server/game_logic/platforms/box_platform.cpp
-                server/game_logic/platforms/box_platform.h
-                server/game_logic/characters/character.h
-                server/game_logic/characters/player.cpp)
+        add_executable(${target_name} ${file} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
         target_link_libraries(${target_name}
             SDL2main
-            SDL2::SDL2
-            SDL2_image::SDL2_image
-            SDL2_ttf::SDL2_ttf
-            SDL2_mixer::SDL2_mixer)
+            SDL2
+            SDL2_image
+            SDL2_ttf
+            SDL2_mixer
+            yaml-cpp)
     endforeach()
 endif()
 
@@ -185,11 +177,11 @@ if(PHYSICS)
         ${HEADERS_CLIENT}
     )
     target_link_libraries(tests PRIVATE
-        Catch2::Catch2WithMain
+        Catch2WithMain
         SDL2main
-        SDL2::SDL2
-        SDL2_image::SDL2_image
-        SDL2_ttf::SDL2_ttf
+        SDL2
+        SDL2_image
+        SDL2_ttf
         ${SOURCES_COMMON} 
         ${SOURCES_GAME_ENGINE} 
         ${HEADERS_COMMON} 
@@ -201,12 +193,13 @@ if(PHYSICS)
         ${HEADERS_CLIENT}
     )
     target_link_libraries(tests PRIVATE 
-        Catch2::Catch2WithMain
+        Catch2WithMain
         SDL2main 
-        SDL2::SDL2
-        SDL2_image::SDL2_image 
-        SDL2_ttf::SDL2_ttf 
-        SDL2_mixer::SDL2_mixer
+        SDL2
+        SDL2_image
+        SDL2_ttf
+        SDL2_mixer
+        yaml-cpp
     )
 endif()
 

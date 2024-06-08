@@ -11,7 +11,6 @@
 #include "../../../game_engine/physics_engine/collision_manager.h"
 #include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
 
-
 class CharacterBody: public DynamicBody {
 protected:
     // game info

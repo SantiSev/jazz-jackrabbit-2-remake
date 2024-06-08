@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <utility>
 
+#include "../weapons/guns.h"
 
 Player::Player(size_t id, std::string name, const uint8_t& character, int x, int y,
                CollisionManager& collision_manager):
@@ -20,7 +21,7 @@ Player::Player(size_t id, std::string name, const uint8_t& character, int x, int
 
 size_t Player::get_points() { return points; }
 
-Weapon Player::get_weapon(size_t weapon) { return weapons[weapon]; }
+Weapon* Player::get_weapon(size_t weapon) { return weapons[weapon]; }
 
 std::string Player::get_name() { return name; }
 
@@ -29,10 +30,11 @@ std::string Player::get_name() { return name; }
 void Player::set_name(std::string new_name) { this->name = std::move(new_name); }
 
 void Player::set_starting_weapon() {  // todo check if its needed to be in config
-    weapons.push_back(DefaultGun(0, *this, collision_manager));
-    weapons.push_back(GunOne(1, *this, collision_manager));
-    weapons.push_back(GunTwo(2, *this, collision_manager));
-    weapons.push_back(GunThree(3, *this, collision_manager));
+
+    weapons[0] = new DefaultGun(0, *this, collision_manager);
+    weapons[1] = new GunOne(1, *this, collision_manager);
+    weapons[2] = new GunTwo(2, *this, collision_manager);
+    weapons[3] = new GunThree(3, *this, collision_manager);
 }
 
 // ------------ Point Methods --------------
@@ -45,11 +47,11 @@ bool Player::is_player_intoxicated() const { return is_intoxicated; }
 
 
 void Player::reload_weapon(size_t ammo_amount, size_t weapon_id) {
-    this->weapons[weapon_id].add_ammo(ammo_amount);
+    this->weapons[weapon_id]->add_ammo(ammo_amount);
 }
 
 
-void Player::shoot_selected_weapon() { weapons[selected_weapon].shoot(); }
+void Player::shoot_selected_weapon() { weapons[selected_weapon]->shoot(); }
 
 void Player::select_next_weapon() {
     // iterates through the weapons and select the next one in a loop the size of the weapons vector
@@ -100,7 +102,7 @@ void Player::jump() {
 
 void Player::update_db() {
 
-    if (!is_alive) {  // if the player is dead, then it shouldnt move
+    if (is_alive()) {  // if the player is dead, then it shouldnt move
         return;
     }
 
@@ -112,7 +114,7 @@ void Player::update_db() {
     }
 
     for (auto& weapon: weapons) {
-        weapon.update_shoot_rate();
+        weapon->update_shoot_rate();
     }
 
     position += velocity;

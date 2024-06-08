@@ -20,7 +20,7 @@ Enemy::Enemy(size_t id, const uint8_t& character, int attack_damage, int health,
 
 void Enemy::update_db() {
 
-    if (is_alive) {
+    if (is_alive()) {
         position += velocity;
     }
 }

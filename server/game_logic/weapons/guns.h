@@ -1,4 +1,5 @@
 
+
 #include "weapon.h"
 
 class GunOne: public Weapon {

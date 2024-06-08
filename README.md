@@ -15,6 +15,7 @@ libsdl2-dev \
 libsdl2-image-dev \
 libsdl2-ttf-dev \
 libsdl2-mixer-dev \
+libyaml-cpp-dev \
 cmake \
 catch2
 ```
@@ -43,9 +44,10 @@ Para ejecutar uno o varios `client` es
 ## Devs requirements
 
 ```bash
-sudo apt install \
+sudo apt install -y \
 pre-commit \
-cppcheck
+cppcheck \
+valgrind
 
 pre-commit install
 ```

@@ -7,7 +7,8 @@
 #include <memory>
 
 #include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
-#include "../characters/player.h"
+
+class Player;
 
 class Bullet: public DynamicBody {
 private:
@@ -16,7 +17,7 @@ private:
     size_t life_span = 25;
 
 public:
-    explicit Bullet(Player& player_owner, int bullet_damage, int bullet_speed);
+    Bullet(Player& player_owner, int bullet_damage);
 
     size_t get_life_span() const;
 
