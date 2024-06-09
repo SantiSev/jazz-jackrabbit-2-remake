@@ -2,7 +2,7 @@
 #define GAME_ENGINE_COLISION_OBJECT_H_
 
 #include "../game_object.h"
-
+#include <string>
 #include "collision_face.h"
 #include "collision_object.h"
 
@@ -45,6 +45,7 @@ public:
     int get_top_hitbox_side() const;
     int get_bottom_hitbox_side() const;
     bool is_active_object() const;
+    std::string get_colision(CollisionFace face);
 
     int get_hitbox_width() const;
     int get_hitbox_height() const;

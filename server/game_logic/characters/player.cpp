@@ -119,9 +119,7 @@ void Player::move_right() {
 }
 
 void Player::jump() {
-    if (!is_on_floor()) {
-        return;
-    }
+
     if (on_floor) {
         on_floor = false;
         velocity.y = -JUMP_SPEED;
@@ -196,35 +194,37 @@ void Player::update_db() {
 
 void Player::handle_colision(CollisionObject* other) {
 
-    on_floor = true;
-
-
     CollisionFace face = is_touching(other);
 
     // cast to Collectable
     Collectable* collectable = dynamic_cast<Collectable*>(other);
 
-    if (!collectable) {
-        if (face == CollisionFace::LEFT ||
-            face == CollisionFace::RIGHT) {  // if im touching something on my side, then i cant
-            std::cout << "wal touch!" << std::endl;
-            // move
-            // into it
-            velocity.x = 0;
-        } else if (face ==
-                   CollisionFace::TOP) {  // if i touch something on top, then i cant move into
+    if (!collectable && face != CollisionFace::NONE) {
 
-            // it and i stop moving up
+        if (face ==CollisionFace::TOP) {  
             velocity.y = 10;
-        } else if (face == CollisionFace::BOTTOM) {
+            on_floor = false;
 
+        } else if (face == CollisionFace::BOTTOM) {
+            
             velocity.y =
-                    10;  // set a small value to avoid getting stuck in the air while walking off
-            // platform
+                    10;  
             on_floor = true;
         }
     }
+
 }
+
+
+void Player::print_info() {
+    // also print current time
+    std::cout << "--------------------------------" << std::endl;
+    std::cout << "| Position: " << position.x << " , " << position.y << " |" << std::endl;
+    std::cout << "| Velocity: " << velocity.x << " , " << velocity.y << " |" << std::endl;
+    std::cout << "| on_floor: " << on_floor << " |" << std::endl;
+}
+
+
 
 void Player::execute_command(command_t command) {
     if (is_dead()) {

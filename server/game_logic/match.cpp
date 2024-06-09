@@ -234,7 +234,8 @@ GameStateDTO Match::create_actual_snapshot() {
 
 //-------------------- Initialization Methods -----------------
 
-void Match::load_spawn_points() {
+void Match::load_spawn_points() { // todo the yaml code doesnt build
+    /*
     //    std::string file_path = map_list_to_string.at(map) + YAML_EXTENSION;
     YAML::Node yaml =
             YAML::LoadFile("/home/niko/Escritorio/taller/tp_final/assets/maps/map_1.yaml");
@@ -254,6 +255,7 @@ void Match::load_spawn_points() {
         auto y = obj["y"].as<int>();
         enemy_spawn_points.emplace_back(x, y);
     }
+    */
 }
 
 void Match::initiate_enemies() {

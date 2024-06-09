@@ -1,6 +1,5 @@
-//
-// Created by santi on 25/05/24.
-//
+
+#include <iostream>
 #include "collision_object.h"
 
 CollisionObject::CollisionObject(int hitbox_width, int hitbox_height):
@@ -54,37 +53,52 @@ bool CollisionObject::is_touching_bool(const CollisionObject* other) const {
 
 CollisionFace CollisionObject::is_touching(const CollisionObject* other) const {
 
-    if (other == nullptr) {
-        return CollisionFace::NONE;
+    /*
+    Result:
+        CollisionFace::LEFT: The right side of this is touching the left side of other.
+        CollisionFace::RIGHT: The left side of this is touching the right side of other.
+        CollisionFace::TOP: The bottom side of this is touching the top side of other.
+        CollisionFace::BOTTOM: The top side of this is touching the bottom side of other.
+        CollisionFace::NONE: No sides are touching.
+    */
+
+    int left_diff = get_right_hitbox_side() - other->get_left_hitbox_side();
+    int right_diff = other->get_right_hitbox_side() - get_left_hitbox_side();
+    int top_diff = get_bottom_hitbox_side() - other->get_top_hitbox_side();
+    int bottom_diff = other->get_bottom_hitbox_side() - get_top_hitbox_side();
+
+    bool touching_left = left_diff > 0 && left_diff <= get_hitbox_width();
+    bool touching_right = right_diff > 0 && right_diff <= other->get_hitbox_width();
+    bool touching_top = top_diff > 0 && top_diff <= get_hitbox_height();
+    bool touching_bottom = bottom_diff > 0 && bottom_diff <= other->get_hitbox_height();
+
+    if (touching_left && left_diff < right_diff && left_diff < top_diff &&
+        left_diff < bottom_diff) {
+        return CollisionFace::RIGHT;
+    }
+    if (touching_right && right_diff < left_diff && right_diff < top_diff &&
+        right_diff < bottom_diff) {
+        return CollisionFace::LEFT;
+    }
+    if (touching_top && top_diff < left_diff && top_diff < right_diff && top_diff < bottom_diff) {
+        return CollisionFace::BOTTOM;
+    }
+    if (touching_bottom && bottom_diff < left_diff && bottom_diff < right_diff &&
+        bottom_diff < top_diff) {
+        return CollisionFace::TOP;
     }
 
-    // Determine the sides of the current object
-    int left = get_left_hitbox_side();
-    int right = get_right_hitbox_side();
-    int top = get_top_hitbox_side();
-    int bottom = get_bottom_hitbox_side();
-
-    // Determine the sides of the other object
-    int other_left = other->get_left_hitbox_side();
-    int other_right = other->get_right_hitbox_side();
-    int other_top = other->get_top_hitbox_side();
-    int other_bottom = other->get_bottom_hitbox_side();
-
-
-    // Check for collision and determine the face being touched
-
-    if (bottom >= other_top && top < other_top && right > other_left && left < other_right) {
-        return CollisionFace::BOTTOM;  // Bottom face is touching the top face of the other object
-    }
-    if (top <= other_bottom && bottom > other_bottom && right > other_left && left < other_right) {
-        return CollisionFace::TOP;  // Top face is touching the bottom face of the other object
-    }
-    if (right >= other_left && left < other_left && bottom > other_top && top < other_bottom) {
-        return CollisionFace::RIGHT;  // Right face is touching the left face of the other object
-    }
-    if (left <= other_right && right > other_right && bottom > other_top && top < other_bottom) {
-        return CollisionFace::LEFT;  // Left face is touching the right face of the other object
-    }
-    // If no collision is detected
     return CollisionFace::NONE;
 }
+
+std::string CollisionObject::get_colision(CollisionFace face) {
+    switch (face) {
+        case NONE: return "NONE";
+        case LEFT: return "LEFT";
+        case RIGHT: return "RIGHT";
+        case TOP: return "TOP";
+        case BOTTOM: return "BOTTOM";
+        default: return "UNKNOWN";
+    }
+}
+

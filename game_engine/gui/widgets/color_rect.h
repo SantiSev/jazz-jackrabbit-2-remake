@@ -15,6 +15,12 @@ private:
     SDL_Rect rect;
 
 public:
+    // create a default constructor
+    ColorRect(){
+        this->color = {0, 0, 0, 0};
+        this->rect = {0, 0, 0, 0};
+    };
+
     ColorRect(const SDL_Color& color, SDL_Rect& rect);
 
     void draw(SDL_Renderer* renderer) override;
