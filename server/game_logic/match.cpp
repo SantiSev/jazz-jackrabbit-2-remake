@@ -138,7 +138,7 @@ GameStateDTO Match::create_actual_snapshot() {
             game_state.players[i].weapons[j].is_empty =
                     players[i]->get_weapon(j).is_weapon_empty() ? (uint8_t)1 : (uint8_t)0;
             game_state.players[i].weapons[j].weapon_name =
-                    (uint8_t)players[i]->get_weapon(j).get_weapon_name();
+                    (uint8_t)players[i]->get_weapon(j).get_weapon_id();
         }
     }
     for (size_t i = 0; i < players.size(); ++i) {
@@ -168,7 +168,7 @@ void Match::add_player_to_game(const std::string& player_name, const character_t
     auto new_player = std::make_shared<Player>(client_id, player_name, character, pos.x, pos.y,
                                                collision_manager);
     new_player->set_id(players_connected);  // todo integrar a player
-    collision_manager.add_dynamic_body(new_player);
+    collision_manager.track_dynamic_body(new_player);
     players.push_back(new_player);
 }
 
@@ -361,7 +361,7 @@ void Match::initiate_enemies() {
     for (auto& spawn_point: enemy_spawn_points) {
         auto new_enemy = std::make_shared<Enemy>(i % 3, i, spawn_point.x, spawn_point.y);
         new_enemy->set_spawn_point(spawn_point);
-        collision_manager.add_dynamic_body(new_enemy);
+        collision_manager.track_dynamic_body(new_enemy);
         enemies.emplace_back(new_enemy);
         i++;
     }

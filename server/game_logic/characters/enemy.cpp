@@ -1,107 +1,50 @@
+
 #include "enemy.h"
 
-#include "../areaObjects/bullet.h"
+#include "../../../common/common_constants.h"
 
-Enemy::Enemy(const uint8_t& enemy_type, const size_t& id, int x, int y):
-        DynamicBody(x, y, ENEMY_WIDTH, ENEMY_HEIGHT),
-        id(id),
-        state(STATE_IDLE_RIGHT),
-        enemy_type(enemy_type) {}
+#include "player.h"
 
-size_t Enemy::get_id() const { return id; }
+#define ATTACK_COOLDOWN 1000
 
-size_t Enemy::get_health() const { return health; }
 
-bool Enemy::is_enemy_alive() const { return is_alive; }
+// These enemys for NOW can only move left and right, attack the player and cannot jump (for now)
 
-void Enemy::set_id(size_t new_id) { this->id = new_id; }
+Enemy::Enemy(size_t id, const uint8_t& character, int attack_damage, int health,
+             int revive_cooldown, int x, int y, int w, int h, int speed):
+        CharacterBody(id, character, x, y, w, h, Vector2D(speed, 0), health,
+                      state = STATE_IDLE_RIGHT, revive_cooldown),
+        attack_damage(attack_damage),
+        attack_cooldown(ATTACK_COOLDOWN),
+        x_speed(speed) {}
 
-void Enemy::set_health(size_t new_health) { this->health = new_health; }
+void Enemy::update_db() {
 
-void Enemy::decrease_health(size_t susbstract_health) {
-    if (((int)health - (int)susbstract_health) < MIN_HEALTH) {
-        health = MIN_HEALTH;
-    } else {
-        health -= susbstract_health;
+    if (!is_dead()) {
+        position += velocity;
     }
 }
 
-void Enemy::increase_health(size_t add_health) {
-    if (((int)health + (int)add_health) > MAX_HEALTH) {
-        health = MAX_HEALTH;
-    } else {
-        health += add_health;
+void Enemy::handle_colision(CollisionObject* other) {
+
+    Player* player = dynamic_cast<Player*>(other);
+
+    if (player) {
+        attack(player);
     }
 }
 
-void Enemy::revive() {
-    health = MAX_HEALTH * 0.75;
-    set_state(STATE_IDLE_RIGHT);
-    position = spawn_position;
-    is_alive = true;
+void Enemy::attack(CharacterBody* player) {
+    player->take_damage(this->attack_damage);
+    player->knockback(10);
 }
-
-bool Enemy::can_revive() const { return (revive_cooldown == 0 && !is_enemy_alive()); }
-
-void Enemy::decrease_revive_cooldown() { revive_cooldown--; }
-
-void Enemy::reset_revive_cooldown() { revive_cooldown = REVIVE_COOLDOWN; }
-
-void Enemy::shoot() {}
-
-void Enemy::kill() {
-    velocity = Vector2D(0, 0);
-    is_alive = false;
-}
-
-void Enemy::set_state(const uint8_t new_state) { this->state = new_state; }
-
-void Enemy::set_spawn_point(const Vector2D& new_spawn_point) { spawn_position = new_spawn_point; }
-
-Vector2D Enemy::get_spawn_point() { return spawn_position; }
 
 void Enemy::move_left() {
     direction = -1;
-    velocity.x = -DEFAULT_SPEED_X;
+    velocity.x = -x_speed;
 }
 
 void Enemy::move_right() {
     direction = 1;
-    velocity.x = DEFAULT_SPEED_X;
+    velocity.x = x_speed;
 }
-
-void Enemy::jump() {
-    on_floor = false;
-    velocity.y = -JUMP_SPEED;
-}
-
-void Enemy::update_db() {
-    if (!on_floor) {
-        velocity.y += GRAVITY;
-    }
-    position += velocity;
-
-    // print_info(); TODO SACAR
-}
-
-bool Enemy::is_on_floor() const { return on_floor; }
-
-bool Enemy::is_facing_right() const { return direction == 1; }
-
-void Enemy::handle_colision(CollisionObject& other) {
-    if (is_touching_bool(other)) {
-        velocity.y = 10;
-        on_floor = true;
-    }
-}
-
-void Enemy::handle_impact(Bullet& bullet) {
-    decrease_health(bullet.get_damage());
-    if (health == 0) {
-        bullet.get_player_points(ENEMY_KILL_POINTS);
-    }
-}
-
-uint8_t Enemy::get_enemy_type() const { return enemy_type; }
-
-uint8_t Enemy::get_state() const { return state; }

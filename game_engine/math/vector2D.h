@@ -12,7 +12,8 @@ public:
     int x, y;
 
     // Constructor
-    explicit Vector2D(int x = 0, int y = 0);
+    explicit Vector2D(int x, int y);
+    explicit Vector2D(int a);
 
     // Suma de 2 vectores
     Vector2D operator+(const Vector2D& other) const;

@@ -5,22 +5,22 @@
 #include "../../game_engine/gui/canvas_object.h"
 #include "../../game_engine/gui/widgets/color_rect.h"
 #include "../../game_engine/physics_engine/collision_manager.h"
-#include "../../game_engine/physics_engine/physics_object/dynamic_body.h"
-#include "../../game_engine/physics_engine/physics_object/static_body.h"
+#include "../../server/game_logic/characters/player.h"
+#include "../../server/game_logic/platforms/box_platform.h"
 
-class Player: public DynamicBody, public engine::CanvasObject {
+class PlayerTest: public Player, public engine::CanvasObject {
+
 private:
-    engine::ColorRect color_rect;
-    float base_speed = 10;
-    int jump_force = 25;
-    int gravity = 1;
-    float friction = 0.1f;
-    bool on_floor = true;
-    bool is_jumping = false;
-    int direction = 1;
+    engine::ColorRect& color_rect;
 
 
 public:
+    PlayerTest(size_t id, std::string name, const uint8_t& character, int x, int y,
+               CollisionManager& collision_manager, engine::ColorRect& color_rect):
+            Player(id, name, character, x, y, collision_manager), color_rect(color_rect) {}
+
+    void draw(SDL_Renderer* renderer) override { color_rect.draw(renderer); }
+
     // create a method that prints the position of the player and the velocity
     void print_position() {
         std::cout << "--------------------------------" << std::endl;
@@ -30,53 +30,17 @@ public:
 
     void update_color_rect() { color_rect.set_position(position.x, position.y); }
 
-    void update_db() override {
-
-        if (!on_floor) {
-            velocity.y += gravity;
-
-        } else {
-            velocity.x -= friction * direction;
-        }
-
-
-        position += velocity;
-
-        print_position();
-    }
-
-
-    void handle_colision(CollisionObject& other) override {
-
-        if (is_touching_bool(other)) {
-            velocity.y = 10;
-            on_floor = true;
-        }
-    }
-
-
-    void jump() {
-        on_floor = false;
-        velocity.y = -jump_force;
-    }
-
-    Player(int x, int y, int width, int height, engine::ColorRect& color_rect):
-            DynamicBody(x, y, width, height, Vector2D(0, 10)), color_rect(color_rect) {}
-
-    void on_key_press(SDL_Keycode key) override {
+    void on_key_press(const SDL_Keycode& key) override {
 
         switch (key) {
             case SDLK_a:
-                direction = -1;
-                velocity.x = -base_speed;
+                move_left();
                 break;
             case SDLK_d:
-                direction = 1;
-                velocity.x = base_speed;
+                move_right();
                 break;
             case SDLK_w:
-                if (on_floor)
-                    jump();
+                jump();
                 break;
             default:
                 velocity.x = 0;
@@ -84,20 +48,19 @@ public:
         }
     }
 
-    void draw(SDL_Renderer* renderer) override { color_rect.draw(renderer); }
-
     void set_position(int x, int y) override {}
     bool is_intersecting(SDL_Point& point) const override { return false; }
     bool is_intersecting(SDL_Rect& rect) const override { return false; }
 };
 
-class Platform: public StaticBody, public engine::CanvasObject {
+
+class PlatformTest: public BoxPlatform, public engine::CanvasObject {
 private:
     engine::ColorRect color_rect;
 
 public:
-    Platform(int x, int y, int width, int height, engine::ColorRect& color_rect):
-            StaticBody(x, y, width, height), color_rect(color_rect) {}
+    PlatformTest(int x, int y, int width, int height, engine::ColorRect& color_rect):
+            BoxPlatform(x, y, width, height), color_rect(color_rect) {}
 
     void draw(SDL_Renderer* renderer) override { color_rect.draw(renderer); }
 
@@ -107,29 +70,31 @@ public:
     bool is_intersecting(SDL_Rect& rect) const override { return false; }
 };
 
+
 int main() {
     engine::Window window(1600, 800, true, true);
-    auto renderer = window.getRenderer();
+    auto renderer = window.get_renderer();
 
     CollisionManager collision_manager(1600, 800);
 
     SDL_Rect rect = {0, 500, 1600, 400};
     engine::ColorRect color_rect({255, 0, 0, 255}, rect);
-    auto platform = std::make_shared<Platform>(0, 500, 1600, 400, color_rect);
+    auto platform = std::make_shared<PlatformTest>(0, 500, 1600, 400, color_rect);
 
     SDL_Rect rect_2 = {800, 300, 100, 50};
     engine::ColorRect color_rect_2({0, 255, 0, 255}, rect_2);
-    auto platform_2 = std::make_shared<Platform>(800, 300, 100, 50, color_rect_2);
+    auto platform_2 = std::make_shared<PlatformTest>(800, 300, 100, 50, color_rect_2);
 
     SDL_Rect rect_3 = {1000, 100, 100, 800};
     engine::ColorRect color_rect_3({0, 255, 255, 255}, rect_3);
-    auto platform_3 = std::make_shared<Platform>(1000, 100, 100, 800, color_rect_3);
+    auto platform_3 = std::make_shared<PlatformTest>(1000, 100, 100, 800, color_rect_3);
 
     SDL_Rect player_cube = {100, 200, 50, 50};
     engine::ColorRect color_player({0, 255, 0, 255}, player_cube);
-    auto player = std::make_shared<Player>(100, 200, 50, 50, color_player);
+    auto player =
+            std::make_shared<PlayerTest>(1, "player", 1, 100, 200, collision_manager, color_player);
 
-    collision_manager.add_dynamic_body(player);
+    collision_manager.track_dynamic_body(player);
     collision_manager.add_object(platform);
     collision_manager.add_object(platform_2);
     collision_manager.add_object(platform_3);
@@ -143,6 +108,7 @@ int main() {
     Uint32 frame_start = 0;
     int frame_time = 0;
     const int frame_delay = 1000 / 60;
+
 
     while (running) {
         frame_start = SDL_GetTicks();
@@ -171,6 +137,8 @@ int main() {
         if (frame_delay > frame_time) {  // Delay to achieve 60 fps
             SDL_Delay(frame_delay - frame_time);
         }
+
+        // player->print_position();
     }
 
     return 0;

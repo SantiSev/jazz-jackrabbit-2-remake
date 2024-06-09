@@ -1,6 +1,7 @@
 #ifndef TP_FINAL_COMMON_CONSTANTS_H
 #define TP_FINAL_COMMON_CONSTANTS_H
 
+#include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 

@@ -5,6 +5,6 @@
 #ifndef COLISIONFACE_H
 #define COLISIONFACE_H
 
-enum class CollisionFace { NONE, LEFT, RIGHT, TOP, BOTTOM };
+enum CollisionFace { NONE, LEFT, RIGHT, TOP, BOTTOM };
 
 #endif  // COLISIONFACE_H
