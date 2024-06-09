@@ -3,6 +3,8 @@
 
 #include <cstdint>
 #include <cstdlib>
+#include <map>
+#include <string>
 
 // Game Settings
 const uint8_t MAX_MATCHES_TO_CREATE = 16;
@@ -77,6 +79,26 @@ const size_t STARTING_MATCH_TIME = 120;  // TODO match duration?
 #define STATE_ESPECIAL_RIGHT 0X15
 #define STATE_ESPECIAL_LEFT 0X16
 #define STATE_DEAD 0X17
+
+const std::map<uint8_t, std::string> map_states_to_animations = {
+        {STATE_IDLE_RIGHT, "idle_right"},
+        {STATE_IDLE_LEFT, "idle_left"},
+        {STATE_SHOOTING_RIGHT, "shooting_right"},
+        {STATE_SHOOTING_LEFT, "shooting_left"},
+        {STATE_JUMPING_RIGHT, "jumping_right"},
+        {STATE_JUMPING_LEFT, "jumping_left"},
+        {STATE_SPRINTING_RIGHT, "sprinting_right"},
+        {STATE_SPRINTING_LEFT, "sprinting_left"},
+        {STATE_MOVING_LEFT, "moving_left"},
+        {STATE_MOVING_RIGHT, "moving_right"},
+        {STATE_FALLING, "falling"},
+        {STATE_DAMAGED, "damaged"},
+        {STATE_INTOXICATED_IDLE, "intoxicated_idle"},
+        {STATE_INTOXICATED_MOV_RIGHT, "intoxicated_moving_right"},
+        {STATE_INTOXICATED_MOV_LEFT, "intoxicated_moving_left"},
+        {STATE_ESPECIAL_RIGHT, "special_right"},
+        {STATE_ESPECIAL_LEFT, "special_left"},
+        {STATE_DEAD, "dead"}};
 
 
 // Weapons

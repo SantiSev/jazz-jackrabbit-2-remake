@@ -6,6 +6,7 @@
 
 #include <arpa/inet.h>
 
+#include "../character_enum.h"
 #include "../common_constants.h"
 #include "../map_enum.h"
 
@@ -45,12 +46,6 @@ typedef enum: uint8_t {
     PAUSE_GAME = 0x10,
     TAUNT = 0x11,
 } command_t;
-
-typedef enum: uint8_t {
-    JAZZ_CHARACTER = 0x00,
-    SPAZ_CHARACTER = 0x01,
-    LORI_CHAARCTER = 0x02
-} character_t;
 
 //------Messages send by client to server --------
 

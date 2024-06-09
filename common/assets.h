@@ -5,7 +5,6 @@
 
 // Textures
 #define BACKGROUNDS "assets/screens.png"
-#define JAZZ "assets/jazz.png"
 
 // Fonts
 #define FONT "assets/fonts/atus.ttf"
