@@ -111,47 +111,6 @@ void Match::countdown_match(std::chrono::time_point<std::chrono::system_clock>& 
     }
 }
 
-GameStateDTO Match::create_actual_snapshot() {
-    GameStateDTO game_state{};
-    game_state.seconds = (uint16_t)match_time % 60;
-    game_state.num_players = players.size();
-    game_state.num_enemies = enemies.size();
-    game_state.num_bullets = bullets.size();
-
-    for (size_t i = 0; i < players.size(); ++i) {
-        game_state.players[i].id = players[i]->get_id();
-        snprintf(game_state.players[i].name, sizeof(game_state.players[i].name), "%s",
-                 players[i]->get_name().c_str());
-        game_state.players[i].health = players[i]->get_health();
-        game_state.players[i].points = players[i]->get_points();
-        game_state.players[i].character = players[i]->get_character();
-        game_state.players[i].state = players[i]->get_state();
-        game_state.players[i].x_pos = players[i].get()->position.x;
-        game_state.players[i].y_pos = players[i].get()->position.y;
-        for (size_t j = 0; j < NUM_OF_WEAPONS; ++j) {
-            game_state.players[i].weapons[j].ammo = players[i]->get_weapon(j)->get_ammo();
-            game_state.players[i].weapons[j].is_empty =
-                    players[i]->get_weapon(j)->get_ammo() == 0 ? (uint8_t)1 : (uint8_t)0;
-            game_state.players[i].weapons[j].weapon_name =
-                    (uint8_t)players[i]->get_weapon(j)->get_weapon_id();
-        }
-    }
-    for (size_t i = 0; i < players.size(); ++i) {
-        game_state.players[i].state = enemies[i]->get_state();
-        game_state.enemies[i].x_pos = enemies[i]->position.x;
-        game_state.enemies[i].y_pos = enemies[i]->position.y;
-        game_state.enemies[i].state = enemies[i]->get_state();
-    }
-    for (size_t i = 0; i < bullets.size(); ++i) {
-        game_state.bullets[i].x_pos = bullets[i]->position.x;
-        game_state.bullets[i].y_pos = bullets[i]->position.y;
-        //        game_state.bullets[i].bullet_type = (uint8_t)bullets[i]->get_bullet_type();
-    }
-
-
-    return game_state;
-}
-
 void Match::run_command(const CommandDTO& dto) {
     std::shared_ptr<Player> player = get_player(dto.id_player);
     if (player) {
@@ -230,6 +189,47 @@ void Match::stop() {
     //        client->get_sender_queue()->close();
     //    }
     client_monitor.remove_all_queues();
+}
+
+GameStateDTO Match::create_actual_snapshot() {
+    GameStateDTO game_state{};
+    game_state.seconds = (uint16_t)match_time % 60;
+    game_state.num_players = players.size();
+    game_state.num_enemies = enemies.size();
+    game_state.num_bullets = bullets.size();
+
+    for (size_t i = 0; i < players.size(); ++i) {
+        game_state.players[i].id = players[i]->get_id();
+        snprintf(game_state.players[i].name, sizeof(game_state.players[i].name), "%s",
+                 players[i]->get_name().c_str());
+        game_state.players[i].health = players[i]->get_health();
+        game_state.players[i].points = players[i]->get_points();
+        game_state.players[i].character = players[i]->get_character();
+        game_state.players[i].state = players[i]->get_state();
+        game_state.players[i].x_pos = players[i].get()->position.x;
+        game_state.players[i].y_pos = players[i].get()->position.y;
+        for (size_t j = 0; j < NUM_OF_WEAPONS; ++j) {
+            game_state.players[i].weapons[j].ammo = players[i]->get_weapon(j)->get_ammo();
+            game_state.players[i].weapons[j].is_empty =
+                    players[i]->get_weapon(j)->get_ammo() == 0 ? (uint8_t)1 : (uint8_t)0;
+            game_state.players[i].weapons[j].weapon_name =
+                    (uint8_t)players[i]->get_weapon(j)->get_weapon_id();
+        }
+    }
+    for (size_t i = 0; i < players.size(); ++i) {
+        game_state.players[i].state = enemies[i]->get_state();
+        game_state.enemies[i].x_pos = enemies[i]->position.x;
+        game_state.enemies[i].y_pos = enemies[i]->position.y;
+        game_state.enemies[i].state = enemies[i]->get_state();
+    }
+    for (size_t i = 0; i < bullets.size(); ++i) {
+        game_state.bullets[i].x_pos = bullets[i]->position.x;
+        game_state.bullets[i].y_pos = bullets[i]->position.y;
+        //        game_state.bullets[i].bullet_type = (uint8_t)bullets[i]->get_bullet_type();
+    }
+
+
+    return game_state;
 }
 
 //-------------------- Initialization Methods -----------------

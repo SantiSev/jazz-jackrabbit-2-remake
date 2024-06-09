@@ -55,20 +55,42 @@ public:
     //-------------------- Gameloop Methods ----------------------
 
 
-    //-------------------- Conection Methods ----------------------
+    void countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
+                         const std::chrono::time_point<std::chrono::system_clock>& endTime);
 
+    void update_players();
+
+    void update_enemies();
+
+    void run_command(const CommandDTO& dto);
+
+    Vector2D select_player_spawn_point();
+
+    void patrol_move_enemies();
+
+    //-------------------- Conection Methods ----------------------
 
     void add_player_to_game(const std::string& player_name, const character_t& character,
                             uint16_t client_id);
 
+    void add_client_to_match(ServerThreadManager* client, const std::string& player_name,
+                             const character_t& character);
+
+    void send_end_message_to_players();
+
+    void delete_disconnected_player(id_client_t id_client);
+
+    GameStateDTO create_actual_snapshot();
 
     //-------------------- Initialization Methods -----------------
+
+    void initiate_enemies();
+
+    void load_spawn_points();
 
     //-------------------- Getter Methods -----------------
 
     std::shared_ptr<Player> get_player(size_t id);
-
-    GameStateDTO create_actual_snapshot();
 
     bool has_match_ended() const;
 
@@ -78,33 +100,9 @@ public:
 
     size_t get_max_players() const;
 
-    void countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
-                         const std::chrono::time_point<std::chrono::system_clock>& endTime);
-
-    void send_end_message_to_players();
-
-    void add_client_to_match(ServerThreadManager* client, const std::string& player_name,
-                             const character_t& character);
-
     std::vector<size_t> get_clients_ids();
 
     map_list_t get_map() const;
-
-    void run_command(const CommandDTO& dto);
-
-    void update_players();
-
-    void update_enemies();
-
-    void initiate_enemies();
-
-    void patrol_move_enemies();
-
-    void load_spawn_points();
-
-    Vector2D select_player_spawn_point();
-
-    void delete_disconnected_player(id_client_t id_client);
 };
 
 #endif
