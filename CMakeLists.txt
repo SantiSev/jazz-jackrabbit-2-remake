@@ -48,9 +48,6 @@ file(GLOB_RECURSE HEADERS_SERVER "server/*.h" "server/**/*.h")
 file(GLOB_RECURSE HEADERS_COMMON "common/*.h" "common/**/*.h")
 file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine/**/*.h")
 
-file(GLOB_RECURSE SERVER_WITHOUT_MAIN "server.cpp" "server.h" "server/protocol/*.cpp" "server/protocol/*.h" "server/game_logic/*.cpp" "server/game_logic/*.h" "server/protocol/**/*.cpp" "server/protocol/**/*.h" "server/game_logic/**/*.cpp" "server/game_logic/**/*.h")
-file(GLOB_RECURSE CLIENT_WITHOUT_MAIN "client.cpp" "client.h" "event_loop.cpp" "event_loop.h" "assets.h" "client/protocol/*.cpp" "client/protocol/*.h" "client/protocol/**/*.cpp" "client/protocol/**/*.h" "client/game_objects/*.cpp" "client/game_objects/*.h" "client/game_objects/**/*.cpp" "client/game_objects/**/*.h" "client/menu_objects/*.cpp" "client/menu_objects/*.h" "client/menu_objects/**/*.cpp" "client/menu_objects/**/*.h" "client/scenes/*.cpp" "client/scenes/*.h" "client/scenes/**/*.cpp" "client/scenes/**/*.h")
-
 if (PRODUCTION)
     add_executable(client 
         ${SOURCES_COMMON} 
@@ -59,7 +56,6 @@ if (PRODUCTION)
         ${HEADERS_COMMON} 
         ${SOURCES_GAME_ENGINE} 
         ${HEADERS_GAME_ENGINE} 
-        ${SERVER_WITHOUT_MAIN}
     )
     add_executable(server 
         ${SOURCES_COMMON} 
@@ -68,7 +64,6 @@ if (PRODUCTION)
         ${HEADERS_COMMON} 
         ${SOURCES_GAME_ENGINE} 
         ${HEADERS_GAME_ENGINE} 
-        ${CLIENT_WITHOUT_MAIN}
     )
 
     target_link_libraries(client 
