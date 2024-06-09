@@ -14,7 +14,7 @@
 #include "../collectables/collectable.h"
 
 // Player config
-#define MAX_HEALTH 100
+#define MAX_HEALTH 1000
 #define MIN_HEALTH 0
 #define STARTING_POINTS 0
 #define REVIVE_COOLDOWN 10

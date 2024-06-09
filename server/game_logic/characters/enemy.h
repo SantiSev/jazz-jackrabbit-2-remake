@@ -4,12 +4,16 @@
 
 #include "character.h"
 
+#define MOVEMENT_RANGE 100
+
 class Enemy: public CharacterBody {
 private:
     uint8_t attack_damage = 0;
     int attack_cooldown = 0;
     bool is_attacking = false;
     int x_speed = 0;
+    int movement_range = MOVEMENT_RANGE;
+
     Vector2D spawn_position;
 
 public:
@@ -27,15 +31,9 @@ public:
     void move_left() override;
     void move_right() override;
 
-    //------- Revive Methods --------
-
-    void revive();
-
     //------- Game Methods --------
 
-    void update_status();
-
-    void patrol(int match_time);
+    virtual void patrol();
 };
 
 

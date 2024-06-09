@@ -8,7 +8,7 @@
 #define ATTACK_COOLDOWN 1000
 
 
-//------- Overrided Methods --------
+//------- Constructors --------
 
 // These enemys for NOW can only move left and right, attack the player and cannot jump (for now)
 
@@ -21,27 +21,61 @@ Enemy::Enemy(size_t id, const character_t& character, int attack_damage, int hea
         x_speed(speed),
         spawn_position(x, y) {}
 
+//------------ Overrided Methods ------------
+
 void Enemy::update_db() {
 
     if (!is_dead()) {
+        patrol();
         position += velocity;
+    } else {
+        velocity = Vector2D(0, 0);
+        set_state(STATE_DEAD);
     }
 }
 
 void Enemy::handle_colision(CollisionObject* other) {
 
     Player* player = dynamic_cast<Player*>(other);
+    CollisionFace face = is_touching(other);
 
-    if (player) {
+    if (player && face != CollisionFace::NONE) {
+        std::cout << "Enemy collided with player" << std::endl;
+
         attack(player);
+
+        switch (face) {
+
+            case CollisionFace::TOP:  // other object is on top of me
+
+                player->position.y = get_top_hitbox_side() - player->get_hitbox_height();
+                break;
+
+            case CollisionFace::LEFT:  // other object is on my left side
+
+
+                player->position.x = get_left_hitbox_side() - player->get_hitbox_width();
+                break;
+
+            case CollisionFace::RIGHT:  // other object is on the right of this object
+
+                player->position.x = get_right_hitbox_side();
+                break;
+
+            case CollisionFace::BOTTOM:  // other object is below me
+                player->position.y = get_bottom_hitbox_side();
+                break;
+            default:
+                break;
+        }
     }
 }
 
 //------- Movement Methods --------
 
 void Enemy::attack(CharacterBody* player) {
+    player->knockback(20);
     player->take_damage(this->attack_damage);
-    player->knockback(10);
 }
 
 void Enemy::move_left() {
@@ -56,39 +90,23 @@ void Enemy::move_right() {
     state = STATE_MOVING_RIGHT;
 }
 
-//------- Revive Methods --------
-
-void Enemy::revive() {
-    health = MAX_HEALTH * 0.75;
-    set_state(STATE_IDLE_RIGHT);
-    position = spawn_position;
-}
-
 //------- Movement Methods --------
 
-void Enemy::update_status() {
-    if (is_dead()) {
-        if (can_revive()) {
-            revive();
-        } else {
-            decrease_revive_cooldown();
-        }
-    }
-    if (!is_dead() && get_health() == MIN_HEALTH) {
-        velocity = Vector2D(0, 0);
-        set_state(STATE_DEAD);
-        reset_revive_cooldown();
-    }
-}
+void Enemy::patrol() {
+    // Calculate the absolute difference between the current position and the spawn position
+    int diff = std::abs(position.x - spawn_position.x);
 
-void Enemy::patrol(int match_time) {
-    if (!is_dead()) {
-        if (abs(match_time % 2) == 0) {
-            if (is_facing_right()) {
-                move_left();
-            } else {
-                move_right();
-            }
+    // If the difference is greater than or equal to 10, the enemy has reached the end of its path
+    if (diff >= movement_range) {
+        // If the current position is less than the spawn position, move right, otherwise move left
+        if (position.x < spawn_position.x) {
+            direction = 1;
+            state = STATE_MOVING_RIGHT;
+            move_right();
+        } else {
+            direction = -1;
+            state = STATE_MOVING_LEFT;
+            move_left();
         }
     }
 }

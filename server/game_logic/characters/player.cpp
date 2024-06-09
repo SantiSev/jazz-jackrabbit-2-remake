@@ -95,6 +95,11 @@ void Player::do_special_attack() {
 // ------------ Movement Methods --------------
 
 void Player::move_left() {
+
+    if (is_knocked_back) {
+        return;
+    }
+
     direction = -1;
     velocity.x = -DEFAULT_SPEED_X;
     if (is_on_floor()) {
@@ -107,6 +112,11 @@ void Player::move_left() {
 }
 
 void Player::move_right() {
+
+    if (is_knocked_back) {
+        return;
+    }
+
     direction = 1;
     velocity.x = DEFAULT_SPEED_X;
     if (is_on_floor()) {
@@ -185,6 +195,13 @@ void Player::update_db() {
         velocity.x -= FRICCTION * direction;
     }
 
+    if (is_knocked_back) {
+        velocity.x += FRICCTION * direction;
+        if (velocity.x == 0) {
+            is_knocked_back = false;
+        }
+    }
+
     for (auto& weapon: weapons) {
         weapon->update_shoot_rate();
     }
@@ -213,12 +230,21 @@ void Player::handle_colision(CollisionObject* other) {
     }
 }
 
+void Player::knockback(int force) {
+    velocity.x = -direction * force;
+    velocity.y = -force;
+    on_floor = false;
+    is_knocked_back = true;
+}
+
 void Player::print_info() {
     // also print current time
     std::cout << "--------------------------------" << std::endl;
     std::cout << "| Position: " << position.x << " , " << position.y << " |" << std::endl;
     std::cout << "| Velocity: " << velocity.x << " , " << velocity.y << " |" << std::endl;
+    std::cout << "| Health: " << health << " |" << std::endl;
     std::cout << "| on_floor: " << on_floor << " |" << std::endl;
+    std::cout << "| is_knocked_back " << is_knocked_back << " |" << std::endl;
 }
 
 

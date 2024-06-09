@@ -17,13 +17,13 @@ class Weapon;
 
 class Player: public CharacterBody {
 private:
-
     std::string name;
     size_t points;
     std::vector<Weapon*> weapons;
     size_t selected_weapon = DEFAULT_WEAPON;
     CollisionManager& collision_manager;  // reference to the collision manager
 
+    bool is_knocked_back = false;
 
     // game statuses
     bool is_intoxicated = false;
@@ -45,6 +45,7 @@ public:
     void update_db() override;
     void handle_colision(CollisionObject* other) override;
     void print_info() override;
+    void knockback(int force) override;
 
     //------- Getters --------
 

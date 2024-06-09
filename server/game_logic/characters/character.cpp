@@ -103,7 +103,7 @@ void CharacterBody::jump() {
     velocity.y = -JUMP_SPEED;
 }
 
-void CharacterBody::knockback(int force) { position -= Vector2D(direction * force); }
+void CharacterBody::knockback(int force) { velocity.x += -direction * force; }
 
 void CharacterBody::update_db() {
     if (!on_floor) {

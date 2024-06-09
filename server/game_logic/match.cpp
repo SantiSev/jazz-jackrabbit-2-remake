@@ -126,7 +126,7 @@ void Match::update_players() {
 
 void Match::update_enemies() {
     for (auto& enemy: enemies) {
-        enemy->update_status();
+        enemy->update_db();
     }
 }
 
@@ -137,7 +137,7 @@ Vector2D Match::select_player_spawn_point() {
 
 void Match::patrol_move_enemies() {
     for (auto& enemy: enemies) {
-        enemy->patrol(match_time);
+        enemy->patrol();
     }
 }
 
@@ -234,7 +234,7 @@ GameStateDTO Match::create_actual_snapshot() {
 
 //-------------------- Initialization Methods -----------------
 
-void Match::load_spawn_points() { // todo the yaml code doesnt build
+void Match::load_spawn_points() {  // todo the yaml code doesnt build
     /*
     //    std::string file_path = map_list_to_string.at(map) + YAML_EXTENSION;
     YAML::Node yaml =
