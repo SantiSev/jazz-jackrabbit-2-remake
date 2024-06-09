@@ -33,7 +33,17 @@ if (static)
     set(LDFLAGS "${LDFLAGS} -static")
 endif()
 
-# define targets
+# DEBUGGING
+if (LOG)
+    add_definitions(-DLOG)
+endif()
+if(LOG_VERBOSE)
+    add_definitions(-DLOG_VERBOSE)
+endif()
+if (CHEATS)
+    add_definitions(-DCHEATS)
+endif()
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LDFLAGS}")
 set(CMAKE_PREFIX_PATH "${SDL2_INCLUDE_DIRS} ${SDL2_ttf_INCLUDE_DIRS} ${SDL2_image_INCLUDE_DIRS} ${SDL2_mixer_INCLUDE_DIRS}")
