@@ -6,6 +6,7 @@
 
 #include <arpa/inet.h>
 
+#include "../character_enum.h"
 #include "../common_constants.h"
 #include "../map_enum.h"
 
@@ -46,12 +47,6 @@ typedef enum: uint8_t {
     TAUNT = 0x11,
 } command_t;
 
-typedef enum: uint8_t {
-    JAZZ_CHARACTER = 0x00,
-    SPAZ_CHARACTER = 0x01,
-    LORI_CHAARCTER = 0x02
-} character_t;
-
 //------Messages send by client to server --------
 
 
@@ -73,7 +68,7 @@ struct LeaveMatchDTO {
 struct CreateGameDTO {
     id_client_t id_client;
     character_t character_selected;
-    map_list_t map_name;  // todo change to enum constant
+    map_list_t map_name;
     uint8_t max_players;
 } __attribute__((packed));
 
@@ -117,7 +112,7 @@ struct PlayerDTO {
     uint16_t id;
     char name[50];
     uint16_t health;
-    uint8_t character;
+    character_t character;
     uint16_t points;
     uint8_t state;
     uint16_t x_pos;

@@ -42,6 +42,14 @@ void ClientMessageHandler::handle_recv_active_games(const MatchInfoDTO& dto) {
     // send_message.push(std::make_shared<RecvActiveGames>(dto));
 }
 
+void ClientMessageHandler::handle_recv_finish_match() {
+    // todo
+    //  client.mostrar_pantalla_score();
+    //  sleep
+    //  client.esperar_tecla_para_volver_a_menu();
+    //  client.cambiar_de_match_a_menu();
+}
+
 void ClientMessageHandler::handle_recv_game_state(const GameStateDTO& dto) {
     game_state_q.push(std::make_shared<GameStateDTO>(dto));
 }

@@ -49,7 +49,7 @@ public:
 
     ServerThreadManager* get_client_by_id(size_t id);
 
-    void send_client_succesful_connect(uint16_t id_client);
+    void send_client_succesful_connect(uint16_t id_client, map_list_t map);
 
     void delete_disconnected_client(id_client_t id_client);
 };

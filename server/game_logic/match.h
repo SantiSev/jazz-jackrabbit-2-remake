@@ -48,7 +48,7 @@ public:
 
     std::shared_ptr<Player> get_player(size_t id);
 
-    void add_player_to_game(const std::string& player_name, const uint8_t& character,
+    void add_player_to_game(const std::string& player_name, const character_t& character,
                             uint16_t client_id);
 
     GameStateDTO create_actual_snapshot();
@@ -67,7 +67,7 @@ public:
     void send_end_message_to_players();
 
     void add_client_to_match(ServerThreadManager* client, const std::string& player_name,
-                             const uint8_t& character);
+                             const character_t& character);
 
     std::vector<size_t> get_clients_ids();
 

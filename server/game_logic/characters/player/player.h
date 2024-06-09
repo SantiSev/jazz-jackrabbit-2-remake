@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "../../../../common/character_enum.h"
 #include "../../../../common/common_constants.h"
 #include "../../../../game_engine/physics_engine/collision_manager.h"
 #include "../../../../game_engine/physics_engine/physics_object/dynamic_body.h"
@@ -22,7 +23,7 @@ private:
     size_t id;
     std::string name;
     size_t health;
-    uint8_t character;  // handle de personaje
+    character_t character;  // handle de personaje
     size_t points;
     uint8_t state;
 
@@ -48,7 +49,7 @@ private:
 
 
 public:
-    Player(size_t id, std::string name, const uint8_t& character, int x, int y,
+    Player(size_t id, std::string name, const character_t& character, int x, int y,
            CollisionManager& collision_manager);
 
     void update_db() override;
@@ -60,7 +61,7 @@ public:
     size_t get_id() const;
     std::string get_name();
     size_t get_health() const;
-    uint8_t get_character() const;
+    character_t get_character() const;
     size_t get_points() const;
     uint8_t get_state() const;
     Weapon get_weapon(size_t weapon);
@@ -70,7 +71,7 @@ public:
     void set_id(size_t id);
     void set_name(std::string name);
     void set_health(size_t health);
-    void set_character(uint8_t new_character);
+    void set_character(const character_t& new_character);
     void set_state(const uint8_t new_state);
     void set_starting_weapon();
 

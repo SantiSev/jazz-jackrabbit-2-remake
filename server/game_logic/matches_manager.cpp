@@ -28,6 +28,7 @@ void MatchesManager::run() {
         stop_all_matches();
         clear_all_clients();
         waiting_server_queue->close();
+        std::cout << "Server Closed" << std::endl;
     } catch (const std::exception& err) {
         if (online) {
             std::cerr << "An exception was caught in matches manager: " << err.what() << "\n";
@@ -44,30 +45,30 @@ void MatchesManager::create_new_match(const CreateGameDTO& dto) {
     match->add_client_to_match(get_client_by_id(dto.id_client), "jugador_1_creador",
                                dto.character_selected);
 
-    send_client_succesful_connect(dto.id_client);
+    send_client_succesful_connect(dto.id_client, dto.map_name);
 }
 
-void MatchesManager::send_client_succesful_connect(uint16_t id_client) {
-    ClientHasConnectedToMatchDTO game_created = {MAP_1};
-    auto send_game_created = std::make_shared<SendConnectedToGameMessage>(game_created);
+void MatchesManager::send_client_succesful_connect(uint16_t id_client, map_list_t map) {
+    ClientHasConnectedToMatchDTO game_connected = {map};
+    auto send_game_created = std::make_shared<SendConnectedToGameMessage>(game_connected);
     get_client_by_id(id_client)->get_sender_queue()->push(send_game_created);
 }
-
-ServerThreadManager* MatchesManager::get_client_by_id(size_t id) {
-    auto it = std::find_if(clients.begin(), clients.end(), [id](ServerThreadManager* client) {
-        return client->get_client_id() == id;
-    });
-    return (it != clients.end()) ? *it : nullptr;
-}
-
 
 void MatchesManager::join_match(const JoinMatchDTO& dto) {
     auto it = matches.find(dto.id_match);
     if (it != matches.end()) {
         it->second->add_client_to_match(get_client_by_id(dto.id_match), "pepo_joineado",
                                         dto.player_character);
-        send_client_succesful_connect(dto.id_client);
+        send_client_succesful_connect(dto.id_client, it->second->get_map());
     }
+}
+
+
+ServerThreadManager* MatchesManager::get_client_by_id(size_t id) {
+    auto it = std::find_if(clients.begin(), clients.end(), [id](ServerThreadManager* client) {
+        return client->get_client_id() == id;
+    });
+    return (it != clients.end()) ? *it : nullptr;
 }
 
 void MatchesManager::add_new_client_to_manager(Socket client_socket) {
@@ -77,6 +78,7 @@ void MatchesManager::add_new_client_to_manager(Socket client_socket) {
     client->get_sender_queue()->push(message);
     client->set_client_id(clients_connected);
     clients.push_back(client);
+    std::cout << "Client " << clients_connected << " connected to server." << std::endl;
 }
 
 void MatchesManager::clear_all_clients() {
@@ -131,22 +133,20 @@ void MatchesManager::check_matches_status() {
 }
 
 void MatchesManager::stop_finished_match(Match* match) {
-    match->stop();
-    match->join();
     std::vector<size_t> ids = match->get_clients_ids();
     for (auto id: ids) {
         auto it = clients.begin();
         while (it != clients.end()) {
             if ((*it)->get_client_id() == id) {
-                (*it)->stop();
-                delete (*it);
-                clients.erase(it);
+                (*it)->set_receiver_queue(waiting_server_queue);
                 break;
             } else {
                 ++it;
             }
         }
     }
+    match->stop();
+    match->join();
 }
 
 void MatchesManager::stop_all_matches() {

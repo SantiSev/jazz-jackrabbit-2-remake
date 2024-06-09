@@ -5,7 +5,7 @@
 
 #include "../../areaObjects/bullet.h"
 
-Player::Player(size_t id, std::string name, const uint8_t& character, int x, int y,
+Player::Player(size_t id, std::string name, const character_t& character, int x, int y,
                CollisionManager& collision_manager):
         DynamicBody(x, y, PLAYER_WIDTH, PLAYER_HEIGHT, Vector2D(NO_SPEED, DEFAULT_SPEED_Y)),
         collision_manager(collision_manager),
@@ -40,7 +40,7 @@ std::string Player::get_name() { return name; }
 
 size_t Player::get_health() const { return health; }
 
-uint8_t Player::get_character() const { return character; }
+character_t Player::get_character() const { return character; }
 
 size_t Player::get_points() const { return points; }
 
@@ -74,7 +74,7 @@ void Player::increase_health(size_t add_health) {
 }
 
 
-void Player::set_character(uint8_t new_character) { this->character = new_character; }
+void Player::set_character(const character_t& new_character) { this->character = new_character; }
 
 void Player::decrease_revive_cooldown() { this->revive_cooldown--; }
 

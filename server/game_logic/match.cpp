@@ -8,6 +8,8 @@
 #include <string>
 #include <utility>
 
+#include "../../common/assets.h"
+
 Match::Match(const map_list_t& map_selected, size_t required_players_setting):
         online(true),
         event_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()),
@@ -38,6 +40,7 @@ void Match::run() {
 
         const double FPSMAX = 1000.0 / 60.0;
         std::shared_ptr<Message> next_message;
+        std::cout << "Match map: " << map_list_to_string.at(map) << " Starting..." << std::endl;
         while (online) {
             auto endTime = std::chrono::system_clock::now();
             std::chrono::duration<double, std::milli> delta = endTime - startTime;
@@ -158,7 +161,7 @@ bool Match::has_match_ended() const { return match_has_ended; }
 
 map_list_t Match::get_map() const { return map; }
 
-void Match::add_player_to_game(const std::string& player_name, const uint8_t& character,
+void Match::add_player_to_game(const std::string& player_name, const character_t& character,
                                uint16_t client_id) {
     players_connected++;
     Vector2D pos = select_player_spawn_point();
@@ -170,11 +173,13 @@ void Match::add_player_to_game(const std::string& player_name, const uint8_t& ch
 }
 
 void Match::add_client_to_match(ServerThreadManager* client, const std::string& player_name,
-                                const uint8_t& character) {
+                                const character_t& character) {
     client_monitor.addClient(client->get_sender_queue());
     client->set_receiver_queue(event_queue);
     clients.push_back(client);
     add_player_to_game(player_name, character, client->get_client_id());
+    std::cout << "Player connected: " << player_name << "is playing as "
+              << character_to_string(character) << std::endl;
 }
 
 size_t Match::get_num_players() { return players.size(); }
@@ -370,7 +375,7 @@ Vector2D Match::select_player_spawn_point() {
 void Match::patrol_move_enemies() {
     for (auto& enemy: enemies) {
         if (enemy->is_enemy_alive()) {
-            if (abs(enemy->get_spawn_point().x - enemy->position.x) > 10) {
+            if (abs(match_time % 2) == 0) {
                 if (enemy->is_facing_right()) {
                     enemy->move_left();
                     enemy->set_state(STATE_MOVING_LEFT);
@@ -385,8 +390,9 @@ void Match::patrol_move_enemies() {
 
 
 void Match::load_spawn_points() {
-    YAML::Node yaml =
-            YAML::LoadFile("/home/abarbalase/Desktop/tp-final-Veiga/assets/maps/map_1.yaml");
+    std::string file_path = map_list_to_string.at(map) + YAML_EXTENSION;
+
+    YAML::Node yaml = YAML::LoadFile(file_path);
     if (yaml.IsNull()) {
         std::cerr << "Error loading yaml file" << std::endl;
         exit(1);

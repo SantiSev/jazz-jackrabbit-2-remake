@@ -11,12 +11,12 @@ EventLoop::EventLoop(std::atomic<bool>& game_running, std::atomic<bool>& menu_ru
 
 void EventLoop::run() {
     while (_keep_running) {
+        std::shared_ptr<Message> msg;
+        recv_message.try_pop(msg);
+        if (msg) {
+            msg->run(message_handler);
+        }
         while (SDL_PollEvent(&event)) {
-            std::shared_ptr<Message> msg;
-            recv_message.try_pop(msg);
-            if (msg) {
-                msg->run(message_handler);
-            }
             if (event.type == SDL_QUIT) {
                 message_handler.quit();
                 menu_running.store(false);
