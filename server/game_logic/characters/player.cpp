@@ -201,20 +201,17 @@ void Player::handle_colision(CollisionObject* other) {
 
     if (!collectable && face != CollisionFace::NONE) {
 
-        if (face ==CollisionFace::TOP) {  
+        if (face == CollisionFace::TOP) {
             velocity.y = 10;
             on_floor = false;
 
         } else if (face == CollisionFace::BOTTOM) {
-            
-            velocity.y =
-                    10;  
+
+            velocity.y = 10;
             on_floor = true;
         }
     }
-
 }
-
 
 void Player::print_info() {
     // also print current time
@@ -223,7 +220,6 @@ void Player::print_info() {
     std::cout << "| Velocity: " << velocity.x << " , " << velocity.y << " |" << std::endl;
     std::cout << "| on_floor: " << on_floor << " |" << std::endl;
 }
-
 
 
 void Player::execute_command(command_t command) {
