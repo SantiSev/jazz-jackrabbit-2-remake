@@ -8,7 +8,6 @@
 
 class GameEnemy {
 private:
-    size_t health = MAX_HEALTH * 0.75;
     uint8_t state;
     uint8_t enemy_type;
     int position_x = 0;
@@ -22,6 +21,8 @@ public:
     void set_state(uint8_t updated_state);
 
     void set_position(int x, int y);
+
+    uint8_t get_state() const;
 };
 
 #endif

@@ -11,9 +11,9 @@ class GamePlayer {
 private:
     uint16_t id;
     std::string name;
-    uint16_t health = MAX_HEALTH;
+    uint16_t health = 0;
     uint8_t character;
-    uint16_t points = STARTING_POINTS;
+    uint16_t points = 0;
     uint8_t state;
     //    WeaponDTO weapons[NUM_OF_WEAPONS];
     int position_x = 0;

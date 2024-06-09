@@ -42,7 +42,8 @@ void Match::run() {
 
         const double FPSMAX = 1000.0 / 60.0;
         std::shared_ptr<Message> next_message;
-        std::cout << "Match map: " << map_list_to_string.at(map) << " Starting..." << std::endl;
+        std::cout << "Match map: " << map_list_to_string.at(map).substr(12) << " has started."
+                  << std::endl;
         while (online) {
             auto endTime = std::chrono::system_clock::now();
             std::chrono::duration<double, std::milli> delta = endTime - startTime;
@@ -200,7 +201,7 @@ void Match::add_client_to_match(ServerThreadManager* client, const std::string& 
     client->set_receiver_queue(event_queue);
     clients.push_back(client);
     add_player_to_game(player_name, character, client->get_client_id());
-    std::cout << "Player connected: " << player_name << "is playing as "
+    std::cout << "Player connected: " << player_name << " is playing as "
               << character_to_string(character) << std::endl;
 }
 
@@ -234,9 +235,11 @@ void Match::stop() {
 //-------------------- Initialization Methods -----------------
 
 void Match::load_spawn_points() {
-    std::string file_path = map_list_to_string.at(map) + YAML_EXTENSION;
+    //    std::string file_path = map_list_to_string.at(map) + YAML_EXTENSION;
+    YAML::Node yaml =
+            YAML::LoadFile("/home/niko/Escritorio/taller/tp_final/assets/maps/map_1.yaml");
 
-    YAML::Node yaml = YAML::LoadFile(file_path);
+    //    YAML::Node yaml = YAML::LoadFile(file_path);
     if (yaml.IsNull()) {
         std::cerr << "Error loading yaml file" << std::endl;
         exit(1);
