@@ -160,19 +160,19 @@ void Client::start() {
 void Client::pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_pool) {
     // Textures
     resource_pool->load_texture(BACKGROUNDS);
-    resource_pool->load_texture(map_character_enum_to_string.at(JAZZ_CHARACTER) + PNG_EXTENSION);
-    resource_pool->load_texture(map_character_enum_to_string.at(SPAZ_CHARACTER) + PNG_EXTENSION);
-    resource_pool->load_texture(map_character_enum_to_string.at(LORI_CHARACTER) + PNG_EXTENSION);
-    resource_pool->load_texture(map_list_to_string.at(MAP_1) + PNG_EXTENSION);
+    resource_pool->load_texture(map_character_enum_to_string.at(JAZZ_CHARACTER));
+    resource_pool->load_texture(map_character_enum_to_string.at(SPAZ_CHARACTER));
+    resource_pool->load_texture(map_character_enum_to_string.at(LORI_CHARACTER));
+    resource_pool->load_texture(map_list_to_string.at(MAP_1));
 
     // Fonts
     resource_pool->load_font(FONT, FONT_SIZE);
 
     // Yaml
-    resource_pool->load_yaml(map_character_enum_to_string.at(JAZZ_CHARACTER) + YAML_EXTENSION);
-    resource_pool->load_yaml(map_character_enum_to_string.at(SPAZ_CHARACTER) + YAML_EXTENSION);
-    resource_pool->load_yaml(map_character_enum_to_string.at(LORI_CHARACTER) + YAML_EXTENSION);
-    resource_pool->load_yaml(map_list_to_string.at(MAP_1) + YAML_EXTENSION);
+    resource_pool->load_yaml(map_character_enum_to_string.at(JAZZ_CHARACTER));
+    resource_pool->load_yaml(map_character_enum_to_string.at(SPAZ_CHARACTER));
+    resource_pool->load_yaml(map_character_enum_to_string.at(LORI_CHARACTER));
+    resource_pool->load_yaml(map_list_to_string.at(MAP_1));
 }
 
 Client::~Client() {

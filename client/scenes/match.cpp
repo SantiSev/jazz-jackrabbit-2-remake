@@ -49,10 +49,8 @@ void MatchScene::init() {
     // uint8_t num_bullets = first_state->num_bullets;
     for (uint8_t i = 0; i < num_players; i++) {
         character_t character = (character_t)first_state->players[i].character;
-        auto texture = resource_pool->get_texture(map_character_enum_to_string.at(character) +
-                                                  PNG_EXTENSION);
-        auto animations = resource_pool->get_yaml(map_character_enum_to_string.at(character) +
-                                                  YAML_EXTENSION);
+        auto texture = resource_pool->get_texture(map_character_enum_to_string.at(character));
+        auto animations = resource_pool->get_yaml(map_character_enum_to_string.at(character));
 
         uint8_t state = first_state->players[i].state;
         std::string animation_name = map_states_to_animations.at(state);
@@ -63,6 +61,7 @@ void MatchScene::init() {
         players[first_state->players[i].id] =
                 std::make_unique<Player>(std::move(player_sprite), message_handler);
     }
+    event_loop->keyboard.add_on_key_down_signal_obj(players.begin()->second.get());
 }
 
 void MatchScene::create_objects() {

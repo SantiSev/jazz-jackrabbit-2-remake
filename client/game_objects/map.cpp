@@ -3,7 +3,7 @@
 Map::Map(const map_list_t& map_enum, std::shared_ptr<engine::ResourcePool> resource_pool):
         resource_pool(resource_pool) {
     std::string map_name = map_list_to_string.at(map_enum);
-    load_map(map_name + PNG_EXTENSION, map_name + YAML_EXTENSION);
+    load_map(map_name);
 }
 
 void Map::draw(SDL_Renderer* renderer) {
@@ -12,9 +12,9 @@ void Map::draw(SDL_Renderer* renderer) {
     }
 }
 
-void Map::load_map(const std::string& tileset_name, const std::string& yaml_name) {
-    auto texture = resource_pool->get_texture(tileset_name);
-    auto yaml = *resource_pool->get_yaml(yaml_name);
+void Map::load_map(const std::string& map_name) {
+    auto texture = resource_pool->get_texture(map_name);
+    auto yaml = *resource_pool->get_yaml(map_name);
 
     for (auto obj: yaml["objects"]) {
         auto s_rect_yaml = obj["s_rect"];
