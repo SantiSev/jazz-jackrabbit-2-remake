@@ -6,6 +6,7 @@
 #include <unordered_map>
 
 #include <SDL2/SDL.h>
+#include <yaml-cpp/yaml.h>
 
 #include "asset_manager.h"
 #include "font.h"
@@ -20,6 +21,7 @@ private:
     AssetManager asset_manager;
     std::unordered_map<std::string, std::shared_ptr<Texture>> textures;
     std::unordered_map<std::string, std::shared_ptr<Font>> fonts;
+    std::unordered_map<std::string, std::shared_ptr<YAML::Node>> yamls;
 
 public:
     explicit ResourcePool(SDL_Renderer* renderer);
@@ -30,9 +32,11 @@ public:
 
     void load_texture(const std::string& name);
     void load_font(const std::string& name, int size);
+    void load_yaml(const std::string& name);
 
     std::shared_ptr<Texture>& get_texture(const std::string& name);
     std::shared_ptr<Font>& get_font(const std::string& name);
+    std::shared_ptr<YAML::Node>& get_yaml(const std::string& name);
 
     ~ResourcePool();
 };

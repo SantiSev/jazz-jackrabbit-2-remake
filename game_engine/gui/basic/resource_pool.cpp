@@ -20,10 +20,21 @@ void ResourcePool::load_font(const std::string& name, int size) {
     }
 }
 
-std::shared_ptr<Texture>& ResourcePool::get_texture(const std::string& name) {
-    return textures[name];
+void ResourcePool::load_yaml(const std::string& name) {
+    if (yamls.find(name) == yamls.end()) {
+        auto yaml = std::make_shared<YAML::Node>(YAML::LoadFile(asset_manager.get_full_path(name)));
+        yamls[name] = yaml;
+    }
 }
 
-std::shared_ptr<Font>& ResourcePool::get_font(const std::string& name) { return fonts[name]; }
+std::shared_ptr<Texture>& ResourcePool::get_texture(const std::string& name) {
+    return textures.at(name);
+}
+
+std::shared_ptr<Font>& ResourcePool::get_font(const std::string& name) { return fonts.at(name); }
+
+std::shared_ptr<YAML::Node>& ResourcePool::get_yaml(const std::string& name) {
+    return yamls.at(name);
+}
 
 ResourcePool::~ResourcePool() = default;
