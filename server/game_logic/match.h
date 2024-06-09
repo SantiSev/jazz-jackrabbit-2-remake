@@ -20,6 +20,8 @@
 
 #include "client_monitor.h"
 
+// size_t bullets_shot = 0;
+
 class Match: public Thread {
 private:
     bool online;
@@ -40,6 +42,7 @@ private:
     std::vector<Vector2D> player_spawn_points;
     std::vector<Vector2D> enemy_spawn_points;
 
+
 public:
     // Constructor
     explicit Match(const map_list_t& map_selected, size_t required_players_setting);
@@ -49,10 +52,21 @@ public:
     // Destroyer
     ~Match() override = default;
 
-    std::shared_ptr<Player> get_player(size_t id);
+    //-------------------- Gameloop Methods ----------------------
+
+
+    //-------------------- Conection Methods ----------------------
+
 
     void add_player_to_game(const std::string& player_name, const character_t& character,
                             uint16_t client_id);
+
+
+    //-------------------- Initialization Methods -----------------
+
+    //-------------------- Getter Methods -----------------
+
+    std::shared_ptr<Player> get_player(size_t id);
 
     GameStateDTO create_actual_snapshot();
 
@@ -78,15 +92,11 @@ public:
 
     void run_command(const CommandDTO& dto);
 
-    bool is_command_valid(command_t command);
-
     void update_players();
 
     void update_enemies();
 
     void initiate_enemies();
-
-    Vector2D select_enemy_spawn_point();
 
     void patrol_move_enemies();
 

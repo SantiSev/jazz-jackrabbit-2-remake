@@ -23,8 +23,6 @@ protected:
     int shoot_rate_counter = 0;
     bool can_shoot = true;
 
-    size_t get_weapon_id() const;
-    size_t get_ammo() const;
     size_t get_max_ammo() const;
 
     void set_weapon_name(size_t weapon_name);
@@ -38,6 +36,9 @@ public:
            size_t max_ammo, int weapon_damage, int shoot_rate);
 
     void add_ammo(size_t added_ammo);
+
+    size_t get_weapon_id() const;
+    size_t get_ammo() const;
 
     void update_shoot_rate();
 

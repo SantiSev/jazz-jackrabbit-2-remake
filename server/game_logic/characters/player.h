@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "../../../common/common_constants.h"
+#include "../../../common/protocol/common_dto.h"
 #include "../../../game_engine/physics_engine/collision_manager.h"
 
 #include "character.h"
@@ -31,8 +32,11 @@ private:
     size_t intoxication_cooldown = INTOXICATON_COOLDOWN;
 
 public:
-    Player(size_t id, std::string name, const uint8_t& character, int x, int y,
+    Player(size_t id, std::string name, const character_t& character, int x, int y,
            CollisionManager& collision_manager);
+
+
+    void revive(Vector2D new_position);
 
     //------- Overrided Methods --------
 
@@ -81,6 +85,12 @@ public:
     void move_left() override;
     void move_right() override;
     void jump() override;
+
+
+    //------- Game Methods --------
+
+    void update_status(Vector2D spawn_point);
+    void execute_command(command_t command);
 };
 
 

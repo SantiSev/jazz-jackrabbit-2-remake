@@ -9,6 +9,8 @@
 #include <utility>
 
 #include "../../common/assets.h"
+#include "weapons/guns.h"
+
 
 Match::Match(const map_list_t& map_selected, size_t required_players_setting):
         online(true),
@@ -86,6 +88,9 @@ void Match::run() {
     }
 }
 
+//-------------------- Gameloop Methods ----------------------
+
+
 void Match::countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
                             const std::chrono::time_point<std::chrono::system_clock>& endTime) {
     if (match_time != 0 && !match_has_ended) {
@@ -102,17 +107,6 @@ void Match::countdown_match(std::chrono::time_point<std::chrono::system_clock>& 
             std::cout << "Game Over" << std::endl;
             match_has_ended = true;
         }
-    }
-}
-
-std::shared_ptr<Player> Match::get_player(size_t id) {
-    auto it = std::find_if(
-            players.begin(), players.end(),
-            [id](const std::shared_ptr<Player>& player) { return player->get_id() == id; });
-    if (it != players.end()) {
-        return *it;
-    } else {
-        throw std::runtime_error("Player with the given ID not found");
     }
 }
 
@@ -134,11 +128,11 @@ GameStateDTO Match::create_actual_snapshot() {
         game_state.players[i].x_pos = players[i].get()->position.x;
         game_state.players[i].y_pos = players[i].get()->position.y;
         for (size_t j = 0; j < NUM_OF_WEAPONS; ++j) {
-            game_state.players[i].weapons[j].ammo = players[i]->get_weapon(j).get_ammo();
+            game_state.players[i].weapons[j].ammo = players[i]->get_weapon(j)->get_ammo();
             game_state.players[i].weapons[j].is_empty =
-                    players[i]->get_weapon(j).is_weapon_empty() ? (uint8_t)1 : (uint8_t)0;
+                    players[i]->get_weapon(j)->get_ammo() == 0 ? (uint8_t)1 : (uint8_t)0;
             game_state.players[i].weapons[j].weapon_name =
-                    (uint8_t)players[i]->get_weapon(j).get_weapon_id();
+                    (uint8_t)players[i]->get_weapon(j)->get_weapon_id();
         }
     }
     for (size_t i = 0; i < players.size(); ++i) {
@@ -150,16 +144,44 @@ GameStateDTO Match::create_actual_snapshot() {
     for (size_t i = 0; i < bullets.size(); ++i) {
         game_state.bullets[i].x_pos = bullets[i]->position.x;
         game_state.bullets[i].y_pos = bullets[i]->position.y;
-        game_state.bullets[i].bullet_type = (uint8_t)bullets[i]->get_bullet_type();
+        //        game_state.bullets[i].bullet_type = (uint8_t)bullets[i]->get_bullet_type();
     }
 
 
     return game_state;
 }
 
-bool Match::has_match_ended() const { return match_has_ended; }
+void Match::run_command(const CommandDTO& dto) {
+    std::shared_ptr<Player> player = get_player(dto.id_player);
+    if (player) {
+        player->execute_command(dto.command);
+    }
+}
 
-map_list_t Match::get_map() const { return map; }
+void Match::update_players() {
+    for (auto& player: players) {
+        player->update_status(select_player_spawn_point());
+    }
+}
+
+void Match::update_enemies() {
+    for (auto& enemy: enemies) {
+        enemy->update_status();
+    }
+}
+
+Vector2D Match::select_player_spawn_point() {
+    int i = rand() % player_spawn_points.size();
+    return player_spawn_points[i];
+}
+
+void Match::patrol_move_enemies() {
+    for (auto& enemy: enemies) {
+        enemy->patrol(match_time);
+    }
+}
+
+//-------------------- Conection Methods -----------------
 
 void Match::add_player_to_game(const std::string& player_name, const character_t& character,
                                uint16_t client_id) {
@@ -182,21 +204,21 @@ void Match::add_client_to_match(ServerThreadManager* client, const std::string& 
               << character_to_string(character) << std::endl;
 }
 
-size_t Match::get_num_players() { return players.size(); }
-
-size_t Match::get_max_players() const { return required_players; }
-
 void Match::send_end_message_to_players() {
     auto game_ended_message = std::make_shared<SendFinishMatchMessage>();
     client_monitor.broadcastClients(game_ended_message);
 }
 
-std::vector<size_t> Match::get_clients_ids() {
-    std::vector<size_t> ids;
-    std::transform(clients.begin(), clients.end(), std::back_inserter(ids),
-                   [](auto& client) { return client->get_client_id(); });
-    return ids;
+void Match::delete_disconnected_player(id_client_t id_client) {
+    for (auto player = players.begin(); player != players.end(); ++player) {
+        if (id_client == (*player)->get_id()) {
+            players.erase(player);
+            break;
+        }
+    }
 }
+
+bool Match::has_match_ended() const { return match_has_ended; }
 
 void Match::stop() {
     online = false;
@@ -209,185 +231,7 @@ void Match::stop() {
     client_monitor.remove_all_queues();
 }
 
-void Match::run_command(const CommandDTO& dto) {
-    std::shared_ptr<Player> player = get_player(dto.id_player);
-    if (!player->is_player_alive()) {
-        return;
-    }
-    if (!is_command_valid(dto.command)) {
-        return;
-    }
-    switch (dto.command) {
-        case MOVE_LEFT:
-            player->move_left();
-            if (player->is_on_floor()) {
-                if (player->is_player_intoxicated()) {
-                    player->set_state(STATE_INTOXICATED_MOV_LEFT);
-                } else {
-                    player->set_state(STATE_MOVING_LEFT);
-                }
-            }
-            break;
-        case MOVE_RIGHT:
-            player->move_right();
-            if (player->is_on_floor()) {
-                if (player->is_player_intoxicated()) {
-                    player->set_state(STATE_INTOXICATED_MOV_RIGHT);
-                } else {
-                    player->set_state(STATE_MOVING_RIGHT);
-                }
-            }
-            break;
-        case MOVE_LEFT_FAST:
-            if (player->is_on_floor()) {
-                // player.move_left_fast();
-                player->set_state(STATE_SPRINTING_LEFT);
-            }
-            break;
-        case MOVE_RIGHT_FAST:
-            if (player->is_on_floor()) {
-                // player.move_right_fast();
-                player->set_state(STATE_SPRINTING_RIGHT);
-            }
-            break;
-        case JUMP:
-            if (!player->is_on_floor()) {
-                break;
-            }
-
-            player->jump();
-            if (player->is_facing_right()) {
-                player->set_state(STATE_JUMPING_RIGHT);
-            } else {
-                player->set_state(STATE_JUMPING_LEFT);
-            }
-            break;
-        case SPECIAL_ATTACK:
-            if (player->is_player_intoxicated() || !player->is_special_available()) {
-                break;
-            }
-            //            player.especial_attack();
-            if (player->is_facing_right()) {
-                player->set_state(STATE_ESPECIAL_RIGHT);
-            } else {
-                player->set_state(STATE_ESPECIAL_LEFT);
-            }
-            player->reset_special_attack();
-            break;
-        // case SHOOT:
-        //     if (!player->is_player_intoxicated()) {
-        //         player->shoot();
-
-        //         Bullet bullet = player->shoot();
-        //         collision_manager.add_dynamic_body(bullet);
-        //         bullets.emplace_back(bullet);
-
-        //         if (player->is_facing_right()) {
-        //             player->set_state(STATE_SHOOTING_RIGHT);
-        //         } else {
-        //             player->set_state(STATE_SHOOTING_LEFT);
-        //         }
-        //     }
-        //     break;
-        default:
-            break;
-    }
-}
-
-bool Match::is_command_valid(command_t command) {
-    if (command <= 0x00 || command > 0x12) {
-        return false;
-    }
-    return true;
-}
-
-void Match::update_players() {
-    for (auto& player: players) {
-        if (!player->is_player_alive()) {
-            if (player->can_revive()) {
-                player->revive(select_player_spawn_point());
-            } else {
-                player->decrease_revive_cooldown();
-            }
-        }
-        if (player->is_player_intoxicated()) {
-            player->decrease_intoxication_cooldown();
-            if (player->get_intoxication_cooldown() == 0) {
-                player->reset_intoxication();
-            }
-        }
-        if (!player->is_special_available()) {
-            player->decrease_special_attack_cooldown();
-        }
-        if (player->is_player_alive() && player->get_health() == MIN_HEALTH) {
-            player->kill_player();
-            player->set_state(STATE_DEAD);
-            player->reset_revive_cooldown();
-        }
-        if (player->is_on_floor() && (player->get_state() == STATE_FALLING)) {
-            if (player->is_facing_right()) {
-                player->set_state(STATE_IDLE_RIGHT);
-            } else {
-                player->set_state(STATE_IDLE_LEFT);
-            }
-        }
-        if (!player->is_on_floor() && (player->velocity.y > 0) && player->is_doing_action_state()) {
-            player->set_state(STATE_FALLING);
-        }
-    }
-}
-
-void Match::update_enemies() {
-    for (auto& enemy: enemies) {
-        if (!enemy->is_enemy_alive()) {
-            if (enemy->can_revive()) {
-                enemy->revive();
-
-                // reset_player_pos_to_spawn_point(player);
-            } else {
-                enemy->decrease_revive_cooldown();
-            }
-        }
-        if (enemy->is_enemy_alive() && enemy->get_health() == MIN_HEALTH) {
-            enemy->kill();
-            enemy->set_state(STATE_DEAD);
-            enemy->reset_revive_cooldown();
-        }
-    }
-}
-
-void Match::initiate_enemies() {
-    int i = 1;
-    for (auto& spawn_point: enemy_spawn_points) {
-        auto new_enemy = std::make_shared<Enemy>(i % 3, i, spawn_point.x, spawn_point.y);
-        new_enemy->set_spawn_point(spawn_point);
-        collision_manager.track_dynamic_body(new_enemy);
-        enemies.emplace_back(new_enemy);
-        i++;
-    }
-}
-
-Vector2D Match::select_player_spawn_point() {
-    int i = rand() % player_spawn_points.size();
-    return player_spawn_points[i];
-}
-
-void Match::patrol_move_enemies() {
-    for (auto& enemy: enemies) {
-        if (enemy->is_enemy_alive()) {
-            if (abs(match_time % 2) == 0) {
-                if (enemy->is_facing_right()) {
-                    enemy->move_left();
-                    enemy->set_state(STATE_MOVING_LEFT);
-                } else {
-                    enemy->move_right();
-                    enemy->set_state(STATE_MOVING_RIGHT);
-                }
-            }
-        }
-    }
-}
-
+//-------------------- Initialization Methods -----------------
 
 void Match::load_spawn_points() {
     std::string file_path = map_list_to_string.at(map) + YAML_EXTENSION;
@@ -409,11 +253,39 @@ void Match::load_spawn_points() {
     }
 }
 
-void Match::delete_disconnected_player(id_client_t id_client) {
-    for (auto player = players.begin(); player != players.end(); ++player) {
-        if (id_client == (*player)->get_id()) {
-            players.erase(player);
-            break;
-        }
+void Match::initiate_enemies() {
+    int i = 1;
+    for (auto& spawn_point: enemy_spawn_points) {
+        auto new_enemy = std::make_shared<Enemy>(i, (character_t)(i % 3), 30, 75, 5, spawn_point.x,
+                                                 spawn_point.y, 40, 40, 5);
+        collision_manager.track_dynamic_body(new_enemy);
+        enemies.emplace_back(new_enemy);
+        i++;
     }
+}
+
+//-------------------- Getter Methods -----------------
+
+size_t Match::get_num_players() { return players.size(); }
+
+map_list_t Match::get_map() const { return map; }
+
+size_t Match::get_max_players() const { return required_players; }
+
+std::shared_ptr<Player> Match::get_player(size_t id) {
+    auto it = std::find_if(
+            players.begin(), players.end(),
+            [id](const std::shared_ptr<Player>& player) { return player->get_id() == id; });
+    if (it != players.end()) {
+        return *it;
+    } else {
+        throw std::runtime_error("Player with the given ID not found");
+    }
+}
+
+std::vector<size_t> Match::get_clients_ids() {
+    std::vector<size_t> ids;
+    std::transform(clients.begin(), clients.end(), std::back_inserter(ids),
+                   [](auto& client) { return client->get_client_id(); });
+    return ids;
 }

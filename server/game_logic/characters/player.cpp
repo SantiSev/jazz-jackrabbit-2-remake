@@ -7,7 +7,7 @@
 
 #define MAX_FALL_SPEED 10
 
-Player::Player(size_t id, std::string name, const uint8_t& character, int x, int y,
+Player::Player(size_t id, std::string name, const character_t& character, int x, int y,
                CollisionManager& collision_manager):
         CharacterBody(id, character, x, y, PLAYER_WIDTH, PLAYER_HEIGHT,
                       Vector2D(NO_SPEED, MAX_FALL_SPEED), MAX_HEALTH, STATE_IDLE_RIGHT,
@@ -37,6 +37,15 @@ void Player::set_starting_weapon() {  // todo check if its needed to be in confi
     weapons[1] = new GunOne(1, *this, collision_manager);
     weapons[2] = new GunTwo(2, *this, collision_manager);
     weapons[3] = new GunThree(3, *this, collision_manager);
+}
+
+// ------------ Revive Methods --------------
+
+void Player::revive(Vector2D new_position) {
+    this->health = MAX_HEALTH;
+    this->revive_cooldown = REVIVE_COOLDOWN;
+    this->state = STATE_IDLE_RIGHT;
+    position = new_position;
 }
 
 // ------------ Point Methods --------------
@@ -88,17 +97,75 @@ void Player::do_special_attack() {
 void Player::move_left() {
     direction = -1;
     velocity.x = -DEFAULT_SPEED_X;
+    if (is_on_floor()) {
+        if (is_player_intoxicated()) {
+            set_state(STATE_INTOXICATED_MOV_LEFT);
+        } else {
+            set_state(STATE_MOVING_LEFT);
+        }
+    }
 }
 
 void Player::move_right() {
     direction = 1;
     velocity.x = DEFAULT_SPEED_X;
+    if (is_on_floor()) {
+        if (is_player_intoxicated()) {
+            set_state(STATE_INTOXICATED_MOV_RIGHT);
+        } else {
+            set_state(STATE_MOVING_RIGHT);
+        }
+    }
 }
 
 void Player::jump() {
+    if (!is_on_floor()) {
+        return;
+    }
     if (on_floor) {
         on_floor = false;
         velocity.y = -JUMP_SPEED;
+    }
+    if (is_facing_right()) {
+        set_state(STATE_JUMPING_RIGHT);
+    } else {
+        set_state(STATE_JUMPING_LEFT);
+    }
+}
+
+//------- Game Methods --------
+
+void Player::update_status(Vector2D spawn_point) {
+    if (is_dead()) {
+        if (can_revive()) {
+            revive(spawn_point);
+        } else {
+            decrease_revive_cooldown();
+        }
+    }
+    if (is_player_intoxicated()) {
+        decrease_intoxication_cooldown();
+        if (get_intoxication_cooldown() == 0) {
+            reset_intoxication();
+        }
+    }
+    if (!is_special_available()) {
+        decrease_special_attack_cooldown();
+    }
+    if (!is_dead() && get_health() == MIN_HEALTH) {
+        velocity = Vector2D(0, 0);
+        set_state(STATE_DEAD);
+        reset_revive_cooldown();
+    }
+    if (is_on_floor() && (get_state() == STATE_FALLING)) {
+        if (is_facing_right()) {
+            set_state(STATE_IDLE_RIGHT);
+        } else {
+            set_state(STATE_IDLE_LEFT);
+        }
+    }
+    if (!is_on_floor() && (velocity.y > 0) && !is_doing_action_state()) {
+        set_state(STATE_FALLING);
     }
 }
 
@@ -156,5 +223,63 @@ void Player::handle_colision(CollisionObject* other) {
             // platform
             on_floor = true;
         }
+    }
+}
+
+void Player::execute_command(command_t command) {
+    if (is_dead()) {
+        return;
+    }
+    switch (command) {
+        case MOVE_LEFT:
+            move_left();
+            break;
+        case MOVE_RIGHT:
+            move_right();
+            break;
+        case MOVE_LEFT_FAST:
+            if (is_on_floor()) {
+                // player.move_left_fast();
+                set_state(STATE_SPRINTING_LEFT);
+            }
+            break;
+        case MOVE_RIGHT_FAST:
+            if (is_on_floor()) {
+                // player.move_right_fast();
+                set_state(STATE_SPRINTING_RIGHT);
+            }
+            break;
+        case JUMP:
+            jump();
+            break;
+        case SPECIAL_ATTACK:
+            if (is_player_intoxicated() || !is_special_available()) {
+                break;
+            }
+            //            player.especial_attack();
+            if (is_facing_right()) {
+                set_state(STATE_SPECIAL_RIGHT);
+            } else {
+                set_state(STATE_SPECIAL_LEFT);
+            }
+            reset_special_attack();
+            break;
+            // case SHOOT:
+            //     if (!is_player_intoxicated()) {
+            //         shoot();
+
+            //         Bullet bullet = shoot();
+            //         collision_manager.add_dynamic_body(bullet);
+            //         bullets.emplace_back(bullet);
+
+            //         if (is_facing_right()) {
+            //             set_state(STATE_SHOOTING_RIGHT);
+            //         } else {
+            //             set_state(STATE_SHOOTING_LEFT);
+            //         }
+            //     }
+            //     break;
+        default:
+            break;
     }
 }

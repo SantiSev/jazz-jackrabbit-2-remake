@@ -9,12 +9,13 @@
 #define BULLET_POINTS 10
 #define BULLET_BONUS_POINTS 50
 
-Bullet::Bullet(Player& player_owner, int bullet_damage):
+Bullet::Bullet(Player& player_owner, const int& bullet_damage, const size_t& bullet_id):
         DynamicBody(player_owner.position.x, player_owner.position.y, BULLET_WIDTH, BULLET_HEIGHT,
                     Vector2D(BULLET_SPEED * player_owner.get_direction(), 0)),
         player_owner(player_owner),
         bullet_damage(bullet_damage),
-        life_span(BULLET_LIFE_SPAN) {
+        life_span(BULLET_LIFE_SPAN),
+        bullet_id(bullet_id) {
     position.y = player_owner.get_bottom_hitbox_side() - player_owner.get_hitbox_height() / 2;
     position.x = player_owner.is_facing_right() ?
                          player_owner.get_right_hitbox_side() + OFFSET_BULLET_X :

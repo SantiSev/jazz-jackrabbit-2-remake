@@ -3,7 +3,9 @@
 #include <cstdint>
 #include <utility>
 
-CharacterBody::CharacterBody(size_t id, const uint8_t& character, int x, int y, int w, int h,
+#include "../../../common/character_enum.h"
+
+CharacterBody::CharacterBody(size_t id, const character_t& character, int x, int y, int w, int h,
                              Vector2D velocity, size_t health, uint8_t state,
                              size_t revive_cooldown):
         DynamicBody(x, y, w, h, Vector2D(velocity)),
@@ -19,7 +21,7 @@ size_t CharacterBody::get_id() const { return id; }
 
 size_t CharacterBody::get_health() const { return health; }
 
-uint8_t CharacterBody::get_character() const { return character_reference; }
+character_t CharacterBody::get_character() const { return character_reference; }
 
 uint8_t CharacterBody::get_state() const { return state; }
 
@@ -35,7 +37,7 @@ void CharacterBody::set_health(const size_t new_health) {
         set_active_status(false);
 }
 
-void CharacterBody::set_character(uint8_t new_character) {
+void CharacterBody::set_character(const character_t& new_character) {
     this->character_reference = new_character;
 }
 
@@ -66,12 +68,6 @@ void CharacterBody::increase_health(size_t add_health) {
 
 // ------- Revive Methods --------
 
-void CharacterBody::revive() {
-    this->health = MAX_HEALTH;
-    this->revive_cooldown = REVIVE_COOLDOWN;
-    this->state = STATE_IDLE_RIGHT;
-}
-
 void CharacterBody::decrease_revive_cooldown() { this->revive_cooldown--; }
 
 bool CharacterBody::can_revive() const { return (is_active_object() && revive_cooldown == 0); }
@@ -89,7 +85,7 @@ int CharacterBody::get_direction() const { return direction; }
 
 bool CharacterBody::is_doing_action_state() const {
     return (state == STATE_SHOOTING_LEFT || state == STATE_SHOOTING_RIGHT ||
-            state == STATE_ESPECIAL_RIGHT || state == STATE_ESPECIAL_LEFT);
+            state == STATE_SPECIAL_RIGHT || state == STATE_SPECIAL_LEFT);
 }
 
 void CharacterBody::move_left() {

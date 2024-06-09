@@ -15,9 +15,10 @@ private:
     Player& player_owner;
     int bullet_damage = 1;
     size_t life_span = 25;
+    size_t bullet_id = 0;
 
 public:
-    Bullet(Player& player_owner, int bullet_damage);
+    Bullet(Player& player_owner, const int& bullet_damage, const size_t& bullet_id);
 
     size_t get_life_span() const;
 
