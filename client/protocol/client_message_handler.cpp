@@ -41,7 +41,7 @@ void ClientMessageHandler::handle_connected_to_match(const ClientHasConnectedToM
     client.map_enum.store(dto.map);
     client.menu_running.store(false);
     client.match_running.store(true);
-    std::cout << "Connected to match with map: " << dto.map << std::endl;
+    std::cout << "Connected to match" << std::endl;
 }
 
 void ClientMessageHandler::handle_recv_active_games(const MatchInfoDTO& dto) {

@@ -5,19 +5,15 @@ MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
                        std::atomic<bool>& match_running, ClientMessageHandler& message_handler):
         window(window),
         renderer(window.get_renderer()),
-        event_loop(event_loop),
         resource_pool(resource_pool),
+        event_loop(event_loop),
+        message_handler(message_handler),
+        game_state_q(message_handler.game_state_q),
         match_running(match_running),
-        map(nullptr),
-        game_state_q(message_handler.game_state_q) {
-    // std::shared_ptr<GameStateDTO> first_state = game_state_q.pop();
-}
+        map(nullptr) {}
 
 void MatchScene::start() {
-
-    if (map == nullptr) {
-        SDL_Delay(1000);
-    }
+    init();
 
     Uint32 frame_start = 0;
     Uint32 frame_time = 0;
@@ -26,19 +22,13 @@ void MatchScene::start() {
     while (match_running) {
         // Updates
         int delta_time = SDL_GetTicks() - frame_start;
-        map->update(delta_time);
-        // for (auto player: players) {
-        //     player->update(delta_time);
-        // }
+        update_objects(delta_time);
 
         frame_start = SDL_GetTicks();
 
         // Draw
         window.clear();
-        map->draw(renderer);
-        // for (auto player: players) {
-        //     player->draw(renderer);
-        // }
+        draw_objects();
 
         window.render();
         frame_time = SDL_GetTicks() - frame_start;
@@ -52,16 +42,65 @@ void MatchScene::load_map(const map_list_t& map_enum) {
     map = std::make_unique<Map>(map_enum, resource_pool);
 }
 
+void MatchScene::init() {
+    std::shared_ptr<GameStateDTO> first_state = game_state_q.pop();
+    uint8_t num_players = first_state->num_players;
+    // uint8_t num_enemies = first_state->num_enemies;
+    // uint8_t num_bullets = first_state->num_bullets;
+    for (uint8_t i = 0; i < num_players; i++) {
+        character_t character = (character_t)first_state->players[i].character;
+        auto texture = resource_pool->get_texture(map_character_enum_to_string.at(character) +
+                                                  PNG_EXTENSION);
+        auto animations = resource_pool->get_yaml(map_character_enum_to_string.at(character) +
+                                                  YAML_EXTENSION);
+
+        uint8_t state = first_state->players[i].state;
+        std::string animation_name = map_states_to_animations.at(state);
+        uint16_t x = first_state->players[i].x_pos;
+        uint16_t y = first_state->players[i].y_pos;
+
+        engine::AnimatedSprite player_sprite(texture, animations, animation_name, x, y);
+        players[first_state->players[i].id] =
+                std::make_unique<Player>(std::move(player_sprite), message_handler);
+    }
+}
+
 void MatchScene::create_objects() {
     // for (auto player: players) {
     //     player->create_objects(renderer, resource_pool);
     // }
 }
 
-void MatchScene::update_objects() {
-    // for (auto player: players) {
-    //     player->update_objects();
-    // }
+void MatchScene::update_objects(int delta_time) {
+    std::shared_ptr<GameStateDTO> game_state(nullptr);
+    game_state_q.try_pop(game_state);
+
+    // update positions
+    if (game_state != nullptr) {
+        for (uint8_t i = 0; i < game_state->num_players; i++) {
+            uint16_t id = game_state->players[i].id;
+            uint8_t state = game_state->players[i].state;
+            std::string animation_name = map_states_to_animations.at(state);
+            uint16_t x = game_state->players[i].x_pos;
+            uint16_t y = game_state->players[i].y_pos;
+
+            players.at(id)->set_position(x, y);
+            players.at(id)->set_animation(animation_name);
+        }
+    }
+
+    // update canvas objects
+    map->update(delta_time);
+    for (auto& player: players) {
+        player.second->update(delta_time);
+    }
+}
+
+void MatchScene::draw_objects() {
+    map->draw(renderer);
+    for (auto& player: players) {
+        player.second->draw(renderer);
+    }
 }
 
 MatchScene::~MatchScene() {

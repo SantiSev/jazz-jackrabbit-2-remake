@@ -2,30 +2,43 @@
 #define TP_FINAL_MATCH_SCENE_H
 
 #include <atomic>
+#include <map>
 #include <memory>
+#include <string>
+#include <utility>
 
 #include <SDL2/SDL.h>
 
 #include "../../common/assets.h"
+#include "../../common/character_enum.h"
+#include "../../common/common_constants.h"
 #include "../../common/common_queue.h"
 #include "../../common/protocol/common_dto.h"
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/gui/basic/window.h"
+#include "../../game_engine/gui/widgets/animated_sprite.h"
 #include "../event_loop.h"
 #include "../game_objects/map.h"
+#include "../game_objects/player.h"
 
 class MatchScene {
 private:
     engine::Window& window;
     SDL_Renderer* renderer;
-    EventLoop* event_loop;
     std::shared_ptr<engine::ResourcePool> resource_pool;
-    std::atomic<bool>& match_running;
-    std::unique_ptr<Map> map;
+
+    EventLoop* event_loop;
+    ClientMessageHandler& message_handler;
     Queue<std::shared_ptr<GameStateDTO>>& game_state_q;
 
+    std::atomic<bool>& match_running;
+    std::unique_ptr<Map> map;
+    std::map<uint16_t, std::unique_ptr<Player>> players;
+
+    void init();
     void create_objects();
-    void update_objects();
+    void update_objects(int delta_time);
+    void draw_objects();
 
 public:
     MatchScene(engine::Window& window, EventLoop* event_loop,

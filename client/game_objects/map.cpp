@@ -14,7 +14,7 @@ void Map::draw(SDL_Renderer* renderer) {
 
 void Map::load_map(const std::string& tileset_name, const std::string& yaml_name) {
     auto texture = resource_pool->get_texture(tileset_name);
-    YAML::Node yaml = YAML::LoadFile(asset_manager.get_full_path(yaml_name));
+    auto yaml = *resource_pool->get_yaml(yaml_name);
 
     for (auto obj: yaml["objects"]) {
         auto s_rect_yaml = obj["s_rect"];

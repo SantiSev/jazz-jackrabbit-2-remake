@@ -46,6 +46,10 @@ void Player::draw(SDL_Renderer* renderer) { sprite.draw(renderer); }
 
 void Player::set_position(int x, int y) { sprite.set_position(x, y); }
 
+void Player::set_animation(const std::string& animation_name) {
+    sprite.set_animation(animation_name);
+}
+
 bool Player::is_intersecting(SDL_Point& point) const { return sprite.is_intersecting(point); }
 
 bool Player::is_intersecting(SDL_Rect& rect) const { return sprite.is_intersecting(rect); }

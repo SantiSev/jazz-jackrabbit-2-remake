@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <memory>
+#include <string>
 #include <utility>
 
 #include <SDL2/SDL.h>
@@ -29,6 +30,7 @@ public:
     void draw(SDL_Renderer* renderer) override;
 
     void set_position(int x, int y) override;
+    void set_animation(const std::string& animation_name);
 
     bool is_intersecting(SDL_Point&) const override;
     bool is_intersecting(SDL_Rect&) const override;
