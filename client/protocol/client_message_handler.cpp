@@ -27,21 +27,27 @@ void ClientMessageHandler::quit() {
 
 void ClientMessageHandler::handle_acpt_connection(const id_client_t& client_id) {
     client.id_client.store(client_id);
+#ifdef LOG
     std::cout << "Connected to server with id: " << client_id << std::endl;
+#endif
 }
 
 void ClientMessageHandler::handle_recv_close_connection(const CloseConnectionDTO& dto) {
     client.menu_running.store(false);
     client.match_running.store(false);
     client.game_running.store(false);
+#ifdef LOG
     std::cout << "Connection closed by server" << std::endl;
+#endif
 }
 
 void ClientMessageHandler::handle_connected_to_match(const ClientHasConnectedToMatchDTO& dto) {
     client.map_enum.store(dto.map);
     client.menu_running.store(false);
     client.match_running.store(true);
+#ifdef LOG
     std::cout << "Connected to match" << std::endl;
+#endif
 }
 
 void ClientMessageHandler::handle_recv_active_games(const MatchInfoDTO& dto) {

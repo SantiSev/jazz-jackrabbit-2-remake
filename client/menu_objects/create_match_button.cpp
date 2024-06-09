@@ -10,7 +10,9 @@ CreateMatchButton::CreateMatchButton(SDL_Renderer* renderer,
         message_handler(message_handler) {}
 
 void CreateMatchButton::on_click() {
+#ifdef LOG
     std::cout << "Creating match." << std::endl;
+#endif
     message_handler.create_match(JAZZ_CHARACTER, MAP_1, MAX_PLAYERS);
 }
 

@@ -10,7 +10,9 @@ JoinMatchButton::JoinMatchButton(SDL_Renderer* renderer,
         message_handler(message_handler) {}
 
 void JoinMatchButton::on_click() {
+#ifdef LOG
     std::cout << "Joining match." << std::endl;
+#endif
     message_handler.join_match(1, JAZZ_CHARACTER);
 }
 

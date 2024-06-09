@@ -85,6 +85,9 @@ void MatchScene::update_objects(int delta_time) {
 
             players.at(id)->set_position(x, y);
             players.at(id)->set_animation(animation_name);
+#ifdef LOG_VERBOSE
+            std::cout << "Trying to set animation: " << animation_name << std::endl;
+#endif
         }
     }
 

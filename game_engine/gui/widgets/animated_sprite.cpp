@@ -25,7 +25,6 @@ AnimatedSprite::AnimatedSprite(std::shared_ptr<Texture> texture,
                                const std::string& animation_name, int x, int y):
         texture(texture),
         animations(animations),
-        current_animation(animation_name),
         current_frame(0),
         elapsed_time(0),
         next_frame_offset(1),
@@ -72,6 +71,14 @@ void AnimatedSprite::set_animation(const std::string& animation_name) {
     if (animations == nullptr) {
         throw BadParams("No animations set");
     }
+
+    if (current_animation == animation_name) {
+        return;
+    }
+
+#ifdef LOG
+    std::cout << "Setting animation: " << animation_name << std::endl;
+#endif
 
     current_animation = animation_name;
     YAML::Node yaml = *animations;
