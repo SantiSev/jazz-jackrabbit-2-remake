@@ -10,7 +10,8 @@ MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
         message_handler(message_handler),
         game_state_q(message_handler.game_state_q),
         match_running(match_running),
-        map(nullptr) {}
+        map(nullptr),
+        player_controller(message_handler) {}
 
 void MatchScene::start() {
     init();
@@ -59,6 +60,10 @@ void MatchScene::init() {
     //     create_character(enemy.id, (character_t)enemy.character, enemy.state, enemy.x_pos,
     //                      enemy.y_pos);
     // }
+
+    // Connect player controler to keyboard and mouse signals
+    event_loop->keyboard.add_on_key_down_signal_obj(&player_controller);
+    event_loop->mouse.add_on_click_signal_obj(&player_controller);
 }
 
 void MatchScene::create_character(uint16_t id, character_t character, uint8_t state, uint16_t x,
@@ -118,7 +123,10 @@ void MatchScene::draw_objects() {
 }
 
 MatchScene::~MatchScene() {
-    // Disconnect from mouse signals
+    // Disconnect from mouse and keyboard signals
+    event_loop->keyboard.remove_on_key_down_signal_obj(&player_controller);
+    event_loop->mouse.remove_on_click_signal_obj(&player_controller);
+
     // for (auto player: players) {
     //     event_loop->keyboard.remove_on_key_down_signal_obj(player);
     //     event_loop->mouse.remove_on_click_signal_obj(player);

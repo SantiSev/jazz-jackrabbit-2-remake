@@ -21,6 +21,7 @@
 #include "../game_objects/character.h"
 #include "../game_objects/character_factory.h"
 #include "../game_objects/map.h"
+#include "../game_objects/player.h"
 
 class MatchScene {
 private:
@@ -35,6 +36,7 @@ private:
     std::atomic<bool>& match_running;
     std::unique_ptr<Map> map;
     std::map<uint16_t, std::unique_ptr<Character>> characters;
+    PlayerController player_controller;
 
     void init();
     void create_character(uint16_t id, character_t character, uint8_t state, uint16_t x,

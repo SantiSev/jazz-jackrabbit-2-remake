@@ -15,27 +15,18 @@
 
 class ClientMessageHandler;
 
-class Player: public engine::CanvasObject {
+class PlayerController: public engine::CanvasObject {
 private:
-    engine::AnimatedSprite sprite;
     ClientMessageHandler& message_handler;
 
 public:
-    Player(engine::AnimatedSprite&& sprite, ClientMessageHandler& message_handler);
-
+    explicit PlayerController(ClientMessageHandler& message_handler);
     void on_click() override;
     void on_key_press(const SDL_Keycode& key) override;
 
-    void update(int delta_time) override;
     void draw(SDL_Renderer* renderer) override;
 
-    void set_position(int x, int y) override;
-    void set_animation(const std::string& animation_name);
-
-    bool is_intersecting(SDL_Point&) const override;
-    bool is_intersecting(SDL_Rect&) const override;
-
-    ~Player() override;
+    ~PlayerController();
 };
 
 
