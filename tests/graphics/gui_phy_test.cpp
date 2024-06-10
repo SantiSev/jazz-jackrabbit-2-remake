@@ -7,8 +7,11 @@
 #include "../../game_engine/physics_engine/collision_manager.h"
 #include "../../server/game_logic/characters/enemy.h"
 #include "../../server/game_logic/characters/player.h"
+#include "../../server/game_logic/collectables/ammo.h"
+#include "../../server/game_logic/collectables/treasure.h"
 #include "../../server/game_logic/platforms/box_platform.h"
 #include "../../server/game_logic/weapons/bullet.h"
+
 
 class PlayerTest: public Player, public engine::CanvasObject {
 
@@ -100,14 +103,13 @@ public:
     bool is_intersecting(SDL_Rect& rect) const override { return false; }
 };
 
-/*
-class CollectableTest: public Collectable, public engine::CanvasObject {
+
+class TreasureTest: public Treasure, public engine::CanvasObject {
 private:
     engine::ColorRect color_rect;
 
 public:
-    CollectableTest(int x, int y, int width, int height):
-            Collectable(x, y, width, height) {
+    TreasureTest(int x, int y, int width, int height): Treasure(100, x, y, width, height) {
         SDL_Color color_values = {255, 255, 0, 255};
         SDL_Rect collectable_cube = {x, y, width, height};
         this->color_rect = engine::ColorRect(color_values, collectable_cube);
@@ -116,11 +118,29 @@ public:
     void draw(SDL_Renderer* renderer) override { color_rect.draw(renderer); }
 
     void set_position(int x, int y) override {}
-
+    void update_color_rect() { color_rect.set_position(position.x, position.y); }
     bool is_intersecting(SDL_Point& point) const override { return false; }
     bool is_intersecting(SDL_Rect& rect) const override { return false; }
 };
-*/
+
+class AmmoTest: public Ammo, public engine::CanvasObject {
+private:
+    engine::ColorRect color_rect;
+
+public:
+    AmmoTest(int x, int y, int width, int height): Ammo(1, 100, x, y, width, height) {
+        SDL_Color color_values = {237, 231, 225, 255};
+        SDL_Rect collectable_cube = {x, y, width, height};
+        this->color_rect = engine::ColorRect(color_values, collectable_cube);
+    }
+
+    void draw(SDL_Renderer* renderer) override { color_rect.draw(renderer); }
+
+    void set_position(int x, int y) override {}
+    void update_color_rect() { color_rect.set_position(position.x, position.y); }
+    bool is_intersecting(SDL_Point& point) const override { return false; }
+    bool is_intersecting(SDL_Rect& rect) const override { return false; }
+};
 
 
 // ----------------------------------------------------------
@@ -171,6 +191,9 @@ int main() {
     SDL_Color color_wall = {200, 210, 255, 255};
     auto wall_1 = std::make_shared<PlatformTest>(1000, 100, 100, 750, color_wall);
 
+    auto treasure = std::make_shared<TreasureTest>(700, 800 - 32 - 80, 32, 32);
+
+    auto ammo = std::make_shared<AmmoTest>(800, 800 - 32 - 80, 32, 32);
 
     auto player = std::make_shared<PlayerTest>(1, "JAZZ_CHARACTER", 1, 100, 450, collision_manager);
 
@@ -178,6 +201,8 @@ int main() {
 
     collision_manager.track_dynamic_body(player);
     collision_manager.track_dynamic_body(enemy);
+    collision_manager.track_dynamic_body(treasure);
+    collision_manager.track_dynamic_body(ammo);
     collision_manager.add_object(floor);
     collision_manager.add_object(roof);
     collision_manager.add_object(platform_1);
@@ -209,6 +234,14 @@ int main() {
             enemy->update_color_rect();
         }
 
+        if (!ammo->is_collected()) {
+            ammo->update_color_rect();
+        }
+
+        if (!treasure->is_collected()) {
+            treasure->update_color_rect();
+        }
+
 
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -220,6 +253,14 @@ int main() {
 
         if (!enemy->is_dead()) {
             enemy->draw(renderer);
+        }
+
+        if (!ammo->is_collected()) {
+            ammo->draw(renderer);
+        }
+
+        if (!treasure->is_collected()) {
+            treasure->draw(renderer);
         }
 
 
@@ -254,10 +295,9 @@ int main() {
             SDL_Delay(frame_delay - frame_time);
         }
 
-        // player->print_info();
+        player->print_info();
     }
     std::cout << "Exiting game..." << std::endl;
-    collision_manager.clear();
 
     return 0;
 }

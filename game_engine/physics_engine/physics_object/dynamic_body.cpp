@@ -10,7 +10,7 @@ DynamicBody::DynamicBody(int x, int y, int width, int height):
 DynamicBody::DynamicBody(int x, int y, int width, int height, Vector2D base_speed):
         CollisionObject(x, y, width, height), velocity(base_speed) {}
 
-void DynamicBody::update_db() {}
+void DynamicBody::update_body() {}
 
 void DynamicBody::print_info() {
     // also print current time

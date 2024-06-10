@@ -1,19 +1,20 @@
 #ifndef TP_FINAL_ENEMY_H
 #define TP_FINAL_ENEMY_H
 
-
 #include "character.h"
 
+// Enemy config
+#define ENEMY_WIDTH 50
+#define ENEMY_HEIGHT 50
 #define MOVEMENT_RANGE 100
 
 class Enemy: public CharacterBody {
 private:
-    uint8_t attack_damage = 0;
-    int attack_cooldown = 0;
+    uint8_t attack_damage;
+    int attack_cooldown;
     bool is_attacking = false;
-    int x_speed = 0;
+    int x_speed;
     int movement_range = MOVEMENT_RANGE;
-
     Vector2D spawn_position;
 
 public:
@@ -22,7 +23,7 @@ public:
 
     //------- Overrided Methods --------
 
-    void update_db() override;
+    void update_body() override;
     void handle_colision(CollisionObject* other) override;
 
     //------- Movement Methods --------

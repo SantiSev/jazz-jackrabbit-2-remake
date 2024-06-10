@@ -1,6 +1,7 @@
 
-#include <iostream>
 #include "collision_object.h"
+
+#include <iostream>
 
 CollisionObject::CollisionObject(int hitbox_width, int hitbox_height):
         GameObject(0, 0), hitbox_width(hitbox_width), hitbox_height(hitbox_height) {}
@@ -53,14 +54,8 @@ bool CollisionObject::is_touching_bool(const CollisionObject* other) const {
 
 CollisionFace CollisionObject::is_touching(const CollisionObject* other) const {
 
-    /*
-    Result:
-        CollisionFace::LEFT: The right side of this is touching the left side of other.
-        CollisionFace::RIGHT: The left side of this is touching the right side of other.
-        CollisionFace::TOP: The bottom side of this is touching the top side of other.
-        CollisionFace::BOTTOM: The top side of this is touching the bottom side of other.
-        CollisionFace::NONE: No sides are touching.
-    */
+    // this method is called when a collision is detected
+    // indicates what face is touching this object
 
     int left_diff = get_right_hitbox_side() - other->get_left_hitbox_side();
     int right_diff = other->get_right_hitbox_side() - get_left_hitbox_side();
@@ -88,17 +83,22 @@ CollisionFace CollisionObject::is_touching(const CollisionObject* other) const {
         return CollisionFace::TOP;
     }
 
-    return CollisionFace::NONE;
+    return CollisionFace::NO_COLLISION;
 }
 
 std::string CollisionObject::get_colision(CollisionFace face) {
     switch (face) {
-        case NONE: return "NONE";
-        case LEFT: return "LEFT";
-        case RIGHT: return "RIGHT";
-        case TOP: return "TOP";
-        case BOTTOM: return "BOTTOM";
-        default: return "UNKNOWN";
+        case NO_COLLISION:
+            return "NONE";
+        case LEFT:
+            return "LEFT";
+        case RIGHT:
+            return "RIGHT";
+        case TOP:
+            return "TOP";
+        case BOTTOM:
+            return "BOTTOM";
+        default:
+            return "UNKNOWN";
     }
 }
-

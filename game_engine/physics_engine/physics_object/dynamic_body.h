@@ -11,7 +11,11 @@ public:
     DynamicBody(int x, int y, int width, int height);
     DynamicBody(int x, int y, int width, int height, Vector2D base_speed);
 
-    virtual void update_db();
+    /*
+     * Updates the body's position based on its velocity
+     * This method should be called every frame make sure the body is updated
+     */
+    virtual void update_body();
 
     void handle_colision(CollisionObject* other) override;
 

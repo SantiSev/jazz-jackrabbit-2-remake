@@ -1,14 +1,13 @@
 #include "player.h"
 
-#define MAX_FALL_SPEED 10
 
 Player::Player(size_t id, std::string name, const character_t& character, int x, int y,
                CollisionManager& collision_manager):
         CharacterBody(id, character, x, y, PLAYER_WIDTH, PLAYER_HEIGHT,
-                      Vector2D(NO_SPEED, MAX_FALL_SPEED), MAX_HEALTH, STATE_IDLE_RIGHT,
+                      Vector2D(NONE, MAX_FALL_SPEED), MAX_HEALTH, STATE_IDLE_RIGHT,
                       REVIVE_COOLDOWN),
         name(std::move(name)),
-        points(STARTING_POINTS),
+        points(NONE),
         weapons(NUM_OF_WEAPONS),
         collision_manager(collision_manager) {
     set_starting_weapon();
@@ -56,6 +55,11 @@ bool Player::is_player_intoxicated() const { return is_intoxicated; }
 
 
 void Player::reload_weapon(size_t ammo_amount, size_t weapon_id) {
+
+    std::cout << "ammo amount: " << ammo_amount << std::endl;
+    std::cout << "weapon id: " << weapon_id << std::endl;
+
+    std::cout << "reloading weapon" << std::endl;
     this->weapons[weapon_id]->add_ammo(ammo_amount);
 }
 
@@ -151,14 +155,14 @@ void Player::update_status(Vector2D spawn_point) {
     }
     if (is_player_intoxicated()) {
         decrease_intoxication_cooldown();
-        if (get_intoxication_cooldown() == 0) {
+        if (get_intoxication_cooldown() == NONE) {
             reset_intoxication();
         }
     }
     if (!is_special_available()) {
         decrease_special_attack_cooldown();
     }
-    if (!is_dead() && get_health() == MIN_HEALTH) {
+    if (!is_dead() && get_health() == NONE) {
         velocity = Vector2D(0, 0);
         set_state(STATE_DEAD);
         reset_revive_cooldown();
@@ -170,14 +174,14 @@ void Player::update_status(Vector2D spawn_point) {
             set_state(STATE_IDLE_LEFT);
         }
     }
-    if (!is_on_floor() && (velocity.y > 0) && !is_doing_action_state()) {
+    if (!is_on_floor() && (velocity.y > NONE) && !is_doing_action_state()) {
         set_state(STATE_FALLING);
     }
 }
 
 // ------------ Override Methods --------------
 
-void Player::update_db() {
+void Player::update_body() {
 
 
     if (is_dead()) {  // if the player is dead, then it shouldnt move
@@ -214,7 +218,7 @@ void Player::handle_colision(CollisionObject* other) {
     Collectable* collectable = dynamic_cast<Collectable*>(other);
     Bullet* bullet = dynamic_cast<Bullet*>(other);
 
-    if (!collectable && !bullet && face != CollisionFace::NONE) {
+    if (!collectable && !bullet && face != CollisionFace::NO_COLLISION) {
 
         if (face == CollisionFace::TOP) {
             velocity.y = 10;

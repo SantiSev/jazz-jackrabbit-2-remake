@@ -11,10 +11,10 @@ Constructor for guns:
         - collision_manager: collision manager of the game
 
         ----- personal config -----
-        - damage: damage of the weapon
-        - ammo: ammo of the weapon
-        - shoot_rate: rate of shooting of the weapon
-        - bullet_speed: speed of the bullets of the weapon
+        -size_t ammo,
+        -size_t max_ammo,
+        -int weapon_damage,
+        -int shoot_rate
 */
 
 /*
@@ -24,7 +24,7 @@ Constructor for guns:
  * Little Bullet speed
  */
 GunOne::GunOne(size_t weapon_id, Player& player_owner, CollisionManager& collision_manager):
-        Weapon(weapon_id, player_owner, collision_manager, 5, 100, 6000000, 100) {}
+        Weapon(weapon_id, player_owner, collision_manager, 5, 200, 60, 20) {}
 
 /*
  * A lot of Damage
@@ -33,7 +33,7 @@ GunOne::GunOne(size_t weapon_id, Player& player_owner, CollisionManager& collisi
  * A lot of Bullet speed
  */
 GunTwo::GunTwo(size_t weapon_id, Player& player_owner, CollisionManager& collision_manager):
-        Weapon(weapon_id, player_owner, collision_manager, 25, 25, 1200000, 150) {}
+        Weapon(weapon_id, player_owner, collision_manager, 25, 25, 10, 20) {}
 
 /*
  * A lot of Damage
@@ -42,7 +42,7 @@ GunTwo::GunTwo(size_t weapon_id, Player& player_owner, CollisionManager& collisi
  * A lot of Bullet speed
  */
 GunThree::GunThree(size_t weapon_id, Player& player_owner, CollisionManager& collision_manager):
-        Weapon(weapon_id, player_owner, collision_manager, 50, 10, 500000, 200) {}
+        Weapon(weapon_id, player_owner, collision_manager, 50, 10, 60, 20) {}
 
 /*
  * Default Gun
@@ -52,7 +52,7 @@ GunThree::GunThree(size_t weapon_id, Player& player_owner, CollisionManager& col
  */
 
 DefaultGun::DefaultGun(size_t weapon_id, Player& player_owner, CollisionManager& collision_manager):
-        Weapon(weapon_id, player_owner, collision_manager, 10, 0, 60000, 100) {}
+        Weapon(weapon_id, player_owner, collision_manager, 10, 0, 60, 20) {}
 
 void DefaultGun::shoot() {
 
@@ -60,8 +60,8 @@ void DefaultGun::shoot() {
         return;
     }
     shoot_rate_counter = 0;
-
+    uint64_t bullet_id = create_bullet_id();
     // TODOD --> get list of bullets reference from player
-    auto bullet = std::make_shared<Bullet>(player_owner, weapon_damage, 0);
+    auto bullet = std::make_shared<Bullet>(bullet_id, player_owner, weapon_damage);
     collision_manager.track_dynamic_body(bullet);
 }

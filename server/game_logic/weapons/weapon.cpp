@@ -50,9 +50,8 @@ void Weapon::shoot() {
     ammo--;
     shoot_rate_counter = 0;
 
-    // TODOD --> get list of bullets reference from player
-    auto bullet = std::make_shared<Bullet>(player_owner, weapon_damage, 0);
-
+    uint64_t bullet_id = create_bullet_id();
+    auto bullet = std::make_shared<Bullet>(bullet_id, player_owner, weapon_damage);
     collision_manager.track_dynamic_body(bullet);
 }
 
@@ -67,5 +66,21 @@ void Weapon::update_shoot_rate() {
     }
 }
 
+uint64_t Weapon::create_bullet_id() {
+    uint16_t weapon_id = this->weapon_id;
+    uint16_t player_id = this->player_owner.get_id();
+
+    bullet_counter++;
+
+    uint64_t bullet_id = 0;  // Initialize bullet_id
+
+    // Shift and combine values
+    bullet_id |= static_cast<uint64_t>(weapon_id) << 48;  // Shift weapon_id to the leftmost 16 bits
+    bullet_id |= static_cast<uint64_t>(player_id) << 32;  // Shift player_id to the next 16 bits
+    bullet_id |=
+            static_cast<uint64_t>(bullet_counter);  // bullet_counter occupies the remaining bits
+
+    return bullet_id;
+}
 
 Weapon::~Weapon() = default;

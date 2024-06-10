@@ -14,27 +14,26 @@ class Player;
 
 class Bullet: public DynamicBody, public engine::CanvasObject {
 private:
+    uint64_t id;
     Player& player_owner;
     int bullet_damage = 1;
     size_t life_span = 25;
-    size_t bullet_id = 0;
 
     engine::ColorRect color_rect;  // todo --> remove later
 
 
 public:
-    Bullet(Player& player_owner, const int& bullet_damage, const size_t& bullet_id);
+    Bullet(const uint64_t& id, Player& player_owner, const int& bullet_damage);
+
+    uint64_t get_id() const;
 
     size_t get_life_span() const;
 
-    size_t get_damage() const;
-
-    void get_player_points(size_t points);
-
-    void update_db() override;
+    void update_body() override;
 
     void handle_colision(CollisionObject* other) override;
 
+    // TODO --> REMOVE SDL LATER
 
     void draw(SDL_Renderer* renderer) override { color_rect.draw(renderer); }
 

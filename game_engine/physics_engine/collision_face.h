@@ -6,7 +6,6 @@
 #include <memory>
 #include <string>
 
-
-enum CollisionFace { NONE, LEFT, RIGHT, TOP, BOTTOM };
+enum CollisionFace { NO_COLLISION, LEFT, RIGHT, TOP, BOTTOM };
 
 #endif  // COLISIONFACE_H

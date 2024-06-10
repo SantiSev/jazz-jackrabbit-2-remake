@@ -14,9 +14,8 @@
 #include "../collectables/collectable.h"
 
 // Player config
+#define NONE 0
 #define MAX_HEALTH 1000
-#define MIN_HEALTH 0
-#define STARTING_POINTS 0
 #define REVIVE_COOLDOWN 10
 #define INTOXICATON_COOLDOWN 4
 #define SPECIAL_COOLDOWN 3
@@ -25,13 +24,8 @@
 #define JUMP_SPEED 25
 #define GRAVITY 1
 #define FRICCTION 0.1f
-#define NO_SPEED 0
-
-// Size configs
-#define ENEMY_WIDTH 50
-#define ENEMY_HEIGHT 50
-#define PLAYER_WIDTH 50
-#define PLAYER_HEIGHT 50
+#define LEFT_DIR -1
+#define RIGHT_DIR 1
 
 class CharacterBody: public DynamicBody {
 protected:
@@ -46,15 +40,17 @@ protected:
 
     // movement logic
     bool on_floor = true;
-    int direction = 1;
+    int direction = RIGHT_DIR;
 
 public:
     CharacterBody(size_t id, const character_t& character, int x, int y, int w, int h,
                   Vector2D velocity, size_t health, uint8_t state, size_t revive_cooldown);
 
+
     //------- Overrided Methods --------
+
     void handle_colision(CollisionObject* other) override;
-    void update_db() override;
+    void update_body() override;
 
     //------- Getters --------
 

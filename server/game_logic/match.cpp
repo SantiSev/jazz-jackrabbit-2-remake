@@ -126,7 +126,7 @@ void Match::update_players() {
 
 void Match::update_enemies() {
     for (auto& enemy: enemies) {
-        enemy->update_db();
+        enemy->update_body();
     }
 }
 
@@ -182,7 +182,6 @@ bool Match::has_match_ended() const { return match_has_ended; }
 
 void Match::stop() {
     online = false;
-    collision_manager.clear();
     //    event_queue->close();
     send_end_message_to_players();
     //    for (auto& client: clients) {

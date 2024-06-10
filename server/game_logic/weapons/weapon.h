@@ -13,6 +13,9 @@ class Player;
 class CollisionManager;
 
 class Weapon {
+private:
+    int bullet_counter = 0;
+
 protected:
     size_t weapon_id = 0;
     int weapon_damage = 0;
@@ -27,6 +30,7 @@ protected:
     bool can_shoot = true;
 
     size_t get_max_ammo() const;
+    uint64_t create_bullet_id();
 
     void set_weapon_name(size_t weapon_name);
     void set_ammo(size_t new_ammo);

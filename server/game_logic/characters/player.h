@@ -14,6 +14,11 @@
 
 #include "character.h"
 
+// player config
+#define PLAYER_WIDTH 50
+#define PLAYER_HEIGHT 50
+#define MAX_FALL_SPEED 10
+
 class Weapon;
 
 class Player: public CharacterBody {
@@ -27,6 +32,7 @@ private:
     bool is_knocked_back = false;
 
     // game statuses
+
     bool is_intoxicated = false;
 
     // game cooldowns
@@ -43,7 +49,7 @@ public:
 
     //------- Overrided Methods --------
 
-    void update_db() override;
+    void update_body() override;
     void handle_colision(CollisionObject* other) override;
     void print_info() override;
     void knockback(int force) override;

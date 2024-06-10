@@ -50,11 +50,13 @@ void CharacterBody::set_revival_cooldown(const size_t new_cooldown) {
 // ------- Health Methods --------
 
 void CharacterBody::take_damage(size_t susbstract_health) {
-    if (((int)health - (int)susbstract_health) < MIN_HEALTH) {
+    if (((int)health - (int)susbstract_health) < NONE) {
         set_active_status(false);
-        health = MIN_HEALTH;
+        health = NONE;
+        state = STATE_DEAD;
     } else {
         health -= susbstract_health;
+        state = STATE_DAMAGED;
     }
 }
 
@@ -70,7 +72,7 @@ void CharacterBody::increase_health(size_t add_health) {
 
 void CharacterBody::decrease_revive_cooldown() { this->revive_cooldown--; }
 
-bool CharacterBody::can_revive() const { return (is_active_object() && revive_cooldown == 0); }
+bool CharacterBody::can_revive() const { return (is_active_object() && revive_cooldown == NONE); }
 
 void CharacterBody::reset_revive_cooldown() { this->revive_cooldown = REVIVE_COOLDOWN; }
 
@@ -79,7 +81,7 @@ void CharacterBody::reset_revive_cooldown() { this->revive_cooldown = REVIVE_COO
 
 bool CharacterBody::is_on_floor() const { return on_floor; }
 
-bool CharacterBody::is_facing_right() const { return direction == 1; }
+bool CharacterBody::is_facing_right() const { return direction == RIGHT_DIR; }
 
 int CharacterBody::get_direction() const { return direction; }
 
@@ -91,21 +93,28 @@ bool CharacterBody::is_doing_action_state() const {
 void CharacterBody::move_left() {
     direction = -1;
     velocity.x = -DEFAULT_SPEED_X;
+    state = STATE_MOVING_LEFT;
 }
 
 void CharacterBody::move_right() {
     direction = 1;
     velocity.x = DEFAULT_SPEED_X;
+    state = STATE_MOVING_RIGHT;
 }
 
 void CharacterBody::jump() {
     on_floor = false;
     velocity.y = -JUMP_SPEED;
+    if (is_facing_right()) {
+        state = STATE_JUMPING_RIGHT;
+    } else {
+        state = STATE_JUMPING_LEFT;
+    }
 }
 
 void CharacterBody::knockback(int force) { velocity.x += -direction * force; }
 
-void CharacterBody::update_db() {
+void CharacterBody::update_body() {
     if (!on_floor) {
         velocity.y += GRAVITY;
 
@@ -140,7 +149,7 @@ void CharacterBody::handle_colision(CollisionObject* other) {
                     10;  // set a small value to avoid getting stuck in the air while walking off
             // platform
             on_floor = true;
-        } else if (face == CollisionFace::NONE) {
+        } else if (face == CollisionFace::NO_COLLISION) {
             on_floor = false;
         }
     }

@@ -11,8 +11,8 @@
 
 class Ammo: public Collectable {
 private:
-    int weapon_id;
-    int amount;
+    int weapon_id = 1;
+    int amount = 10;
 
 public:
     Ammo(int weapon_id, int amount, int x, int y, int hitbox_width, int hitbox_height):
@@ -22,7 +22,7 @@ public:
 
         Player* player = dynamic_cast<Player*>(other);
         if (player) {
-            player->reload_weapon(weapon_id, amount);
+            player->reload_weapon(amount, weapon_id);
             has_been_collected();
         }
     }

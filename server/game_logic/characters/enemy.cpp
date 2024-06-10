@@ -23,7 +23,7 @@ Enemy::Enemy(size_t id, const character_t& character, int attack_damage, int hea
 
 //------------ Overrided Methods ------------
 
-void Enemy::update_db() {
+void Enemy::update_body() {
 
     if (!is_dead()) {
         patrol();
@@ -39,7 +39,7 @@ void Enemy::handle_colision(CollisionObject* other) {
     Player* player = dynamic_cast<Player*>(other);
     CollisionFace face = is_touching(other);
 
-    if (player && face != CollisionFace::NONE) {
+    if (player && face != CollisionFace::NO_COLLISION) {
         std::cout << "Enemy collided with player" << std::endl;
 
         attack(player);

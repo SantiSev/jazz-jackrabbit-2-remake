@@ -24,6 +24,9 @@ void CollisionManager::place_object_in_grid(std::shared_ptr<CollisionObject> obj
     }
 }
 
+bool CollisionManager::is_valid_cell(int x, int y) const {
+    return x >= 0 && x < grid_width && y >= 0 && y < grid_height;
+}
 
 void CollisionManager::remove_object_from_grid(std::shared_ptr<CollisionObject> obj,
                                                Vector2D position) {
@@ -39,7 +42,7 @@ void CollisionManager::remove_object_from_grid(std::shared_ptr<CollisionObject> 
 
 // ----------------- public methods ---------------------
 
-bool CollisionManager::can_be_placed(std::shared_ptr<CollisionObject> obj) {
+bool CollisionManager::can_be_placed(std::shared_ptr<CollisionObject> obj) const {
     for (int i = obj->position.x; i < obj->position.x + obj->get_hitbox_width(); ++i) {
         for (int j = obj->position.y; j < obj->position.y + obj->get_hitbox_height(); ++j) {
             if (grid[i][j] != nullptr) {
@@ -115,7 +118,7 @@ void CollisionManager::update() {  // create to update specific object
         if (obj != nullptr || !obj->is_active_object()) {
             auto& old_position_ref = std::get<1>(*it);
 
-            obj->update_db();
+            obj->update_body();
 
             detect_colisions(obj);  // Detect collisions with other objects
 

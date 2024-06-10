@@ -9,10 +9,9 @@
 
 #include "collectable.h"
 
-
 class Treasure: public Collectable {
 private:
-    int value;
+    int value = 100;
 
 public:
     Treasure(int value, int x, int y, int hitbox_width, int hitbox_height):

@@ -1,8 +1,6 @@
-//
-// Created by santi on 24/05/24.
-//
 
 #include "static_body.h"
+
 #include <iostream>
 
 StaticBody::StaticBody(int width, int height): CollisionObject(width, height) {}
@@ -15,7 +13,6 @@ void StaticBody::handle_colision(CollisionObject* other) {
     // Therefore, it does not need to handle colisions.
     CollisionFace face = this->is_touching(other);
 
-     std::cout << "STATIC HANDLER IF YOU ARE READING THIS THEN YOU ARE LAZY" << std::endl;
     switch (face) {
         case CollisionFace::TOP:  // other object is on top of me
             other->position.y = get_top_hitbox_side() - other->get_hitbox_height();

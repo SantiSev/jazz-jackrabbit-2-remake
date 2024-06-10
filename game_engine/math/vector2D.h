@@ -1,6 +1,3 @@
-//
-// Created by santi on 23/05/24.
-//
 
 #ifndef GAME_ENGINE_MATH_VECTOR2D_H_
 #define GAME_ENGINE_MATH_VECTOR2D_H_
@@ -36,4 +33,3 @@ public:
 };
 
 #endif  // GAME_ENGINE_MATH_VECTOR2D_H_
-// Copyriht 2024  S.E.V
