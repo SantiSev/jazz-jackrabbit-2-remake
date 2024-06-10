@@ -15,8 +15,11 @@ private:
     int amount = 10;
 
 public:
-    Ammo(int weapon_id, int amount, int x, int y, int hitbox_width, int hitbox_height):
-            Collectable(x, y, hitbox_width, hitbox_height), weapon_id(weapon_id), amount(amount) {}
+    Ammo(int weapon_id, int amount, int x, int y, int hitbox_width, int hitbox_height,
+         int appearance_time):
+            Collectable(x, y, hitbox_width, hitbox_height, appearance_time),
+            weapon_id(weapon_id),
+            amount(amount) {}
 
     void handle_colision(CollisionObject* other) override {
 
@@ -29,6 +32,5 @@ public:
     }
     int get_weapon_id() const { return weapon_id; }
 };
-
 
 #endif  // AMMO_H

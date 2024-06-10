@@ -7,11 +7,11 @@
 class Collectable: public DynamicBody {
 private:
     bool collected = false;
-    int appearance_time = 0;  // TODO IMPLEMENTAR
+    int appearance_time = 0;  //
 
 public:
-    Collectable(int x, int y, int hitbox_width, int hitbox_height):
-            DynamicBody(x, y, hitbox_width, hitbox_height) {}
+    Collectable(int x, int y, int hitbox_width, int hitbox_height, int appearance_time):
+            DynamicBody(x, y, hitbox_width, hitbox_height), appearance_time(appearance_time) {}
 
     bool is_collected() const { return collected; }
 

@@ -14,8 +14,8 @@ private:
     int value = 100;
 
 public:
-    Treasure(int value, int x, int y, int hitbox_width, int hitbox_height):
-            Collectable(x, y, hitbox_width, hitbox_height), value(value) {}
+    Treasure(int value, int x, int y, int hitbox_width, int hitbox_height, int appearance_time):
+            Collectable(x, y, hitbox_width, hitbox_height, appearance_time), value(value) {}
 
     void handle_colision(CollisionObject* other) override {
 

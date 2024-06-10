@@ -12,8 +12,10 @@ private:
     int health_amount;
 
 public:
-    HealthItem(int health_amount, int x, int y, int hitbox_width, int hitbox_height):
-            Collectable(x, y, hitbox_width, hitbox_height), health_amount(health_amount) {}
+    HealthItem(int health_amount, int x, int y, int hitbox_width, int hitbox_height,
+               int appearance_time):
+            Collectable(x, y, hitbox_width, hitbox_height, appearance_time),
+            health_amount(health_amount) {}
 
     void handle_colision(CollisionObject* other) override {
 
