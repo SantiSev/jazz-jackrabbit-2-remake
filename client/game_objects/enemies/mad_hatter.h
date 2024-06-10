@@ -10,17 +10,17 @@
 
 #include "../../../common/character_enum.h"
 #include "../../../game_engine/gui/basic/resource_pool.h"
-#include "../character.h"
+#include "../../../game_engine/gui/widgets/animated_sprite.h"
 
 // TODO -> ADD MAD HATTER TO CHARACTER ENUM
-class MadHatter: public Character {
+class MadHatter: public engine::AnimatedSprite {
 public:
     MadHatter(const std::shared_ptr<engine::ResourcePool>& resource_pool,
               const std::string& animation_name, int x, int y):
-            Character(std::make_unique<engine::AnimatedSprite>(
+            engine::AnimatedSprite(
                     resource_pool->get_texture(map_character_enum_to_string.at(JAZZ_CHARACTER)),
                     resource_pool->get_yaml(map_character_enum_to_string.at(JAZZ_CHARACTER)),
-                    animation_name, x, y)) {}
+                    animation_name, x, y) {}
 };
 
 
