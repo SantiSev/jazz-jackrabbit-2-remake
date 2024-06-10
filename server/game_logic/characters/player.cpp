@@ -247,6 +247,7 @@ void Player::print_info() {
     std::cout << "| shoot status: " << weapons[selected_weapon]->shoot_rate_status() << " |"
               << std::endl;
     std::cout << "| points: " << points << " |" << std::endl;
+    std::cout << "| state: " << (int)get_state() << " |" << std::endl;
 }
 
 
