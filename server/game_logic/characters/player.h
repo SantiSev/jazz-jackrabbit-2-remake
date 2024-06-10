@@ -34,7 +34,7 @@ private:
     size_t intoxication_cooldown = INTOXICATON_COOLDOWN;
 
 public:
-    Player(size_t id, std::string name, const character_t& character, int x, int y,
+    Player(uint16_t id, std::string name, const character_t& character, int x, int y,
            CollisionManager& collision_manager);
 
     //------- Overrided Methods --------

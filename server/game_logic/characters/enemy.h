@@ -17,7 +17,7 @@ private:
     int movement_range = MOVEMENT_RANGE;
 
 public:
-    Enemy(size_t id, const character_t& character, int attack_damage, int health,
+    Enemy(uint16_t id, const character_t& character, int attack_damage, int health,
           int revive_cooldown, int x, int y, int w, int h, int speed);
 
     //------- Overrided Methods --------

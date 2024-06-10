@@ -12,7 +12,7 @@
 
 // These enemys for NOW can only move left and right, attack the player and cannot jump (for now)
 
-Enemy::Enemy(size_t id, const character_t& character, int attack_damage, int health,
+Enemy::Enemy(uint16_t id, const character_t& character, int attack_damage, int health,
              int revive_cooldown, int x, int y, int w, int h, int speed):
         CharacterBody(id, character, x, y, w, h, Vector2D(speed, 0), health, STATE_IDLE_RIGHT,
                       revive_cooldown),
