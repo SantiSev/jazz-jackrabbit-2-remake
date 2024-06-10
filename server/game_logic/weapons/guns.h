@@ -1,4 +1,6 @@
 
+#ifndef GUNS_H
+#define GUNS_H
 
 #include "weapon.h"
 
@@ -22,3 +24,5 @@ public:
     DefaultGun(size_t weapon_id, Player& player_owner, CollisionManager& collision_manager);
     void shoot() override;
 };
+
+#endif  // GUNS_H

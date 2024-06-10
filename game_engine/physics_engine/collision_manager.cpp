@@ -159,3 +159,16 @@ void CollisionManager::clear() {
     }
     dynamic_bodies.clear();
 }
+
+
+CollisionManager::~CollisionManager() {
+    for (auto& column: grid) {
+        column.clear();
+        column.shrink_to_fit();
+    }
+    grid.clear();
+    grid.shrink_to_fit();
+
+    dynamic_bodies.clear();
+    dynamic_bodies.shrink_to_fit();
+}

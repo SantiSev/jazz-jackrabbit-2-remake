@@ -1,10 +1,5 @@
 #include "player.h"
 
-#include <cstdint>
-#include <utility>
-
-#include "../weapons/guns.h"
-
 #define MAX_FALL_SPEED 10
 
 Player::Player(size_t id, std::string name, const character_t& character, int x, int y,
@@ -19,11 +14,14 @@ Player::Player(size_t id, std::string name, const character_t& character, int x,
     set_starting_weapon();
 }
 
+
 // -------- Getters ---------
 
 size_t Player::get_points() { return points; }
 
-Weapon* Player::get_weapon(size_t weapon) { return weapons[weapon]; }
+// return a unique pointer to the weapon
+
+Weapon* Player::get_weapon(size_t weapon) { return weapons[weapon].get(); }
 
 std::string Player::get_name() { return name; }
 
@@ -33,10 +31,10 @@ void Player::set_name(std::string new_name) { this->name = std::move(new_name); 
 
 void Player::set_starting_weapon() {  // todo check if its needed to be in config
 
-    weapons[0] = new DefaultGun(0, *this, collision_manager);
-    weapons[1] = new GunOne(1, *this, collision_manager);
-    weapons[2] = new GunTwo(2, *this, collision_manager);
-    weapons[3] = new GunThree(3, *this, collision_manager);
+    weapons[0] = std::make_unique<DefaultGun>(0, *this, collision_manager);
+    weapons[1] = std::make_unique<GunOne>(1, *this, collision_manager);
+    weapons[2] = std::make_unique<GunTwo>(2, *this, collision_manager);
+    weapons[3] = std::make_unique<GunThree>(3, *this, collision_manager);
 }
 
 // ------------ Revive Methods --------------

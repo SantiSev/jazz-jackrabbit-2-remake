@@ -49,6 +49,9 @@ public:
     int get_grid_height() const;
 
     void clear();
+
+
+    ~CollisionManager();
 };
 
 

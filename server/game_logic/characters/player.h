@@ -3,13 +3,14 @@
 
 #include <cstdint>
 #include <memory>
-#include <optional>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "../../../common/common_constants.h"
 #include "../../../common/protocol/common_dto.h"
 #include "../../../game_engine/physics_engine/collision_manager.h"
+#include "../weapons/guns.h"
 
 #include "character.h"
 
@@ -19,7 +20,7 @@ class Player: public CharacterBody {
 private:
     std::string name;
     size_t points;
-    std::vector<Weapon*> weapons;
+    std::vector<std::unique_ptr<Weapon>> weapons;
     size_t selected_weapon = DEFAULT_WEAPON;
     CollisionManager& collision_manager;  // reference to the collision manager
 
@@ -95,7 +96,13 @@ public:
 
     void update_status(Vector2D spawn_point);
     void execute_command(command_t command);
-};
 
+    ~Player() {
+        for (auto& weapon: weapons) {
+            weapon.reset();  // Releases ownership and deletes the managed object
+        }
+        weapons.clear();
+    }
+};
 
 #endif

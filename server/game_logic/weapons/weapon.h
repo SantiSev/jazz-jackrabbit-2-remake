@@ -9,6 +9,9 @@
 
 #include "bullet.h"
 
+class Player;
+class CollisionManager;
+
 class Weapon {
 protected:
     size_t weapon_id = 0;
@@ -40,6 +43,7 @@ public:
     size_t get_weapon_id() const;
     size_t get_ammo() const;
 
+    // todo --> this is for testing purposes, remove later
     bool shoot_ready() const { return can_shoot; }
     int shoot_rate_status() const { return shoot_rate_counter; }
 

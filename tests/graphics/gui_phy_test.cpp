@@ -32,6 +32,7 @@ public:
         this->gun_rect = engine::ColorRect(gun_color, gun_cube);
     }
 
+
     void draw(SDL_Renderer* renderer) override {
         color_rect.draw(renderer);
         gun_rect.draw(renderer);
@@ -78,6 +79,7 @@ public:
     bool is_intersecting(SDL_Rect& rect) const override { return false; }
 };
 
+// ----------------------------------------------------------
 
 class PlatformTest: public BoxPlatform, public engine::CanvasObject {
 private:
@@ -98,6 +100,30 @@ public:
     bool is_intersecting(SDL_Rect& rect) const override { return false; }
 };
 
+/*
+class CollectableTest: public Collectable, public engine::CanvasObject {
+private:
+    engine::ColorRect color_rect;
+
+public:
+    CollectableTest(int x, int y, int width, int height):
+            Collectable(x, y, width, height) {
+        SDL_Color color_values = {255, 255, 0, 255};
+        SDL_Rect collectable_cube = {x, y, width, height};
+        this->color_rect = engine::ColorRect(color_values, collectable_cube);
+    }
+
+    void draw(SDL_Renderer* renderer) override { color_rect.draw(renderer); }
+
+    void set_position(int x, int y) override {}
+
+    bool is_intersecting(SDL_Point& point) const override { return false; }
+    bool is_intersecting(SDL_Rect& rect) const override { return false; }
+};
+*/
+
+
+// ----------------------------------------------------------
 
 class EnemyTest: public Enemy, public engine::CanvasObject {
 private:
@@ -119,6 +145,9 @@ public:
 
     void draw(SDL_Renderer* renderer) override { color_rect.draw(renderer); }
 };
+
+
+// ----------------------------------------------------------
 
 
 int main() {
@@ -225,8 +254,10 @@ int main() {
             SDL_Delay(frame_delay - frame_time);
         }
 
-        player->print_info();
+        // player->print_info();
     }
+    std::cout << "Exiting game..." << std::endl;
+    collision_manager.clear();
 
     return 0;
 }
