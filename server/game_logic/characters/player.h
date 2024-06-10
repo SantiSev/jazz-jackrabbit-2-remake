@@ -24,7 +24,7 @@ class Weapon;
 class Player: public CharacterBody {
 private:
     std::string name;
-    size_t points;
+    int points = 0;
     std::vector<std::unique_ptr<Weapon>> weapons;
     size_t selected_weapon = DEFAULT_WEAPON;
     CollisionManager& collision_manager;  // reference to the collision manager
@@ -56,7 +56,7 @@ public:
 
     //------- Getters --------
 
-    size_t get_points();
+    int get_points();
     Weapon* get_weapon(size_t weapon);
     std::string get_name();
 
@@ -67,7 +67,7 @@ public:
 
     //------- Point Methods --------
 
-    void add_points(size_t points);
+    void add_points(int points);
 
     //------- Weapon Methods --------
 

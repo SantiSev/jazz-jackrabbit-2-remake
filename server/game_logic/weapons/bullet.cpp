@@ -48,8 +48,7 @@ void Bullet::update_body() {
 
 void Bullet::handle_colision(CollisionObject* other) {
 
-
-    if (is_touching_bool(other)) {
+    if (is_active_object() && is_touching_bool(other)) {
 
         set_active_status(false);
 

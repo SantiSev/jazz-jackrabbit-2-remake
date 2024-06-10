@@ -7,7 +7,6 @@ Player::Player(size_t id, std::string name, const character_t& character, int x,
                       Vector2D(NONE, MAX_FALL_SPEED), MAX_HEALTH, STATE_IDLE_RIGHT,
                       REVIVE_COOLDOWN),
         name(std::move(name)),
-        points(NONE),
         weapons(NUM_OF_WEAPONS),
         collision_manager(collision_manager) {
     set_starting_weapon();
@@ -16,7 +15,7 @@ Player::Player(size_t id, std::string name, const character_t& character, int x,
 
 // -------- Getters ---------
 
-size_t Player::get_points() { return points; }
+int Player::get_points() { return points; }
 
 // return a unique pointer to the weapon
 
@@ -47,7 +46,7 @@ void Player::revive(Vector2D new_position) {
 
 // ------------ Point Methods --------------
 
-void Player::add_points(size_t new_points) { this->points += new_points; }
+void Player::add_points(int new_points) { this->points += new_points; }
 
 // ------------ Weapon Methods --------------
 
@@ -56,10 +55,6 @@ bool Player::is_player_intoxicated() const { return is_intoxicated; }
 
 void Player::reload_weapon(size_t ammo_amount, size_t weapon_id) {
 
-    std::cout << "ammo amount: " << ammo_amount << std::endl;
-    std::cout << "weapon id: " << weapon_id << std::endl;
-
-    std::cout << "reloading weapon" << std::endl;
     this->weapons[weapon_id]->add_ammo(ammo_amount);
 }
 

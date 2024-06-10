@@ -20,7 +20,7 @@ public:
     void handle_colision(CollisionObject* other) override {
 
         Player* player = dynamic_cast<Player*>(other);
-        if (player) {
+        if (!is_collected() && player) {
             player->add_points(value);
             has_been_collected();
         }

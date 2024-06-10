@@ -128,7 +128,7 @@ private:
     engine::ColorRect color_rect;
 
 public:
-    AmmoTest(int x, int y, int width, int height): Ammo(1, 100, x, y, width, height) {
+    AmmoTest(int x, int y, int width, int height): Ammo(1, 50, x, y, width, height) {
         SDL_Color color_values = {237, 231, 225, 255};
         SDL_Rect collectable_cube = {x, y, width, height};
         this->color_rect = engine::ColorRect(color_values, collectable_cube);

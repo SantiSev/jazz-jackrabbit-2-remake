@@ -21,7 +21,8 @@ public:
     void handle_colision(CollisionObject* other) override {
 
         Player* player = dynamic_cast<Player*>(other);
-        if (player) {
+
+        if (!is_collected() && player) {
             player->reload_weapon(amount, weapon_id);
             has_been_collected();
         }
