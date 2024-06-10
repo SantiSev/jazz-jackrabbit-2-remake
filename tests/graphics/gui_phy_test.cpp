@@ -19,7 +19,6 @@ private:
     engine::ColorRect color_rect;
     engine::ColorRect gun_rect;
 
-
 public:
     PlayerTest(size_t id, std::string name, const uint8_t& character, int x, int y,
                CollisionManager& collision_manager):
@@ -29,7 +28,7 @@ public:
         SDL_Color color = {0, 255, 0, 255};
         this->color_rect = engine::ColorRect(color, player_cube);
 
-        // have gun rect be red
+
         SDL_Rect gun_cube = {x + 50, y + 10, 10, 10};
         SDL_Color gun_color = {255, 0, 0, 255};
         this->gun_rect = engine::ColorRect(gun_color, gun_cube);
@@ -109,7 +108,7 @@ private:
     engine::ColorRect color_rect;
 
 public:
-    TreasureTest(int x, int y, int width, int height): Treasure(100, x, y, width, height) {
+    TreasureTest(int x, int y, int width, int height): Treasure(100, x, y, width, height, 100) {
         SDL_Color color_values = {255, 255, 0, 255};
         SDL_Rect collectable_cube = {x, y, width, height};
         this->color_rect = engine::ColorRect(color_values, collectable_cube);
@@ -128,7 +127,7 @@ private:
     engine::ColorRect color_rect;
 
 public:
-    AmmoTest(int x, int y, int width, int height): Ammo(1, 50, x, y, width, height) {
+    AmmoTest(int x, int y, int width, int height): Ammo(1, 50, x, y, width, height, 100) {
         SDL_Color color_values = {237, 231, 225, 255};
         SDL_Rect collectable_cube = {x, y, width, height};
         this->color_rect = engine::ColorRect(color_values, collectable_cube);
@@ -191,9 +190,9 @@ int main() {
     SDL_Color color_wall = {200, 210, 255, 255};
     auto wall_1 = std::make_shared<PlatformTest>(1000, 100, 100, 750, color_wall);
 
-    auto treasure = std::make_shared<TreasureTest>(700, 800 - 32 - 80, 32, 32);
+    auto treasure = std::make_shared<TreasureTest>(700, 800 - 32 - 50, 32, 32);
 
-    auto ammo = std::make_shared<AmmoTest>(800, 800 - 32 - 80, 32, 32);
+    auto ammo = std::make_shared<AmmoTest>(800, 800 - 32 - 50, 32, 32);
 
     auto player = std::make_shared<PlayerTest>(1, "JAZZ_CHARACTER", 1, 100, 450, collision_manager);
 
@@ -244,6 +243,21 @@ int main() {
             collision_manager.track_dynamic_body(enemy);
         }
 
+        if (player->try_revive()) {
+            player->revive(Vector2D(100, 450));
+            collision_manager.track_dynamic_body(player);
+        }
+
+        if (ammo->try_respawn()) {
+            ammo->respawn(Vector2D(800, 800 - 32 - 80));
+            collision_manager.track_dynamic_body(ammo);
+        }
+
+        if (treasure->try_respawn()) {
+            treasure->respawn(Vector2D(700, 800 - 32 - 80));
+            collision_manager.track_dynamic_body(treasure);
+        }
+
 
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -269,17 +283,19 @@ int main() {
 
 
         for (auto& [dynamic_body, position]: collision_manager.dynamic_bodies) {
-            // cast it o bullet
+
             auto bullet = std::dynamic_pointer_cast<Bullet>(dynamic_body);
+            auto ammo = std::dynamic_pointer_cast<AmmoTest>(dynamic_body);
+            auto collectable = std::dynamic_pointer_cast<TreasureTest>(dynamic_body);
 
-            if (bullet) {
-
-                if (bullet->is_active_object()) {
-
-                    bullet->draw(renderer);
-                } else {
-                    collision_manager.remove_object(bullet);
-                }
+            if (bullet && bullet->is_active_object()) {
+                bullet->draw(renderer);
+            } else if (ammo && ammo->is_active_object()) {
+                ammo->draw(renderer);
+            } else if (collectable && collectable->is_active_object()) {
+                collectable->draw(renderer);
+            } else if (!dynamic_body->is_active_object()) {
+                collision_manager.remove_object(dynamic_body);
             }
         }
 

@@ -20,8 +20,6 @@
 
 #include "client_monitor.h"
 
-// size_t bullets_shot = 0;
-
 class Match: public Thread {
 private:
     bool online;
