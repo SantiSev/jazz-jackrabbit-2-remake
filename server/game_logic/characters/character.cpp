@@ -6,22 +6,23 @@
 #include "../../../common/character_enum.h"
 
 CharacterBody::CharacterBody(size_t id, const character_t& character, int x, int y, int w, int h,
-                             Vector2D velocity, size_t health, uint8_t state,
-                             size_t revive_cooldown):
+                             Vector2D velocity, int health, uint8_t state, size_t revive_cooldown):
         DynamicBody(x, y, w, h, Vector2D(velocity)),
         id(id),
-        health(health),
         character_reference(character),
         state(state),
+        health(health),
         revive_cooldown(revive_cooldown) {}
 
 //------- Getters --------
 
-size_t CharacterBody::get_id() const { return id; }
+uint16_t CharacterBody::get_id() const { return id; }
 
 character_t CharacterBody::get_character() const { return character_reference; }
 
 uint8_t CharacterBody::get_state() const { return state; }
+
+int CharacterBody::get_health() const { return health; }
 
 bool CharacterBody::is_dead() const { return health == 0; }
 

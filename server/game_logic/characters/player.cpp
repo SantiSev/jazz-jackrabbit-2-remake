@@ -15,13 +15,11 @@ Player::Player(size_t id, std::string name, const character_t& character, int x,
 
 // -------- Getters ---------
 
-int Player::get_points() { return points; }
+int Player::get_points() const { return points; }
 
-// return a unique pointer to the weapon
+Weapon* Player::get_weapon(size_t weapon) const { return weapons[weapon].get(); }
 
-Weapon* Player::get_weapon(size_t weapon) { return weapons[weapon].get(); }
-
-std::string Player::get_name() { return name; }
+std::string Player::get_name() const { return name; }
 
 //------------ Setters ----------
 
@@ -35,14 +33,6 @@ void Player::set_starting_weapon() {  // todo check if its needed to be in confi
     weapons[3] = std::make_unique<GunThree>(3, *this, collision_manager);
 }
 
-// ------------ Revive Methods --------------
-
-void Player::revive(Vector2D new_position) {
-    this->health = MAX_HEALTH;
-    this->revive_cooldown = REVIVE_COOLDOWN;
-    this->state = STATE_IDLE_RIGHT;
-    position = new_position;
-}
 
 // ------------ Point Methods --------------
 
@@ -50,22 +40,19 @@ void Player::add_points(int new_points) { this->points += new_points; }
 
 // ------------ Weapon Methods --------------
 
-bool Player::is_player_intoxicated() const { return is_intoxicated; }
-
-
-void Player::reload_weapon(size_t ammo_amount, size_t weapon_id) {
+void Player::reload_weapon(size_t weapon_id, int ammo_amount) {
 
     this->weapons[weapon_id]->add_ammo(ammo_amount);
 }
 
 void Player::shoot_selected_weapon() { weapons[selected_weapon]->shoot(); }
 
-void Player::select_next_weapon() {
-    // iterates through the weapons and select the next one in a loop the size of the weapons vector
-    selected_weapon = (selected_weapon + 1) % weapons.size();
-}
+void Player::select_next_weapon() { selected_weapon = (selected_weapon + 1) % weapons.size(); }
+
 
 // ------------ Intoxication Methods --------------
+
+bool Player::is_player_intoxicated() const { return is_intoxicated; }
 
 void Player::reset_intoxication() { is_intoxicated = false; }
 
@@ -80,13 +67,6 @@ bool Player::is_special_available() const { return special_cooldown == 0; }
 void Player::decrease_special_attack_cooldown() { special_cooldown--; }
 
 void Player::reset_special_attack() { special_cooldown = SPECIAL_COOLDOWN; }
-
-void Player::do_special_attack() {
-    if (is_special_available()) {
-        // GENERAR PROYECTIL ESPECIAL
-        reset_special_attack();
-    }
-}
 
 // ------------ Movement Methods --------------
 
@@ -137,38 +117,13 @@ void Player::jump() {
     }
 }
 
-//------- Game Methods --------
-
-void Player::update_status(Vector2D spawn_point) {  // todo check if its needed
-
-    if (is_dead()) {
-        return;
-    }
-
-    if (is_player_intoxicated()) {
-        decrease_intoxication_cooldown();
-        if (get_intoxication_cooldown() == NONE) {
-            reset_intoxication();
-        }
-    }
-    if (!is_special_available()) {
-        decrease_special_attack_cooldown();
-    }
-    if (!is_dead() && get_health() == NONE) {
-        velocity = Vector2D(0, 0);
-        state = STATE_DEAD;
-    }
-    if (is_on_floor() && (get_state() == STATE_FALLING)) {
-        if (is_facing_right()) {
-            state = STATE_IDLE_RIGHT;
-        } else {
-            state = STATE_IDLE_LEFT;
-        }
-    }
-    if (!is_on_floor() && (velocity.y > NONE) && !is_doing_action_state()) {
-        state = STATE_FALLING;
+void Player::do_special_attack() {
+    if (is_special_available()) {
+        // GENERAR PROYECTIL ESPECIAL
+        reset_special_attack();
     }
 }
+
 
 // ------------ Override Methods --------------
 
@@ -231,6 +186,16 @@ void Player::knockback(int force) {
     is_knocked_back = true;
 }
 
+void Player::revive(Vector2D new_position) {
+    this->health = MAX_HEALTH;
+    this->revive_cooldown = REVIVE_COOLDOWN;
+    this->state = STATE_IDLE_RIGHT;
+    position = new_position;
+
+    for (auto& weapon: weapons) {
+        weapon->reset_ammo();
+    }
+}
 
 void Player::print_info() {
     std::cout << "--------------------------------" << std::endl;
@@ -247,6 +212,7 @@ void Player::print_info() {
     std::cout << "| state: " << (int)get_state() << " |" << std::endl;
 }
 
+//------- Match Methods --------
 
 void Player::execute_command(command_t command) {
     if (is_dead()) {
@@ -304,5 +270,36 @@ void Player::execute_command(command_t command) {
             //     break;
         default:
             break;
+    }
+}
+
+void Player::update_status(Vector2D spawn_point) {  // todo check if its needed
+
+    if (is_dead()) {
+        return;
+    }
+
+    if (is_player_intoxicated()) {
+        decrease_intoxication_cooldown();
+        if (get_intoxication_cooldown() == NONE) {
+            reset_intoxication();
+        }
+    }
+    if (!is_special_available()) {
+        decrease_special_attack_cooldown();
+    }
+    if (!is_dead() && get_health() == NONE) {
+        velocity = Vector2D(0, 0);
+        state = STATE_DEAD;
+    }
+    if (is_on_floor() && (get_state() == STATE_FALLING)) {
+        if (is_facing_right()) {
+            state = STATE_IDLE_RIGHT;
+        } else {
+            state = STATE_IDLE_LEFT;
+        }
+    }
+    if (!is_on_floor() && (velocity.y > NONE) && !is_doing_action_state()) {
+        state = STATE_FALLING;
     }
 }

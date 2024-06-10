@@ -23,7 +23,7 @@ public:
         Player* player = dynamic_cast<Player*>(other);
 
         if (!is_collected() && player) {
-            player->reload_weapon(amount, weapon_id);
+            player->reload_weapon(weapon_id, amount);
             has_been_collected();
         }
     }

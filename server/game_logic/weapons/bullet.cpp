@@ -4,32 +4,36 @@
 #include "../characters/player.h"
 
 
-#define OFFSET_BULLET_X 3
-#define BULLET_LIFE_SPAN 10000
-#define BULLET_POINTS 10
-#define BULLET_BONUS_POINTS 50
-
-Bullet::Bullet(const uint64_t& id, Player& player_owner, const int& bullet_damage):
+Bullet::Bullet(const uint64_t& id, const uint8_t type, Player& player_owner,
+               const int& bullet_damage):
         DynamicBody(player_owner.position.x, player_owner.position.y, BULLET_WIDTH, BULLET_HEIGHT,
                     Vector2D(BULLET_SPEED * player_owner.get_direction(), 0)),
         id(id),
+        type(type),
         player_owner(player_owner),
         bullet_damage(bullet_damage),
         life_span(BULLET_LIFE_SPAN) {
 
     position.y = player_owner.get_bottom_hitbox_side() - player_owner.get_hitbox_height() / 2;
-    position.x = player_owner.is_facing_right() ?
-                         player_owner.get_right_hitbox_side() + OFFSET_BULLET_X :
-                         player_owner.get_left_hitbox_side() + OFFSET_BULLET_X;
+
+    if (player_owner.is_facing_right()) {
+        position.x = player_owner.get_right_hitbox_side() + OFFSET_BULLET_X;
+        direction = GOING_RIGHT;
+    } else {
+        position.x = player_owner.get_left_hitbox_side() + OFFSET_BULLET_X;
+        direction = GOING_LEFT;
+    }
 
     SDL_Rect bullet_cube = {position.x, position.y, BULLET_WIDTH, BULLET_HEIGHT};
     SDL_Color color = {255, 165, 0, 0};
     this->color_rect = engine::ColorRect(color, bullet_cube);
 }
 
-size_t Bullet::get_life_span() const { return life_span; }
-
 uint64_t Bullet::get_id() const { return id; }
+
+uint8_t Bullet::get_direction() const { return player_owner.get_direction(); }
+
+uint8_t Bullet::get_type() const { return type; }
 
 void Bullet::update_body() {
 

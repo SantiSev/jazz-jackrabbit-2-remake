@@ -26,23 +26,26 @@
 #define FRICCTION 0.1f
 #define LEFT_DIR -1
 #define RIGHT_DIR 1
+#define REVIVE_COOLDOWN 1000
 
 class CharacterBody: public DynamicBody {
 protected:
     // dto info
+
     uint16_t id;
     character_t character_reference;
     uint8_t state = STATE_IDLE_RIGHT;  // estado del personaje TODO: cambiar a enum
 
     // game logic info
+
     int health;
-    int revive_cooldown;
+    int revive_cooldown = REVIVE_COOLDOWN;
     bool on_floor = true;
     int direction = RIGHT_DIR;
 
 public:
     CharacterBody(size_t id, const character_t& character, int x, int y, int w, int h,
-                  Vector2D velocity, size_t health, uint8_t state, size_t revive_cooldown);
+                  Vector2D velocity, int health, uint8_t state, size_t revive_cooldown);
 
 
     //------- Overrided Methods --------
@@ -52,9 +55,10 @@ public:
 
     //------- Getters --------
 
-    size_t get_id() const;
+    uint16_t get_id() const;
     character_t get_character() const;
     uint8_t get_state() const;
+    int get_health() const;
     bool is_dead() const;
 
     //------- Health Methods --------

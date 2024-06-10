@@ -27,16 +27,9 @@ private:
     int points = 0;
     std::vector<std::unique_ptr<Weapon>> weapons;
     size_t selected_weapon = DEFAULT_WEAPON;
-    CollisionManager& collision_manager;  // reference to the collision manager
-
+    CollisionManager& collision_manager;
     bool is_knocked_back = false;
-
-    // game statuses
-
     bool is_intoxicated = false;
-
-    // game cooldowns
-
     size_t special_cooldown = 0;
     size_t intoxication_cooldown = INTOXICATON_COOLDOWN;
 
@@ -48,14 +41,16 @@ public:
 
     void update_body() override;
     void handle_colision(CollisionObject* other) override;
-    void print_info() override;
     void knockback(int force) override;
+    void print_info() override;
+    void revive(Vector2D new_position) override;
 
     //------- Getters --------
 
-    int get_points();
-    Weapon* get_weapon(size_t weapon);
-    std::string get_name();
+    int get_points() const;
+    std::string get_name() const;
+    std::vector<std::unique_ptr<Weapon>>& get_weapons() const;
+    Weapon* get_weapon(size_t weapon) const;
 
     //------- Setters --------
 
@@ -70,7 +65,7 @@ public:
 
     void select_next_weapon();
     void shoot_selected_weapon();
-    void reload_weapon(size_t ammo, size_t weapon);
+    void reload_weapon(size_t weapon, int ammo);
 
     //------- Intoxication Methods --------
 
@@ -89,20 +84,22 @@ public:
 
     //------- Movement Methods --------
 
-    virtual void do_special_attack();
     void move_left() override;
     void move_right() override;
     void jump() override;
+    virtual void do_special_attack();
 
 
-    //------- Game Methods --------
+    //------- Match Methods --------
 
     void update_status(Vector2D spawn_point);
     void execute_command(command_t command);
 
+    //------- Deconstructor --------
+
     ~Player() {
         for (auto& weapon: weapons) {
-            weapon.reset();  // Releases ownership and deletes the managed object
+            weapon.reset();
         }
         weapons.clear();
     }

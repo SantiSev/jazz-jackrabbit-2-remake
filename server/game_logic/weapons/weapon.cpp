@@ -4,35 +4,28 @@
 
 #include "../characters/player.h"
 
-Weapon::Weapon(size_t weapon_id, Player& player_owner, CollisionManager& collision_manager,
-               size_t ammo, size_t max_ammo, int weapon_damage, int shoot_rate):
+Weapon::Weapon(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager,
+               int ammo, int max_ammo, int weapon_damage, int shoot_rate):
         weapon_id(weapon_id),
         weapon_damage(weapon_damage),
         ammo(ammo),
         max_ammo(max_ammo),
-        player_owner(player_owner),
         shoot_rate(shoot_rate),
+        player_owner(player_owner),
         collision_manager(collision_manager) {}
 
 //---------- Getters ---------
 
-size_t Weapon::get_weapon_id() const { return weapon_id; }
+uint8_t Weapon::get_weapon_id() const { return weapon_id; }
 
-size_t Weapon::get_ammo() const { return ammo; }
+int Weapon::get_ammo() const { return ammo; }
 
-size_t Weapon::get_max_ammo() const { return max_ammo; }
+int Weapon::get_max_ammo() const { return max_ammo; }
 
-//---------- Setters ----------
-
-void Weapon::set_weapon_name(size_t name) { this->weapon_id = name; }
-
-void Weapon::set_ammo(size_t new_ammo) { this->ammo = new_ammo; }
-
-void Weapon::set_max_ammo(size_t new_max_ammo) { this->max_ammo = new_max_ammo; }
 
 // -------------- Methods --------------
 
-void Weapon::add_ammo(size_t added_ammo) {
+void Weapon::add_ammo(int added_ammo) {
     this->ammo += added_ammo;
     if (ammo > max_ammo) {
         ammo = max_ammo;
@@ -51,7 +44,7 @@ void Weapon::shoot() {
     shoot_rate_counter = 0;
 
     uint64_t bullet_id = create_bullet_id();
-    auto bullet = std::make_shared<Bullet>(bullet_id, player_owner, weapon_damage);
+    auto bullet = std::make_shared<Bullet>(bullet_id, weapon_id, player_owner, weapon_damage);
     collision_manager.track_dynamic_body(bullet);
 }
 
@@ -65,6 +58,15 @@ void Weapon::update_shoot_rate() {
         shoot_rate_counter++;
     }
 }
+
+void Weapon::reset_ammo() {
+    if (max_ammo <= 0) {
+        max_ammo = 10;
+    }
+    ammo = max_ammo / RESET_FACTOR;
+}
+
+// -------------- Private Methods --------------
 
 uint64_t Weapon::create_bullet_id() {
     uint16_t weapon_id = this->weapon_id;
