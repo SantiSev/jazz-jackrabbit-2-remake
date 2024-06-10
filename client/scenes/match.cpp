@@ -44,30 +44,27 @@ void MatchScene::load_map(const map_list_t& map_enum) {
 
 void MatchScene::init() {
     std::shared_ptr<GameStateDTO> first_state = game_state_q.pop();
+
     uint8_t num_players = first_state->num_players;
     // uint8_t num_enemies = first_state->num_enemies;
     // uint8_t num_bullets = first_state->num_bullets;
+
     for (uint8_t i = 0; i < num_players; i++) {
-        character_t character = (character_t)first_state->players[i].character;
-        auto texture = resource_pool->get_texture(map_character_enum_to_string.at(character));
-        auto animations = resource_pool->get_yaml(map_character_enum_to_string.at(character));
-
-        uint8_t state = first_state->players[i].state;
-        std::string animation_name = map_states_to_animations.at(state);
-        uint16_t x = first_state->players[i].x_pos;
-        uint16_t y = first_state->players[i].y_pos;
-
-        engine::AnimatedSprite player_sprite(texture, animations, animation_name, x, y);
-        players[first_state->players[i].id] =
-                std::make_unique<Player>(std::move(player_sprite), message_handler);
+        auto player = first_state->players[i];
+        create_character(player.id, (character_t)player.character, player.state, player.x_pos,
+                         player.y_pos);
     }
-    event_loop->keyboard.add_on_key_down_signal_obj(players.begin()->second.get());
+    // for (uint8_t i = 0; i < num_enemies; i++) {
+    //     auto enemy = first_state->enemies[i];
+    //     create_character(enemy.id, (character_t)enemy.character, enemy.state, enemy.x_pos,
+    //                      enemy.y_pos);
+    // }
 }
 
-void MatchScene::create_objects() {
-    // for (auto player: players) {
-    //     player->create_objects(renderer, resource_pool);
-    // }
+void MatchScene::create_character(uint16_t id, character_t character, uint8_t state, uint16_t x,
+                                  uint16_t y) {
+    characters[id] = CharacterFactory::create_character(resource_pool, character,
+                                                        map_states_to_animations.at(state), x, y);
 }
 
 void MatchScene::update_objects(int delta_time) {
@@ -77,47 +74,46 @@ void MatchScene::update_objects(int delta_time) {
     // update positions
     if (game_state != nullptr) {
         for (uint8_t i = 0; i < game_state->num_players; i++) {
-            uint16_t id = game_state->players[i].id;
-            uint8_t state = game_state->players[i].state;
-            std::string animation_name = map_states_to_animations.at(state);
-            uint16_t x = game_state->players[i].x_pos;
-            uint16_t y = game_state->players[i].y_pos;
+            auto player = game_state->players[i];
 
-            if (players.find(id) == players.end()) {
-                character_t character = (character_t)game_state->players[i].character;
-                auto texture =
-                        resource_pool->get_texture(map_character_enum_to_string.at(character));
-                auto animations =
-                        resource_pool->get_yaml(map_character_enum_to_string.at(character));
-
-                uint8_t state = game_state->players[i].state;
-                std::string animation_name = map_states_to_animations.at(state);
-                uint16_t x = game_state->players[i].x_pos;
-                uint16_t y = game_state->players[i].y_pos;
-
-                engine::AnimatedSprite player_sprite(texture, animations, animation_name, x, y);
-                players[game_state->players[i].id] =
-                        std::make_unique<Player>(std::move(player_sprite), message_handler);
+            if (characters.find(player.id) == characters.end()) {
+                create_character(player.id, (character_t)player.character, player.state,
+                                 player.x_pos, player.y_pos);
             }
-            players.at(id)->set_position(x, y);
-            players.at(id)->set_animation(animation_name);
+
+            characters.at(player.id)->set_position(player.x_pos, player.y_pos);
+            characters.at(player.id)->set_animation(map_states_to_animations.at(player.state));
 #ifdef LOG_VERBOSE
-            std::cout << "Trying to set animation: " << animation_name << std::endl;
+            std::cout << "Trying to set animation: " << map_states_to_animations.at(player.state)
+                      << std::endl;
 #endif
         }
+
+        // for (uint8_t i = 0; i < game_state->num_enemies; i++) {
+        //     auto enemy = game_state->enemies[i];
+
+        //     if (characters.find(enemy.id) == characters.end()) {
+        //         create_character(enemy.id, (character_t)enemy.character, enemy.state,
+        //         enemy.x_pos,
+        //                          enemy.y_pos);
+        //     }
+
+        //     characters.at(enemy.id)->set_position(enemy.x_pos, enemy.y_pos);
+        //     characters.at(enemy.id)->set_animation(map_states_to_animations.at(enemy.state));
+        // }
     }
 
     // update canvas objects
     map->update(delta_time);
-    for (auto& player: players) {
-        player.second->update(delta_time);
+    for (auto& character: characters) {
+        character.second->update(delta_time);
     }
 }
 
 void MatchScene::draw_objects() {
     map->draw(renderer);
-    for (auto& player: players) {
-        player.second->draw(renderer);
+    for (auto& character: characters) {
+        character.second->draw(renderer);
     }
 }
 

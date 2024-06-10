@@ -18,8 +18,9 @@
 #include "../../game_engine/gui/basic/window.h"
 #include "../../game_engine/gui/widgets/animated_sprite.h"
 #include "../event_loop.h"
+#include "../game_objects/character.h"
+#include "../game_objects/character_factory.h"
 #include "../game_objects/map.h"
-#include "../game_objects/player.h"
 
 class MatchScene {
 private:
@@ -33,10 +34,11 @@ private:
 
     std::atomic<bool>& match_running;
     std::unique_ptr<Map> map;
-    std::map<uint16_t, std::unique_ptr<Player>> players;
+    std::map<uint16_t, std::unique_ptr<Character>> characters;
 
     void init();
-    void create_objects();
+    void create_character(uint16_t id, character_t character, uint8_t state, uint16_t x,
+                          uint16_t y);
     void update_objects(int delta_time);
     void draw_objects();
 
