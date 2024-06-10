@@ -15,6 +15,7 @@
 #include "../common/character_enum.h"
 #include "../common/common_queue.h"
 #include "../common/map_enum.h"
+#include "../common/sfx_enum.h"
 #include "../game_engine/gui/basic/resource_pool.h"
 #include "../game_engine/gui/basic/window.h"
 #include "../game_engine/gui/canvas_object.h"

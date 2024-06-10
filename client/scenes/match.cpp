@@ -54,12 +54,15 @@ void MatchScene::init() {
         auto player = first_state->players[i];
         create_character(player.id, (character_t)player.character, player.state, player.x_pos,
                          player.y_pos);
+        // create_bullet(player.id, COMMON_BULLET, player.x_pos, player.y_pos, 0);
     }
     // for (uint8_t i = 0; i < num_enemies; i++) {
     //     auto enemy = first_state->enemies[i];
     //     create_character(enemy.id, (character_t)enemy.character, enemy.state, enemy.x_pos,
     //                      enemy.y_pos);
     // }
+
+    // TODO Create bullets
 
     // Connect player controler to keyboard and mouse signals
     event_loop->keyboard.add_on_key_down_signal_obj(&player_controller);
@@ -68,8 +71,14 @@ void MatchScene::init() {
 
 void MatchScene::create_character(uint16_t id, character_t character, uint8_t state, uint16_t x,
                                   uint16_t y) {
-    characters[id] = CharacterFactory::create_character(resource_pool, character,
-                                                        map_states_to_animations.at(state), x, y);
+    animated_objects[id] = CharacterFactory::create_character(
+            resource_pool, character, map_states_to_animations.at(state), x, y);
+}
+
+void MatchScene::create_bullet(uint16_t id, uint8_t bullet_type, uint16_t x, uint16_t y,
+                               uint8_t direction) {
+    animated_objects[id] =
+            BulletFactory::create_bullet(resource_pool, bullet_type, direction, x, y);
 }
 
 void MatchScene::update_objects(int delta_time) {
@@ -81,13 +90,14 @@ void MatchScene::update_objects(int delta_time) {
         for (uint8_t i = 0; i < game_state->num_players; i++) {
             auto player = game_state->players[i];
 
-            if (characters.find(player.id) == characters.end()) {
+            if (animated_objects.find(player.id) == animated_objects.end()) {
                 create_character(player.id, (character_t)player.character, player.state,
                                  player.x_pos, player.y_pos);
             }
 
-            characters.at(player.id)->set_position(player.x_pos, player.y_pos);
-            characters.at(player.id)->set_animation(map_states_to_animations.at(player.state));
+            animated_objects.at(player.id)->set_position(player.x_pos, player.y_pos);
+            animated_objects.at(player.id)->set_animation(
+                    map_states_to_animations.at(player.state));
 #ifdef LOG_VERBOSE
             std::cout << "Trying to set animation: " << map_states_to_animations.at(player.state)
                       << std::endl;
@@ -97,28 +107,30 @@ void MatchScene::update_objects(int delta_time) {
         // for (uint8_t i = 0; i < game_state->num_enemies; i++) {
         //     auto enemy = game_state->enemies[i];
 
-        //     if (characters.find(enemy.id) == characters.end()) {
+        //     if (animated_objects.find(enemy.id) == animated_objects.end()) {
         //         create_character(enemy.id, (character_t)enemy.character, enemy.state,
         //         enemy.x_pos,
         //                          enemy.y_pos);
         //     }
 
-        //     characters.at(enemy.id)->set_position(enemy.x_pos, enemy.y_pos);
-        //     characters.at(enemy.id)->set_animation(map_states_to_animations.at(enemy.state));
+        //     animated_objects.at(enemy.id)->set_position(enemy.x_pos, enemy.y_pos);
+        //     animated_objects.at(enemy.id)->set_animation(map_states_to_animations.at(enemy.state));
         // }
+
+        // TODO Create bullets
     }
 
     // update canvas objects
     map->update(delta_time);
-    for (auto& character: characters) {
-        character.second->update(delta_time);
+    for (auto& obj: animated_objects) {
+        obj.second->update(delta_time);
     }
 }
 
 void MatchScene::draw_objects() {
     map->draw(renderer);
-    for (auto& character: characters) {
-        character.second->draw(renderer);
+    for (auto& obj: animated_objects) {
+        obj.second->draw(renderer);
     }
 }
 
