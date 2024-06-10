@@ -1,20 +1,43 @@
+# width and height of the hitbox
+body_width: 16
+body_height: 10
 common_bullet:
+    flipped: false
+    frames: 3
+    fps: 8
     x: 47
     y: 48
-    h: 16
     w: 9
+    h: 16
+    off_x: 0
+    off_y: 0
 other_bullet_1:
+    flipped: false
+    frames: 1
+    fps: 1
     x: 0
     y: 0
-    h: 0
     w: 0
+    h: 0
+    off_x: 0
+    off_y: 0
 other_bullet_2:
+    flipped: false
+    frames: 1
+    fps: 1
     x: 0
     y: 0
-    h: 0
     w: 0
+    h: 0
+    off_x: 0
+    off_y: 0
 other_bullet_3:
+    flipped: false
+    frames: 1
+    fps: 1
     x: 0
     y: 0
-    h: 0
     w: 0
+    h: 0
+    off_x: 0
+    off_y: 0
