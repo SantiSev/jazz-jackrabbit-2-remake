@@ -7,7 +7,9 @@
 typedef enum: uint8_t {
     JAZZ_CHARACTER = 0x00,
     SPAZ_CHARACTER = 0x01,
-    LORI_CHAARCTER = 0x02
+    LORI_CHAARCTER = 0x02,
+    MAD_HATTER = 0x03,
+    LIZARD_GOON = 0x04
 } character_t;
 
 
