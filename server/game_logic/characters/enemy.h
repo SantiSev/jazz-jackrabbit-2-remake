@@ -10,12 +10,11 @@
 
 class Enemy: public CharacterBody {
 private:
-    uint8_t attack_damage;
+    int attack_damage;
     int attack_cooldown;
     bool is_attacking = false;
     int x_speed;
     int movement_range = MOVEMENT_RANGE;
-    Vector2D spawn_position;
 
 public:
     Enemy(size_t id, const character_t& character, int attack_damage, int health,
@@ -25,6 +24,7 @@ public:
 
     void update_body() override;
     void handle_colision(CollisionObject* other) override;
+    void print_info() override;
 
     //------- Movement Methods --------
 
@@ -33,7 +33,7 @@ public:
     void move_right() override;
 
     //------- Game Methods --------
-
+    Vector2D spawn_position;
     virtual void patrol();
 };
 

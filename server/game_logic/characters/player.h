@@ -44,9 +44,6 @@ public:
     Player(size_t id, std::string name, const character_t& character, int x, int y,
            CollisionManager& collision_manager);
 
-
-    void revive(Vector2D new_position);
-
     //------- Overrided Methods --------
 
     void update_body() override;

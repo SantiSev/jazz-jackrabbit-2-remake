@@ -15,8 +15,8 @@
 
 // Player config
 #define NONE 0
-#define MAX_HEALTH 1000
-#define REVIVE_COOLDOWN 10
+#define MAX_HEALTH 100
+#define REVIVE_COOLDOWN 1000
 #define INTOXICATON_COOLDOWN 4
 #define SPECIAL_COOLDOWN 3
 #define DEFAULT_SPEED_Y 10
@@ -36,7 +36,7 @@ protected:
     uint8_t state = STATE_IDLE_RIGHT;  // estado del personaje TODO: cambiar a enum
 
     // game cooldowns
-    size_t revive_cooldown;
+    int revive_cooldown;
 
     // movement logic
     bool on_floor = true;
@@ -60,24 +60,15 @@ public:
     uint8_t get_state() const;
     bool is_dead() const;
 
-    //------- Setters --------
-
-    void set_id(size_t new_id);
-    void set_health(size_t health);
-    void set_character(const character_t& new_character);
-    void set_state(uint8_t new_state);
-    void set_revival_cooldown(size_t new_cooldown);
-
     //------- Health Methods --------
 
-    void take_damage(size_t susbstract_health);
-    void increase_health(size_t add_health);
+    virtual void take_damage(size_t susbstract_health);
+    virtual void increase_health(size_t add_health);
 
     //------- Revive Methods --------
 
-    void decrease_revive_cooldown();
-    bool can_revive() const;
-    void reset_revive_cooldown();
+    virtual void revive(Vector2D new_position);
+    bool try_revive();
 
     //------- Movement Methods --------
 
@@ -86,12 +77,10 @@ public:
     int get_direction() const;
     bool is_doing_action_state() const;
 
-    void virtual move_left();
-    void virtual move_right();
-    void virtual jump();
-    void virtual knockback(int force);
-
-    void revive(Vector2D new_position);
+    virtual void move_left();
+    virtual void move_right();
+    virtual void jump();
+    virtual void knockback(int force);
 };
 
 

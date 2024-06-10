@@ -27,26 +27,6 @@ uint8_t CharacterBody::get_state() const { return state; }
 
 bool CharacterBody::is_dead() const { return health == 0; }
 
-//------- Setters --------
-
-void CharacterBody::set_id(size_t new_id) { this->id = new_id; }
-
-void CharacterBody::set_health(const size_t new_health) {
-    this->health = new_health;
-    if (new_health == 0)
-        set_active_status(false);
-}
-
-void CharacterBody::set_character(const character_t& new_character) {
-    this->character_reference = new_character;
-}
-
-void CharacterBody::set_state(const uint8_t new_state) { this->state = new_state; }
-
-void CharacterBody::set_revival_cooldown(const size_t new_cooldown) {
-    this->revive_cooldown = new_cooldown;
-}
-
 // ------- Health Methods --------
 
 void CharacterBody::take_damage(size_t susbstract_health) {
@@ -70,12 +50,28 @@ void CharacterBody::increase_health(size_t add_health) {
 
 // ------- Revive Methods --------
 
-void CharacterBody::decrease_revive_cooldown() { this->revive_cooldown--; }
+bool CharacterBody::try_revive() {
 
-bool CharacterBody::can_revive() const { return (is_active_object() && revive_cooldown == NONE); }
+    if (!is_dead()) {
+        std::cout << "Character is not dead" << std::endl;
+        return false;
+    }
 
-void CharacterBody::reset_revive_cooldown() { this->revive_cooldown = REVIVE_COOLDOWN; }
+    if (revive_cooldown == NONE && !is_active_object()) {
+        set_active_status(true);
+        return true;
+    } else {
+        this->revive_cooldown--;
+        return false;
+    }
+}
 
+void CharacterBody::revive(Vector2D new_position) {
+    this->health = MAX_HEALTH;
+    this->revive_cooldown = REVIVE_COOLDOWN;
+    this->state = STATE_IDLE_RIGHT;
+    position = new_position;
+}
 
 // ------- Movement Methods --------
 
@@ -129,7 +125,6 @@ void CharacterBody::handle_colision(CollisionObject* other) {
 
     CollisionFace face = is_touching(other);
 
-    // cast to Collectable
     Collectable* collectable = dynamic_cast<Collectable*>(other);
 
     if (!collectable) {  // if its a collectable, i want to go through it without stopping my

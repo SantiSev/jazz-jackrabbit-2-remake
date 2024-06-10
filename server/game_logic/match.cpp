@@ -149,7 +149,6 @@ void Match::add_player_to_game(const std::string& player_name, const character_t
     Vector2D pos = select_player_spawn_point();
     auto new_player = std::make_shared<Player>(client_id, player_name, character, pos.x, pos.y,
                                                collision_manager);
-    new_player->set_id(players_connected);  // todo integrar a player
     collision_manager.track_dynamic_body(new_player);
     players.push_back(new_player);
 }

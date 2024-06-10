@@ -152,6 +152,15 @@ void CollisionManager::remove_inactive_bodies() {
     }
 }
 
+void CollisionManager::iterateDynamicBodies(
+        std::function<void(std::shared_ptr<DynamicBody>&)> func) {
+    for (auto& bodyTuple: dynamic_bodies) {
+        auto& body = std::get<0>(bodyTuple);
+        func(body);
+    }
+}
+
+
 int CollisionManager::get_grid_width() const { return grid_width; }
 
 int CollisionManager::get_grid_height() const { return grid_height; }

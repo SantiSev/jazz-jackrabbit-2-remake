@@ -41,7 +41,7 @@ public:
         gun_rect.draw(renderer);
     }
 
-    void update_color_rect() {
+    void update(int delta) override {
         color_rect.set_position(position.x, position.y);
         int gun_dir = position.x;
         if (direction == 1) {
@@ -118,7 +118,7 @@ public:
     void draw(SDL_Renderer* renderer) override { color_rect.draw(renderer); }
 
     void set_position(int x, int y) override {}
-    void update_color_rect() { color_rect.set_position(position.x, position.y); }
+    void update(int delta) override { color_rect.set_position(position.x, position.y); }
     bool is_intersecting(SDL_Point& point) const override { return false; }
     bool is_intersecting(SDL_Rect& rect) const override { return false; }
 };
@@ -137,7 +137,7 @@ public:
     void draw(SDL_Renderer* renderer) override { color_rect.draw(renderer); }
 
     void set_position(int x, int y) override {}
-    void update_color_rect() { color_rect.set_position(position.x, position.y); }
+    void update(int delta) override { color_rect.set_position(position.x, position.y); }
     bool is_intersecting(SDL_Point& point) const override { return false; }
     bool is_intersecting(SDL_Rect& rect) const override { return false; }
 };
@@ -158,7 +158,7 @@ public:
         this->color_rect = engine::ColorRect(color, enemy_cube);
     }
 
-    void update_color_rect() { color_rect.set_position(position.x, position.y); }
+    void update(int delta) override { color_rect.set_position(position.x, position.y); }
     void set_position(int x, int y) override {}
     bool is_intersecting(SDL_Point& point) const override { return false; }
     bool is_intersecting(SDL_Rect& rect) const override { return false; }
@@ -203,6 +203,7 @@ int main() {
     collision_manager.track_dynamic_body(enemy);
     collision_manager.track_dynamic_body(treasure);
     collision_manager.track_dynamic_body(ammo);
+
     collision_manager.add_object(floor);
     collision_manager.add_object(roof);
     collision_manager.add_object(platform_1);
@@ -228,18 +229,19 @@ int main() {
         collision_manager.update();
         collision_manager.remove_inactive_bodies();
 
-        player->update_color_rect();
+        // itereate the dynamic bodies and update the color rect
 
-        if (!enemy->is_dead()) {
-            enemy->update_color_rect();
-        }
+        collision_manager.iterateDynamicBodies([](std::shared_ptr<DynamicBody>& body) {
+            auto canvasBody = std::dynamic_pointer_cast<engine::CanvasObject>(body);
+            if (canvasBody && body->is_active_object()) {
 
-        if (!ammo->is_collected()) {
-            ammo->update_color_rect();
-        }
+                canvasBody->update(1);
+            }
+        });
 
-        if (!treasure->is_collected()) {
-            treasure->update_color_rect();
+        if (enemy->try_revive()) {
+            enemy->revive(enemy->spawn_position);
+            collision_manager.track_dynamic_body(enemy);
         }
 
 
@@ -251,21 +253,14 @@ int main() {
         }
         window.clear();
 
-        if (!enemy->is_dead()) {
-            enemy->draw(renderer);
-        }
+        collision_manager.iterateDynamicBodies([renderer](std::shared_ptr<DynamicBody>& body) {
+            auto canvasBody = std::dynamic_pointer_cast<engine::CanvasObject>(body);
+            if (canvasBody && body->is_active_object()) {
 
-        if (!ammo->is_collected()) {
-            ammo->draw(renderer);
-        }
+                canvasBody->draw(renderer);
+            }
+        });
 
-        if (!treasure->is_collected()) {
-            treasure->draw(renderer);
-        }
-
-
-        // Draw
-        player->draw(renderer);
         floor->draw(renderer);
         roof->draw(renderer);
         platform_1->draw(renderer);
@@ -296,6 +291,7 @@ int main() {
         }
 
         player->print_info();
+        enemy->print_info();
     }
     std::cout << "Exiting game..." << std::endl;
 

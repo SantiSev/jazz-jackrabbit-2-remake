@@ -17,10 +17,11 @@ private:
     int bullet_counter = 0;
 
 protected:
-    size_t weapon_id = 0;
+    size_t weapon_id = 0;  // TODO CHANGE TO UINT8
     int weapon_damage = 0;
     size_t ammo = 0;
     size_t max_ammo = 0;
+
     Player& player_owner;
     int shoot_rate = 10;
     CollisionManager& collision_manager;  // the weapon creates bullets and sends them to the

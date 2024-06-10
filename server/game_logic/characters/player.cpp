@@ -58,7 +58,6 @@ void Player::reload_weapon(size_t ammo_amount, size_t weapon_id) {
     this->weapons[weapon_id]->add_ammo(ammo_amount);
 }
 
-
 void Player::shoot_selected_weapon() { weapons[selected_weapon]->shoot(); }
 
 void Player::select_next_weapon() {
@@ -101,9 +100,9 @@ void Player::move_left() {
     velocity.x = -DEFAULT_SPEED_X;
     if (is_on_floor()) {
         if (is_player_intoxicated()) {
-            set_state(STATE_INTOXICATED_MOV_LEFT);
+            state = STATE_INTOXICATED_MOV_LEFT;
         } else {
-            set_state(STATE_MOVING_LEFT);
+            state = STATE_MOVING_LEFT;
         }
     }
 }
@@ -118,9 +117,9 @@ void Player::move_right() {
     velocity.x = DEFAULT_SPEED_X;
     if (is_on_floor()) {
         if (is_player_intoxicated()) {
-            set_state(STATE_INTOXICATED_MOV_RIGHT);
+            state = STATE_INTOXICATED_MOV_RIGHT;
         } else {
-            set_state(STATE_MOVING_RIGHT);
+            state = STATE_MOVING_RIGHT;
         }
     }
 }
@@ -132,22 +131,20 @@ void Player::jump() {
         velocity.y = -JUMP_SPEED;
     }
     if (is_facing_right()) {
-        set_state(STATE_JUMPING_RIGHT);
+        state = STATE_JUMPING_RIGHT;
     } else {
-        set_state(STATE_JUMPING_LEFT);
+        state = STATE_JUMPING_LEFT;
     }
 }
 
 //------- Game Methods --------
 
-void Player::update_status(Vector2D spawn_point) {
+void Player::update_status(Vector2D spawn_point) {  // todo check if its needed
+
     if (is_dead()) {
-        if (can_revive()) {
-            revive(spawn_point);
-        } else {
-            decrease_revive_cooldown();
-        }
+        return;
     }
+
     if (is_player_intoxicated()) {
         decrease_intoxication_cooldown();
         if (get_intoxication_cooldown() == NONE) {
@@ -159,18 +156,17 @@ void Player::update_status(Vector2D spawn_point) {
     }
     if (!is_dead() && get_health() == NONE) {
         velocity = Vector2D(0, 0);
-        set_state(STATE_DEAD);
-        reset_revive_cooldown();
+        state = STATE_DEAD;
     }
     if (is_on_floor() && (get_state() == STATE_FALLING)) {
         if (is_facing_right()) {
-            set_state(STATE_IDLE_RIGHT);
+            state = STATE_IDLE_RIGHT;
         } else {
-            set_state(STATE_IDLE_LEFT);
+            state = STATE_IDLE_LEFT;
         }
     }
     if (!is_on_floor() && (velocity.y > NONE) && !is_doing_action_state()) {
-        set_state(STATE_FALLING);
+        state = STATE_FALLING;
     }
 }
 
@@ -197,6 +193,7 @@ void Player::update_body() {
         if (velocity.x == 0) {
             is_knocked_back = false;
         }
+        state = STATE_DAMAGED;
     }
 
     for (auto& weapon: weapons) {
@@ -234,8 +231,8 @@ void Player::knockback(int force) {
     is_knocked_back = true;
 }
 
+
 void Player::print_info() {
-    // also print current time
     std::cout << "--------------------------------" << std::endl;
     std::cout << "| Position: " << position.x << " , " << position.y << " |" << std::endl;
     std::cout << "| Velocity: " << velocity.x << " , " << velocity.y << " |" << std::endl;
@@ -255,6 +252,7 @@ void Player::execute_command(command_t command) {
     if (is_dead()) {
         return;
     }
+
     switch (command) {
         case MOVE_LEFT:
             move_left();
@@ -265,13 +263,13 @@ void Player::execute_command(command_t command) {
         case MOVE_LEFT_FAST:
             if (is_on_floor()) {
                 // player.move_left_fast();
-                set_state(STATE_SPRINTING_LEFT);
+                state = STATE_SPRINTING_LEFT;
             }
             break;
         case MOVE_RIGHT_FAST:
             if (is_on_floor()) {
                 // player.move_right_fast();
-                set_state(STATE_SPRINTING_RIGHT);
+                state = STATE_SPRINTING_RIGHT;
             }
             break;
         case JUMP:
@@ -283,9 +281,9 @@ void Player::execute_command(command_t command) {
             }
             //            player.especial_attack();
             if (is_facing_right()) {
-                set_state(STATE_SPECIAL_RIGHT);
+                state = STATE_SPECIAL_RIGHT;
             } else {
-                set_state(STATE_SPECIAL_LEFT);
+                state = STATE_SPECIAL_LEFT;
             }
             reset_special_attack();
             break;
@@ -298,9 +296,9 @@ void Player::execute_command(command_t command) {
             //         bullets.emplace_back(bullet);
 
             //         if (is_facing_right()) {
-            //             set_state(STATE_SHOOTING_RIGHT);
+            //             state = STATE_SHOOTING_RIGHT);
             //         } else {
-            //             set_state(STATE_SHOOTING_LEFT);
+            //             state = STATE_SHOOTING_LEFT);
             //         }
             //     }
             //     break;

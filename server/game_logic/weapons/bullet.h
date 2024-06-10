@@ -15,6 +15,8 @@ class Player;
 class Bullet: public DynamicBody, public engine::CanvasObject {
 private:
     uint64_t id;
+    uint8_t direction;
+    uint8_t type;
     Player& player_owner;
     int bullet_damage = 1;
     size_t life_span = 25;

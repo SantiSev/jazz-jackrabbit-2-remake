@@ -2,6 +2,7 @@
 #ifndef COLLISION_MANAGER_H
 #define COLLISION_MANAGER_H
 
+#include <functional>
 #include <memory>
 #include <tuple>
 #include <vector>
@@ -29,6 +30,9 @@ private:
 
 public:
     std::vector<std::tuple<std::shared_ptr<DynamicBody>, Vector2D>> dynamic_bodies;
+
+    void iterateDynamicBodies(std::function<void(std::shared_ptr<DynamicBody>&)> func);
+
     CollisionManager(int levelWidth, int levelHeight);
     std::shared_ptr<CollisionObject> get_collision_object_at(int x, int y) const;
     void add_object(std::shared_ptr<CollisionObject> obj);

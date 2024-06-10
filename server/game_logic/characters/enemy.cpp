@@ -30,7 +30,7 @@ void Enemy::update_body() {
         position += velocity;
     } else {
         velocity = Vector2D(0, 0);
-        set_state(STATE_DEAD);
+        state = STATE_DEAD;
     }
 }
 
@@ -69,6 +69,17 @@ void Enemy::handle_colision(CollisionObject* other) {
                 break;
         }
     }
+}
+
+void Enemy::print_info() {
+    std::cout << "--------------------------------" << std::endl;
+    std::cout << "| Enemy: " << id << std::endl;
+    std::cout << "| Position: " << position.x << " , " << position.y << " |" << std::endl;
+    std::cout << "| Velocity: " << velocity.x << " , " << velocity.y << " |" << std::endl;
+    std::cout << "| Health: " << health << " |" << std::endl;
+    std::cout << "| Active: " << is_active_object() << " |" << std::endl;
+    std::cout << "| Revive Cooldown: " << revive_cooldown << std::endl;
+    std::cout << "| Spawn Position: " << spawn_position.x << " , " << spawn_position.y << std::endl;
 }
 
 //------- Movement Methods --------
