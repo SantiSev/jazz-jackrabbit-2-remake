@@ -64,7 +64,7 @@ ServerThreadManager* MatchesManager::get_client_by_id(size_t id) {
 void MatchesManager::join_match(const JoinMatchDTO& dto) {
     auto it = matches.find(dto.id_match);
     if (it != matches.end()) {
-        it->second->add_client_to_match(get_client_by_id(dto.id_match), "pepo_joineado",
+        it->second->add_client_to_match(get_client_by_id(dto.id_client), "pepo_joineado",
                                         dto.player_character);
         send_client_succesful_connect(dto.id_client);
     }
