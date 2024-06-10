@@ -19,8 +19,6 @@ CharacterBody::CharacterBody(size_t id, const character_t& character, int x, int
 
 size_t CharacterBody::get_id() const { return id; }
 
-size_t CharacterBody::get_health() const { return health; }
-
 character_t CharacterBody::get_character() const { return character_reference; }
 
 uint8_t CharacterBody::get_state() const { return state; }
@@ -29,22 +27,25 @@ bool CharacterBody::is_dead() const { return health == 0; }
 
 // ------- Health Methods --------
 
-void CharacterBody::take_damage(size_t susbstract_health) {
-    if (((int)health - (int)susbstract_health) < NONE) {
-        set_active_status(false);
+void CharacterBody::take_damage(int damage) {
+
+    health -= damage;
+
+    if (health < NONE) {
         health = NONE;
         state = STATE_DEAD;
+        set_active_status(false);
     } else {
-        health -= susbstract_health;
         state = STATE_DAMAGED;
     }
 }
 
-void CharacterBody::increase_health(size_t add_health) {
-    if (((int)this->health + (int)add_health) > MAX_HEALTH) {
-        this->health = MAX_HEALTH;
-    } else {
-        this->health += add_health;
+void CharacterBody::increase_health(int add_health) {
+
+    health += add_health;
+
+    if (health > MAX_HEALTH) {
+        health = MAX_HEALTH;
     }
 }
 
@@ -53,7 +54,6 @@ void CharacterBody::increase_health(size_t add_health) {
 bool CharacterBody::try_revive() {
 
     if (!is_dead()) {
-        std::cout << "Character is not dead" << std::endl;
         return false;
     }
 
@@ -81,6 +81,7 @@ bool CharacterBody::is_facing_right() const { return direction == RIGHT_DIR; }
 
 int CharacterBody::get_direction() const { return direction; }
 
+// Avoid adding falling animation   || Agus es un bo
 bool CharacterBody::is_doing_action_state() const {
     return (state == STATE_SHOOTING_LEFT || state == STATE_SHOOTING_RIGHT ||
             state == STATE_SPECIAL_RIGHT || state == STATE_SPECIAL_LEFT);
@@ -113,6 +114,12 @@ void CharacterBody::knockback(int force) { velocity.x += -direction * force; }
 void CharacterBody::update_body() {
     if (!on_floor) {
         velocity.y += GRAVITY;
+
+        if (velocity.y > 0 && !is_doing_action_state()) {
+            state = STATE_FALLING;
+        } else {
+            state = is_facing_right() ? STATE_JUMPING_RIGHT : STATE_JUMPING_LEFT;
+        }
 
     } else {
         velocity.x -= FRICCTION * direction;

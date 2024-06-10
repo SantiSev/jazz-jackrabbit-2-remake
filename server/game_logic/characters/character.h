@@ -29,16 +29,14 @@
 
 class CharacterBody: public DynamicBody {
 protected:
-    // game info
-    size_t id;
-    size_t health;
+    // dto info
+    uint16_t id;
     character_t character_reference;
     uint8_t state = STATE_IDLE_RIGHT;  // estado del personaje TODO: cambiar a enum
 
-    // game cooldowns
+    // game logic info
+    int health;
     int revive_cooldown;
-
-    // movement logic
     bool on_floor = true;
     int direction = RIGHT_DIR;
 
@@ -55,15 +53,14 @@ public:
     //------- Getters --------
 
     size_t get_id() const;
-    size_t get_health() const;
     character_t get_character() const;
     uint8_t get_state() const;
     bool is_dead() const;
 
     //------- Health Methods --------
 
-    virtual void take_damage(size_t susbstract_health);
-    virtual void increase_health(size_t add_health);
+    virtual void take_damage(int damage);
+    virtual void increase_health(int add_health);
 
     //------- Revive Methods --------
 
