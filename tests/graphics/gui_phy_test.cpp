@@ -8,6 +8,7 @@
 #include "../../server/game_logic/characters/enemy.h"
 #include "../../server/game_logic/characters/player.h"
 #include "../../server/game_logic/platforms/box_platform.h"
+#include "../../server/game_logic/weapons/bullet.h"
 
 class PlayerTest: public Player, public engine::CanvasObject {
 
@@ -59,6 +60,12 @@ public:
                 break;
             case SDLK_w:
                 jump();
+                break;
+            case SDLK_SPACE:
+                shoot_selected_weapon();
+                break;
+            case SDLK_j:
+                select_next_weapon();
                 break;
             default:
                 velocity.x = 0;
@@ -132,12 +139,11 @@ int main() {
     SDL_Color color_3 = {255, 0, 100, 255};
     auto platform_2 = std::make_shared<PlatformTest>(500, 300, 300, 64, color_3);
 
-
     SDL_Color color_wall = {200, 210, 255, 255};
     auto wall_1 = std::make_shared<PlatformTest>(1000, 100, 100, 750, color_wall);
 
 
-    auto player = std::make_shared<PlayerTest>(1, "JAZZ_CHARACTER", 1, 100, 200, collision_manager);
+    auto player = std::make_shared<PlayerTest>(1, "JAZZ_CHARACTER", 1, 100, 450, collision_manager);
 
     auto enemy = std::make_shared<EnemyTest>(2, JAZZ_CHARACTER, 10, 100, 1000, 500, 800 - 32 - 50);
 
@@ -166,8 +172,14 @@ int main() {
 
         // Updates
         collision_manager.update();
+        collision_manager.remove_inactive_bodies();
+
         player->update_color_rect();
-        enemy->update_color_rect();
+
+        if (!enemy->is_dead()) {
+            enemy->update_color_rect();
+        }
+
 
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -177,14 +189,34 @@ int main() {
         }
         window.clear();
 
+        if (!enemy->is_dead()) {
+            enemy->draw(renderer);
+        }
+
+
         // Draw
         player->draw(renderer);
-        enemy->draw(renderer);
         floor->draw(renderer);
         roof->draw(renderer);
         platform_1->draw(renderer);
         platform_2->draw(renderer);
         wall_1->draw(renderer);
+
+
+        for (auto& [dynamic_body, position]: collision_manager.dynamic_bodies) {
+            // cast it o bullet
+            auto bullet = std::dynamic_pointer_cast<Bullet>(dynamic_body);
+
+            if (bullet) {
+
+                if (bullet->is_active_object()) {
+
+                    bullet->draw(renderer);
+                } else {
+                    collision_manager.remove_object(bullet);
+                }
+            }
+        }
 
         window.render();
 

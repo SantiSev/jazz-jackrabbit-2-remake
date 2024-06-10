@@ -44,6 +44,7 @@ public:
     void remove_object(std::shared_ptr<CollisionObject> obj);
     void update_object(std::shared_ptr<CollisionObject> obj);
     void update();
+    void remove_inactive_bodies();
     int get_grid_width() const;
     int get_grid_height() const;
 

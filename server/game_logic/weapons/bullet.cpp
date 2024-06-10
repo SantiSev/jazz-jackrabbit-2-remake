@@ -16,10 +16,15 @@ Bullet::Bullet(Player& player_owner, const int& bullet_damage, const size_t& bul
         bullet_damage(bullet_damage),
         life_span(BULLET_LIFE_SPAN),
         bullet_id(bullet_id) {
+
     position.y = player_owner.get_bottom_hitbox_side() - player_owner.get_hitbox_height() / 2;
     position.x = player_owner.is_facing_right() ?
                          player_owner.get_right_hitbox_side() + OFFSET_BULLET_X :
                          player_owner.get_left_hitbox_side() + OFFSET_BULLET_X;
+
+    SDL_Rect bullet_cube = {position.x, position.y, BULLET_WIDTH, BULLET_HEIGHT};
+    SDL_Color color = {255, 165, 0, 0};
+    this->color_rect = engine::ColorRect(color, bullet_cube);
 }
 
 size_t Bullet::get_life_span() const { return life_span; }
@@ -27,6 +32,9 @@ size_t Bullet::get_life_span() const { return life_span; }
 void Bullet::update_db() {
 
     if (is_active_object()) {
+
+        update_color_rect();
+
         life_span--;
         if (life_span == 0) {
             set_active_status(false);
@@ -38,12 +46,21 @@ void Bullet::update_db() {
 
 void Bullet::handle_colision(CollisionObject* other) {
 
+
     if (is_touching_bool(other)) {
+
         set_active_status(false);
 
         CharacterBody* character = dynamic_cast<CharacterBody*>(other);
 
         if (character) {
+
+            if (character->get_id() == player_owner.get_id()) {  // avoid shooting myself
+                set_active_status(true);
+                return;
+            }
+
+
             character->take_damage(bullet_damage);
             player_owner.add_points(BULLET_POINTS);
             if (character->is_dead()) {

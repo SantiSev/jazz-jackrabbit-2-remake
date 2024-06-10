@@ -213,10 +213,10 @@ void Player::handle_colision(CollisionObject* other) {
 
     CollisionFace face = is_touching(other);
 
-    // cast to Collectable
     Collectable* collectable = dynamic_cast<Collectable*>(other);
+    Bullet* bullet = dynamic_cast<Bullet*>(other);
 
-    if (!collectable && face != CollisionFace::NONE) {
+    if (!collectable && !bullet && face != CollisionFace::NONE) {
 
         if (face == CollisionFace::TOP) {
             velocity.y = 10;
@@ -244,7 +244,8 @@ void Player::print_info() {
     std::cout << "| Velocity: " << velocity.x << " , " << velocity.y << " |" << std::endl;
     std::cout << "| Health: " << health << " |" << std::endl;
     std::cout << "| on_floor: " << on_floor << " |" << std::endl;
-    std::cout << "| is_knocked_back " << is_knocked_back << " |" << std::endl;
+    std::cout << "| weapon: " << selected_weapon << " |" << std::endl;
+    std::cout << "| ammo: " << weapons[selected_weapon]->get_ammo() << " |" << std::endl;
 }
 
 

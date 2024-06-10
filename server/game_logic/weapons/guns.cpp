@@ -24,7 +24,7 @@ Constructor for guns:
  * Little Bullet speed
  */
 GunOne::GunOne(size_t weapon_id, Player& player_owner, CollisionManager& collision_manager):
-        Weapon(weapon_id, player_owner, collision_manager, 5, 100, 60, 100) {}
+        Weapon(weapon_id, player_owner, collision_manager, 5, 100, 6000000, 100) {}
 
 /*
  * A lot of Damage
@@ -33,7 +33,7 @@ GunOne::GunOne(size_t weapon_id, Player& player_owner, CollisionManager& collisi
  * A lot of Bullet speed
  */
 GunTwo::GunTwo(size_t weapon_id, Player& player_owner, CollisionManager& collision_manager):
-        Weapon(weapon_id, player_owner, collision_manager, 25, 25, 120, 150) {}
+        Weapon(weapon_id, player_owner, collision_manager, 25, 25, 1200000, 150) {}
 
 /*
  * A lot of Damage
@@ -42,7 +42,7 @@ GunTwo::GunTwo(size_t weapon_id, Player& player_owner, CollisionManager& collisi
  * A lot of Bullet speed
  */
 GunThree::GunThree(size_t weapon_id, Player& player_owner, CollisionManager& collision_manager):
-        Weapon(weapon_id, player_owner, collision_manager, 50, 10, 60, 200) {}
+        Weapon(weapon_id, player_owner, collision_manager, 50, 10, 500000, 200) {}
 
 /*
  * Default Gun
@@ -52,7 +52,7 @@ GunThree::GunThree(size_t weapon_id, Player& player_owner, CollisionManager& col
  */
 
 DefaultGun::DefaultGun(size_t weapon_id, Player& player_owner, CollisionManager& collision_manager):
-        Weapon(weapon_id, player_owner, collision_manager, 10, 0, 15, 100) {}
+        Weapon(weapon_id, player_owner, collision_manager, 10, 0, 60000, 100) {}
 
 void DefaultGun::shoot() {
 

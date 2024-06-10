@@ -128,9 +128,23 @@ void CollisionManager::update() {  // create to update specific object
             }
 
             ++it;  // Move to the next element
+        }
+    }
+}
+
+// create a method that removes all inactive objects from the grid
+// and from the dynamic_bodies vector
+// and then call this method from the update method
+
+void CollisionManager::remove_inactive_bodies() {
+    for (auto it = dynamic_bodies.begin(); it != dynamic_bodies.end();) {
+        auto& obj = std::get<0>(*it);
+
+        if (!obj->is_active_object()) {
+            remove_object_from_grid(obj, obj->position);
+            it = dynamic_bodies.erase(it);
         } else {
-            // Remove from dynamic_bodies
-            it = dynamic_bodies.erase(it);  // Erase returns a valid iterator to the next element
+            ++it;  // Move to the next element only if it wasn't erased
         }
     }
 }

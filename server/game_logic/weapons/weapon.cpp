@@ -51,6 +51,7 @@ void Weapon::shoot() {
 
     // TODOD --> get list of bullets reference from player
     auto bullet = std::make_shared<Bullet>(player_owner, weapon_damage, 0);
+
     collision_manager.track_dynamic_body(bullet);
 }
 
