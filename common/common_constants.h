@@ -9,7 +9,7 @@
 // Game Settings
 const uint8_t MAX_MATCHES_TO_CREATE = 16;
 const size_t MAX_PLAYERS =
-        1;  // The match doesn't start without this many players connected to the match.
+        2;  // The match doesn't start without this many players connected to the match.
 const size_t MAX_ENEMIES = 6;
 #define PLAYER_KILL_POINTS 15
 #define ENEMY_KILL_POINTS 5

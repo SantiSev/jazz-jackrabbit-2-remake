@@ -83,6 +83,22 @@ void MatchScene::update_objects(int delta_time) {
             uint16_t x = game_state->players[i].x_pos;
             uint16_t y = game_state->players[i].y_pos;
 
+            if (players.find(id) == players.end()) {
+                character_t character = (character_t)game_state->players[i].character;
+                auto texture =
+                        resource_pool->get_texture(map_character_enum_to_string.at(character));
+                auto animations =
+                        resource_pool->get_yaml(map_character_enum_to_string.at(character));
+
+                uint8_t state = game_state->players[i].state;
+                std::string animation_name = map_states_to_animations.at(state);
+                uint16_t x = game_state->players[i].x_pos;
+                uint16_t y = game_state->players[i].y_pos;
+
+                engine::AnimatedSprite player_sprite(texture, animations, animation_name, x, y);
+                players[game_state->players[i].id] =
+                        std::make_unique<Player>(std::move(player_sprite), message_handler);
+            }
             players.at(id)->set_position(x, y);
             players.at(id)->set_animation(animation_name);
 #ifdef LOG_VERBOSE
