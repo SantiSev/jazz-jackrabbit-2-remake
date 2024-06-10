@@ -10,9 +10,11 @@
 
 #include "../../common/assets.h"
 
-Match::Match(const map_list_t& map_selected, size_t required_players_setting):
+Match::Match(const map_list_t& map_selected, size_t required_players_setting,
+             std::shared_ptr<Queue<std::shared_ptr<Message>>>& lobby_queue):
         online(true),
         event_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()),
+        lobby_queue(lobby_queue),
         message_handler(*this),
         players({}),
         enemies({}),
@@ -33,15 +35,15 @@ void Match::run() {
         //            start..."
         //                      << std::endl;
         //        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        //        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
         auto startTime = std::chrono::system_clock::now();
         auto runTime = startTime;
 
         const double FPSMAX = 1000.0 / 60.0;
-        std::shared_ptr<Message> next_message;
         std::cout << "Match map: " << map_list_to_string.at(map) << " Starting..." << std::endl;
         while (online) {
+            std::shared_ptr<Message> message;
             auto endTime = std::chrono::system_clock::now();
             std::chrono::duration<double, std::milli> delta = endTime - startTime;
             startTime = endTime;
@@ -49,9 +51,9 @@ void Match::run() {
             auto frameStart = std::chrono::system_clock::now();
 
             size_t events = 0;
-            while (event_queue->try_pop(next_message) && events < MAX_EVENTS_PER_LOOP) {
+            while (event_queue->try_pop(message) && events < MAX_EVENTS_PER_LOOP) {
                 events++;
-                next_message->run(message_handler);
+                message->run(message_handler);
             }
 
             patrol_move_enemies();
@@ -77,7 +79,7 @@ void Match::run() {
                         std::chrono::milliseconds(static_cast<int>(FPSMAX - delta.count())));
             }
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        //        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     } catch (const std::exception& err) {
         if (online) {
             std::cerr << "An exception was caught in gameloop: " << err.what() << "\n";
@@ -196,17 +198,6 @@ std::vector<size_t> Match::get_clients_ids() {
     std::transform(clients.begin(), clients.end(), std::back_inserter(ids),
                    [](auto& client) { return client->get_client_id(); });
     return ids;
-}
-
-void Match::stop() {
-    online = false;
-    collision_manager.clear();
-    //    event_queue->close();
-    send_end_message_to_players();
-    //    for (auto& client: clients) {
-    //        client->get_sender_queue()->close();
-    //    }
-    client_monitor.remove_all_queues();
 }
 
 void Match::run_command(const CommandDTO& dto) {
@@ -409,10 +400,55 @@ void Match::load_spawn_points() {
     }
 }
 
+
+ServerThreadManager& Match::get_client_by_id(id_client_t id_client) {
+    auto it =
+            std::find_if(clients.begin(), clients.end(), [id_client](ServerThreadManager* client) {
+                return client->get_client_id() == id_client;
+            });
+
+    if (it != clients.end()) {
+        return **it;  // Dereferenciamos el iterador y el puntero
+    } else {
+        throw std::runtime_error("Client with the given ID not found in match.");
+    }
+}
+
+void Match::stop() {
+    online = false;
+    std::cout << "stopping match " << std::endl;
+    collision_manager.clear();
+    std::cout << "collision manager cleared" << std::endl;
+    //    event_queue->close();
+    send_end_message_to_players();
+    //    for (auto& client: clients) {
+    //        client->get_sender_queue()->close();
+    //    }
+    client_monitor.remove_all_queues();
+    clients.clear();
+    std::cout << "clients cleared in match" << std::endl;
+}
+
 void Match::delete_disconnected_player(id_client_t id_client) {
     for (auto player = players.begin(); player != players.end(); ++player) {
         if (id_client == (*player)->get_id()) {
+            CloseConnectionDTO dto{id_client};
+            client_monitor.removeQueue(get_client_by_id(id_client).get_sender_queue());
+            auto message = std::make_shared<CloseConnectionMessage>(dto);
+            lobby_queue->try_push(message);
+            collision_manager.remove_object(*player);
             players.erase(player);
+            erase_client_from_list(id_client);
+            std::cout << "Player " << id_client << " disconnected from match " << std::endl;
+            break;
+        }
+    }
+}
+
+void Match::erase_client_from_list(id_client_t id_client) {
+    for (auto it = clients.begin(); it != clients.end(); ++it) {
+        if ((*it)->get_client_id() == id_client) {
+            clients.erase(it);
             break;
         }
     }

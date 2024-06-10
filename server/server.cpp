@@ -13,13 +13,12 @@ void Server::run() {
                 break;
             }
         }
+        accepter->stop();
+        accepter->join();
+        delete accepter;
     } catch (const std::exception& err) {
         std::cerr << "An exception was caught in server_class: " << err.what() << "\n";
     }
 }
 
-Server::~Server() {
-    accepter->stop();
-    accepter->join();
-    delete accepter;
-}
+Server::~Server() = default;

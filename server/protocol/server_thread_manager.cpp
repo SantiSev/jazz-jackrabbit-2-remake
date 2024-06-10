@@ -32,9 +32,12 @@ void ServerThreadManager::set_sender_queue(
 void ServerThreadManager::stop() {
     sender.stop();
     receiver.stop();
+    std::cout << "sender and receiver stopped" << std::endl;
     server_protocol.force_shutdown();
+    std::cout << "protocol shutdown" << std::endl;
     sender.join();
     receiver.join();
+    std::cout << "sender and receiver joined" << std::endl;
 }
 
 void ServerThreadManager::set_client_id(const size_t& new_id) { this->client_id = new_id; }

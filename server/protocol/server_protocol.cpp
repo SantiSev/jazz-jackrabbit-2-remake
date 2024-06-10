@@ -1,5 +1,6 @@
 #include "./server_protocol.h"
 
+#include <iostream>
 #include <vector>
 
 #include <arpa/inet.h>
@@ -51,6 +52,7 @@ std::shared_ptr<RecvJoinMatchMessage> ServerProtocol::recv_join_match() {
 
 std::shared_ptr<Message> ServerProtocol::recv_message() {
     const uint16_t header = recv_two_bytes();
+    printf("El valor de header es: %u\n", header);
 
     switch (header) {
         case CLOSE_CONNECTION:

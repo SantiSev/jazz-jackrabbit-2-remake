@@ -10,7 +10,7 @@ bool ServerReceiver::is_dead() { return _keep_running; }
 
 void ServerReceiver::stop() {
     _keep_running = false;
-    queue->close();
+    //    queue->close();
 }
 
 void ServerReceiver::run() {

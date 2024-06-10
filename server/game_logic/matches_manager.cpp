@@ -12,20 +12,19 @@ MatchesManager::MatchesManager():
 
 void MatchesManager::run() {
     try {
-        std::shared_ptr<Message> client_message;
         while (online) {
-            client_message = nullptr;
+            std::shared_ptr<Message> client_message;
             check_matches_status();
 
-            while (waiting_server_queue->try_pop(client_message)) {
-                if (client_message != nullptr) {
-                    client_message->run(message_handler);
-                }
+            waiting_server_queue->try_pop(client_message);
+            if (client_message) {
+                client_message->run(message_handler);
             }
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
+        std::cout << "stopping matches" << std::endl;
         stop_all_matches();
+        std::cout << "clearing all clients" << std::endl;
         clear_all_clients();
         waiting_server_queue->close();
         std::cout << "Server Closed" << std::endl;
@@ -39,7 +38,7 @@ void MatchesManager::run() {
 
 void MatchesManager::create_new_match(const CreateGameDTO& dto) {
     matches_number++;
-    auto match = std::make_shared<Match>(dto.map_name, dto.max_players);
+    auto match = std::make_shared<Match>(dto.map_name, dto.max_players, waiting_server_queue);
     matches.insert({matches_number, match});
     match->start();
     match->add_client_to_match(get_client_by_id(dto.id_client), "jugador_1_creador",
@@ -55,9 +54,11 @@ void MatchesManager::send_client_succesful_connect(uint16_t id_client, map_list_
 }
 
 void MatchesManager::join_match(const JoinMatchDTO& dto) {
+    std::cout << "Joining match " << dto.id_match << std::endl;
     auto it = matches.find(dto.id_match);
     if (it != matches.end()) {
-        it->second->add_client_to_match(get_client_by_id(dto.id_match), "pepo_joineado",
+        std::cout << "match found to join " << std::endl;
+        it->second->add_client_to_match(get_client_by_id(dto.id_client), "pepo_joineado",
                                         dto.player_character);
         send_client_succesful_connect(dto.id_client, it->second->get_map());
     }
@@ -85,7 +86,7 @@ void MatchesManager::clear_all_clients() {
     for (auto& client: clients) {
         CloseConnectionDTO close_connection{client->get_client_id()};
         auto game_ended_message = std::make_shared<CloseConnectionMessage>(close_connection);
-        client->get_sender_queue()->push(game_ended_message);
+        client->get_sender_queue()->try_push(game_ended_message);
         client->stop();
         delete client;
     }
@@ -113,7 +114,11 @@ void MatchesManager::send_match_lists(RequestActiveGamesDTO dto) {
 void MatchesManager::delete_disconnected_client(id_client_t id_client) {
     for (auto client = clients.begin(); client != clients.end(); ++client) {
         if (id_client == (*client)->get_client_id()) {
+            std::cout << "Stopping client " << id_client << " in lobby." << std::endl;
+            (*client)->stop();
+            delete *client;
             clients.erase(client);
+            std::cout << "Client " << id_client << " disconnected from lobby." << std::endl;
             break;
         }
     }
