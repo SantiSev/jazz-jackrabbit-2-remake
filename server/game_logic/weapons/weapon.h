@@ -40,6 +40,9 @@ public:
     size_t get_weapon_id() const;
     size_t get_ammo() const;
 
+    bool shoot_ready() const { return can_shoot; }
+    int shoot_rate_status() const { return shoot_rate_counter; }
+
     void update_shoot_rate();
 
     virtual void shoot();

@@ -226,6 +226,7 @@ GameStateDTO Match::create_actual_snapshot() {
         game_state.bullets[i].x_pos = bullets[i]->position.x;
         game_state.bullets[i].y_pos = bullets[i]->position.y;
         //        game_state.bullets[i].bullet_type = (uint8_t)bullets[i]->get_bullet_type();
+        //        PASAR BULLET ID
     }
 
 

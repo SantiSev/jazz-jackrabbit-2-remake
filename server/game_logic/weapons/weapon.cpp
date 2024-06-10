@@ -48,6 +48,7 @@ void Weapon::shoot() {
     }
 
     ammo--;
+    shoot_rate_counter = 0;
 
     // TODOD --> get list of bullets reference from player
     auto bullet = std::make_shared<Bullet>(player_owner, weapon_damage, 0);
@@ -56,11 +57,13 @@ void Weapon::shoot() {
 }
 
 void Weapon::update_shoot_rate() {
-    shoot_rate_counter++;
 
     if (shoot_rate_counter == shoot_rate) {
         can_shoot = true;
-        shoot_rate_counter = 0;
+
+    } else {
+        can_shoot = false;
+        shoot_rate_counter++;
     }
 }
 

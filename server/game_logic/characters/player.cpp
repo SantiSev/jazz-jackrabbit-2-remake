@@ -246,6 +246,10 @@ void Player::print_info() {
     std::cout << "| on_floor: " << on_floor << " |" << std::endl;
     std::cout << "| weapon: " << selected_weapon << " |" << std::endl;
     std::cout << "| ammo: " << weapons[selected_weapon]->get_ammo() << " |" << std::endl;
+    std::cout << "| shoot status: " << weapons[selected_weapon]->shoot_ready() << " |" << std::endl;
+    std::cout << "| shoot status: " << weapons[selected_weapon]->shoot_rate_status() << " |"
+              << std::endl;
+    std::cout << "| points: " << points << " |" << std::endl;
 }
 
 

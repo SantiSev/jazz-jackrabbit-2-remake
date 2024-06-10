@@ -59,6 +59,7 @@ void DefaultGun::shoot() {
     if (!can_shoot) {
         return;
     }
+    shoot_rate_counter = 0;
 
     // TODOD --> get list of bullets reference from player
     auto bullet = std::make_shared<Bullet>(player_owner, weapon_damage, 0);
