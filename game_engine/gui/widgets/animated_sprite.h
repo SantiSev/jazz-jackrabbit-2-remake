@@ -20,6 +20,8 @@ private:
     std::shared_ptr<Texture> texture;
     std::shared_ptr<YAML::Node> animations;
     std::string current_animation;
+    int animation_off_x;
+    int animation_off_y;
 
     SDL_Rect s_rect;
     SDL_Rect d_rect;
@@ -55,6 +57,7 @@ public:
     void update(int delta) override;
 
     void set_position(int x, int y) override;
+    void set_position_with_correction(int x, int y);
     void reverse_animation();
     void flip();
     void set_animation(const std::string& animation_name);

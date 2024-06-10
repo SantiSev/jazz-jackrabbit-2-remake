@@ -6,6 +6,8 @@ AnimatedSprite::AnimatedSprite(std::shared_ptr<Texture> texture, SDL_Rect& s_rec
                                int frames, int fps):
         texture(texture),
         animations(nullptr),
+        animation_off_x(0),
+        animation_off_y(0),
         s_rect(s_rect),
         d_rect(d_rect),
         x_start(s_rect.x),
@@ -25,13 +27,14 @@ AnimatedSprite::AnimatedSprite(std::shared_ptr<Texture> texture,
                                const std::string& animation_name, int x, int y):
         texture(texture),
         animations(animations),
+        animation_off_x(0),
+        animation_off_y(0),
         current_frame(0),
         elapsed_time(0),
         next_frame_offset(1),
         flipped(false) {
-    d_rect.x = x;
-    d_rect.y = y;
     set_animation(animation_name);
+    set_position_with_correction(x, y);
 }
 
 void AnimatedSprite::update(int delta) {
@@ -59,8 +62,29 @@ void AnimatedSprite::draw(SDL_Renderer* renderer) {
 void AnimatedSprite::next_frame() { current_frame = (current_frame + next_frame_offset) % frames; }
 
 void AnimatedSprite::set_position(int x, int y) {
-    d_rect.x = x;
-    d_rect.y = y;
+    // If no animations are set, there's no need to adjust the position
+    if (animations == nullptr) {
+        d_rect.x = x;
+        d_rect.y = y;
+        return;
+    }
+    set_position_with_correction(x, y);
+}
+
+void AnimatedSprite::set_position_with_correction(int x, int y) {
+    int corrected_x = x + animation_off_x;
+    int corrected_y = y + animation_off_y;
+
+    if (corrected_x < 0) {
+        corrected_x = 0;
+    }
+
+    if (corrected_y < 0) {
+        corrected_y = 0;
+    }
+
+    d_rect.x = corrected_x;
+    d_rect.y = corrected_y;
 }
 
 void AnimatedSprite::reverse_animation() { next_frame_offset *= -1; }
@@ -92,6 +116,9 @@ void AnimatedSprite::set_animation(const std::string& animation_name) {
     s_rect.w = animation["w"].as<int>();
     s_rect.h = animation["h"].as<int>();
 
+    animation_off_x = animation["off_x"].as<int>();
+    animation_off_y = animation["off_y"].as<int>();
+
     d_rect.h = yaml["character_height"].as<int>();
     d_rect.w = yaml["character_width"].as<int>();
 
@@ -122,6 +149,8 @@ AnimatedSprite::AnimatedSprite(AnimatedSprite&& other) noexcept:
         texture(std::move(other.texture)),
         animations(std::move(other.animations)),
         current_animation(other.current_animation),
+        animation_off_x(other.animation_off_x),
+        animation_off_y(other.animation_off_y),
         s_rect(other.s_rect),
         d_rect(other.d_rect),
         x_start(other.x_start),
@@ -139,6 +168,8 @@ AnimatedSprite& AnimatedSprite::operator=(AnimatedSprite&& other) noexcept {
     texture = std::move(other.texture);
     animations = std::move(other.animations);
     current_animation = other.current_animation;
+    animation_off_x = other.animation_off_x;
+    animation_off_y = other.animation_off_y;
     s_rect = other.s_rect;
     d_rect = other.d_rect;
     x_start = other.x_start;

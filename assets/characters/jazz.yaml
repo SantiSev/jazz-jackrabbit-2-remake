@@ -1,5 +1,6 @@
-character_width: 55
-character_height: 55
+# width and height of the hitbox
+character_width: 30
+character_height: 44
 idle_right:
     flipped: false
     frames: 26
@@ -8,6 +9,8 @@ idle_right:
     y: 55
     w: 48
     h: 48
+    off_x: -6
+    off_y: -3
 idle_left:
     flipped: true
     frames: 26
@@ -16,22 +19,48 @@ idle_left:
     y: 55
     w: 48
     h: 48
-shooting_right:
+    off_x: -6
+    off_y: -3
+moving_right:
     flipped: false
-    frames: 1
+    frames: 8
     fps: 8
-    x: 0
-    y: 16
-    w: 55
-    h: 55
-shooting_left:
+    x: 5
+    y: 291
+    w: 54
+    h: 43
+    off_x: -11
+    off_y: 1
+moving_left:
     flipped: true
-    frames: 1
+    frames: 8
     fps: 8
-    x: 0
-    y: 16
-    w: 55
-    h: 55
+    x: 5
+    y: 291
+    w: 54
+    h: 43
+    off_x: -11
+    off_y: 1
+spriting_right:
+    flipped: false
+    frames: 4
+    fps: 8
+    x: 10
+    y: 360
+    w: 67
+    h: 38
+    off_x: -17
+    off_y: 6
+spriting_left:
+    flipped: true
+    frames: 4
+    fps: 8
+    x: 10
+    y: 360
+    w: 67
+    h: 38
+    off_x: -17
+    off_y: 6
 jumping_right:
     flipped: false
     frames: 9
@@ -40,6 +69,8 @@ jumping_right:
     y: 444
     w: 54
     h: 48
+    off_x: -12
+    off_y: -4
 jumping_left:
     flipped: true
     frames: 9
@@ -48,38 +79,8 @@ jumping_left:
     y: 444
     w: 54
     h: 48
-spriting_right:
-    flipped: false
-    frames: 1
-    fps: 8
-    x: 0
-    y: 48
-    w: 55
-    h: 55
-spriting_left:
-    flipped: true
-    frames: 1
-    fps: 8
-    x: 0
-    y: 48
-    w: 55
-    h: 55
-moving_right:
-    flipped: false
-    frames: 4
-    fps: 8
-    x: 0
-    y: 64
-    w: 55
-    h: 55
-moving_left:
-    flipped: true
-    frames: 4
-    fps: 8
-    x: 0
-    y: 64
-    w: 55
-    h: 55
+    off_x: -12
+    off_y: -4
 falling:
     flipped: false
     frames: 3
@@ -88,59 +89,95 @@ falling:
     y: 516
     w: 57
     h: 46
+    off_x: -12
+    off_y: -2
+shooting_right:
+    flipped: false
+    frames: 2
+    fps: 8
+    x: 4
+    y: 145
+    w: 48
+    h: 44
+    off_x: -7
+    off_y: -3
+shooting_left:
+    flipped: true
+    frames: 2
+    fps: 8
+    x: 4
+    y: 145
+    w: 48
+    h: 44
+    off_x: -7
+    off_y: -3
+special_right:
+    flipped: false
+    frames: 1
+    fps: 1
+    x: 0
+    y: 0
+    w: 0
+    h: 0
+    off_x: 0
+    off_y: 0
+special_left:
+    flipped: true
+    frames: 1
+    fps: 1
+    x: 0
+    y: 0
+    w: 0
+    h: 0
+    off_x: 0
+    off_y: 0
 damaged:
     flipped: false
     frames: 1
-    fps: 8
+    fps: 1
     x: 0
-    y: 96
-    w: 55
-    h: 55
-intoxicated_idle:
-    flipped: false
-    frames: 1
-    fps: 8
-    x: 0
-    y: 112
-    w: 55
-    h: 55
-intoxicated_moving_right:
-    flipped: false
-    frames: 4
-    fps: 8
-    x: 0
-    y: 128
-    w: 55
-    h: 55
-intoxicated_moving_left:
-    flipped: true
-    frames: 4
-    fps: 8
-    x: 0
-    y: 128
-    w: 55
-    h: 55
-special_right:
-    flipped: false
-    frames: 4
-    fps: 8
-    x: 0
-    y: 144
-    w: 55
-    h: 55
-special_left:
-    flipped: true
-    frames: 4
-    fps: 8
-    x: 0
-    y: 144
-    w: 55
-    h: 55
+    y: 0
+    w: 0
+    h: 0
+    off_x: 0
+    off_y: 0
 dead:
     flipped: false
     frames: 1
-    fps: 8
+    fps: 1
     x: 0
-    y: 160
-    w: 55
-    h: 55
+    y: 0
+    w: 0
+    h: 0
+    off_x: 0
+    off_y: 0
+intoxicated_idle:
+    flipped: false
+    frames: 8
+    fps: 8
+    x: 2
+    y: 585
+    w: 48
+    h: 47
+    off_x: -7
+    off_y: -2
+intoxicated_moving_right:
+    flipped: false
+    frames: 12
+    fps: 8
+    x: 3
+    y: 657
+    w: 66
+    h: 49
+    off_x: -17
+    off_y: -5
+intoxicated_moving_left:
+    flipped: true
+    frames: 12
+    fps: 8
+    x: 3
+    y: 657
+    w: 66
+    h: 49
+    off_x: -17
+    off_y: -5
