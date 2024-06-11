@@ -18,8 +18,8 @@ public:
     MadHatter(const std::shared_ptr<engine::ResourcePool>& resource_pool,
               const std::string& animation_name, int x, int y):
             engine::AnimatedSprite(
-                    resource_pool->get_texture(map_character_enum_to_string.at(JAZZ_CHARACTER)),
-                    resource_pool->get_yaml(map_character_enum_to_string.at(JAZZ_CHARACTER)),
+                    resource_pool->get_texture(ENEMIES_FILE),
+                    resource_pool->get_yaml(map_character_enum_to_string.at(MAD_HATTER)),
                     animation_name, x, y) {}
 };
 
