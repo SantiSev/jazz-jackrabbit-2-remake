@@ -44,6 +44,7 @@ file(GLOB_RECURSE SOURCES_SERVER "server/*.cpp" "sever/**/*.cpp")
 file(GLOB_RECURSE SOURCES_COMMON "common/*.cpp" "common/**/*.cpp")
 file(GLOB_RECURSE SOURCES_GAME_ENGINE "game_engine/*.cpp" "game_engine/**/*.cpp")
 
+
 file(GLOB_RECURSE HEADERS_CLIENT "client/*.h" "client/**/*.h")
 file(GLOB_RECURSE HEADERS_SERVER "server/*.h" "server/**/*.h")
 file(GLOB_RECURSE HEADERS_COMMON "common/*.h" "common/**/*.h")
@@ -67,6 +68,7 @@ add_executable(server
         ${HEADERS_GAME_ENGINE}
 )
 
+
 target_link_libraries(client
         SDL2main
         SDL2
@@ -74,6 +76,7 @@ target_link_libraries(client
         SDL2_ttf
         SDL2_mixer
         yaml-cpp
+
 )
 target_link_libraries(server
         SDL2main
@@ -140,11 +143,7 @@ if (GRAPHICS)
         # Extract the file name without extension to use as the target name
         get_filename_component(target_name ${file} NAME_WE)
 
-        add_executable(${target_name} ${file} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE}
-                server/game_logic/areaObjects/bullet.cpp
-                server/game_logic/areaObjects/bullet.h
-                server/game_logic/platforms/box_platform.cpp
-                server/game_logic/platforms/box_platform.h)
+        add_executable(${target_name} ${file} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
         target_link_libraries(${target_name}
                 SDL2main
                 SDL2
@@ -153,6 +152,17 @@ if (GRAPHICS)
                 SDL2_mixer
                 yaml-cpp)
     endforeach()
+endif()
+
+# GRAPHICS TEST
+if (GP_TESTS)
+        add_executable(GPTEST "tests/graphics/gui_phy_test.cpp"
+        ${HEADERS_GAME_ENGINE} 
+        ${SOURCES_GAME_ENGINE} 
+        ${SOURCES_COMMON} 
+        ${HEADERS_COMMON}  
+        ${SERVER_WITHOUT_MAIN}) 
+        target_link_libraries(GPTEST SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 endif()
 
 
@@ -191,14 +201,15 @@ if(PHYSICS)
             ${HEADERS_SERVER}
             ${HEADERS_CLIENT}
     )
-    target_link_libraries(tests PRIVATE
-            Catch2WithMain
-            SDL2main
-            SDL2
-            SDL2_image
-            SDL2_ttf
-            SDL2_mixer
-            yaml-cpp
+    target_link_libraries(tests PRIVATE 
+        Catch2WithMain
+        SDL2main 
+        SDL2
+        SDL2_image
+        SDL2_ttf
+        SDL2_mixer
+        yaml-cpp
+
     )
 endif()
 

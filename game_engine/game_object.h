@@ -13,5 +13,4 @@ public:
     virtual ~GameObject() = default;
 };
 
-
 #endif  // GAME_ENGINE_GAME_OBJECT_H_

@@ -24,6 +24,9 @@ void CollisionManager::place_object_in_grid(std::shared_ptr<CollisionObject> obj
     }
 }
 
+bool CollisionManager::is_valid_cell(int x, int y) const {
+    return x >= 0 && x < grid_width && y >= 0 && y < grid_height;
+}
 
 void CollisionManager::remove_object_from_grid(std::shared_ptr<CollisionObject> obj,
                                                Vector2D position) {
@@ -37,11 +40,24 @@ void CollisionManager::remove_object_from_grid(std::shared_ptr<CollisionObject> 
     }
 }
 
+// ----------------- public methods ---------------------
+
+bool CollisionManager::can_be_placed(std::shared_ptr<CollisionObject> obj) const {
+    for (int i = obj->position.x; i < obj->position.x + obj->get_hitbox_width(); ++i) {
+        for (int j = obj->position.y; j < obj->position.y + obj->get_hitbox_height(); ++j) {
+            if (grid[i][j] != nullptr) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void CollisionManager::add_object(std::shared_ptr<CollisionObject> obj) {
     place_object_in_grid(obj);
 }
 
-void CollisionManager::add_dynamic_body(std::shared_ptr<DynamicBody> obj) {
+void CollisionManager::track_dynamic_body(std::shared_ptr<DynamicBody> obj) {
     dynamic_bodies.emplace_back(obj, obj->position);
     place_object_in_grid(obj);
 }
@@ -71,8 +87,9 @@ void CollisionManager::detect_colisions(std::shared_ptr<DynamicBody> obj) {
         for (int j = obj_y; j < obj_y + obj_height; ++j) {
             std::shared_ptr<CollisionObject> other = get_collision_object_at(i, j);
             if (other != nullptr && other.get() != obj.get()) {
-                obj->handle_colision(
-                        *other);  // Handle the collision with respect to me and all others
+                // double dispatch to handle collision
+                obj->handle_colision(other.get());  // Handle collision with other object
+                other->handle_colision(obj.get());  // Handle collision with obj
             }
         }
     }
@@ -98,10 +115,10 @@ void CollisionManager::update() {  // create to update specific object
 
         auto& obj = std::get<0>(*it);
 
-        if (obj != nullptr) {
+        if (obj != nullptr || !obj->is_active_object()) {
             auto& old_position_ref = std::get<1>(*it);
 
-            obj->update_db();
+            obj->update_body();
 
             detect_colisions(obj);  // Detect collisions with other objects
 
@@ -114,12 +131,35 @@ void CollisionManager::update() {  // create to update specific object
             }
 
             ++it;  // Move to the next element
-        } else {
-            // Remove from dynamic_bodies
-            it = dynamic_bodies.erase(it);  // Erase returns a valid iterator to the next element
         }
     }
 }
+
+// create a method that removes all inactive objects from the grid
+// and from the dynamic_bodies vector
+// and then call this method from the update method
+
+void CollisionManager::remove_inactive_bodies() {
+    for (auto it = dynamic_bodies.begin(); it != dynamic_bodies.end();) {
+        auto& obj = std::get<0>(*it);
+
+        if (!obj->is_active_object()) {
+            remove_object_from_grid(obj, obj->position);
+            it = dynamic_bodies.erase(it);
+        } else {
+            ++it;  // Move to the next element only if it wasn't erased
+        }
+    }
+}
+
+void CollisionManager::iterateDynamicBodies(
+        std::function<void(std::shared_ptr<DynamicBody>&)> func) {
+    for (auto& bodyTuple: dynamic_bodies) {
+        auto& body = std::get<0>(bodyTuple);
+        func(body);
+    }
+}
+
 
 int CollisionManager::get_grid_width() const { return grid_width; }
 
@@ -130,4 +170,17 @@ void CollisionManager::clear() {
         std::fill(column.begin(), column.end(), nullptr);
     }
     dynamic_bodies.clear();
+}
+
+
+CollisionManager::~CollisionManager() {
+    for (auto& column: grid) {
+        column.clear();
+        column.shrink_to_fit();
+    }
+    grid.clear();
+    grid.shrink_to_fit();
+
+    dynamic_bodies.clear();
+    dynamic_bodies.shrink_to_fit();
 }

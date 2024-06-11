@@ -40,8 +40,9 @@ void MatchesManager::create_new_match(const CreateGameDTO& dto) {
     matches_number++;
     auto match = std::make_shared<Match>(dto.map_name, dto.max_players, waiting_server_queue);
     matches.insert({matches_number, match});
+    std::string num_player = std::to_string(clients_connected);
     match->start();
-    match->add_client_to_match(get_client_by_id(dto.id_client), "jugador_1_creador",
+    match->add_client_to_match(get_client_by_id(dto.id_client), "player " + num_player,
                                dto.character_selected);
 
     send_client_succesful_connect(dto.id_client, dto.map_name);
@@ -56,7 +57,9 @@ void MatchesManager::send_client_succesful_connect(uint16_t id_client, map_list_
 void MatchesManager::join_match(const JoinMatchDTO& dto) {
     std::cout << "Joining match " << dto.id_match << std::endl;
     auto it = matches.find(dto.id_match);
+    std::string num_player = std::to_string(clients_connected);
     if (it != matches.end()) {
+
         std::cout << "match found to join " << std::endl;
         it->second->add_client_to_match(get_client_by_id(dto.id_client), "pepo_joineado",
                                         dto.player_character);

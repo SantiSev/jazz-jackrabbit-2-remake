@@ -1,107 +1,123 @@
+
 #include "enemy.h"
 
-#include "../areaObjects/bullet.h"
+#include "../../../common/common_constants.h"
 
-Enemy::Enemy(const uint8_t& enemy_type, const size_t& id, int x, int y):
-        DynamicBody(x, y, ENEMY_WIDTH, ENEMY_HEIGHT),
-        id(id),
-        state(STATE_IDLE_RIGHT),
-        enemy_type(enemy_type) {}
+#include "player.h"
 
-size_t Enemy::get_id() const { return id; }
+#define ATTACK_COOLDOWN 1000
 
-size_t Enemy::get_health() const { return health; }
 
-bool Enemy::is_enemy_alive() const { return is_alive; }
+//------- Constructors --------
 
-void Enemy::set_id(size_t new_id) { this->id = new_id; }
+// These enemys for NOW can only move left and right, attack the player and cannot jump (for now)
 
-void Enemy::set_health(size_t new_health) { this->health = new_health; }
+Enemy::Enemy(uint16_t id, const character_t& character, int attack_damage, int health,
+             int revive_cooldown, int x, int y, int w, int h, int speed):
+        CharacterBody(id, character, x, y, w, h, Vector2D(speed, 0), health, STATE_IDLE_RIGHT,
+                      revive_cooldown),
+        attack_damage(attack_damage),
+        attack_cooldown(ATTACK_COOLDOWN),
+        x_speed(speed),
+        spawn_position(x, y) {}
 
-void Enemy::decrease_health(size_t susbstract_health) {
-    if (((int)health - (int)susbstract_health) < MIN_HEALTH) {
-        health = MIN_HEALTH;
+//------------ Overrided Methods ------------
+
+void Enemy::update_body() {
+
+    if (!is_dead()) {
+        patrol();
+        position += velocity;
     } else {
-        health -= susbstract_health;
+        velocity = Vector2D(0, 0);
+        state = STATE_DEAD;
     }
 }
 
-void Enemy::increase_health(size_t add_health) {
-    if (((int)health + (int)add_health) > MAX_HEALTH) {
-        health = MAX_HEALTH;
-    } else {
-        health += add_health;
+void Enemy::handle_colision(CollisionObject* other) {
+
+    Player* player = dynamic_cast<Player*>(other);
+    CollisionFace face = is_touching(other);
+
+    if (player && face != CollisionFace::NO_COLLISION) {
+        std::cout << "Enemy collided with player" << std::endl;
+
+        attack(player);
+
+        switch (face) {
+
+            case CollisionFace::TOP:  // other object is on top of me
+
+                player->position.y = get_top_hitbox_side() - player->get_hitbox_height();
+                break;
+
+            case CollisionFace::LEFT:  // other object is on my left side
+
+
+                player->position.x = get_left_hitbox_side() - player->get_hitbox_width();
+                break;
+
+            case CollisionFace::RIGHT:  // other object is on the right of this object
+
+                player->position.x = get_right_hitbox_side();
+                break;
+
+            case CollisionFace::BOTTOM:  // other object is below me
+                player->position.y = get_bottom_hitbox_side();
+                break;
+            default:
+                break;
+        }
     }
 }
 
-void Enemy::revive() {
-    health = MAX_HEALTH * 0.75;
-    set_state(STATE_IDLE_RIGHT);
-    position = spawn_position;
-    is_alive = true;
+void Enemy::print_info() {
+    std::cout << "--------------------------------" << std::endl;
+    std::cout << "| Enemy: " << id << std::endl;
+    std::cout << "| Position: " << position.x << " , " << position.y << " |" << std::endl;
+    std::cout << "| Velocity: " << velocity.x << " , " << velocity.y << " |" << std::endl;
+    std::cout << "| Health: " << health << " |" << std::endl;
+    std::cout << "| Active: " << is_active_object() << " |" << std::endl;
+    std::cout << "| Revive Cooldown: " << revive_cooldown << std::endl;
+    std::cout << "| Spawn Position: " << spawn_position.x << " , " << spawn_position.y << std::endl;
 }
 
-bool Enemy::can_revive() const { return (revive_cooldown == 0 && !is_enemy_alive()); }
+//------- Movement Methods --------
 
-void Enemy::decrease_revive_cooldown() { revive_cooldown--; }
-
-void Enemy::reset_revive_cooldown() { revive_cooldown = REVIVE_COOLDOWN; }
-
-void Enemy::shoot() {}
-
-void Enemy::kill() {
-    velocity = Vector2D(0, 0);
-    is_alive = false;
+void Enemy::attack(CharacterBody* player) {
+    player->knockback(20);
+    player->take_damage(this->attack_damage);
 }
-
-void Enemy::set_state(const uint8_t new_state) { this->state = new_state; }
-
-void Enemy::set_spawn_point(const Vector2D& new_spawn_point) { spawn_position = new_spawn_point; }
-
-Vector2D Enemy::get_spawn_point() { return spawn_position; }
 
 void Enemy::move_left() {
     direction = -1;
-    velocity.x = -DEFAULT_SPEED_X;
+    velocity.x = -x_speed;
+    state = STATE_MOVING_LEFT;
 }
 
 void Enemy::move_right() {
     direction = 1;
-    velocity.x = DEFAULT_SPEED_X;
+    velocity.x = x_speed;
+    state = STATE_MOVING_RIGHT;
 }
 
-void Enemy::jump() {
-    on_floor = false;
-    velocity.y = -JUMP_SPEED;
-}
+//------- Movement Methods --------
 
-void Enemy::update_db() {
-    if (!on_floor) {
-        velocity.y += GRAVITY;
-    }
-    position += velocity;
+void Enemy::patrol() {
+    // Calculate the absolute difference between the current position and the spawn position
+    int diff = std::abs(position.x - spawn_position.x);
 
-    // print_info(); TODO SACAR
-}
-
-bool Enemy::is_on_floor() const { return on_floor; }
-
-bool Enemy::is_facing_right() const { return direction == 1; }
-
-void Enemy::handle_colision(CollisionObject& other) {
-    if (is_touching_bool(other)) {
-        velocity.y = 10;
-        on_floor = true;
+    // If the difference is greater than or equal to 10, the enemy has reached the end of its path
+    if (diff >= movement_range) {
+        // If the current position is less than the spawn position, move right, otherwise move left
+        if (position.x < spawn_position.x) {
+            direction = 1;
+            state = STATE_MOVING_RIGHT;
+            move_right();
+        } else {
+            direction = -1;
+            state = STATE_MOVING_LEFT;
+            move_left();
+        }
     }
 }
-
-void Enemy::handle_impact(Bullet& bullet) {
-    decrease_health(bullet.get_damage());
-    if (health == 0) {
-        bullet.get_player_points(ENEMY_KILL_POINTS);
-    }
-}
-
-uint8_t Enemy::get_enemy_type() const { return enemy_type; }
-
-uint8_t Enemy::get_state() const { return state; }

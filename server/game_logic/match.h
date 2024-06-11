@@ -1,3 +1,5 @@
+
+
 #ifndef TP_FINAL_MATCH_H
 #define TP_FINAL_MATCH_H
 
@@ -9,13 +11,19 @@
 #include <yaml-cpp/yaml.h>
 
 #include "../../game_engine/physics_engine/collision_manager.h"
-#include "../../server/game_logic/characters/enemy.h"
+#include "../../server/game_logic/weapons/bullet.h"
 #include "../protocol/match_message_handler.h"
 #include "../protocol/server_thread_manager.h"
-#include "./client_monitor.h"
-#include "areaObjects/bullet.h"
-#include "characters/player/player.h"
+#include "characters/enemies.h"
+#include "characters/players.h"
+#include "collectables/collectable_items.h"
 
+#include "client_monitor.h"
+
+class Player;
+class Enemy;
+class Bullet;
+class Collectable;
 
 class Match: public Thread {
 private:
@@ -26,10 +34,12 @@ private:
     std::shared_ptr<Queue<std::shared_ptr<Message>>>& lobby_queue;
     std::list<ServerThreadManager*> clients;
     MatchMessageHandler message_handler;
+
     std::vector<std::shared_ptr<Player>> players;
     std::vector<std::shared_ptr<Enemy>> enemies;
     std::vector<std::shared_ptr<Bullet>> bullets;
-    std::vector<std::string> items;
+    std::vector<std::shared_ptr<Collectable>> items;
+
     size_t players_connected = 0;
     size_t required_players;
     ClientMonitor client_monitor;
@@ -42,18 +52,53 @@ public:
     // Constructor
     explicit Match(const map_list_t& map_selected, size_t required_players_setting,
                    std::shared_ptr<Queue<std::shared_ptr<Message>>>& lobby_queue);
+
     void run() override;
-    // Kill the thread
     void stop() override;
-    // Destroyer
     ~Match() override = default;
 
-    std::shared_ptr<Player> get_player(size_t id);
+    //-------------------- Gameloop Methods ----------------------
+
+    void countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
+                         const std::chrono::time_point<std::chrono::system_clock>& endTime);
+
+    void respawn_players();
+
+    void respawn_enemies();
+
+    void respawn_items();
+
+    void run_command(const CommandDTO& dto);
+
+    Vector2D select_player_spawn_point();
+
+    //-------------------- Conection Methods ----------------------
+
+    // un add playuer to match
 
     void add_player_to_game(const std::string& player_name, const character_t& character,
                             uint16_t client_id);
 
+    void add_client_to_match(ServerThreadManager* client, const std::string& player_name,
+                             const character_t& character);
+
+    void send_end_message_to_players();
+
+    void delete_disconnected_player(id_client_t id_client);
+
     GameStateDTO create_actual_snapshot();
+
+    //-------------------- Initialization Methods -----------------
+
+    void initiate_enemies();
+
+    void load_spawn_points();
+
+    void load_map(const map_list_t& map_selected);
+
+    //-------------------- Getter Methods -----------------
+
+    std::shared_ptr<Player> get_player(size_t id);
 
     bool has_match_ended() const;
 
@@ -63,37 +108,9 @@ public:
 
     size_t get_max_players() const;
 
-    void countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
-                         const std::chrono::time_point<std::chrono::system_clock>& endTime);
-
-    void send_end_message_to_players();
-
-    void add_client_to_match(ServerThreadManager* client, const std::string& player_name,
-                             const character_t& character);
-
     std::vector<size_t> get_clients_ids();
 
     map_list_t get_map() const;
-
-    void run_command(const CommandDTO& dto);
-
-    bool is_command_valid(command_t command);
-
-    void update_players();
-
-    void update_enemies();
-
-    void initiate_enemies();
-
-    Vector2D select_enemy_spawn_point();
-
-    void patrol_move_enemies();
-
-    void load_spawn_points();
-
-    Vector2D select_player_spawn_point();
-
-    void delete_disconnected_player(id_client_t id_client);
 
     ServerThreadManager& get_client_by_id(id_client_t id_client);
 
