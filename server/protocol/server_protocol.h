@@ -7,6 +7,7 @@
 
 #include "../../common/protocol/common_protocol.h"
 #include "../../common/protocol/messages/connection_events/close_connection.h"
+#include "../../common/protocol/messages/in_game_events/add_player.h"
 #include "../../common/protocol/messages/in_game_events/recv_cheat_command.h"
 #include "../../common/protocol/messages/in_game_events/recv_command.h"
 #include "../../common/protocol/messages/in_game_events/recv_leave_match.h"
@@ -36,6 +37,8 @@ public:
     bool is_closed() const;
 
     std::shared_ptr<Message> recv_req_active_games();
+
+    std::shared_ptr<Message> recv_add_player();
 };
 
 #endif

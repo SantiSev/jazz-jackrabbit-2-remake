@@ -8,13 +8,14 @@ MatchesManager::MatchesManager():
         online(true),
         matches_number(0),
         waiting_server_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()),
-        message_handler(*this) {}
+        message_handler(*this),
+        client_monitor() {}
 
 void MatchesManager::run() {
     try {
         while (online) {
             std::shared_ptr<Message> client_message;
-            check_matches_status();
+            //            check_matches_status();
 
             waiting_server_queue->try_pop(client_message);
             if (client_message) {
@@ -38,14 +39,22 @@ void MatchesManager::run() {
 
 void MatchesManager::create_new_match(const CreateGameDTO& dto) {
     matches_number++;
-    auto match = std::make_shared<Match>(dto.map_name, dto.max_players, waiting_server_queue);
+    auto match = std::make_shared<Match>(dto.map_name, dto.max_players, waiting_server_queue,
+                                         client_monitor);
     matches.insert({matches_number, match});
-    std::string num_player = std::to_string(clients_connected);
     match->start();
-    match->add_client_to_match(get_client_by_id(dto.id_client), "player " + num_player,
-                               dto.character_selected);
-
+    std::string namestr = "Player 1";
+    AddPlayerDTO AddDTO = {};
+    snprintf(AddDTO.name, sizeof(AddDTO.name), "%s", namestr.c_str());
+    AddDTO.id_client = dto.id_client;
+    AddDTO.player_character = dto.character_selected;
+    AddDTO.map_name = dto.map_name;
+    auto message = std::make_shared<AddPlayerMessage>(AddDTO);
+    match->get_match_queue()->push(message);
+    get_client_by_id(dto.id_client)->set_receiver_queue(match->match_queue);
     send_client_succesful_connect(dto.id_client, dto.map_name);
+    //    match->add_client_to_match(get_client_by_id(dto.id_client), "jugador_1_creador",
+    //                               dto.character_selected);
 }
 
 void MatchesManager::send_client_succesful_connect(uint16_t id_client, map_list_t map) {
@@ -55,15 +64,22 @@ void MatchesManager::send_client_succesful_connect(uint16_t id_client, map_list_
 }
 
 void MatchesManager::join_match(const JoinMatchDTO& dto) {
-    std::cout << "Joining match " << dto.id_match << std::endl;
+    std::cout << "Joining match id " << dto.id_match << std::endl;
     auto it = matches.find(dto.id_match);
-    std::string num_player = std::to_string(clients_connected);
     if (it != matches.end()) {
-
         std::cout << "match found to join " << std::endl;
-        it->second->add_client_to_match(get_client_by_id(dto.id_client), "Player " + num_player,
-                                        dto.player_character);
-        send_client_succesful_connect(dto.id_client, it->second->get_map());
+        get_client_by_id(dto.id_client)->set_receiver_queue(it->second->match_queue);
+        client_monitor.addClient(get_client_by_id(dto.id_client)->get_sender_queue());
+        std::string namestr = "Player " + std::to_string(dto.id_client);
+        AddPlayerDTO AddDTO = {};
+        snprintf(AddDTO.name, sizeof(AddDTO.name), "%s", namestr.c_str());
+        AddDTO.id_client = dto.id_client;
+        AddDTO.player_character = dto.player_character;
+        AddDTO.map_name = it->second->get_map();
+        auto message = std::make_shared<AddPlayerMessage>(AddDTO);
+        it->second->get_match_queue()->push(message);
+        //        it->second->add_client_to_match(get_client_by_id(dto.id_client), "pepo_joineado",
+        //                                        dto.player_character);
     }
 }
 
@@ -117,6 +133,7 @@ void MatchesManager::delete_disconnected_client(id_client_t id_client) {
     for (auto client = clients.begin(); client != clients.end(); ++client) {
         if (id_client == (*client)->get_client_id()) {
             std::cout << "Stopping client " << id_client << " in lobby." << std::endl;
+            client_monitor.removeQueue(get_client_by_id(id_client)->get_sender_queue());
             (*client)->stop();
             delete *client;
             clients.erase(client);

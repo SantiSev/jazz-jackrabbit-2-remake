@@ -42,6 +42,13 @@ std::shared_ptr<Message> ServerProtocol::recv_req_active_games() {
     return std::make_shared<SendRequestGamesMessage>(active_games);
 }
 
+std::shared_ptr<Message> ServerProtocol::recv_add_player() {
+    AddPlayerDTO dto = {};
+    skt.recvall(&dto, sizeof(dto), &was_closed);
+    dto.id_client = ntohs(dto.id_client);
+    return std::make_shared<AddPlayerMessage>(dto);
+}
+
 std::shared_ptr<RecvJoinMatchMessage> ServerProtocol::recv_join_match() {
     JoinMatchDTO join_match = {};
     skt.recvall(&join_match, sizeof(join_match), &was_closed);
@@ -69,6 +76,8 @@ std::shared_ptr<Message> ServerProtocol::recv_message() {
             return recv_join_match();
         case RECV_REQUEST_ACTIVE_GAMES:
             return recv_req_active_games();
+        case ADD_PLAYER:
+            return recv_add_player();
         default:
             return std::make_shared<InvalidMessage>();
     }

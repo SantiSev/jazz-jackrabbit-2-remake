@@ -14,3 +14,7 @@ void MatchMessageHandler::handle_recv_cheat_command(const CheatCommandDTO& cheat
 void MatchMessageHandler::handle_recv_close_connection(const CloseConnectionDTO& dto) {
     match.delete_disconnected_player(dto.id_client);
 }
+
+void MatchMessageHandler::handle_add_player(const AddPlayerDTO& dto) {
+    match.add_player_to_game(dto);
+}

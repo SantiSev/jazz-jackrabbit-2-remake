@@ -18,6 +18,7 @@
 #define RECV_CHEAT_COMMAND 0x0102
 #define RECV_LEAVE_MATCH 0x0103
 #define SEND_FINISH_MATCH 0x0104
+#define ADD_PLAYER 0x0105
 
 #define RECV_REQUEST_ACTIVE_GAMES 0x0200
 #define RECV_CREATE_GAME 0x0201
@@ -76,6 +77,13 @@ struct JoinMatchDTO {
     id_client_t id_client;
     id_match_t id_match;
     character_t player_character;
+} __attribute__((packed));
+
+struct AddPlayerDTO {
+    char name[50];
+    id_client_t id_client;
+    character_t player_character;
+    map_list_t map_name;
 } __attribute__((packed));
 
 struct RequestActiveGamesDTO {

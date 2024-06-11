@@ -1,10 +1,18 @@
 #include "match.h"
 
+#include <algorithm>
+#include <chrono>
+#include <cstring>
+#include <iomanip>
+#include <memory>
+#include <string>
+#include <utility>
+
+#include "../../common/assets.h"
 
 Match::Match(const map_list_t& map_selected, size_t required_players_setting,
-             std::shared_ptr<Queue<std::shared_ptr<Message>>>& lobby_queue):
+             std::shared_ptr<Queue<std::shared_ptr<Message>>>& lobby_queue, ClientMonitor& monitor):
         online(true),
-        event_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()),
         lobby_queue(lobby_queue),
         message_handler(*this),
         players({}),
@@ -12,9 +20,10 @@ Match::Match(const map_list_t& map_selected, size_t required_players_setting,
         bullets({}),
         items({}),
         required_players(required_players_setting),
-        client_monitor(),
+        client_monitor(monitor),
         map(map_selected),
-        collision_manager(nullptr) {
+        collision_manager(nullptr),
+        match_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()) {
 
     load_enviorment(map_selected);
     load_spawn_points();
@@ -36,9 +45,7 @@ void Match::run() {
         auto runTime = startTime;
 
         const double FPSMAX = 1000.0 / 60.0;
-
         std::cout << "Match map: " << map_list_to_string.at(map) << " Starting..." << std::endl;
-
         while (online) {
             std::shared_ptr<Message> message;
             auto endTime = std::chrono::system_clock::now();
@@ -48,8 +55,7 @@ void Match::run() {
             auto frameStart = std::chrono::system_clock::now();
 
             size_t events = 0;
-
-            while (event_queue->try_pop(message) && events < MAX_EVENTS_PER_LOOP) {
+            while (match_queue->try_pop(message) && events < MAX_EVENTS_PER_LOOP) {
                 events++;
                 message->run(message_handler);
             }
@@ -148,25 +154,26 @@ Vector2D Match::select_player_spawn_point() {
 
 //-------------------- Conection Methods -----------------
 
-void Match::add_player_to_game(const std::string& player_name, const character_t& character,
-                               uint16_t client_id) {
+void Match::add_player_to_game(const AddPlayerDTO& dto) {
     players_connected++;
     Vector2D pos = select_player_spawn_point();
-    auto new_player = std::make_shared<Player>(client_id, player_name, character, pos.x, pos.y,
-                                               *collision_manager);
+    auto new_player = std::make_shared<Player>(dto.id_client, dto.name, dto.player_character, pos.x,
+                                               pos.y, *collision_manager);
     collision_manager->track_dynamic_body(new_player);
     players.push_back(new_player);
+    std::cout << "Player connected: " << dto.id_client << "is playing as "
+              << map_character_enum_to_string.at(dto.player_character) << std::endl;
 }
 
 
 void Match::add_client_to_match(ServerThreadManager* client, const std::string& player_name,
                                 const character_t& character) {
-    client_monitor.addClient(client->get_sender_queue());
-    client->set_receiver_queue(event_queue);
-    clients.push_back(client);
-    add_player_to_game(player_name, character, client->get_client_id());
-    std::cout << "Player connected: " << player_name << " is playing as "
-              << map_character_enum_to_string.at(character) << std::endl;
+    //    client_monitor.addClient(client->get_sender_queue());
+    //    client->set_receiver_queue(event_queue);
+    //    clients.push_back(client);
+    //    add_player_to_game(player_name, character, client->get_client_id());
+    //    std::cout << "Player connected: " << player_name << " is playing as "
+    //              << map_character_enum_to_string.at(character) << std::endl;
 }
 
 
@@ -187,7 +194,6 @@ void Match::stop() {
     //        client->get_sender_queue()->close();
     //    }
     client_monitor.remove_all_queues();
-    clients.clear();
     std::cout << "clients cleared in match" << std::endl;
 }
 
@@ -237,9 +243,10 @@ GameStateDTO Match::create_actual_snapshot() {
 //-------------------- Initialization Methods -----------------
 
 
-void Match::load_enviorment(map_list_t map) {
+void Match::load_enviorment(map_list_t selected_map) {
     // hardcoding for testing purposes
-    YAML::Node yaml = YAML::LoadFile("/home/maxo/Desktop/taller/assets/maps/grass_map.yaml");
+    YAML::Node yaml =
+            YAML::LoadFile("/home/niko/Escritorio/taller/tp_final/assets/maps/grass_map.yaml");
 
     if (yaml.IsNull()) {
         throw std::runtime_error("Error loading yaml file");
@@ -286,7 +293,8 @@ void Match::load_enviorment(map_list_t map) {
 void Match::load_spawn_points() {
 
     //    std::string file_path = map_list_to_string.at(map) + YAML_EXTENSION;
-    YAML::Node yaml = YAML::LoadFile("/home/maxo/Desktop/taller/assets/maps/grass_map.yaml");
+    YAML::Node yaml =
+            YAML::LoadFile("/home/niko/Escritorio/taller/tp_final/assets/maps/grass_map.yaml");
 
     //    YAML::Node yaml = YAML::LoadFile(file_path);
     if (yaml.IsNull()) {
@@ -330,47 +338,49 @@ void Match::initiate_enemies() {
     }
 }
 
-
-ServerThreadManager& Match::get_client_by_id(id_client_t id_client) {
-    auto it =
-            std::find_if(clients.begin(), clients.end(), [id_client](ServerThreadManager* client) {
-                return client->get_client_id() == id_client;
-            });
-
-    if (it != clients.end()) {
-        return **it;  // Dereferenciamos el iterador y el puntero
-    } else {
-        throw std::runtime_error("Client with the given ID not found in match.");
-    }
-}
+// ServerThreadManager& Match::get_client_by_id(id_client_t id_client) {
+//     auto it =
+//             std::find_if(clients.begin(), clients.end(), [id_client](ServerThreadManager* client)
+//             {
+//                 return client->get_client_id() == id_client;
+//             });
+//
+//     if (it != clients.end()) {
+//         return **it;
+//     } else {
+//         throw std::runtime_error("Client with the given ID not found in match.");
+//     }
+// }
 
 
 void Match::delete_disconnected_player(id_client_t id_client) {
+    std::unique_lock<std::mutex> lock(match_mutex);
     for (auto player = players.begin(); player != players.end(); ++player) {
         if (id_client == (*player)->get_id()) {
             CloseConnectionDTO dto{id_client};
-            client_monitor.removeQueue(get_client_by_id(id_client).get_sender_queue());
             auto message = std::make_shared<CloseConnectionMessage>(dto);
             lobby_queue->try_push(message);
             collision_manager->remove_object(*player);
             players.erase(player);
-            erase_client_from_list(id_client);
+            //            erase_client_from_list(id_client);
             std::cout << "Player " << id_client << " disconnected from match " << std::endl;
             break;
         }
     }
 }
 
-void Match::erase_client_from_list(id_client_t id_client) {
-    for (auto it = clients.begin(); it != clients.end(); ++it) {
-        if ((*it)->get_client_id() == id_client) {
-            clients.erase(it);
-            break;
-        }
-    }
-}
+// void Match::erase_client_from_list(id_client_t id_client) {
+//     for (auto it = clients.begin(); it != clients.end(); ++it) {
+//         if ((*it)->get_client_id() == id_client) {
+//             clients.erase(it);
+//             break;
+//         }
+//     }
+// }
 
 //-------------------- Getter Methods -----------------
+
+std::shared_ptr<Queue<std::shared_ptr<Message>>>& Match::get_match_queue() { return match_queue; }
 
 size_t Match::get_num_players() { return players.size(); }
 
@@ -391,7 +401,7 @@ std::shared_ptr<Player> Match::get_player(size_t id) {
 
 std::vector<size_t> Match::get_clients_ids() {
     std::vector<size_t> ids;
-    std::transform(clients.begin(), clients.end(), std::back_inserter(ids),
-                   [](auto& client) { return client->get_client_id(); });
+    std::transform(players.begin(), players.end(), std::back_inserter(ids),
+                   [](auto& player) { return player->get_id(); });
     return ids;
 }

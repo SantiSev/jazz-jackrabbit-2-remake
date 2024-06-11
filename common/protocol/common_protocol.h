@@ -40,6 +40,8 @@ public:
     void send_active_games(const uint16_t header, MatchInfoDTO& active_games);
 
     ~CommonProtocol();
+
+    void send_add_player(const uint16_t i, AddPlayerDTO dto);
 };
 
 #endif

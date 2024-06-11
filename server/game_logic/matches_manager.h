@@ -23,6 +23,8 @@ private:
     std::list<ServerThreadManager*> clients;
     std::shared_ptr<Queue<std::shared_ptr<Message>>> waiting_server_queue;
     MatchesManagerMessageHandler message_handler;
+    std::mutex manager_mutex;
+    ClientMonitor client_monitor;
 
 public:
     MatchesManager();
