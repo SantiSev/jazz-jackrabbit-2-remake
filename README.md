@@ -50,6 +50,17 @@ cppcheck \
 valgrind
 
 pre-commit install
+
+TIBURONCIN_SRC="https://github.com/eldipa/tiburoncin.git"
+
+install_tiburoncin() {
+  git clone $TIBURONCIN_SRC > /dev/null
+  cd tiburoncin
+  make 1> /dev/null
+  sudo cp tiburoncin /usr/bin/
+  cd ..
+  rm -rf tiburoncin
+}
 ```
 
 ```
