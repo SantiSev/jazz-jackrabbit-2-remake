@@ -1,16 +1,5 @@
 #include "match.h"
 
-#include <algorithm>
-#include <chrono>
-#include <cstring>
-#include <iomanip>
-#include <memory>
-#include <string>
-#include <utility>
-
-#include "../../common/assets.h"
-#include "weapons/guns.h"
-
 
 Match::Match(const map_list_t& map_selected, size_t required_players_setting,
              std::shared_ptr<Queue<std::shared_ptr<Message>>>& lobby_queue):
@@ -25,9 +14,9 @@ Match::Match(const map_list_t& map_selected, size_t required_players_setting,
         required_players(required_players_setting),
         client_monitor(),
         map(map_selected),
-        collision_manager(1600, 800) {
+        collision_manager(nullptr) {
 
-    // load enviorment with CM
+    load_enviorment(map_selected);
     load_spawn_points();
     initiate_enemies();
 }
@@ -65,8 +54,8 @@ void Match::run() {
                 message->run(message_handler);
             }
 
-            collision_manager.update();
-            collision_manager.remove_inactive_bodies();
+            collision_manager->update();
+            collision_manager->remove_inactive_bodies();
 
             respawn_enemies();
             respawn_players();
@@ -164,10 +153,11 @@ void Match::add_player_to_game(const std::string& player_name, const character_t
     players_connected++;
     Vector2D pos = select_player_spawn_point();
     auto new_player = std::make_shared<Player>(client_id, player_name, character, pos.x, pos.y,
-                                               collision_manager);
-    collision_manager.track_dynamic_body(new_player);
+                                               *collision_manager);
+    collision_manager->track_dynamic_body(new_player);
     players.push_back(new_player);
 }
+
 
 void Match::add_client_to_match(ServerThreadManager* client, const std::string& player_name,
                                 const character_t& character) {
@@ -178,6 +168,7 @@ void Match::add_client_to_match(ServerThreadManager* client, const std::string& 
     std::cout << "Player connected: " << player_name << " is playing as "
               << map_character_enum_to_string.at(character) << std::endl;
 }
+
 
 void Match::send_end_message_to_players() {
     auto game_ended_message = std::make_shared<SendFinishMatchMessage>();
@@ -244,7 +235,55 @@ GameStateDTO Match::create_actual_snapshot() {
 
 //-------------------- Initialization Methods -----------------
 
-void Match::load_spawn_points() {  // TODO the yaml code doesnt build
+
+void Match::load_enviorment(map_list_t map) {
+    // hardcoding for testing purposes
+    YAML::Node yaml = YAML::LoadFile("/home/santi/Desktop/Facultad/talller_de_programacion/"
+                                     "tp_final/tp-final-Veiga/assets/maps/grass_map.yaml");
+
+    if (yaml.IsNull()) {
+        throw std::runtime_error("Error loading yaml file");
+    }
+    int grid_width = yaml["map_width"].as<int>();
+    int grid_height = yaml["map_height"].as<int>();
+
+    if (grid_width <= 0 || grid_height <= 0) {
+        throw std::runtime_error("Invalid map size");
+    }
+
+    collision_manager = std::make_unique<CollisionManager>(grid_width, grid_height);
+
+    std::cout << "Loading map..." << std::endl;
+
+    for (auto obj: yaml["objects"]) {
+
+        bool collision = obj["collision"].as<bool>();
+
+        if (collision) {
+
+            auto d_rect_list_yaml = obj["d_rect_list"];
+            for (auto d_rect_obj: d_rect_list_yaml) {
+                auto d_rect_yaml = d_rect_obj["d_rect"];
+
+                auto repeat_h = d_rect_yaml["repeat_h"].as<int>();
+                auto repeat_v = d_rect_yaml["repeat_v"].as<int>();
+
+                auto x = d_rect_yaml["x"].as<int>();
+                auto y = d_rect_yaml["y"].as<int>();
+                auto w = d_rect_yaml["w"].as<int>();
+                auto h = d_rect_yaml["h"].as<int>();
+
+                // create boxplatofrm shared pointer
+                auto new_box = std::make_shared<BoxPlatform>(x, y, w * repeat_h, h * repeat_v);
+                collision_manager->add_object(new_box);
+            }
+        }
+    }
+    std::cout << "Map loaded !" << std::endl;
+}
+
+
+void Match::load_spawn_points() {
 
     //    std::string file_path = map_list_to_string.at(map) + YAML_EXTENSION;
     YAML::Node yaml = YAML::LoadFile("/home/santi/Desktop/Facultad/talller_de_programacion/"
@@ -255,11 +294,13 @@ void Match::load_spawn_points() {  // TODO the yaml code doesnt build
         std::cerr << "Error loading yaml file" << std::endl;
         exit(1);
     }
+
     for (auto obj: yaml["player_spawnpoints"]) {
         auto x = obj["x"].as<int>();
         auto y = obj["y"].as<int>();
         player_spawn_points.emplace_back(x, y);
     }
+
     for (auto obj: yaml["enemy_spawnpoints"]) {
         auto x = obj["x"].as<int>();
         auto y = obj["y"].as<int>();
@@ -276,10 +317,16 @@ void Match::initiate_enemies() {
     }
 
     for (auto& spawn_point: enemy_spawn_points) {
-        auto new_enemy = std::make_shared<Enemy>(i, (character_t)(i % 3), 30, 75, 5, spawn_point.x,
-                                                 spawn_point.y, 40, 40, 5);
-        collision_manager.track_dynamic_body(new_enemy);
-        enemies.emplace_back(new_enemy);
+
+        if (i % 2 == 0) {
+            auto lizard_goon = std::make_shared<LizardGoon>(i, spawn_point.x, spawn_point.y);
+            collision_manager->track_dynamic_body(lizard_goon);
+            enemies.emplace_back(lizard_goon);
+        } else {
+            auto mad_hatter = std::make_shared<MadHatter>(i, spawn_point.x, spawn_point.y);
+            collision_manager->track_dynamic_body(mad_hatter);
+            enemies.emplace_back(mad_hatter);
+        }
         i++;
     }
 }
@@ -306,7 +353,7 @@ void Match::delete_disconnected_player(id_client_t id_client) {
             client_monitor.removeQueue(get_client_by_id(id_client).get_sender_queue());
             auto message = std::make_shared<CloseConnectionMessage>(dto);
             lobby_queue->try_push(message);
-            collision_manager.remove_object(*player);
+            collision_manager->remove_object(*player);
             players.erase(player);
             erase_client_from_list(id_client);
             std::cout << "Player " << id_client << " disconnected from match " << std::endl;

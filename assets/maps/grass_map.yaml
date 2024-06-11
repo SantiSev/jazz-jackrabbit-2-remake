@@ -56,9 +56,9 @@ objects:
 player_spawnpoints:
     - x: 100
       y: 100
-    - x: 800
+    - x: 300
       y: 100
-    - x: 1100
+    - x: 500
       y: 100
 enemy_spawnpoints:
     - x: 500
