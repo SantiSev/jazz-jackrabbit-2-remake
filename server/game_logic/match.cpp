@@ -318,13 +318,10 @@ void Match::load_spawn_points() {
 
 void Match::initiate_enemies() {
     int i = 1;
-
     if (enemy_spawn_points.empty()) {
         throw std::runtime_error("No enemy spawn points found in map.");
     }
-
     for (auto& spawn_point: enemy_spawn_points) {
-
         if (i % 2 == 0) {
             auto lizard_goon = std::make_shared<LizardGoon>(i, spawn_point.x, spawn_point.y);
             collision_manager->track_dynamic_body(lizard_goon);
