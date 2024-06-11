@@ -45,6 +45,11 @@ void Player::reload_weapon(size_t weapon_id, int ammo_amount) {
 }
 
 void Player::shoot_selected_weapon() {
+
+#ifdef LOG_VERBOSE
+    std::cout << "| Player id: " << this->id << " | Player::shoot_selected_weapon() |" << std::endl;
+#endif
+
     weapons[selected_weapon]->shoot();
     state = is_facing_right() ? STATE_SHOOTING_RIGHT : STATE_SHOOTING_LEFT;
 }
@@ -74,6 +79,10 @@ void Player::reset_special_attack() { special_cooldown = SPECIAL_COOLDOWN; }
 
 void Player::move_left() {
 
+#ifdef LOG_VERBOSE
+    std::cout << "| Player id: " << this->id << " | Player::move_left() |" << std::endl;
+#endif
+
     if (is_knocked_back) {
         return;
     }
@@ -91,6 +100,10 @@ void Player::move_left() {
 
 void Player::move_right() {
 
+#ifdef LOG_VERBOSE
+    std::cout << "| Player id: " << this->id << " | Player::move_right() |" << std::endl;
+#endif
+
     if (is_knocked_back) {
         return;
     }
@@ -107,6 +120,10 @@ void Player::move_right() {
 }
 
 void Player::jump() {
+
+#ifdef LOG_VERBOSE
+    std::cout << "| Player id: " << this->id << " | Player::jump() |" << std::endl;
+#endif
 
     if (on_floor) {
         on_floor = false;

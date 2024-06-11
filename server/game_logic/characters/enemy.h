@@ -4,9 +4,9 @@
 #include "character.h"
 
 // Enemy config
-#define ENEMY_WIDTH 50
-#define ENEMY_HEIGHT 50
-#define MOVEMENT_RANGE 25
+#define ENEMY_WIDTH 35
+#define ENEMY_HEIGHT 45
+#define MOVEMENT_RANGE 50
 
 class Enemy: public CharacterBody {
 private:
