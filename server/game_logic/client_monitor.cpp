@@ -24,17 +24,6 @@ void ClientMonitor::broadcastClients(const std::shared_ptr<Message>& gameMessage
     }
 }
 
-// void ClientMonitor::removeQueue(
-//         std::shared_ptr<Queue<std::shared_ptr<Message>>> const queueToRemove) {
-//     std::lock_guard<std::mutex> lock(mutex);
-//     auto queue = std::find_if(clientQueues.begin(), clientQueues.end(),
-//                               [&](const auto& ref) { return &(ref.get()) == &queueToRemove; });
-//     if (queue != clientQueues.end()) {
-//         clientQueues.erase(queue);
-//     }
-// }
-
-
 void ClientMonitor::removeQueue(
         const std::shared_ptr<Queue<std::shared_ptr<Message>>>& queueToRemove) {
     for (auto it = clientQueues.begin(); it != clientQueues.end();) {

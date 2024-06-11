@@ -29,8 +29,9 @@ class Match: public Thread {
 private:
     bool online;
     bool match_has_ended = false;
-    int match_time = STARTING_MATCH_TIME;
+    int match_time = MATCH_DURATION;
     std::shared_ptr<Queue<std::shared_ptr<Message>>> event_queue;  // shared with the receiver
+    std::shared_ptr<Queue<std::shared_ptr<Message>>>& lobby_queue;
     std::list<ServerThreadManager*> clients;
     MatchMessageHandler message_handler;
 
@@ -48,7 +49,10 @@ private:
     std::vector<Vector2D> enemy_spawn_points;
 
 public:
-    explicit Match(const map_list_t& map_selected, size_t required_players_setting);
+    // Constructor
+    explicit Match(const map_list_t& map_selected, size_t required_players_setting,
+                   std::shared_ptr<Queue<std::shared_ptr<Message>>>& lobby_queue);
+
     void run() override;
     void stop() override;
     ~Match() override = default;
@@ -107,6 +111,10 @@ public:
     std::vector<size_t> get_clients_ids();
 
     map_list_t get_map() const;
+
+    ServerThreadManager& get_client_by_id(id_client_t id_client);
+
+    void erase_client_from_list(id_client_t id_client);
 };
 
 #endif

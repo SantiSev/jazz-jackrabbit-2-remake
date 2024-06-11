@@ -22,7 +22,7 @@ protected:
 public:
     explicit CommonProtocol(Socket&& skt);
     CommonProtocol(const std::string& hostname, const std::string& servname);
-    void send_close_connection(const uint16_t header);
+    void send_close_connection(const uint16_t header, CloseConnectionDTO& dto);
     void send_acpt_connection(const uint16_t header, const id_client_t id_client);
     void send_cheat_command(const uint16_t header, CheatCommandDTO& cheat_command);
     void send_command(const uint16_t header, CommandDTO& command);
