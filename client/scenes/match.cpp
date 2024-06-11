@@ -82,6 +82,7 @@ void MatchScene::update_objects(int delta_time) {
         for (uint8_t i = 0; i < game_state->num_players; i++) {
             auto player = game_state->players[i];
 
+            // If it's a new player create it
             players.try_emplace(player.id, CharacterFactory::create_character(
                                                    resource_pool, (character_t)player.character,
                                                    map_states_to_animations.at(player.state),
@@ -94,6 +95,7 @@ void MatchScene::update_objects(int delta_time) {
         for (uint8_t i = 0; i < game_state->num_enemies; i++) {
             auto enemy = game_state->enemies[i];
 
+            // If it's a new enemy create it
             enemies.try_emplace(enemy.id, CharacterFactory::create_character(
                                                   resource_pool, (character_t)enemy.character,
                                                   map_states_to_animations.at(enemy.state),
@@ -106,6 +108,7 @@ void MatchScene::update_objects(int delta_time) {
         for (uint8_t i = 0; i < game_state->num_bullets; i++) {
             auto bullet = game_state->bullets[i];
 
+            // If it's a new bullet create it
             bullets.try_emplace(bullet.id, BulletFactory::create_bullet(
                                                    resource_pool, bullet.bullet_type,
                                                    bullet.direction, bullet.x_pos, bullet.y_pos));

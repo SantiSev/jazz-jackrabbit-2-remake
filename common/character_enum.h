@@ -16,9 +16,9 @@ typedef enum: uint8_t {
 } character_t;
 
 const std::map<character_t, std::string> map_character_enum_to_string = {
-        {JAZZ_CHARACTER, "assets/characters/jazz"},
-        {SPAZ_CHARACTER, "assets/characters/spaz"},
-        {LORI_CHARACTER, "assets/characters/lori"},
+        {JAZZ_CHARACTER, "assets/characters/players/jazz"},
+        {SPAZ_CHARACTER, "assets/characters/players/spaz"},
+        {LORI_CHARACTER, "assets/characters/players/lori"},
         {MAD_HATTER, "assets/characters/enemies/mad_hatter"},
         {LIZARD_GOON, "assets/characters/enemies/lizard_goon"}};
 

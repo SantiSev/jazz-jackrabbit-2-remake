@@ -7,7 +7,7 @@
 #include "../../common/protocol/messages/common_message.h"
 #include "../../common/protocol/messages/menu_events/recv_active_games.h"
 #include "../../common/protocol/messages/message_handler.h"
-#include "../game_objects/player.h"
+#include "../game_objects/player_controller.h"
 
 #include "client_thread_manager.h"
 
