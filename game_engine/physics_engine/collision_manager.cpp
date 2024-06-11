@@ -111,6 +111,11 @@ void CollisionManager::handle_out_of_bounds(std::shared_ptr<DynamicBody> obj) {
 
 void CollisionManager::update() {  // create to update specific object
     // Use an iterator to iterate over the dynamic_bodies tuple
+
+    if (dynamic_bodies.empty()) {
+        return;
+    }
+
     for (auto it = dynamic_bodies.begin(); it != dynamic_bodies.end();) {
 
         auto& obj = std::get<0>(*it);
@@ -140,6 +145,11 @@ void CollisionManager::update() {  // create to update specific object
 // and then call this method from the update method
 
 void CollisionManager::remove_inactive_bodies() {
+
+    if (dynamic_bodies.empty()) {
+        return;
+    }
+
     for (auto it = dynamic_bodies.begin(); it != dynamic_bodies.end();) {
         auto& obj = std::get<0>(*it);
 

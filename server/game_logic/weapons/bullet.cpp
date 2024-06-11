@@ -23,10 +23,6 @@ Bullet::Bullet(const uint64_t& id, const uint8_t type, Player& player_owner,
         position.x = player_owner.get_left_hitbox_side() + OFFSET_BULLET_X;
         direction = GOING_LEFT;
     }
-
-    SDL_Rect bullet_cube = {position.x, position.y, BULLET_WIDTH, BULLET_HEIGHT};
-    SDL_Color color = {255, 165, 0, 0};
-    this->color_rect = engine::ColorRect(color, bullet_cube);
 }
 
 uint64_t Bullet::get_id() const { return id; }
@@ -38,8 +34,6 @@ uint8_t Bullet::get_type() const { return type; }
 void Bullet::update_body() {
 
     if (is_active_object()) {
-
-        update_color_rect();
 
         life_span--;
         if (life_span == 0) {

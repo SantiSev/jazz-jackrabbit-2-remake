@@ -129,19 +129,25 @@ void Match::run_command(const CommandDTO& dto) {
 
 void Match::respawn_players() {
     for (auto& player: players) {
-        player->update_status(select_player_spawn_point());
+        if (player->try_revive()) {
+            player->revive(player.get()->position);
+        }
     }
 }
 
 void Match::respawn_enemies() {
     for (auto& enemy: enemies) {
-        enemy->update_body();
+        if (enemy->try_revive()) {
+            enemy->revive(enemy.get()->spawn_position);
+        }
     }
 }
 
 void Match::respawn_items() {
     for (auto& item: items) {
-        item->update_body();
+        if (item->try_respawn()) {
+            item->respawn(item.get()->position);
+        }
     }
 }
 
@@ -239,10 +245,10 @@ GameStateDTO Match::create_actual_snapshot() {
 //-------------------- Initialization Methods -----------------
 
 void Match::load_spawn_points() {  // TODO the yaml code doesnt build
-    /*
+
     //    std::string file_path = map_list_to_string.at(map) + YAML_EXTENSION;
-    YAML::Node yaml =
-            YAML::LoadFile("/home/niko/Escritorio/taller/tp_final/assets/maps/map_1.yaml");
+    YAML::Node yaml = YAML::LoadFile("/home/santi/Desktop/Facultad/talller_de_programacion/"
+                                     "tp_final/tp-final-Veiga/assets/maps/grass_map.yaml");
 
     //    YAML::Node yaml = YAML::LoadFile(file_path);
     if (yaml.IsNull()) {
@@ -259,12 +265,16 @@ void Match::load_spawn_points() {  // TODO the yaml code doesnt build
         auto y = obj["y"].as<int>();
         enemy_spawn_points.emplace_back(x, y);
     }
-    */
 }
 
 
 void Match::initiate_enemies() {
     int i = 1;
+
+    if (enemy_spawn_points.empty()) {
+        throw std::runtime_error("No enemy spawn points found in map.");
+    }
+
     for (auto& spawn_point: enemy_spawn_points) {
         auto new_enemy = std::make_shared<Enemy>(i, (character_t)(i % 3), 30, 75, 5, spawn_point.x,
                                                  spawn_point.y, 40, 40, 5);
