@@ -10,6 +10,7 @@
 #include <list>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -44,7 +45,7 @@ private:
     std::list<ServerThreadManager*> clients;
     MatchMessageHandler message_handler;
 
-    std::vector<std::shared_ptr<Player>> players;
+    std::unordered_map<uint16_t, std::shared_ptr<Player>> players;
     std::vector<std::shared_ptr<Enemy>> enemies;
     std::vector<std::shared_ptr<Bullet>> bullets;
     std::vector<std::shared_ptr<Collectable>> items;
