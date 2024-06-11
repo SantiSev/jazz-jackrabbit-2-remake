@@ -11,7 +11,7 @@ common_bullet:
     h: 9
     off_x: 0
     off_y: 0
-other_bullet_1:
+bullet_one:
     flipped: false
     frames: 1
     fps: 1
@@ -21,7 +21,7 @@ other_bullet_1:
     h: 0
     off_x: 0
     off_y: 0
-other_bullet_2:
+bullet_two:
     flipped: false
     frames: 1
     fps: 1
@@ -31,7 +31,7 @@ other_bullet_2:
     h: 0
     off_x: 0
     off_y: 0
-other_bullet_3:
+bullet_three:
     flipped: false
     frames: 1
     fps: 1

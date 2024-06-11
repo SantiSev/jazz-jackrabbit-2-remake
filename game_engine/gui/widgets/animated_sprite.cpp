@@ -100,7 +100,7 @@ void AnimatedSprite::set_animation(const std::string& animation_name) {
         return;
     }
 
-#ifdef LOG
+#ifdef LOG_VERBOSE
     std::cout << "Setting animation: " << animation_name << std::endl;
 #endif
 

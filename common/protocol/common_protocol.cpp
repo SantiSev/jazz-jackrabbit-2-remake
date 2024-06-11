@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <arpa/inet.h>
+#include <endian.h>
 
 #include "messages/connection_events/close_connection.h"
 
@@ -82,8 +83,14 @@ void CommonProtocol::send_game_state(const uint16_t header, GameStateDTO& game_s
         }
     }
     for (int i = 0; i < game_state.num_enemies; i++) {
+        game_state.enemies[i].id = htons(game_state.enemies[i].id);
         game_state.enemies[i].x_pos = htons(game_state.enemies[i].x_pos);
         game_state.enemies[i].y_pos = htons(game_state.enemies[i].y_pos);
+    }
+    for (int i = 0; i < game_state.num_bullets; i++) {
+        game_state.bullets[i].id = htobe64(game_state.bullets[i].id);
+        game_state.bullets[i].x_pos = htons(game_state.bullets[i].x_pos);
+        game_state.bullets[i].y_pos = htons(game_state.bullets[i].y_pos);
     }
     skt.sendall(&game_state, sizeof(game_state), &was_closed);
 }

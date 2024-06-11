@@ -1,4 +1,4 @@
-map_width: 1280
+map_width: 800
 map_height: 600
 objects:
     - name: "background_1"
@@ -34,7 +34,7 @@ objects:
           - d_rect:
                 repeat_h: 1
                 repeat_v: 1
-                x: 1248
+                x: 768
                 y: 400
                 w: 22
                 h: 192
@@ -47,7 +47,7 @@ objects:
           h: 32
       d_rect_list:
           - d_rect:
-                repeat_h: 40
+                repeat_h: 25
                 repeat_v: 1
                 x: 0
                 y: 568
@@ -56,17 +56,17 @@ objects:
 player_spawnpoints:
     - x: 100
       y: 100
-    - x: 800
+    - x: 400
       y: 100
-    - x: 1100
+    - x: 600
       y: 100
 enemy_spawnpoints:
     - x: 500
-      y: 100
+      y: 500
     - x: 300
-      y: 100
+      y: 500
 item_spawnpoints:
     - x: 700
       y: 100
-    - x: 900
+    - x: 200
       y: 100

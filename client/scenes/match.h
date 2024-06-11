@@ -35,14 +35,12 @@ private:
 
     std::atomic<bool>& match_running;
     std::unique_ptr<Map> map;
-    std::map<uint16_t, std::unique_ptr<engine::AnimatedSprite>> animated_objects;
+    std::map<uint16_t, std::unique_ptr<engine::AnimatedSprite>> players;
+    std::map<uint16_t, std::unique_ptr<engine::AnimatedSprite>> enemies;
+    std::map<uint16_t, std::unique_ptr<engine::AnimatedSprite>> bullets;
     PlayerController player_controller;
 
     void init();
-    void create_character(uint16_t id, character_t character, uint8_t state, uint16_t x,
-                          uint16_t y);
-    void create_bullet(uint16_t id, uint8_t bullet_type, uint16_t x, uint16_t y, uint8_t direction);
-
     void update_objects(int delta_time);
     void draw_objects();
 
