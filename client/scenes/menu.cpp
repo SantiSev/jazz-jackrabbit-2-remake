@@ -41,7 +41,7 @@ void MenuScene::start() {
     }
 
     Uint32 frame_start = 0;
-    Uint32 frame_time = 0;
+    Uint32 frame_time;
     const int frame_delay = 1000 / 60;
 
     while (menu_running) {

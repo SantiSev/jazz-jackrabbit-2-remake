@@ -27,8 +27,8 @@ void ServerAccepter::run() {
 
 void ServerAccepter::stop() {
     _keep_running = false;
-    skt.shutdown(SHUT_RDWR);  // TODO revisar esto
-    skt.close();
     matches_manager.stop();
     matches_manager.join();
+    skt.shutdown(SHUT_RDWR);
+    skt.close();
 }

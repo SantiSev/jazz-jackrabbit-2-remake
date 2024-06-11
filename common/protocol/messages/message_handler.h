@@ -18,6 +18,7 @@ public:
     virtual void handle_recv_active_games(const MatchInfoDTO& dto) {}
     virtual void handle_recv_command(const CommandDTO& command) {}
     virtual void handle_recv_game_state(const GameStateDTO& dto) {}
+    virtual void handle_recv_finish_match() {}
 };
 
 #endif

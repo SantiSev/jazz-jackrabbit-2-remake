@@ -33,6 +33,7 @@ public:
     void handle_connected_to_match(const ClientHasConnectedToMatchDTO& dto) override;
     void handle_recv_active_games(const MatchInfoDTO& dto) override;
     void handle_recv_game_state(const GameStateDTO& dto) override;
+    void handle_recv_finish_match() override;
 };
 
 

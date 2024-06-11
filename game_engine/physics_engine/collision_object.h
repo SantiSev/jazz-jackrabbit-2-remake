@@ -1,26 +1,19 @@
 #ifndef GAME_ENGINE_COLISION_OBJECT_H_
 #define GAME_ENGINE_COLISION_OBJECT_H_
 
+#include <string>
+
 #include "../game_object.h"
 
-#include "colision_face.h"
+#include "collision_face.h"
+#include "collision_object.h"
 
-class Bullet;
 
-/*
- * For every ColisionObject, its fundamental to take into account
- * 1. This class is the base class for all objects that can collide
- * 2. The hitbox is a rectangle, so it has a width and a height.
- * 3. detect_colision is a virtual method that must be overriden by the child class
- * 4. every child class must create their own handle_colision method, which will be called by
- * detect_colision
- * 5. handle_collision is not a virtual method here because each child class can have different
- * signatures for that function
- */
 class CollisionObject: public GameObject {
 private:
     int hitbox_width;
     int hitbox_height;
+    bool is_active = true;
 
 protected:
     /*
@@ -28,13 +21,13 @@ protected:
      * CollisionObject instance (i.e., *this or self)
      * is being touched by the other collision object.
      */
-    CollisionFace is_touching(const CollisionObject& other) const;
+    CollisionFace is_touching(const CollisionObject* other) const;
 
     /*
      * This code is identical to the is_touching method,
      * but it returns a boolean value instead of a CollisionFace.
      */
-    bool is_touching_bool(const CollisionObject& other) const;
+    bool is_touching_bool(const CollisionObject* other) const;
 
 public:
     CollisionObject(int width, int height);
@@ -44,19 +37,25 @@ public:
     int get_right_hitbox_side() const;
     int get_top_hitbox_side() const;
     int get_bottom_hitbox_side() const;
+    bool is_active_object() const;
+
+    /*
+     * This method is used to get the name of the face that is being touched.
+     * It is used for testing purposes.
+     */
+    std::string get_colision(CollisionFace face);
 
     int get_hitbox_width() const;
     int get_hitbox_height() const;
     void set_hitbox_width(int new_width);
     void set_hitbox_height(int new_height);
+    void set_active_status(bool status);
 
     /*
-     * In case of being nececary, if i need to detect a collision
-     * and act upon it, i can override this method and implement it.
+     * It is required to implement this method in the derived classes.
+     * This method is called when a collision is detected.
      */
-    virtual void handle_colision(CollisionObject& other) = 0;
-    virtual void handle_impact(Bullet& bullet) {}
-
+    virtual void handle_colision(CollisionObject* other) = 0;
 
     virtual ~CollisionObject() = default;
 };

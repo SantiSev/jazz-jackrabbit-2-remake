@@ -1,3 +1,4 @@
+#LAST CMAKE DE NIKO
 cmake_minimum_required(VERSION 3.10)
 
 project(tp_final LANGUAGES CXX)
@@ -53,6 +54,7 @@ file(GLOB_RECURSE SOURCES_SERVER "server/*.cpp" "sever/**/*.cpp")
 file(GLOB_RECURSE SOURCES_COMMON "common/*.cpp" "common/**/*.cpp")
 file(GLOB_RECURSE SOURCES_GAME_ENGINE "game_engine/*.cpp" "game_engine/**/*.cpp")
 
+
 file(GLOB_RECURSE HEADERS_CLIENT "client/*.h" "client/**/*.h")
 file(GLOB_RECURSE HEADERS_SERVER "server/*.h" "server/**/*.h")
 file(GLOB_RECURSE HEADERS_COMMON "common/*.h" "common/**/*.h")
@@ -76,22 +78,23 @@ if (PRODUCTION)
         ${HEADERS_GAME_ENGINE} 
     )
 
-    target_link_libraries(client 
-        SDL2main 
-        SDL2 
-        SDL2_image 
-        SDL2_ttf 
+target_link_libraries(client
+        SDL2main
+        SDL2
+        SDL2_image
+        SDL2_ttf
         SDL2_mixer
         yaml-cpp
-    )
-    target_link_libraries(server 
-        SDL2main 
-        SDL2 
-        SDL2_image 
-        SDL2_ttf 
+
+)
+target_link_libraries(server
+        SDL2main
+        SDL2
+        SDL2_image
+        SDL2_ttf
         SDL2_mixer
         yaml-cpp
-    )
+)
 endif()
 
 # COMMUNICATION - TESTS
@@ -101,45 +104,45 @@ if (EVENTS)
     file(GLOB_RECURSE SOURCES_SERVER_GAME_LOGIC "server/game_logic/*.cpp")
 
     add_executable(client_test_one tests/events/client_to_server/client_main.cpp
-        ${SOURCES_COMMON}
-        ${SOURCES_CLIENT_PROTOCOL}
-        ${SOURCES_SERVER_PROTOCOL}
-        ${SOURCES_SERVER_GAME_LOGIC}
-        ${HEADERS_CLIENT}
-        ${HEADERS_SERVER}
-        ${HEADERS_COMMON}
+            ${SOURCES_COMMON}
+            ${SOURCES_CLIENT_PROTOCOL}
+            ${SOURCES_SERVER_PROTOCOL}
+            ${SOURCES_SERVER_GAME_LOGIC}
+            ${HEADERS_CLIENT}
+            ${HEADERS_SERVER}
+            ${HEADERS_COMMON}
     )
 
     add_executable(server_test_one tests/events/client_to_server/server_main.cpp
-        ${SOURCES_COMMON}
-        ${SOURCES_CLIENT_PROTOCOL}
-        ${SOURCES_SERVER_PROTOCOL}
-        ${SOURCES_SERVER_GAME_LOGIC}
-        ${HEADERS_CLIENT}
-        ${HEADERS_SERVER}
-        ${HEADERS_COMMON}
+            ${SOURCES_COMMON}
+            ${SOURCES_CLIENT_PROTOCOL}
+            ${SOURCES_SERVER_PROTOCOL}
+            ${SOURCES_SERVER_GAME_LOGIC}
+            ${HEADERS_CLIENT}
+            ${HEADERS_SERVER}
+            ${HEADERS_COMMON}
     )
 
     add_executable(client_test_two tests/events/server_to_client/client_main.cpp
-        ${SOURCES_COMMON}
-        ${SOURCES_CLIENT_PROTOCOL}
-        ${SOURCES_SERVER_PROTOCOL}
-        ${SOURCES_SERVER_GAME_LOGIC}
-        ${HEADERS_CLIENT}
-        ${HEADERS_SERVER}
-        ${HEADERS_COMMON}
+            ${SOURCES_COMMON}
+            ${SOURCES_CLIENT_PROTOCOL}
+            ${SOURCES_SERVER_PROTOCOL}
+            ${SOURCES_SERVER_GAME_LOGIC}
+            ${HEADERS_CLIENT}
+            ${HEADERS_SERVER}
+            ${HEADERS_COMMON}
     )
 
     add_executable(server_test_two tests/events/server_to_client/server_main.cpp
-        ${SOURCES_COMMON}
-        ${SOURCES_CLIENT_PROTOCOL}
-        ${SOURCES_SERVER_PROTOCOL}
-        ${SOURCES_SERVER_GAME_LOGIC}
-        ${HEADERS_CLIENT}
-        ${HEADERS_SERVER}
-        ${HEADERS_COMMON}
+            ${SOURCES_COMMON}
+            ${SOURCES_CLIENT_PROTOCOL}
+            ${SOURCES_SERVER_PROTOCOL}
+            ${SOURCES_SERVER_GAME_LOGIC}
+            ${HEADERS_CLIENT}
+            ${HEADERS_SERVER}
+            ${HEADERS_COMMON}
     )
-endif()    
+endif()
 
 
 # GRAPHICS TEST
@@ -149,19 +152,26 @@ if (GRAPHICS)
         # Extract the file name without extension to use as the target name
         get_filename_component(target_name ${file} NAME_WE)
 
-        add_executable(${target_name} ${file} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE}
-                server/game_logic/areaObjects/bullet.cpp
-                server/game_logic/areaObjects/bullet.h
-                server/game_logic/platforms/box_platform.cpp
-                server/game_logic/platforms/box_platform.h)
+        add_executable(${target_name} ${file} ${SOURCES_GAME_ENGINE} ${HEADERS_GAME_ENGINE})
         target_link_libraries(${target_name}
-            SDL2main
-            SDL2
-            SDL2_image
-            SDL2_ttf
-            SDL2_mixer
-            yaml-cpp)
+                SDL2main
+                SDL2
+                SDL2_image
+                SDL2_ttf
+                SDL2_mixer
+                yaml-cpp)
     endforeach()
+endif()
+
+# GRAPHICS TEST
+if (GP_TESTS)
+        add_executable(GPTEST "tests/graphics/gui_phy_test.cpp"
+        ${HEADERS_GAME_ENGINE} 
+        ${SOURCES_GAME_ENGINE} 
+        ${SOURCES_COMMON} 
+        ${HEADERS_COMMON}  
+        ${SERVER_WITHOUT_MAIN}) 
+        target_link_libraries(GPTEST SDL2main SDL2 SDL2_image SDL2_ttf SDL2_mixer)
 endif()
 
 
@@ -174,40 +184,41 @@ if(PHYSICS)
     file(GLOB_RECURSE SOURCES_SERVER_GAME_LOGIC "server/game_logic/*.cpp")
 
     add_executable(tests tests/unit_tests/physics_test.cpp
-        ${SOURCES_COMMON}
-        ${SOURCES_GAME_ENGINE}
-        ${HEADERS_COMMON}
-        ${HEADERS_GAME_ENGINE}
-        ${SOURCES_CLIENT_PROTOCOL}
-        ${SOURCES_SERVER_PROTOCOL}
-        ${SOURCES_SERVER_GAME_LOGIC}
-        ${HEADERS_SERVER}
-        ${HEADERS_CLIENT}
+            ${SOURCES_COMMON}
+            ${SOURCES_GAME_ENGINE}
+            ${HEADERS_COMMON}
+            ${HEADERS_GAME_ENGINE}
+            ${SOURCES_CLIENT_PROTOCOL}
+            ${SOURCES_SERVER_PROTOCOL}
+            ${SOURCES_SERVER_GAME_LOGIC}
+            ${HEADERS_SERVER}
+            ${HEADERS_CLIENT}
     )
     target_link_libraries(tests PRIVATE
-        Catch2WithMain
-        SDL2main
-        SDL2
-        SDL2_image
-        SDL2_ttf
-        ${SOURCES_COMMON} 
-        ${SOURCES_GAME_ENGINE} 
-        ${HEADERS_COMMON} 
-        ${HEADERS_GAME_ENGINE} 
-        ${SOURCES_CLIENT_PROTOCOL}
-        ${SOURCES_SERVER_PROTOCOL}
-        ${SOURCES_SERVER_GAME_LOGIC}
-        ${HEADERS_SERVER} 
-        ${HEADERS_CLIENT}
+            Catch2WithMain
+            SDL2main
+            SDL2
+            SDL2_image
+            SDL2_ttf
+            ${SOURCES_COMMON}
+            ${SOURCES_GAME_ENGINE}
+            ${HEADERS_COMMON}
+            ${HEADERS_GAME_ENGINE}
+            ${SOURCES_CLIENT_PROTOCOL}
+            ${SOURCES_SERVER_PROTOCOL}
+            ${SOURCES_SERVER_GAME_LOGIC}
+            ${HEADERS_SERVER}
+            ${HEADERS_CLIENT}
     )
     target_link_libraries(tests PRIVATE 
         Catch2WithMain
         SDL2main 
         SDL2
-        SDL2_image 
-        SDL2_ttf 
+        SDL2_image
+        SDL2_ttf
         SDL2_mixer
         yaml-cpp
+
     )
 endif()
 
@@ -216,8 +227,8 @@ if (DEFINED TSAN)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=thread")
 
     add_executable(server-tsan ${SOURCES_SERVER} ${SOURCES_COMMON}
-    game_engine/physics_engine/collision_manager.h
-    game_engine/physics_engine/colision_object.h)
+            game_engine/physics_engine/collision_manager.h
+            game_engine/physics_engine/colision_object.h)
 
 endif()
 

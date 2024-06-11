@@ -1,6 +1,3 @@
-//
-// Created by santi on 23/05/24.
-//
 
 #ifndef GAME_ENGINE_MATH_VECTOR2D_H_
 #define GAME_ENGINE_MATH_VECTOR2D_H_
@@ -12,7 +9,8 @@ public:
     int x, y;
 
     // Constructor
-    explicit Vector2D(int x = 0, int y = 0);
+    explicit Vector2D(int x, int y);
+    explicit Vector2D(int a);
 
     // Suma de 2 vectores
     Vector2D operator+(const Vector2D& other) const;
@@ -35,4 +33,3 @@ public:
 };
 
 #endif  // GAME_ENGINE_MATH_VECTOR2D_H_
-// Copyriht 2024  S.E.V

@@ -25,7 +25,11 @@ void CommonProtocol::send_header(const uint16_t header) {
     skt.sendall(&header_to_n, sizeof(header_to_n), &was_closed);
 }
 
-void CommonProtocol::send_close_connection(const uint16_t header) { send_header(header); }
+void CommonProtocol::send_close_connection(const uint16_t header, CloseConnectionDTO& dto) {
+    send_header(header);
+    dto.id_client = htons(dto.id_client);
+    skt.sendall(&dto, sizeof(dto), &was_closed);
+}
 
 void CommonProtocol::send_acpt_connection(const uint16_t header, const id_client_t id_client) {
     send_header(header);
@@ -115,9 +119,15 @@ void CommonProtocol::send_message(const std::shared_ptr<Message>& message) {
 }
 
 void CommonProtocol::force_shutdown() {
-    was_closed = true;
-    skt.shutdown(SHUT_RDWR);
-    skt.close();
+    if (!was_closed) {
+        was_closed = true;
+        try {
+            skt.shutdown(SHUT_RDWR);
+        } catch (const std::exception& e) {
+            std::cerr << "Socket shutdown failed: " << e.what() << std::endl;
+        }
+        skt.close();
+    }
 }
 
 std::shared_ptr<Message> CommonProtocol::recv_closed_connection() {
