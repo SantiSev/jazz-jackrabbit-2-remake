@@ -239,8 +239,7 @@ GameStateDTO Match::create_actual_snapshot() {
 
 void Match::load_enviorment(map_list_t map) {
     // hardcoding for testing purposes
-    YAML::Node yaml = YAML::LoadFile("/home/santi/Desktop/Facultad/talller_de_programacion/"
-                                     "tp_final/tp-final-Veiga/assets/maps/grass_map.yaml");
+    YAML::Node yaml = YAML::LoadFile("/home/maxo/Desktop/taller/assets/maps/grass_map.yaml");
 
     if (yaml.IsNull()) {
         throw std::runtime_error("Error loading yaml file");

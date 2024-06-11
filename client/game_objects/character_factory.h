@@ -28,12 +28,12 @@ public:
             case LORI_CHARACTER:
                 return std::make_unique<Lori>(resource_pool, animation_name, x, y);
                 break;
-                // case LIZARD_GOON_CHARACTER:
-                //     return std::make_unique<LizardGoon>(resource_pool, animation_name, x, y);
-                //     break;
-                // case MAD_HATTER_CHARACTER:
-                //     return std::make_unique<MadHatter>(resource_pool, animation_name, x, y);
-                //     break;
+            case LIZARD_GOON:
+                return std::make_unique<LizardGoon>(resource_pool, animation_name, x, y);
+                break;
+            case MAD_HATTER:
+                return std::make_unique<MadHatter>(resource_pool, animation_name, x, y);
+                break;
             default:
                 throw std::invalid_argument("Invalid character enum");
         }

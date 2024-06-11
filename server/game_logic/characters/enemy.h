@@ -6,7 +6,7 @@
 // Enemy config
 #define ENEMY_WIDTH 50
 #define ENEMY_HEIGHT 50
-#define MOVEMENT_RANGE 100
+#define MOVEMENT_RANGE 25
 
 class Enemy: public CharacterBody {
 private:
