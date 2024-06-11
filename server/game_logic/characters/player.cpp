@@ -44,7 +44,10 @@ void Player::reload_weapon(size_t weapon_id, int ammo_amount) {
     this->weapons[weapon_id]->add_ammo(ammo_amount);
 }
 
-void Player::shoot_selected_weapon() { weapons[selected_weapon]->shoot(); }
+void Player::shoot_selected_weapon() {
+    weapons[selected_weapon]->shoot();
+    state = is_facing_right() ? STATE_SHOOTING_RIGHT : STATE_SHOOTING_LEFT;
+}
 
 void Player::select_next_weapon() { selected_weapon = (selected_weapon + 1) % weapons.size(); }
 
@@ -225,48 +228,13 @@ void Player::execute_command(command_t command) {
         case MOVE_RIGHT:
             move_right();
             break;
-        case MOVE_LEFT_FAST:
-            if (is_on_floor()) {
-                // player.move_left_fast();
-                state = STATE_SPRINTING_LEFT;
-            }
-            break;
-        case MOVE_RIGHT_FAST:
-            if (is_on_floor()) {
-                // player.move_right_fast();
-                state = STATE_SPRINTING_RIGHT;
-            }
-            break;
         case JUMP:
             jump();
             break;
-        case SPECIAL_ATTACK:
-            if (is_player_intoxicated() || !is_special_available()) {
-                break;
-            }
-            //            player.especial_attack();
-            if (is_facing_right()) {
-                state = STATE_SPECIAL_RIGHT;
-            } else {
-                state = STATE_SPECIAL_LEFT;
-            }
-            reset_special_attack();
+        case SHOOT:
+            std::cout << "SHOOT" << std::endl;
+            shoot_selected_weapon();
             break;
-            // case SHOOT:
-            //     if (!is_player_intoxicated()) {
-            //         shoot();
-
-            //         Bullet bullet = shoot();
-            //         collision_manager.add_dynamic_body(bullet);
-            //         bullets.emplace_back(bullet);
-
-            //         if (is_facing_right()) {
-            //             state = STATE_SHOOTING_RIGHT);
-            //         } else {
-            //             state = STATE_SHOOTING_LEFT);
-            //         }
-            //     }
-            //     break;
         default:
             break;
     }

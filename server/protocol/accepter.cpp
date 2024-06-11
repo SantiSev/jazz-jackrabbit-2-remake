@@ -6,7 +6,7 @@
 #include "../game_logic/matches_manager.h"
 
 
-ServerAccepter::ServerAccepter(const std::string& port): skt(Socket(port.c_str())) {}
+ServerAccepter::ServerAccepter(const std::string& port): skt(port.c_str()) {}
 
 void ServerAccepter::run() {
     try {
