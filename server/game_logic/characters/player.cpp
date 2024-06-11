@@ -148,10 +148,16 @@ void Player::do_special_attack() {
 
 void Player::update_body() {
 
-
     if (is_dead()) {  // if the player is dead, then it shouldnt move
         return;
     }
+
+
+    if (velocity.x == 0 && is_on_floor() && !is_knocked_back && state != STATE_SHOOTING_LEFT &&
+        state != STATE_SHOOTING_RIGHT) {
+        state = is_facing_right() ? STATE_IDLE_RIGHT : STATE_IDLE_LEFT;
+    }
+
 
     if (!on_floor) {
         if (velocity.y < MAX_FALL_SPEED) {
@@ -175,6 +181,10 @@ void Player::update_body() {
     }
 
     position += velocity;
+
+#ifdef LOG_VERBOSE
+    print_info();
+#endif
 }
 
 void Player::handle_colision(CollisionObject* other) {
