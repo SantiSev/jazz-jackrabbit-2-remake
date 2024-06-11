@@ -42,12 +42,18 @@ void MatchesManager::create_new_match(const CreateGameDTO& dto) {
     auto match =
             std::make_shared<Match>(dto.map_name, dto.max_players, manager_queue, client_monitor);
     matches.insert({matches_number, match});
+
+    auto client = get_client_by_id(dto.id_client);
+    client->set_receiver_queue(match->get_match_queue());
+    client_monitor.addClient(client->get_sender_queue());
+
     match->start();
+
     std::string namestr = "Player 1";
     auto message =
             make_add_player_message(namestr, dto.id_client, dto.character_selected, dto.map_name);
     match->get_match_queue()->try_push(message);
-    get_client_by_id(dto.id_client)->set_receiver_queue(match->get_match_queue());
+
     send_client_succesful_connect(dto.id_client, dto.map_name);
     //    match->add_client_to_match(get_client_by_id(dto.id_client), "jugador_1_creador",
     //                               dto.character_selected);
