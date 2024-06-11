@@ -1,4 +1,10 @@
 /*
+ * Este codigo se encuentra bajo licencia: GPL v2
+ * El autor del mismo es: Taller de programacion I (Veiga) FIUBA (eldipa)
+ * El link al repositorio es: https://github.com/eldipa/sockets-en-cpp
+ * */
+
+/*
  * Este es un hack alrededor de un bug de G++ que, a pesar de decirle
  * que use un estándar (véase el Makefile), igualmente usa código
  * que es especifico de GNU (y no POSIX).
