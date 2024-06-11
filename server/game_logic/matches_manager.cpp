@@ -8,7 +8,10 @@ MatchesManager::MatchesManager():
         online(true),
         matches_number(0),
         waiting_server_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()),
-        message_handler(*this) {}
+        message_handler(*this),
+        resource_pool(std::make_shared<engine::ResourcePool>()) {
+    pre_load_resources();
+}
 
 void MatchesManager::run() {
     try {
@@ -38,7 +41,8 @@ void MatchesManager::run() {
 
 void MatchesManager::create_new_match(const CreateGameDTO& dto) {
     matches_number++;
-    auto match = std::make_shared<Match>(dto.map_name, dto.max_players, waiting_server_queue);
+    auto match = std::make_shared<Match>(dto.map_name, dto.max_players, waiting_server_queue,
+                                         resource_pool);
     matches.insert({matches_number, match});
     std::string num_player = std::to_string(clients_connected);
     match->start();
@@ -162,6 +166,16 @@ void MatchesManager::stop_all_matches() {
         match.second->join();
     }
     matches.clear();
+}
+
+void MatchesManager::pre_load_resources() {
+    resource_pool->load_yaml(map_character_enum_to_string.at(JAZZ_CHARACTER));
+    resource_pool->load_yaml(map_character_enum_to_string.at(SPAZ_CHARACTER));
+    resource_pool->load_yaml(map_character_enum_to_string.at(LORI_CHARACTER));
+    resource_pool->load_yaml(map_character_enum_to_string.at(MAD_HATTER));
+    resource_pool->load_yaml(map_character_enum_to_string.at(LIZARD_GOON));
+    resource_pool->load_yaml(SFX_FILE);
+    resource_pool->load_yaml(map_list_to_string.at(MAP_1));
 }
 
 void MatchesManager::stop() { online = false; }

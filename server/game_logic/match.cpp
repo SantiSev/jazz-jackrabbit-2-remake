@@ -2,7 +2,8 @@
 
 
 Match::Match(const map_list_t& map_selected, size_t required_players_setting,
-             std::shared_ptr<Queue<std::shared_ptr<Message>>>& lobby_queue):
+             std::shared_ptr<Queue<std::shared_ptr<Message>>>& lobby_queue,
+             const std::shared_ptr<engine::ResourcePool>& resource_pool):
         online(true),
         event_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()),
         lobby_queue(lobby_queue),
@@ -14,8 +15,8 @@ Match::Match(const map_list_t& map_selected, size_t required_players_setting,
         required_players(required_players_setting),
         client_monitor(),
         map(map_selected),
-        collision_manager(nullptr) {
-
+        collision_manager(nullptr),
+        resource_pool(resource_pool) {
     load_enviorment(map_selected);
     load_spawn_points();
     initiate_enemies();
@@ -238,8 +239,7 @@ GameStateDTO Match::create_actual_snapshot() {
 
 
 void Match::load_enviorment(map_list_t map) {
-    // hardcoding for testing purposes
-    YAML::Node yaml = YAML::LoadFile("/home/maxo/Desktop/taller/assets/maps/grass_map.yaml");
+    auto yaml = *resource_pool->get_yaml(map_list_to_string.at(map));
 
     if (yaml.IsNull()) {
         throw std::runtime_error("Error loading yaml file");
@@ -260,7 +260,6 @@ void Match::load_enviorment(map_list_t map) {
         bool collision = obj["collision"].as<bool>();
 
         if (collision) {
-
             auto d_rect_list_yaml = obj["d_rect_list"];
             for (auto d_rect_obj: d_rect_list_yaml) {
                 auto d_rect_yaml = d_rect_obj["d_rect"];
@@ -273,22 +272,26 @@ void Match::load_enviorment(map_list_t map) {
                 auto w = d_rect_yaml["w"].as<int>();
                 auto h = d_rect_yaml["h"].as<int>();
 
-                // create boxplatofrm shared pointer
-                auto new_box = std::make_shared<BoxPlatform>(x, y, w * repeat_h, h * repeat_v);
-                collision_manager->add_object(new_box);
+                // create horizontal boxplatofrm shared pointer
+                auto new_h_box = std::make_shared<BoxPlatform>(x, y, w * repeat_h, h);
+                collision_manager->add_object(new_h_box);
+
+                // create vertical boxplatofrm shared pointer (y + h to avoid overlapping with
+                // horizontal box)
+                auto new_v_box = std::make_shared<BoxPlatform>(x, y + h, w, h * repeat_v);
+                collision_manager->add_object(new_v_box);
             }
         }
     }
-    std::cout << "Map loaded !" << std::endl;
+#ifdef LOG
+    std::cout << "Map loaded!" << std::endl;
+#endif
 }
 
 
 void Match::load_spawn_points() {
+    auto yaml = *resource_pool->get_yaml(map_list_to_string.at(map));
 
-    //    std::string file_path = map_list_to_string.at(map) + YAML_EXTENSION;
-    YAML::Node yaml = YAML::LoadFile("/home/maxo/Desktop/taller/assets/maps/grass_map.yaml");
-
-    //    YAML::Node yaml = YAML::LoadFile(file_path);
     if (yaml.IsNull()) {
         std::cerr << "Error loading yaml file" << std::endl;
         exit(1);

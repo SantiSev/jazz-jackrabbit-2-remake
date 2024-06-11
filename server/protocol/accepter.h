@@ -8,7 +8,6 @@
 
 #include "../game_logic/matches_manager.h"
 
-
 class ServerAccepter: public Thread {
 private:
     Socket skt;
