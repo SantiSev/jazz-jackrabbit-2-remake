@@ -35,14 +35,7 @@ cmake \
 catch2
 ```
 
-Para instalar y compilar el juego se puede usar el script `build.sh` o los comandos son:
-
-```bash
-mkdir build
-cd build
-cmake -DPRODUCTION=ON ..
-make
-```
+Para instalar y compilar el juego se puede usar el script `build.sh`, con el comando `./build.sh -debug log`
 
 Esta secuencia compilara dos archivos: `server` y `client`. Para ejecutar `server` es
 
@@ -67,7 +60,7 @@ valgrind
 pre-commit install
 ```
 
-```
+```txt
 How to run tests:
 Antes que nada, hace
 
@@ -85,6 +78,7 @@ pero que luego esta se libera al cerrar la aplicacion por el sistema operativo.
 
 Para suprimirlos primero generar archivo valgrind.log y procesarlo con el script valgrind_to_suppressions.py. Una
 vez hecho eso simplemente correr valgrind con el archivo de supresiones generado.
+
 ```bash
 valgrind --leak-check=full --show-leak-kinds=all --gen-suppressions=all --log-file=valgrind.log ./program
 python3 valgrind_to_suppressions.py valgrind.log suppressions.supp
