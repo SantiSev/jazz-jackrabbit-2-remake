@@ -34,7 +34,17 @@ if (static)
     set(LDFLAGS "${LDFLAGS} -static")
 endif()
 
-# define targets
+# DEBUGGING
+if (LOG)
+    add_definitions(-DLOG)
+endif()
+if(LOG_VERBOSE)
+    add_definitions(-DLOG_VERBOSE)
+endif()
+if (CHEATS)
+    add_definitions(-DCHEATS)
+endif()
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LDFLAGS}")
 set(CMAKE_PREFIX_PATH "${SDL2_INCLUDE_DIRS} ${SDL2_ttf_INCLUDE_DIRS} ${SDL2_image_INCLUDE_DIRS} ${SDL2_mixer_INCLUDE_DIRS}")
@@ -50,24 +60,23 @@ file(GLOB_RECURSE HEADERS_SERVER "server/*.h" "server/**/*.h")
 file(GLOB_RECURSE HEADERS_COMMON "common/*.h" "common/**/*.h")
 file(GLOB_RECURSE HEADERS_GAME_ENGINE "game_engine/*.h" "game_engine/**/*.h")
 
-#if (PRODUCTION)
-add_executable(client
-        ${SOURCES_COMMON}
-        ${SOURCES_CLIENT}
-        ${HEADERS_CLIENT}
-        ${HEADERS_COMMON}
-        ${SOURCES_GAME_ENGINE}
-        ${HEADERS_GAME_ENGINE}
-)
-add_executable(server
-        ${SOURCES_COMMON}
-        ${SOURCES_SERVER}
-        ${HEADERS_SERVER}
-        ${HEADERS_COMMON}
-        ${SOURCES_GAME_ENGINE}
-        ${HEADERS_GAME_ENGINE}
-)
-
+if (PRODUCTION)
+    add_executable(client 
+        ${SOURCES_COMMON} 
+        ${SOURCES_CLIENT} 
+        ${HEADERS_CLIENT} 
+        ${HEADERS_COMMON} 
+        ${SOURCES_GAME_ENGINE} 
+        ${HEADERS_GAME_ENGINE} 
+    )
+    add_executable(server 
+        ${SOURCES_COMMON} 
+        ${SOURCES_SERVER} 
+        ${HEADERS_SERVER} 
+        ${HEADERS_COMMON} 
+        ${SOURCES_GAME_ENGINE} 
+        ${HEADERS_GAME_ENGINE} 
+    )
 
 target_link_libraries(client
         SDL2main
@@ -86,7 +95,7 @@ target_link_libraries(server
         SDL2_mixer
         yaml-cpp
 )
-#endif()
+endif()
 
 # COMMUNICATION - TESTS
 if (EVENTS)

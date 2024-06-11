@@ -7,4 +7,4 @@ Spaz::Spaz(uint16_t id, const std::string& name, int x, int y, CollisionManager&
         Player(id, name, SPAZ_CHARACTER, x, y, collision_manager) {}
 
 Lori::Lori(uint16_t id, const std::string& name, int x, int y, CollisionManager& collision_manager):
-        Player(id, name, LORI_CHAARCTER, x, y, collision_manager) {}
+        Player(id, name, LORI_CHARACTER, x, y, collision_manager) {}

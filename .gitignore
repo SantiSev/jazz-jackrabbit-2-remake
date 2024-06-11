@@ -52,3 +52,7 @@ tests_bin
 # CMake
 CMakeFiles
 valgrind.log
+
+# Logs
+server.log
+client.log

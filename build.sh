@@ -64,6 +64,33 @@ if [[ $# -eq 0 ]]; then
   cp -r ../assets .
 
   make
+  # if ./build.sh log
+elif [[ $1 == "-debug" ]]; then
+  echo "Building with debugging info"
+  check_for_dir $BUILD_DIR
+
+  cd $BUILD_DIR
+
+  # Initialize cmake options variable
+  CMAKE_OPTIONS=""
+
+  # Check for additional parameters and set cmake options accordingly
+  for param in "${@:2}"; do
+    if [[ $param == "log" ]]; then
+      CMAKE_OPTIONS+=" -DLOG=ON"
+    elif [[ $param == "log_verbose" ]]; then
+      CMAKE_OPTIONS+=" -DLOG_VERBOSE=ON"
+    elif [[ $param == "cheats" ]]; then
+      CMAKE_OPTIONS+=" -DCHEATS=ON"
+    fi
+  done
+
+  cmake .. -DPRODUCTION=ON $CMAKE_OPTIONS
+
+  echo "Copying assets"
+  cp -r ../assets .
+  
+  make
 # if ./build.sh graphics
 elif [[ $1 == "graphics" ]]; then
   echo "Building tests"

@@ -170,7 +170,7 @@ void Match::add_client_to_match(ServerThreadManager* client, const std::string& 
     clients.push_back(client);
     add_player_to_game(player_name, character, client->get_client_id());
     std::cout << "Player connected: " << player_name << " is playing as "
-              << character_to_string(character) << std::endl;
+              << map_character_enum_to_string.at(character) << std::endl;
 }
 
 void Match::send_end_message_to_players() {
@@ -178,21 +178,11 @@ void Match::send_end_message_to_players() {
     client_monitor.broadcastClients(game_ended_message);
 }
 
-void Match::delete_disconnected_player(id_client_t id_client) {
-    for (auto player = players.begin(); player != players.end(); ++player) {
-        if (id_client == (*player)->get_id()) {
-            players.erase(player);
-            break;
-        }
-    }
-}
-
 bool Match::has_match_ended() const { return match_has_ended; }
 
 void Match::stop() {
     online = false;
     std::cout << "stopping match " << std::endl;
-    collision_manager.clear();
     std::cout << "collision manager cleared" << std::endl;
     //    event_queue->close();
     send_end_message_to_players();
@@ -248,7 +238,7 @@ GameStateDTO Match::create_actual_snapshot() {
 
 //-------------------- Initialization Methods -----------------
 
-void Match::load_spawn_points() {  // todo the yaml code doesnt build
+void Match::load_spawn_points() {  // TODO the yaml code doesnt build
     /*
     //    std::string file_path = map_list_to_string.at(map) + YAML_EXTENSION;
     YAML::Node yaml =
@@ -282,7 +272,7 @@ void Match::initiate_enemies() {
         enemies.emplace_back(new_enemy);
         i++;
     }
- }
+}
 
 
 ServerThreadManager& Match::get_client_by_id(id_client_t id_client) {

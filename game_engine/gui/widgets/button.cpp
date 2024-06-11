@@ -10,10 +10,7 @@ Button::Button(std::unique_ptr<Label> label, SDL_Rect& rect, const SDL_Color& co
         hover_color(hover_color),
         is_hovered_m(false) {}
 
-void Button::on_click() {
-    std::cout << "Button was clicked." << std::endl;
-    label->on_click();
-}
+void Button::on_click() { label->on_click(); }
 
 void Button::is_hovered(bool hovered) {
     is_hovered_m = hovered;

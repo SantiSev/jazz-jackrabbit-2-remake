@@ -61,12 +61,11 @@ void MatchesManager::join_match(const JoinMatchDTO& dto) {
     if (it != matches.end()) {
 
         std::cout << "match found to join " << std::endl;
-        it->second->add_client_to_match(get_client_by_id(dto.id_client), "pepo_joineado",
+        it->second->add_client_to_match(get_client_by_id(dto.id_client), "Player " + num_player,
                                         dto.player_character);
         send_client_succesful_connect(dto.id_client, it->second->get_map());
     }
 }
-
 
 ServerThreadManager* MatchesManager::get_client_by_id(size_t id) {
     auto it = std::find_if(clients.begin(), clients.end(), [id](ServerThreadManager* client) {
