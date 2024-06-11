@@ -13,7 +13,7 @@ QuitButton::QuitButton(SDL_Renderer* renderer, std::shared_ptr<engine::ResourceP
 
 void QuitButton::on_click() {
 #ifdef LOG
-    std::cout << "Closing game." << std::endl;
+    std::cout << "Clicked Close game." << std::endl;
 #endif
     message_handler.quit();
     menu_running.store(false);

@@ -11,8 +11,9 @@ JoinMatchButton::JoinMatchButton(SDL_Renderer* renderer,
 
 void JoinMatchButton::on_click() {
 #ifdef LOG
-    std::cout << "Joining match." << std::endl;
+    std::cout << "Clicked Join match." << std::endl;
 #endif
+    // TODO hardcoded, implement match list
     message_handler.join_match(1, JAZZ_CHARACTER);
 }
 

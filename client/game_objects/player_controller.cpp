@@ -1,13 +1,13 @@
-#include "player.h"
+#include "player_controller.h"
 
 PlayerController::PlayerController(ClientMessageHandler& message_handler):
         message_handler(message_handler) {}
 
 void PlayerController::on_click() {
+    message_handler.send_command(SHOOT);
 #ifdef LOG
     std::cout << "PlayerController clicked" << std::endl;
 #endif
-    message_handler.send_command(SHOOT);
 }
 
 void PlayerController::on_key_press(const SDL_Keycode& key) {
@@ -33,8 +33,9 @@ void PlayerController::on_key_press(const SDL_Keycode& key) {
         default:
             break;
     }
-#ifdef LOG_VERBOSE
-    std::cout << "PlayerController pressed key: " << key << std::endl;
+
+#ifdef LOG
+    std::cout << "PlayerController key pressed " << key << std::endl;
 #endif
 }
 
