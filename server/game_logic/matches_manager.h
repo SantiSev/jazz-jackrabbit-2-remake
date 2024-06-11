@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 
+#include "../../game_engine/gui/basic/resource_pool.h"
 #include "../protocol/manager_message_handler.h"
 #include "../protocol/server_thread_manager.h"
 #include "./match.h"
@@ -23,6 +24,9 @@ private:
     std::list<ServerThreadManager*> clients;
     std::shared_ptr<Queue<std::shared_ptr<Message>>> waiting_server_queue;
     MatchesManagerMessageHandler message_handler;
+    std::shared_ptr<engine::ResourcePool> resource_pool;
+
+    void pre_load_resources();
 
 public:
     MatchesManager();

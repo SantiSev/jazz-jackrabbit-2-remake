@@ -15,7 +15,7 @@ void ResourcePool::load_texture(const std::string& name) {
     std::string file = name + PNG_EXTENSION;
     if (textures.find(name) == textures.end()) {
         auto texture = std::make_shared<Texture>(asset_manager.get_full_path(file), renderer);
-        textures[name] = texture;
+        textures.insert({name, texture});
     }
 }
 
@@ -26,7 +26,7 @@ void ResourcePool::load_font(const std::string& name, int size) {
     std::string file = name + TTF_EXTENSION;
     if (fonts.find(name) == fonts.end()) {
         auto font = std::make_shared<Font>(asset_manager.get_full_path(file), size);
-        fonts[name] = font;
+        fonts.insert({name, font});
     }
 }
 
@@ -34,7 +34,7 @@ void ResourcePool::load_yaml(const std::string& name) {
     std::string file = name + YAML_EXTENSION;
     if (yamls.find(name) == yamls.end()) {
         auto yaml = std::make_shared<YAML::Node>(YAML::LoadFile(asset_manager.get_full_path(file)));
-        yamls[name] = yaml;
+        yamls.insert({name, yaml});
     }
 }
 

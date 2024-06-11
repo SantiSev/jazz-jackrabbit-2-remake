@@ -26,6 +26,8 @@ public:
 
     void draw(SDL_Renderer* renderer) override;
 
+    bool is_intersecting(SDL_Point& point) const override;
+
     ~PlayerController();
 };
 

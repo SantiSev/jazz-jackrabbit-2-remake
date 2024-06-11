@@ -17,6 +17,7 @@
 #include <yaml-cpp/yaml.h>
 
 #include "../../common/assets.h"
+#include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/physics_engine/collision_manager.h"
 #include "../../server/game_logic/weapons/bullet.h"
 #include "../protocol/match_message_handler.h"
@@ -57,10 +58,13 @@ private:
     std::vector<Vector2D> player_spawn_points;
     std::vector<Vector2D> enemy_spawn_points;
 
+    const std::shared_ptr<engine::ResourcePool>& resource_pool;
+
 public:
     // Constructor
     explicit Match(const map_list_t& map_selected, size_t required_players_setting,
-                   std::shared_ptr<Queue<std::shared_ptr<Message>>>& lobby_queue);
+                   std::shared_ptr<Queue<std::shared_ptr<Message>>>& lobby_queue,
+                   const std::shared_ptr<engine::ResourcePool>& resource_pool);
 
     void run() override;
     void stop() override;

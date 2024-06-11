@@ -4,7 +4,7 @@ PlayerController::PlayerController(ClientMessageHandler& message_handler):
         message_handler(message_handler) {}
 
 void PlayerController::on_click() {
-#ifdef LOG_VERBOSE
+#ifdef LOG
     std::cout << "PlayerController clicked" << std::endl;
 #endif
     message_handler.send_command(SHOOT);
@@ -39,5 +39,8 @@ void PlayerController::on_key_press(const SDL_Keycode& key) {
 }
 
 void PlayerController::draw(SDL_Renderer* renderer) {}
+
+// It should be clickable anywhere
+bool PlayerController::is_intersecting(SDL_Point& point) const { return true; }
 
 PlayerController::~PlayerController() = default;

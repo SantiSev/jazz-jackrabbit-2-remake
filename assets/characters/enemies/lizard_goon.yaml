@@ -1,0 +1,23 @@
+# width and height of the hitbox
+body_width: 35
+body_height: 43
+moving_right:
+    flipped: false
+    frames: 12
+    fps: 8
+    x: 15
+    y: 4
+    w: 68
+    h: 62
+    off_x: -17
+    off_y: -19
+moving_left:
+    flipped: true
+    frames: 12
+    fps: 8
+    x: 15
+    y: 4
+    w: 68
+    h: 62
+    off_x: -17
+    off_y: -19

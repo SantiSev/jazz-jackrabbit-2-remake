@@ -1,21 +1,7 @@
 #!/bin/bash
 
-sudo apt-get update > /dev/null
-
 BUILD_DIR="./build"
 TESTS_DIR="./tests_bin"
-TIBURONCIN_SRC="https://github.com/eldipa/tiburoncin.git"
-
-echo "Installing dependencies"
-sudo apt install -y libsdl2-dev > /dev/null
-echo "libsdl2-dev installed"
-
-sudo apt install -y libsdl2-image-dev > /dev/null
-echo "libsdl2-image-dev installed"
-sudo apt install -y libsdl2-ttf-dev > /dev/null
-echo "libsdl2-ttf-dev installed"
-sudo apt install -y libsdl2-mixer-dev > /dev/null
-echo "libsdl2-mixer-dev installed"
 
 # if dir exists remove it
 check_for_dir() {
@@ -27,15 +13,6 @@ check_for_dir() {
   else
     mkdir $dir
   fi
-}
-
-install_tiburoncin() {
-  git clone $TIBURONCIN_SRC > /dev/null
-  cd tiburoncin
-  make 1> /dev/null
-  sudo cp tiburoncin /usr/bin/
-  cd ..
-  rm -rf tiburoncin
 }
 
 run_event_tests() {
@@ -108,12 +85,6 @@ elif [[ $1 == "events" ]]; then
   echo "Building event tests"
   
   check_for_dir $BUILD_DIR
-  
-  echo "Installing tiburoncin"
-  install_tiburoncin
-
-  echo "Installing valgrind"
-  sudo apt-get install -y valgrind > /dev/null
 
   cd $BUILD_DIR
   cmake -DEVENTS=ON ..
@@ -129,9 +100,6 @@ else [[ $1 == "physics" ]]
   echo "Building physics tests"
 
   check_for_dir $BUILD_DIR
-
-  echo "Installing catch2"
-  sudo apt install -y catch2 > /dev/null
 
   cd $BUILD_DIR
   cmake -DPHYSICS=ON ..
