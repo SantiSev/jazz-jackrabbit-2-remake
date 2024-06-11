@@ -3,6 +3,7 @@
 #include <vector>
 
 #include <arpa/inet.h>
+#include <endian.h>
 
 ClientProtocol::ClientProtocol(const std::string& hostname, const std::string& servname):
         CommonProtocol(hostname, servname) {}
@@ -28,8 +29,14 @@ std::shared_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() {
         }
     }
     for (int i = 0; i < game_state.num_enemies; i++) {
+        game_state.enemies[i].id = ntohs(game_state.enemies[i].id);
         game_state.enemies[i].x_pos = ntohs(game_state.enemies[i].x_pos);
         game_state.enemies[i].y_pos = ntohs(game_state.enemies[i].y_pos);
+    }
+    for (int i = 0; i < game_state.num_bullets; i++) {
+        game_state.bullets[i].id = be64toh(game_state.bullets[i].id);
+        game_state.bullets[i].x_pos = ntohs(game_state.bullets[i].x_pos);
+        game_state.bullets[i].y_pos = ntohs(game_state.bullets[i].y_pos);
     }
     return std::make_shared<SendGameStateMessage>(game_state);
 }

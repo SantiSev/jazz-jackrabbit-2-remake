@@ -9,6 +9,7 @@
 
 #include "../../../common/common_constants.h"
 #include "../../../common/protocol/common_dto.h"
+#include "../../../common/sfx_enum.h"
 #include "../../../game_engine/physics_engine/collision_manager.h"
 #include "../weapons/guns.h"
 

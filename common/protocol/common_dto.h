@@ -96,13 +96,16 @@ struct WeaponDTO {
 } __attribute__((packed));
 
 struct BulletDTO {
+    uint64_t id;
     uint8_t bullet_type;
+    uint8_t direction;
     uint16_t x_pos;
     uint16_t y_pos;
 } __attribute__((packed));
 
 struct EnemyDTO {
-    uint8_t enemy_type;
+    uint16_t id;
+    uint8_t character;
     uint8_t state;
     uint16_t x_pos;
     uint16_t y_pos;
