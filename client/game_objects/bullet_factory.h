@@ -15,7 +15,7 @@
 class BulletFactory {
 public:
     static std::unique_ptr<engine::AnimatedSprite> create_bullet(
-            const std::shared_ptr<engine::ResourcePool>& resource_pool, uint8_t bullet_type,
+            const std::shared_ptr<engine::ResourcePool>& resource_pool, bullet_type_t bullet_type,
             uint8_t direction, int x, int y) {
         switch (bullet_type) {
             case COMMON_BULLET:

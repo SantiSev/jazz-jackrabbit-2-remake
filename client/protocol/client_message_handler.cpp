@@ -8,7 +8,7 @@ void ClientMessageHandler::send_command(command_t command) {
     CommandDTO dto{client.id_client, command};
     send_message.push(std::make_shared<RecvCommandMessage>(dto));
 #ifdef LOG
-    std::cout << "Sending command: " << command << std::endl;
+    std::cout << "Sending command: " << int(command) << std::endl;
 #endif
 }
 

@@ -35,7 +35,7 @@ void PlayerController::on_key_press(const SDL_Keycode& key) {
     }
 
 #ifdef LOG
-    std::cout << "PlayerController key pressed " << key << std::endl;
+    std::cout << "PlayerController key pressed " << (char)key << std::endl;
 #endif
 }
 

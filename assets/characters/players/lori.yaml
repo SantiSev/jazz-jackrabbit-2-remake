@@ -5,12 +5,10 @@ idle_right:
     flipped: false
     frames: 26
     fps: 10
-    # Position of the sprite in the sprite sheet
     x: 1
     y: 55
     w: 48
     h: 48
-    # Offset to account for hitbox and start of animation
     off_x: -6
     off_y: -3
 idle_left:
@@ -124,35 +122,35 @@ special_right:
     off_x: 0
     off_y: 0
 special_left:
-    flipped: true
-    frames: 1
-    fps: 1
-    x: 0
-    y: 0
-    w: 0
-    h: 0
-    off_x: 0
-    off_y: 0
+    flipped: false
+    frames: 3
+    fps: 8
+    x: 8
+    y: 516
+    w: 57
+    h: 46
+    off_x: -12
+    off_y: -2
 damaged:
     flipped: false
-    frames: 1
-    fps: 1
-    x: 0
-    y: 0
-    w: 0
-    h: 0
-    off_x: 0
-    off_y: 0
+    frames: 3
+    fps: 8
+    x: 8
+    y: 516
+    w: 57
+    h: 46
+    off_x: -12
+    off_y: -2
 dead:
     flipped: false
-    frames: 1
-    fps: 1
-    x: 0
-    y: 0
-    w: 0
-    h: 0
-    off_x: 0
-    off_y: 0
+    frames: 3
+    fps: 8
+    x: 8
+    y: 516
+    w: 57
+    h: 46
+    off_x: -12
+    off_y: -2
 intoxicated_idle:
     flipped: false
     frames: 8

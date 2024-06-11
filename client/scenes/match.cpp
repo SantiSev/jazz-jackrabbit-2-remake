@@ -63,8 +63,9 @@ void MatchScene::init() {
     }
     for (uint8_t i = 0; i < first_state->num_bullets; i++) {
         auto bullet = first_state->bullets[i];
-        bullets[bullet.id] = BulletFactory::create_bullet(
-                resource_pool, bullet.bullet_type, bullet.direction, bullet.x_pos, bullet.y_pos);
+        bullets[bullet.id] =
+                BulletFactory::create_bullet(resource_pool, (bullet_type_t)bullet.bullet_type,
+                                             bullet.direction, bullet.x_pos, bullet.y_pos);
     }
 
     // Connect player controler to keyboard and mouse signals
@@ -94,7 +95,6 @@ void MatchScene::update_objects(int delta_time) {
 
         for (uint8_t i = 0; i < game_state->num_enemies; i++) {
             auto enemy = game_state->enemies[i];
-
             // If it's a new enemy create it
             enemies.try_emplace(enemy.id, CharacterFactory::create_character(
                                                   resource_pool, (character_t)enemy.character,
@@ -110,7 +110,7 @@ void MatchScene::update_objects(int delta_time) {
 
             // If it's a new bullet create it
             bullets.try_emplace(bullet.id, BulletFactory::create_bullet(
-                                                   resource_pool, bullet.bullet_type,
+                                                   resource_pool, (bullet_type_t)bullet.bullet_type,
                                                    bullet.direction, bullet.x_pos, bullet.y_pos));
 
             bullets.at(bullet.id)->set_position(bullet.x_pos, bullet.y_pos);
