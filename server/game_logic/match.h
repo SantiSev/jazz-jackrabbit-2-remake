@@ -3,13 +3,19 @@
 #ifndef TP_FINAL_MATCH_H
 #define TP_FINAL_MATCH_H
 
+#include <algorithm>
+#include <chrono>
+#include <cstring>
+#include <iomanip>
 #include <list>
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <yaml-cpp/yaml.h>
 
+#include "../../common/assets.h"
 #include "../../game_engine/physics_engine/collision_manager.h"
 #include "../../server/game_logic/weapons/bullet.h"
 #include "../protocol/match_message_handler.h"
@@ -17,6 +23,8 @@
 #include "characters/enemies.h"
 #include "characters/players.h"
 #include "collectables/collectable_items.h"
+#include "platforms/box_platform.h"
+#include "weapons/guns.h"
 
 #include "client_monitor.h"
 
@@ -44,7 +52,7 @@ private:
     size_t required_players;
     ClientMonitor client_monitor;
     map_list_t map;
-    CollisionManager collision_manager;
+    std::unique_ptr<CollisionManager> collision_manager;
     std::vector<Vector2D> player_spawn_points;
     std::vector<Vector2D> enemy_spawn_points;
 
@@ -89,6 +97,8 @@ public:
     GameStateDTO create_actual_snapshot();
 
     //-------------------- Initialization Methods -----------------
+
+    void load_enviorment(map_list_t map);
 
     void initiate_enemies();
 
