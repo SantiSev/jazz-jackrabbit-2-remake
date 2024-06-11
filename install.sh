@@ -1,8 +1,9 @@
 #!/bin/bash
 
-sudo apt-get update > /dev/null
+sudo apt update > /dev/null
 
-echo "Installing dependencies"
+echo "Installing dependencies..."
+
 sudo apt install -y libsdl2-dev > /dev/null
 echo "libsdl2-dev installed"
 
