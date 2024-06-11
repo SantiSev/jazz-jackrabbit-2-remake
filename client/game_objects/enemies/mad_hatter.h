@@ -12,7 +12,6 @@
 #include "../../../game_engine/gui/basic/resource_pool.h"
 #include "../../../game_engine/gui/widgets/animated_sprite.h"
 
-// TODO -> ADD MAD HATTER TO CHARACTER ENUM
 class MadHatter: public engine::AnimatedSprite {
 public:
     MadHatter(const std::shared_ptr<engine::ResourcePool>& resource_pool,
