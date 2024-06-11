@@ -1,3 +1,4 @@
+
 #include "enemies.h"
 
 #define MAD_HATTER_ATTACK_DAMAGE 100

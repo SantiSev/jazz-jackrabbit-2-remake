@@ -1,3 +1,7 @@
+
+#ifndef ENEMIES_H
+#define ENEMIES_H
+
 #include "enemy.h"
 
 class MadHatter: public Enemy {
@@ -9,3 +13,5 @@ class LizardGoon: public Enemy {
 public:
     LizardGoon(uint16_t id, int x, int y);
 };
+
+#endif  // ENEMIES_H

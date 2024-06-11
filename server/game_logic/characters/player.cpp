@@ -33,7 +33,6 @@ void Player::set_starting_weapon() {  // todo check if its needed to be in confi
     weapons[3] = std::make_unique<GunThree>(3, *this, collision_manager);
 }
 
-
 // ------------ Point Methods --------------
 
 void Player::add_points(int new_points) { this->points += new_points; }

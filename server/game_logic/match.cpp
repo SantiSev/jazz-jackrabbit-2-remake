@@ -18,32 +18,39 @@ Match::Match(const map_list_t& map_selected, size_t required_players_setting):
         message_handler(*this),
         players({}),
         enemies({}),
-        items(0),
+        bullets({}),
+        items({}),
         required_players(required_players_setting),
         client_monitor(),
         map(map_selected),
-        collision_manager(800, 600) {
+        collision_manager(1600, 800) {
+
+    // load enviorment with CM
     load_spawn_points();
     initiate_enemies();
 }
 
 void Match::run() {
     try {
-        //        while (online && players.size() != required_players) {
-        //            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        //            std::cout << "Match map: " << map << " Waiting for all players to connect to
-        //            start..."
-        //                      << std::endl;
-        //        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+        /* while (online && players.size() != required_players) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            std::cout << "Match map: " << map << " Waiting for all players to connect to start..."
+        << std::endl;
+        } */
+
+        // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
         auto startTime = std::chrono::system_clock::now();
         auto runTime = startTime;
 
         const double FPSMAX = 1000.0 / 60.0;
+
         std::shared_ptr<Message> next_message;
+
         std::cout << "Match map: " << map_list_to_string.at(map).substr(12) << " has started."
                   << std::endl;
+
         while (online) {
             auto endTime = std::chrono::system_clock::now();
             std::chrono::duration<double, std::milli> delta = endTime - startTime;
@@ -52,15 +59,18 @@ void Match::run() {
             auto frameStart = std::chrono::system_clock::now();
 
             size_t events = 0;
+
             while (event_queue->try_pop(next_message) && events < MAX_EVENTS_PER_LOOP) {
                 events++;
                 next_message->run(message_handler);
             }
 
-            patrol_move_enemies();
             collision_manager.update();
-            update_enemies();
-            update_players();
+            collision_manager.remove_inactive_bodies();
+
+            respawn_enemies();
+            respawn_players();
+            respawn_items();
 
             countdown_match(runTime, endTime);
 
@@ -72,7 +82,7 @@ void Match::run() {
             delta = frameEnd - frameStart;
 
             if (match_has_ended) {
-                break;
+                online = false;
             }
 
             if (delta.count() < FPSMAX) {
@@ -80,7 +90,7 @@ void Match::run() {
                         std::chrono::milliseconds(static_cast<int>(FPSMAX - delta.count())));
             }
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
     } catch (const std::exception& err) {
         if (online) {
             std::cerr << "An exception was caught in gameloop: " << err.what() << "\n";
@@ -118,15 +128,21 @@ void Match::run_command(const CommandDTO& dto) {
     }
 }
 
-void Match::update_players() {
+void Match::respawn_players() {
     for (auto& player: players) {
         player->update_status(select_player_spawn_point());
     }
 }
 
-void Match::update_enemies() {
+void Match::respawn_enemies() {
     for (auto& enemy: enemies) {
         enemy->update_body();
+    }
+}
+
+void Match::respawn_items() {
+    for (auto& item: items) {
+        item->update_body();
     }
 }
 
@@ -135,11 +151,6 @@ Vector2D Match::select_player_spawn_point() {
     return player_spawn_points[i];
 }
 
-void Match::patrol_move_enemies() {
-    for (auto& enemy: enemies) {
-        enemy->patrol();
-    }
-}
 
 //-------------------- Conection Methods -----------------
 
