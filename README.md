@@ -7,6 +7,21 @@
 - Santiago Sevitz - 107520 - <ssevitz@fi.uba.ar>
 - Nicolas Ramiro Sanchez - 998792 - <nrsanchez@fi.uba.ar>
 
+## Librerias externas
+
+### Librerias externas: Threads
+
+Este trabajo practico utiliza librerias externas provistas por la Catedra de Taller de programacion I (Veiga) FIUBA
+(eldipa). Cuyo codigo, esta bajo la licencia: GPL v2. Dichas librerias implementan Threads y Queues (thread-safe)
+[https://github.com/eldipa/hands-on-threads](https://github.com/eldipa/hands-on-threads)
+
+### Librerias externas: Sockets
+
+Este trabajo practico utiliza librerias externas provistas por la Catedra de Taller de programacion I (Veiga) FIUBA
+(eldipa). Cuyo codigo, esta bajo la licencia: GPL v2. Dichas librerias implementan Sockets en C++ para ser utilizados
+con un protocolo en particular. El link al repositorio es:
+[https://github.com/eldipa/sockets-en-cpp](https://github.com/eldipa/sockets-en-cpp)
+
 ## Game requirements
 
 ```bash
