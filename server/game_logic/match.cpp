@@ -225,19 +225,20 @@ GameStateDTO Match::create_actual_snapshot() {
                     (uint8_t)players[i]->get_weapon(j)->get_weapon_id();
         }
     }
-    for (size_t i = 0; i < players.size(); ++i) {
-        game_state.players[i].state = enemies[i]->get_state();
+    for (size_t i = 0; i < enemies.size(); ++i) {
+        game_state.enemies[i].id = enemies[i]->get_id();
+        game_state.enemies[i].state = enemies[i]->get_state();
+        game_state.enemies[i].character = enemies[i]->get_character();
         game_state.enemies[i].x_pos = enemies[i]->position.x;
         game_state.enemies[i].y_pos = enemies[i]->position.y;
-        game_state.enemies[i].state = enemies[i]->get_state();
     }
     for (size_t i = 0; i < bullets.size(); ++i) {
+        game_state.bullets[i].id = bullets[i]->get_id();
+        game_state.bullets[i].direction = bullets[i]->get_direction();
+        game_state.bullets[i].bullet_type = bullets[i]->get_type();
         game_state.bullets[i].x_pos = bullets[i]->position.x;
         game_state.bullets[i].y_pos = bullets[i]->position.y;
-        //        game_state.bullets[i].bullet_type = (uint8_t)bullets[i]->get_bullet_type();
-        //        PASAR BULLET ID
     }
-
 
     return game_state;
 }
@@ -247,8 +248,7 @@ GameStateDTO Match::create_actual_snapshot() {
 void Match::load_spawn_points() {  // TODO the yaml code doesnt build
 
     //    std::string file_path = map_list_to_string.at(map) + YAML_EXTENSION;
-    YAML::Node yaml = YAML::LoadFile("/home/santi/Desktop/Facultad/talller_de_programacion/"
-                                     "tp_final/tp-final-Veiga/assets/maps/grass_map.yaml");
+    YAML::Node yaml = YAML::LoadFile("/home/maxo/Desktop/taller/assets/maps/grass_map.yaml");
 
     //    YAML::Node yaml = YAML::LoadFile(file_path);
     if (yaml.IsNull()) {

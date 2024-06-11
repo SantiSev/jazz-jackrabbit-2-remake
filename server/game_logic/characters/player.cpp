@@ -26,11 +26,11 @@ std::string Player::get_name() const { return name; }
 void Player::set_name(std::string new_name) { this->name = std::move(new_name); }
 
 void Player::set_starting_weapon() {  // todo check if its needed to be in config
-
-    weapons[0] = std::make_unique<DefaultGun>(0, *this, collision_manager);
-    weapons[1] = std::make_unique<GunOne>(1, *this, collision_manager);
-    weapons[2] = std::make_unique<GunTwo>(2, *this, collision_manager);
-    weapons[3] = std::make_unique<GunThree>(3, *this, collision_manager);
+    // TODO fix this the id should not be passed as a parameter
+    weapons[0] = std::make_unique<DefaultGun>(COMMON_BULLET, *this, collision_manager);
+    weapons[1] = std::make_unique<GunOne>(BULLET_ONE, *this, collision_manager);
+    weapons[2] = std::make_unique<GunTwo>(BULLET_TWO, *this, collision_manager);
+    weapons[3] = std::make_unique<GunThree>(BULLET_THREE, *this, collision_manager);
 }
 
 // ------------ Point Methods --------------
