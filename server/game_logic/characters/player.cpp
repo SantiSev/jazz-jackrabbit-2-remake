@@ -301,4 +301,11 @@ void Player::update_status(Vector2D spawn_point) {  // todo check if its needed
     if (!is_on_floor() && (velocity.y > NONE) && !is_doing_action_state()) {
         state = STATE_FALLING;
     }
+    if (is_on_floor() && !is_doing_action_state()) {
+        if (is_facing_right()) {
+            state = STATE_IDLE_RIGHT;
+        } else {
+            state = STATE_IDLE_LEFT;
+        }
+    }
 }
