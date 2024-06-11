@@ -14,7 +14,7 @@
 
 Enemy::Enemy(uint16_t id, const character_t& character, int attack_damage, int health,
              int revive_cooldown, int x, int y, int w, int h, int speed):
-        CharacterBody(id, character, x, y, w, h, Vector2D(speed, 0), health, MOVE_RIGHT,
+        CharacterBody(id, character, x, y, w, h, Vector2D(speed, 0), health, STATE_MOVING_RIGHT,
                       revive_cooldown),
         attack_damage(attack_damage),
         attack_cooldown(ATTACK_COOLDOWN),
