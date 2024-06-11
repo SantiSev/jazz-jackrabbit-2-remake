@@ -116,8 +116,8 @@ void AnimatedSprite::set_animation(const std::string& animation_name) {
     s_rect.w = animation["w"].as<int>();
     s_rect.h = animation["h"].as<int>();
 
-    d_rect.h = animation["w"].as<int>();
-    d_rect.w = animation["h"].as<int>();
+    d_rect.w = animation["w"].as<int>();
+    d_rect.h = animation["h"].as<int>();
 
     animation_off_x = animation["off_x"].as<int>();
     animation_off_y = animation["off_y"].as<int>();

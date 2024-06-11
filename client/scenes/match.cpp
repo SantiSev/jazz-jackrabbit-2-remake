@@ -54,7 +54,6 @@ void MatchScene::init() {
         auto player = first_state->players[i];
         create_character(player.id, (character_t)player.character, player.state, player.x_pos,
                          player.y_pos);
-        // create_bullet(player.id, COMMON_BULLET, player.x_pos, player.y_pos, 0);
     }
     // for (uint8_t i = 0; i < num_enemies; i++) {
     //     auto enemy = first_state->enemies[i];
@@ -62,7 +61,8 @@ void MatchScene::init() {
     //                      enemy.y_pos);
     // }
 
-    // TODO Create bullets
+    // TODO Create bullets // create_bullet(player.id, COMMON_BULLET, player.x_pos, player.y_pos,
+    // 0);
 
     // Connect player controler to keyboard and mouse signals
     event_loop->keyboard.add_on_key_down_signal_obj(&player_controller);
