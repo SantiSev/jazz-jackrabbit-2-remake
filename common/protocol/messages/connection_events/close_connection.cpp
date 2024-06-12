@@ -1,13 +1,14 @@
 #include "./close_connection.h"
 
-CloseConnectionMessage::CloseConnectionMessage(): Message(CLOSE_CONNECTION) {}
+CloseConnectionMessage::CloseConnectionMessage(const CloseConnectionDTO& closed_con_dto):
+        Message(CLOSE_CONNECTION), dto(closed_con_dto) {}
 
-void CloseConnectionMessage::run() {}
-
-void CloseConnectionMessage::run(ClientProtocol& client_protocol) {}
-
-void CloseConnectionMessage::send_message(CommonProtocol& protocol) {
-    protocol.send_close_connection(header);
+void CloseConnectionMessage::run(MessageHandler& handler) {
+    handler.handle_recv_close_connection(dto);
 }
 
-CloseConnectionMessage::~CloseConnectionMessage() {}
+void CloseConnectionMessage::send_message(CommonProtocol& protocol) {
+    protocol.send_close_connection(header, dto);
+}
+
+CloseConnectionMessage::~CloseConnectionMessage() = default;

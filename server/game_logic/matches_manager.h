@@ -8,7 +8,8 @@
 #include <string>
 #include <vector>
 
-#include "../../common/common_dto.h"
+#include "../../game_engine/gui/basic/resource_pool.h"
+#include "../protocol/manager_message_handler.h"
 #include "../protocol/server_thread_manager.h"
 #include "./match.h"
 
@@ -22,6 +23,10 @@ private:
     std::map<size_t, std::shared_ptr<Match>> matches;
     std::list<ServerThreadManager*> clients;
     std::shared_ptr<Queue<std::shared_ptr<Message>>> waiting_server_queue;
+    MatchesManagerMessageHandler message_handler;
+    std::shared_ptr<engine::ResourcePool> resource_pool;
+
+    void pre_load_resources();
 
 public:
     MatchesManager();
@@ -34,22 +39,23 @@ public:
     void check_matches_status();
     void stop_finished_match(Match* match);
 
-    std::vector<matchesDTO> return_matches_lists();
+    MatchInfoDTO return_matches_lists();
 
-    void create_new_match(const uint16_t& id_client, const std::string& match_name,
-                          const size_t& max_players, const std::string& map_name,
-                          const uint8_t& character_selected);
+    void create_new_match(const CreateGameDTO& dto);
 
-    void add_new_client(Socket client_socket);
+    void add_new_client_to_manager(Socket client_socket);
 
-    void send_match_lists(ServerThreadManager* client);
+    void send_match_lists(RequestActiveGamesDTO dto);
 
-    void clear_all_waiting_clients();
+    void clear_all_clients();
 
-    void join_match(const id_player_t& client_id, const id_match_t& match_id,
-                    const character_t& character);
+    void join_match(const JoinMatchDTO& dto);
 
     ServerThreadManager* get_client_by_id(size_t id);
+
+    void send_client_succesful_connect(uint16_t id_client, map_list_t map);
+
+    void delete_disconnected_client(id_client_t id_client);
 };
 
 

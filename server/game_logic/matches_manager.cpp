@@ -4,31 +4,33 @@
 #include <utility>
 #include <vector>
 
-#include "../../common/protocol/messages/common_message.h"
-
 MatchesManager::MatchesManager():
         online(true),
         matches_number(0),
-        waiting_server_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()) {}
+        waiting_server_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()),
+        message_handler(*this),
+        resource_pool(std::make_shared<engine::ResourcePool>()) {
+    pre_load_resources();
+}
 
 void MatchesManager::run() {
     try {
-        std::shared_ptr<Message> client_message;
         while (online) {
-            client_message = nullptr;
+            std::shared_ptr<Message> client_message;
             check_matches_status();
 
-            while (waiting_server_queue->try_pop(client_message)) {
-                if (client_message != nullptr) {
-                    client_message->run(*this);
-                }
+            waiting_server_queue->try_pop(client_message);
+            if (client_message) {
+                client_message->run(message_handler);
             }
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
+        std::cout << "stopping matches" << std::endl;
         stop_all_matches();
-        clear_all_waiting_clients();
+        std::cout << "clearing all clients" << std::endl;
+        clear_all_clients();
         waiting_server_queue->close();
+        std::cout << "Server Closed" << std::endl;
     } catch (const std::exception& err) {
         if (online) {
             std::cerr << "An exception was caught in matches manager: " << err.what() << "\n";
@@ -37,37 +39,101 @@ void MatchesManager::run() {
     }
 }
 
-void MatchesManager::create_new_match(const uint16_t& id_client, const std::string& match_name,
-                                      const size_t& max_players, const std::string& map_name,
-                                      const uint8_t& character_selected) {
+void MatchesManager::create_new_match(const CreateGameDTO& dto) {
     matches_number++;
-    auto match = std::make_shared<Match>(map_name, match_name, max_players);
+    auto match = std::make_shared<Match>(dto.map_name, dto.max_players, waiting_server_queue,
+                                         resource_pool);
     matches.insert({matches_number, match});
+    std::string num_player = std::to_string(clients_connected);
     match->start();
-    match->add_client_to_match(get_client_by_id(id_client), "jugador 1", character_selected);
+    match->add_client_to_match(get_client_by_id(dto.id_client), "player " + num_player,
+                               dto.character_selected);
+
+    send_client_succesful_connect(dto.id_client, dto.map_name);
+}
+
+void MatchesManager::send_client_succesful_connect(uint16_t id_client, map_list_t map) {
+    ClientHasConnectedToMatchDTO game_connected = {map};
+    auto send_game_created = std::make_shared<SendConnectedToGameMessage>(game_connected);
+    get_client_by_id(id_client)->get_sender_queue()->push(send_game_created);
+}
+
+void MatchesManager::join_match(const JoinMatchDTO& dto) {
+    std::cout << "Joining match " << dto.id_match << std::endl;
+    auto it = matches.find(dto.id_match);
+    std::string num_player = std::to_string(clients_connected);
+    if (it != matches.end()) {
+
+        std::cout << "match found to join " << std::endl;
+        it->second->add_client_to_match(get_client_by_id(dto.id_client), "Player " + num_player,
+                                        dto.player_character);
+        send_client_succesful_connect(dto.id_client, it->second->get_map());
+    }
 }
 
 ServerThreadManager* MatchesManager::get_client_by_id(size_t id) {
     auto it = std::find_if(clients.begin(), clients.end(), [id](ServerThreadManager* client) {
         return client->get_client_id() == id;
     });
-
     return (it != clients.end()) ? *it : nullptr;
 }
 
-void MatchesManager::join_match(const id_player_t& client_id, const id_match_t& match_id,
-                                const character_t& character) {
-    auto it = matches.find(match_id);
-    if (it != matches.end()) {
-        it->second->add_client_to_match(get_client_by_id(client_id), "pepo", character);
+void MatchesManager::add_new_client_to_manager(Socket client_socket) {
+    clients_connected++;
+    auto client = new ServerThreadManager(std::move(client_socket), waiting_server_queue);
+    auto message = std::make_shared<AcptConnection>(clients_connected);  // le mando su id
+    client->get_sender_queue()->push(message);
+    client->set_client_id(clients_connected);
+    clients.push_back(client);
+    std::cout << "Client " << clients_connected << " connected to server." << std::endl;
+}
+
+void MatchesManager::clear_all_clients() {
+    for (auto& client: clients) {
+        CloseConnectionDTO close_connection{client->get_client_id()};
+        auto game_ended_message = std::make_shared<CloseConnectionMessage>(close_connection);
+        client->get_sender_queue()->try_push(game_ended_message);
+        client->stop();
+        delete client;
+    }
+    clients.clear();
+}
+
+MatchInfoDTO MatchesManager::return_matches_lists() {
+    MatchInfoDTO matches_lists{};
+    matches_lists.num_games = matches.size();
+    size_t i = 0;
+    for (auto& match: matches) {
+        matches_lists.active_games[i].map = match.second->get_map();
+        matches_lists.active_games[i].players_ingame = match.second->get_num_players();
+        matches_lists.active_games[i].players_max = match.second->get_max_players();
+    }
+    return matches_lists;
+}
+
+void MatchesManager::send_match_lists(RequestActiveGamesDTO dto) {
+    auto matches_lists = return_matches_lists();
+    auto matches_message = std::make_shared<RecvActiveGames>(matches_lists);
+    get_client_by_id(dto.id_client)->get_sender_queue()->push(matches_message);
+}
+
+void MatchesManager::delete_disconnected_client(id_client_t id_client) {
+    for (auto client = clients.begin(); client != clients.end(); ++client) {
+        if (id_client == (*client)->get_client_id()) {
+            std::cout << "Stopping client " << id_client << " in lobby." << std::endl;
+            (*client)->stop();
+            delete *client;
+            clients.erase(client);
+            std::cout << "Client " << id_client << " disconnected from lobby." << std::endl;
+            break;
+        }
     }
 }
 
 void MatchesManager::check_matches_status() {
     for (auto it = matches.begin(); it != matches.end();) {
         if (it->second->has_match_ended()) {
-            std::cout << "Match " << it->first << " " << it->second->get_match_name()
-                      << " has ended.\n";
+            std::cout << "Match " << it->first << " " << it->second->get_map() << " has ended.\n";
             stop_finished_match(it->second.get());
             matches.erase(it);
             break;
@@ -78,22 +144,20 @@ void MatchesManager::check_matches_status() {
 }
 
 void MatchesManager::stop_finished_match(Match* match) {
-    match->stop();
-    match->join();
     std::vector<size_t> ids = match->get_clients_ids();
     for (auto id: ids) {
         auto it = clients.begin();
         while (it != clients.end()) {
             if ((*it)->get_client_id() == id) {
-                (*it)->stop();
-                delete (*it);
-                clients.erase(it);
+                (*it)->set_receiver_queue(waiting_server_queue);
                 break;
             } else {
                 ++it;
             }
         }
     }
+    match->stop();
+    match->join();
 }
 
 void MatchesManager::stop_all_matches() {
@@ -104,40 +168,14 @@ void MatchesManager::stop_all_matches() {
     matches.clear();
 }
 
-std::vector<matchesDTO> MatchesManager::return_matches_lists() {
-    std::vector<matchesDTO> matches_list;
-    for (auto& match: matches) {
-        matchesDTO matchDTO;
-        matchDTO.match_name = match.second->get_match_name();
-        matchDTO.match_id = match.first;
-        matchDTO.minutes = match.second->get_minutes();
-        matchDTO.seconds = match.second->get_seconds();
-        matchDTO.num_actual_players = match.second->get_num_players();
-        matchDTO.max_players = match.second->get_max_players();
-        matches_list.push_back(matchDTO);
-    }
-    return matches_list;
-}
-
-void MatchesManager::add_new_client(Socket client_socket) {
-    clients_connected++;
-    auto client = new ServerThreadManager(std::move(client_socket), waiting_server_queue);
-    //    auto message =std::make_shared<ConnectedMessage>(clients_connected);  // le mando su id
-    //    para que lo guarde client->get_sender_queue()->push(message);
-    client->set_client_id(clients_connected);
-    clients.push_back(client);
-}
-
-void MatchesManager::clear_all_waiting_clients() {
-    for (auto& client: clients) {
-        client->stop();
-        delete client;
-    }
-    clients.clear();
-}
-
-void MatchesManager::send_match_lists(ServerThreadManager* client) {
-    //     client->get_sender_queue()->push(return_matches_lists());
+void MatchesManager::pre_load_resources() {
+    resource_pool->load_yaml(map_character_enum_to_string.at(JAZZ_CHARACTER));
+    resource_pool->load_yaml(map_character_enum_to_string.at(SPAZ_CHARACTER));
+    resource_pool->load_yaml(map_character_enum_to_string.at(LORI_CHARACTER));
+    resource_pool->load_yaml(map_character_enum_to_string.at(MAD_HATTER));
+    resource_pool->load_yaml(map_character_enum_to_string.at(LIZARD_GOON));
+    resource_pool->load_yaml(SFX_FILE);
+    resource_pool->load_yaml(map_list_to_string.at(MAP_1));
 }
 
 void MatchesManager::stop() { online = false; }

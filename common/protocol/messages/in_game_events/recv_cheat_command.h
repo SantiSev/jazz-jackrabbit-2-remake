@@ -10,8 +10,8 @@ private:
     CheatCommandDTO cheat_command;
 
 public:
-    explicit RecvCheatCommandMessage(CheatCommandDTO& cheat_command);
-    void run() override;
+    explicit RecvCheatCommandMessage(const CheatCommandDTO& cheat_command);
+    void run(MessageHandler& handler) override;
     void send_message(CommonProtocol& protocol) override;
     ~RecvCheatCommandMessage();
 };

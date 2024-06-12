@@ -2,21 +2,19 @@
 
 using engine::Button;
 
-Button::Button(Label&& label, SDL_Rect& rect, const SDL_Color& color, const SDL_Color& hover_color):
+Button::Button(std::unique_ptr<Label> label, SDL_Rect& rect, const SDL_Color& color,
+               const SDL_Color& hover_color):
         label(std::move(label)),
         rect(rect),
         color(color),
         hover_color(hover_color),
         is_hovered_m(false) {}
 
-void Button::on_click() {
-    std::cout << "Button was clicked." << std::endl;
-    label.on_click();
-}
+void Button::on_click() { label->on_click(); }
 
 void Button::is_hovered(bool hovered) {
     is_hovered_m = hovered;
-    label.is_hovered(hovered);
+    label->is_hovered(hovered);
 }
 
 void Button::draw(SDL_Renderer* renderer) {
@@ -36,13 +34,13 @@ void Button::draw(SDL_Renderer* renderer) {
         throw SDLError("Error drawing button: " + std::string(SDL_GetError()));
     }
 
-    label.draw(renderer);
+    label->draw(renderer);
 }
 
 void Button::set_position(int x, int y) {
     rect.x = x;
     rect.y = y;
-    label.set_position(x, y);
+    label->set_position(x, y);
 }
 
 bool Button::is_intersecting(SDL_Point& point) const {

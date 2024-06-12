@@ -1,109 +1,306 @@
 #include "player.h"
 
-#include <cstdint>
-#include <utility>
 
-#include "../../../common/common_constants.h"
-
-Player::Player(size_t id, std::string name, const uint8_t& character):
-        id(id),
+Player::Player(uint16_t id, std::string name, const character_t& character, int x, int y,
+               CollisionManager& collision_manager):
+        CharacterBody(id, character, x, y, PLAYER_WIDTH, PLAYER_HEIGHT,
+                      Vector2D(NONE, MAX_FALL_SPEED), MAX_HEALTH, STATE_IDLE_RIGHT,
+                      REVIVE_COOLDOWN),
         name(std::move(name)),
-        health(MAX_HEALTH),
-        character(character),
-        points(STARTING_POINTS),
-        state(STATE_IDLE_RIGHT) {
+        weapons(NUM_OF_WEAPONS),
+        collision_manager(collision_manager) {
     set_starting_weapon();
 }
-void Player::set_starting_weapon() {
-    weapons[DEFAULT_WEAPON].set_is_empty(false);
-    weapons[DEFAULT_WEAPON].set_weapon_name(DEFAULT_WEAPON);
-    weapons[DEFAULT_WEAPON].set_ammo(100);
-    weapons[FIRST_WEAPON].set_is_empty(true);
-    weapons[FIRST_WEAPON].set_weapon_name(FIRST_WEAPON);
-    weapons[FIRST_WEAPON].set_ammo(0);
-    weapons[SECOND_WEAPON].set_ammo(0);
-    weapons[SECOND_WEAPON].set_is_empty(true);
-    weapons[SECOND_WEAPON].set_weapon_name(SECOND_WEAPON);
-    weapons[THIRD_WEAPON].set_ammo(0);
-    weapons[THIRD_WEAPON].set_is_empty(true);
-    weapons[THIRD_WEAPON].set_weapon_name(THIRD_WEAPON);
-    weapons[THIRD_WEAPON].set_ammo(0);
-}
 
-size_t Player::get_id() const { return id; }
 
-std::string Player::get_name() { return name; }
+// -------- Getters ---------
 
-size_t Player::get_health() const { return health; }
+int Player::get_points() const { return points; }
 
-uint8_t Player::get_character() const { return character; }
+Weapon* Player::get_weapon(size_t weapon) const { return weapons[weapon].get(); }
 
-size_t Player::get_points() const { return points; }
+std::string Player::get_name() const { return name; }
 
-void Player::add_points(size_t new_points) { this->points += new_points; }
-
-void Player::set_id(const size_t new_id) { this->id = new_id; }
+//------------ Setters ----------
 
 void Player::set_name(std::string new_name) { this->name = std::move(new_name); }
 
-void Player::set_health(const size_t new_health) { this->health = new_health; }
-
-void Player::decrease_health(size_t susbstract_health) {
-    if (((int)health - (int)susbstract_health) < MIN_HEALTH) {
-        health = MIN_HEALTH;
-    } else {
-        health -= susbstract_health;
-    }
+void Player::set_starting_weapon() {  // todo check if its needed to be in config
+    // TODO fix this the id should not be passed as a parameter
+    weapons[0] = std::make_unique<DefaultGun>(COMMON_BULLET, *this, collision_manager);
+    weapons[1] = std::make_unique<GunOne>(BULLET_ONE, *this, collision_manager);
+    weapons[2] = std::make_unique<GunTwo>(BULLET_TWO, *this, collision_manager);
+    weapons[3] = std::make_unique<GunThree>(BULLET_THREE, *this, collision_manager);
 }
 
-void Player::increase_health(size_t add_health) {
-    if (((int)this->health + (int)add_health) > MAX_HEALTH) {
-        this->health = MAX_HEALTH;
-    } else {
-        this->health += add_health;
-    }
-}
+// ------------ Point Methods --------------
 
-void Player::set_character(uint8_t new_character) { this->character = new_character; }
+void Player::add_points(int new_points) { this->points += new_points; }
 
+// ------------ Weapon Methods --------------
 
-void Player::increase_points(size_t new_points) { this->points += new_points; }
+void Player::reload_weapon(size_t weapon_id, int ammo_amount) {
 
-void Player::decrease_revive_cooldown() { this->revive_cooldown--; }
-
-void Player::reset_revive_cooldown() { this->revive_cooldown = REVIVE_COOLDOWN; }
-
-void Player::get_weapon_ammo(size_t ammo, size_t weapon) {
-    this->weapons[weapon].add_ammo(ammo);
-    this->weapons[weapon].set_is_empty(false);
+    this->weapons[weapon_id]->add_ammo(ammo_amount);
 }
 
 void Player::shoot_selected_weapon() {
-    if (selected_weapon == DEFAULT_WEAPON) {
-        // GENERAR PROYECTIL DEFAULT (no decrementa balas)
+
+#ifdef LOG_VERBOSE
+    std::cout << "| Player id: " << this->id << " | Player::shoot_selected_weapon() |" << std::endl;
+#endif
+
+    weapons[selected_weapon]->shoot();
+    state = is_facing_right() ? STATE_SHOOTING_RIGHT : STATE_SHOOTING_LEFT;
+}
+
+void Player::select_next_weapon() { selected_weapon = (selected_weapon + 1) % weapons.size(); }
+
+
+// ------------ Intoxication Methods --------------
+
+bool Player::is_player_intoxicated() const { return is_intoxicated; }
+
+void Player::reset_intoxication() { is_intoxicated = false; }
+
+void Player::decrease_intoxication_cooldown() { intoxication_cooldown--; }
+
+size_t Player::get_intoxication_cooldown() const { return intoxication_cooldown; }
+
+// ------------ Special Attack Methods --------------
+
+bool Player::is_special_available() const { return special_cooldown == 0; }
+
+void Player::decrease_special_attack_cooldown() { special_cooldown--; }
+
+void Player::reset_special_attack() { special_cooldown = SPECIAL_COOLDOWN; }
+
+// ------------ Movement Methods --------------
+
+void Player::move_left() {
+
+#ifdef LOG_VERBOSE
+    std::cout << "| Player id: " << this->id << " | Player::move_left() |" << std::endl;
+#endif
+
+    if (is_knocked_back) {
+        return;
     }
-    if (!weapons[selected_weapon].is_weapon_empty())
-        this->weapons[selected_weapon].decrease_ammo();
-    if (weapons[selected_weapon].get_ammo() == 0) {
-        weapons[selected_weapon].set_is_empty(true);
+
+    direction = -1;
+    velocity.x = -DEFAULT_SPEED_X;
+    if (is_on_floor()) {
+        if (is_player_intoxicated()) {
+            state = STATE_INTOXICATED_MOV_LEFT;
+        } else {
+            state = STATE_MOVING_LEFT;
+        }
     }
-    // GENERAR PROYECTIL
+}
+
+void Player::move_right() {
+
+#ifdef LOG_VERBOSE
+    std::cout << "| Player id: " << this->id << " | Player::move_right() |" << std::endl;
+#endif
+
+    if (is_knocked_back) {
+        return;
+    }
+
+    direction = 1;
+    velocity.x = DEFAULT_SPEED_X;
+    if (is_on_floor()) {
+        if (is_player_intoxicated()) {
+            state = STATE_INTOXICATED_MOV_RIGHT;
+        } else {
+            state = STATE_MOVING_RIGHT;
+        }
+    }
+}
+
+void Player::jump() {
+
+#ifdef LOG_VERBOSE
+    std::cout << "| Player id: " << this->id << " | Player::jump() |" << std::endl;
+#endif
+
+    if (on_floor) {
+        on_floor = false;
+        velocity.y = -JUMP_SPEED;
+    }
+    if (is_facing_right()) {
+        state = STATE_JUMPING_RIGHT;
+    } else {
+        state = STATE_JUMPING_LEFT;
+    }
+}
+
+void Player::do_special_attack() {
+    if (is_special_available()) {
+        // GENERAR PROYECTIL ESPECIAL
+        reset_special_attack();
+    }
 }
 
 
-void Player::select_weapon(size_t weapon_number) {
-    if (!weapons[weapon_number].is_weapon_empty()) {
-        this->selected_weapon = weapons[weapon_number].get_weapon_name();
+// ------------ Override Methods --------------
+
+void Player::update_body() {
+
+    if (is_dead()) {  // if the player is dead, then it shouldnt move
+        return;
+    }
+
+
+    if (velocity.x == 0 && is_on_floor() && !is_knocked_back && state != STATE_SHOOTING_LEFT &&
+        state != STATE_SHOOTING_RIGHT) {
+        state = is_facing_right() ? STATE_IDLE_RIGHT : STATE_IDLE_LEFT;
+    }
+
+
+    if (!on_floor) {
+        if (velocity.y < MAX_FALL_SPEED) {
+            velocity.y += GRAVITY;
+        }
+
+    } else {
+        velocity.x -= FRICCTION * direction;
+    }
+
+    if (is_knocked_back) {
+        velocity.x += FRICCTION * direction;
+        if (velocity.x == 0) {
+            is_knocked_back = false;
+        }
+        state = STATE_DAMAGED;
+    }
+
+    for (auto& weapon: weapons) {
+        weapon->update_shoot_rate();
+    }
+
+    position += velocity;
+
+#ifdef LOG_VERBOSE
+    print_info();
+#endif
+}
+
+void Player::handle_colision(CollisionObject* other) {
+
+    CollisionFace face = is_touching(other);
+
+    Collectable* collectable = dynamic_cast<Collectable*>(other);
+    Bullet* bullet = dynamic_cast<Bullet*>(other);
+
+    if (!collectable && !bullet && face != CollisionFace::NO_COLLISION) {
+
+        if (face == CollisionFace::TOP) {
+            velocity.y = 10;
+            on_floor = false;
+
+        } else if (face == CollisionFace::BOTTOM) {
+
+            velocity.y = 10;
+            on_floor = true;
+        }
     }
 }
 
-bool Player::can_revive() const { return (!is_alive && revive_cooldown == 0); }
+void Player::knockback(int force) {
+    velocity.x = -direction * force;
+    velocity.y = -force;
+    on_floor = false;
+    is_knocked_back = true;
+}
 
-void Player::revive() {
+void Player::revive(Vector2D new_position) {
     this->health = MAX_HEALTH;
     this->revive_cooldown = REVIVE_COOLDOWN;
     this->state = STATE_IDLE_RIGHT;
-    // posicionar en spawn
+    position = new_position;
+
+    for (auto& weapon: weapons) {
+        weapon->reset_ammo();
+    }
 }
 
-uint8_t Player::get_state() const { return state; }
+void Player::print_info() {
+    std::cout << "--------------------------------" << std::endl;
+    std::cout << "| Position: " << position.x << " , " << position.y << " |" << std::endl;
+    std::cout << "| Velocity: " << velocity.x << " , " << velocity.y << " |" << std::endl;
+    std::cout << "| Health: " << health << " |" << std::endl;
+    std::cout << "| on_floor: " << on_floor << " |" << std::endl;
+    std::cout << "| weapon: " << selected_weapon << " |" << std::endl;
+    std::cout << "| ammo: " << weapons[selected_weapon]->get_ammo() << " |" << std::endl;
+    std::cout << "| shoot status: " << weapons[selected_weapon]->shoot_ready() << " |" << std::endl;
+    std::cout << "| shoot status: " << weapons[selected_weapon]->shoot_rate_status() << " |"
+              << std::endl;
+    std::cout << "| points: " << points << " |" << std::endl;
+    std::cout << "| state: " << (int)get_state() << " |" << std::endl;
+}
+
+//------- Match Methods --------
+
+void Player::execute_command(command_t command) {
+    if (is_dead()) {
+        return;
+    }
+
+    switch (command) {
+        case MOVE_LEFT:
+            move_left();
+            break;
+        case MOVE_RIGHT:
+            move_right();
+            break;
+        case JUMP:
+            jump();
+            break;
+        case SHOOT:
+            std::cout << "SHOOT" << std::endl;
+            shoot_selected_weapon();
+            break;
+        default:
+            break;
+    }
+}
+
+void Player::update_status(Vector2D spawn_point) {  // todo check if its needed
+
+    if (is_dead()) {
+        return;
+    }
+
+    if (is_player_intoxicated()) {
+        decrease_intoxication_cooldown();
+        if (get_intoxication_cooldown() == NONE) {
+            reset_intoxication();
+        }
+    }
+    if (!is_special_available()) {
+        decrease_special_attack_cooldown();
+    }
+    if (!is_dead() && get_health() == NONE) {
+        velocity = Vector2D(0, 0);
+        state = STATE_DEAD;
+    }
+    if (is_on_floor() && (get_state() == STATE_FALLING)) {
+        if (is_facing_right()) {
+            state = STATE_IDLE_RIGHT;
+        } else {
+            state = STATE_IDLE_LEFT;
+        }
+    }
+    if (!is_on_floor() && (velocity.y > NONE) && !is_doing_action_state()) {
+        state = STATE_FALLING;
+    }
+    if (is_on_floor() && !is_doing_action_state()) {
+        if (is_facing_right()) {
+            state = STATE_IDLE_RIGHT;
+        } else {
+            state = STATE_IDLE_LEFT;
+        }
+    }
+}

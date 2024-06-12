@@ -7,13 +7,11 @@
 
 class SendFinishMatchMessage: public Message {
 private:
-    FinishMatchDTO finish_match;
-
 public:
-    explicit SendFinishMatchMessage(FinishMatchDTO& finish_match);
-    void run() override;
+    SendFinishMatchMessage();
+    void run(MessageHandler& handler) override;
     void send_message(CommonProtocol& protocol) override;
-    ~SendFinishMatchMessage();
+    ~SendFinishMatchMessage() override;
 };
 
 #endif

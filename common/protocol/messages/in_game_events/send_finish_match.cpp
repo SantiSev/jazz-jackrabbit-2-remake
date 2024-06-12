@@ -1,13 +1,11 @@
 #include "./send_finish_match.h"
 
-SendFinishMatchMessage::SendFinishMatchMessage(FinishMatchDTO& finish_match):
-        Message(SEND_FINISH_MATCH), finish_match(finish_match) {}
+SendFinishMatchMessage::SendFinishMatchMessage(): Message(SEND_FINISH_MATCH) {}
 
-
-void SendFinishMatchMessage::run() {}
+void SendFinishMatchMessage::run(MessageHandler& handler) { handler.handle_recv_finish_match(); }
 
 void SendFinishMatchMessage::send_message(CommonProtocol& protocol) {
-    protocol.send_finish_match(header, finish_match);
+    protocol.send_finish_match(header);
 }
 
-SendFinishMatchMessage::~SendFinishMatchMessage() {}
+SendFinishMatchMessage::~SendFinishMatchMessage() = default;

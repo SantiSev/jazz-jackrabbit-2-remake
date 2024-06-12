@@ -8,8 +8,8 @@ private:
     CreateGameDTO create_game;
 
 public:
-    explicit RecvCreateGameMessage(CreateGameDTO& create_game);
-    void run() override;
+    explicit RecvCreateGameMessage(const CreateGameDTO& create_game);
+    void run(MessageHandler& handler) override;
     void send_message(CommonProtocol& protocol) override;
     ~RecvCreateGameMessage();
 };

@@ -1,0 +1,72 @@
+map_width: 800
+map_height: 600
+objects:
+    - name: "background_1"
+      collision: false
+      s_rect:
+          x: 0
+          y: 1154
+          w: 255
+          h: 255
+      d_rect_list:
+          - d_rect:
+                repeat_h: 1
+                repeat_v: 1
+                x: 0
+                y: 0
+                w: 800
+                h: 600
+    - name: "wooden_pole"
+      collision: true
+      s_rect:
+          x: 37
+          y: 1920
+          w: 22
+          h: 192
+      d_rect_list:
+          - d_rect:
+                repeat_h: 1
+                repeat_v: 1
+                x: 0
+                y: 400
+                w: 22
+                h: 192
+          - d_rect:
+                repeat_h: 1
+                repeat_v: 1
+                x: 768
+                y: 400
+                w: 22
+                h: 192
+    - name: "grass_block_1"
+      collision: true
+      s_rect:
+          x: 96
+          y: 0
+          w: 32
+          h: 32
+      d_rect_list:
+          - d_rect:
+                repeat_h: 25
+                repeat_v: 1
+                x: 0
+                y: 568
+                w: 32
+                h: 32
+player_spawnpoints:
+    - x: 100
+      y: 100
+    - x: 400
+      y: 100
+    - x: 600
+      y: 100
+enemy_spawnpoints:
+    - x: 100
+      y: 515
+    - x: 600
+      y: 515
+item_spawnpoints:
+    - x: 700
+      y: 100
+    - x: 200
+      y: 100

@@ -10,10 +10,10 @@ private:
     LeaveMatchDTO leave_match;
 
 public:
-    explicit RecvLeaveMatchMessage(LeaveMatchDTO& leave_match);
-    void run() override;
+    explicit RecvLeaveMatchMessage(const LeaveMatchDTO& leave_match);
+    void run(MessageHandler& handler) override;
     void send_message(CommonProtocol& protocol) override;
-    ~RecvLeaveMatchMessage();
+    ~RecvLeaveMatchMessage() override;
 };
 
 #endif

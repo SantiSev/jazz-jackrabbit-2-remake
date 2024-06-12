@@ -2,63 +2,108 @@
 #define TP_FINAL_PLAYER_H
 
 #include <cstdint>
-#include <cstdio>
+#include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "../../../common/common_constants.h"
-#include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
+#include "../../../common/protocol/common_dto.h"
+#include "../../../common/sfx_enum.h"
+#include "../../../game_engine/physics_engine/collision_manager.h"
+#include "../weapons/guns.h"
 
-#include "weapon.h"
+#include "character.h"
 
-#define MAX_HEALTH 100
-#define MIN_HEALTH 0
-#define STARTING_POINTS 0
-#define REVIVE_COOLDOWN 5
+// player config
+#define PLAYER_WIDTH 50
+#define PLAYER_HEIGHT 50
+#define MAX_FALL_SPEED 10
 
+class Weapon;
 
-class Player {
+class Player: public CharacterBody {
 private:
-    // DynamicBody character_body; // Commented by Agus: No compile
-    size_t id;
     std::string name;
-    size_t health;
-    uint8_t character;
-    size_t points;
-    uint8_t state;
-    // bool is_facing_right; (?)
-    bool is_alive = true;
-    size_t revive_cooldown = REVIVE_COOLDOWN;
-    std::vector<Weapon> weapons{};
+    int points = 0;
+    std::vector<std::unique_ptr<Weapon>> weapons;
     size_t selected_weapon = DEFAULT_WEAPON;
+    CollisionManager& collision_manager;
+    bool is_knocked_back = false;
+    bool is_intoxicated = false;
+    size_t special_cooldown = 0;
+    size_t intoxication_cooldown = INTOXICATON_COOLDOWN;
 
 public:
-    Player(size_t id, std::string name, const uint8_t& character);
+    Player(uint16_t id, std::string name, const character_t& character, int x, int y,
+           CollisionManager& collision_manager);
 
-    size_t get_id() const;
-    Vector2D get_position() const;
-    std::string get_name();
-    size_t get_health() const;
-    uint8_t get_character() const;
-    size_t get_points() const;
-    void set_id(size_t id);
+    //------- Overrided Methods --------
+
+    void update_body() override;
+    void handle_colision(CollisionObject* other) override;
+    void knockback(int force) override;
+    void print_info() override;
+    void revive(Vector2D new_position) override;
+
+    //------- Getters --------
+
+    int get_points() const;
+    std::string get_name() const;
+    std::vector<std::unique_ptr<Weapon>>& get_weapons() const;
+    Weapon* get_weapon(size_t weapon) const;
+
+    //------- Setters --------
+
     void set_name(std::string name);
-    void set_health(size_t health);
-    void set_character(uint8_t new_character);
-    void add_points(size_t points);
-    void increase_points(size_t new_points);
-    void decrease_health(size_t susbstract_health);
-    void increase_health(size_t add_health);
-    void revive();
-    void decrease_revive_cooldown();
-    bool can_revive() const;
-    void select_weapon(size_t weapon_number);
-    void shoot_selected_weapon();
-    void get_weapon_ammo(size_t ammo, size_t weapon);
-    void reset_revive_cooldown();
-    uint8_t get_state() const;
     void set_starting_weapon();
-};
 
+    //------- Point Methods --------
+
+    void add_points(int points);
+
+    //------- Weapon Methods --------
+
+    void select_next_weapon();
+    void shoot_selected_weapon();
+    void reload_weapon(size_t weapon, int ammo);
+
+    //------- Intoxication Methods --------
+
+    void reset_intoxication();
+    bool is_player_intoxicated() const;
+
+    void decrease_intoxication_cooldown();
+    size_t get_intoxication_cooldown() const;
+
+    //------- Special Attack Methods --------
+
+    int get_special_cooldown();
+    bool is_special_available() const;
+    void decrease_special_attack_cooldown();
+    void reset_special_attack();
+
+    //------- Movement Methods --------
+
+    void move_left() override;
+    void move_right() override;
+    void jump() override;
+    virtual void do_special_attack();
+
+
+    //------- Match Methods --------
+
+    void update_status(Vector2D spawn_point);
+    void execute_command(command_t command);
+
+    //------- Deconstructor --------
+
+    ~Player() {
+        for (auto& weapon: weapons) {
+            weapon.reset();
+        }
+        weapons.clear();
+    }
+};
 
 #endif

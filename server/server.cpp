@@ -1,25 +1,18 @@
 #include "server.h"
 
-#include <iostream>
-#include <utility>
-
-#include "game_logic/matches_manager.h"
-
-#include "accepter.h"
+Server::Server(const std::string& port): accepter(new ServerAccepter(port)) {}
 
 void Server::run() {
     try {
-        auto accepter = new ServerAccepter("8080");
         accepter->start();
 
         std::string serverInput;
         while (true) {
             std::cin >> serverInput;
-            if (serverInput == "q") {
+            if (serverInput == QUIT) {
                 break;
             }
         }
-
         accepter->stop();
         accepter->join();
         delete accepter;
@@ -27,9 +20,5 @@ void Server::run() {
         std::cerr << "An exception was caught in server_class: " << err.what() << "\n";
     }
 }
-
-const std::string& Server::get_servname() { return portDir; }
-
-Server::Server(std::string port): portDir(std::move(port)) {}
 
 Server::~Server() = default;

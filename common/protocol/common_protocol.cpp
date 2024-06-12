@@ -4,6 +4,9 @@
 #include <vector>
 
 #include <arpa/inet.h>
+#include <endian.h>
+
+#include "messages/connection_events/close_connection.h"
 
 CommonProtocol::CommonProtocol(Socket&& skt): skt(std::move(skt)), was_closed(false) {}
 
@@ -23,7 +26,11 @@ void CommonProtocol::send_header(const uint16_t header) {
     skt.sendall(&header_to_n, sizeof(header_to_n), &was_closed);
 }
 
-void CommonProtocol::send_close_connection(const uint16_t header) { send_header(header); }
+void CommonProtocol::send_close_connection(const uint16_t header, CloseConnectionDTO& dto) {
+    send_header(header);
+    dto.id_client = htons(dto.id_client);
+    skt.sendall(&dto, sizeof(dto), &was_closed);
+}
 
 void CommonProtocol::send_acpt_connection(const uint16_t header, const id_client_t id_client) {
     send_header(header);
@@ -51,45 +58,90 @@ void CommonProtocol::send_leave_match(const uint16_t header, LeaveMatchDTO& leav
 
 void CommonProtocol::send_create_game(const uint16_t header, CreateGameDTO& create_game) {
     send_header(header);
-    create_game.id_player = htons(create_game.id_player);
+    create_game.id_client = htons(create_game.id_client);
     skt.sendall(&create_game, sizeof(create_game), &was_closed);
 }
 
 void CommonProtocol::send_join_match(const uint16_t header, JoinMatchDTO& join_match) {
     send_header(header);
-    join_match.id_player = htons(join_match.id_player);
+    join_match.id_client = htons(join_match.id_client);
     join_match.id_match = htons(join_match.id_match);
     skt.sendall(&join_match, sizeof(join_match), &was_closed);
 }
 
 void CommonProtocol::send_game_state(const uint16_t header, GameStateDTO& game_state) {
     send_header(header);
+    game_state.seconds = htons(game_state.seconds);
+    for (int i = 0; i < game_state.num_players; i++) {
+        game_state.players[i].id = htons(game_state.players[i].id);
+        game_state.players[i].health = htons(game_state.players[i].health);
+        game_state.players[i].points = htons(game_state.players[i].points);
+        game_state.players[i].x_pos = htons(game_state.players[i].x_pos);
+        game_state.players[i].y_pos = htons(game_state.players[i].y_pos);
+        for (int j = 0; j < NUM_OF_WEAPONS; j++) {
+            game_state.players[i].weapons[j].ammo = htons(game_state.players[i].weapons[j].ammo);
+        }
+    }
+    for (int i = 0; i < game_state.num_enemies; i++) {
+        game_state.enemies[i].id = htons(game_state.enemies[i].id);
+        game_state.enemies[i].x_pos = htons(game_state.enemies[i].x_pos);
+        game_state.enemies[i].y_pos = htons(game_state.enemies[i].y_pos);
+    }
+    for (int i = 0; i < game_state.num_bullets; i++) {
+        game_state.bullets[i].id = htobe64(game_state.bullets[i].id);
+        game_state.bullets[i].x_pos = htons(game_state.bullets[i].x_pos);
+        game_state.bullets[i].y_pos = htons(game_state.bullets[i].y_pos);
+    }
     skt.sendall(&game_state, sizeof(game_state), &was_closed);
 }
 
-void CommonProtocol::send_finish_match(const uint16_t header, FinishMatchDTO& finish_match) {
-    send_header(header);
-    skt.sendall(&finish_match, sizeof(finish_match), &was_closed);
-}
+void CommonProtocol::send_finish_match(const uint16_t header) { send_header(header); }
 
-void CommonProtocol::send_active_games(const uint16_t header, ActiveGamesDTO& active_games) {
+void CommonProtocol::send_request_active_games(const uint16_t header,
+                                               RequestActiveGamesDTO& active_games) {
     send_header(header);
+    active_games.id_client = htons(active_games.id_client);
     skt.sendall(&active_games, sizeof(active_games), &was_closed);
 }
 
-void CommonProtocol::send_game_created(const uint16_t header, GameCreatedDTO& game_created) {
+void CommonProtocol::send_game_created(const uint16_t header,
+                                       ClientHasConnectedToMatchDTO& game_created) {
     send_header(header);
     skt.sendall(&game_created, sizeof(game_created), &was_closed);
 }
 
-void CommonProtocol::send_message(std::shared_ptr<Message> message) {
+void CommonProtocol::send_game_joined(const uint16_t header,
+                                      ClientHasConnectedToMatchDTO& game_joined) {
+    send_header(header);
+    skt.sendall(&game_joined, sizeof(game_joined), &was_closed);
+}
+
+void CommonProtocol::send_active_games(const uint16_t header, MatchInfoDTO& active_games) {
+    send_header(header);
+    skt.sendall(&active_games, sizeof(active_games), &was_closed);
+}
+
+void CommonProtocol::send_message(const std::shared_ptr<Message>& message) {
     message->send_message(*this);
 }
 
 void CommonProtocol::force_shutdown() {
-    was_closed = true;
-    skt.shutdown(2);
-    skt.close();
+    if (!was_closed) {
+        was_closed = true;
+        try {
+            skt.shutdown(SHUT_RDWR);
+        } catch (const std::exception& e) {
+            std::cerr << "Socket shutdown failed: " << e.what() << std::endl;
+        }
+        skt.close();
+    }
+}
+
+std::shared_ptr<Message> CommonProtocol::recv_closed_connection() {
+    CloseConnectionDTO dto = {};
+    skt.recvall(&dto, sizeof(dto), &was_closed);
+    dto.id_client = ntohs(dto.id_client);
+    return std::make_shared<CloseConnectionMessage>(dto);
 }
 
 CommonProtocol::~CommonProtocol() = default;
