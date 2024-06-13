@@ -59,7 +59,7 @@ void run(SDL_Renderer*& renderer, SDL_Window*& window) {
         SDL_RenderClear(renderer);
 
         // Draw
-        sprite.draw(renderer);
+        sprite.draw(renderer, it);
         SDL_RenderPresent(renderer);
 
         frame_time = SDL_GetTicks() - frame_start;

@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <utility>
+#include <cmath>
 
 #include <SDL2/SDL.h>
 
@@ -42,7 +43,7 @@ private:
 
     void init();
     void update_objects(int delta_time);
-    void draw_objects();
+    void draw_objects(int it);
 
 public:
     MatchScene(engine::Window& window, EventLoop* event_loop,

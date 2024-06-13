@@ -35,7 +35,7 @@ public:
     Button(Button&& other) noexcept;
     Button& operator=(Button&& other) noexcept;
 
-    void draw(SDL_Renderer* renderer) override;
+    void draw(SDL_Renderer* renderer, int it) override;
 
     void on_click() override;
     void is_hovered(bool) override;

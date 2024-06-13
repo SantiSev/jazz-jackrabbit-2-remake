@@ -52,7 +52,7 @@ void run(SDL_Renderer*& renderer, SDL_Window*& window) {
         SDL_RenderClear(renderer);
 
         // Draw
-        color_rect.draw(renderer);
+        color_rect.draw(renderer, it);
         SDL_RenderPresent(renderer);
 
         frame_time = SDL_GetTicks() - frame_start;

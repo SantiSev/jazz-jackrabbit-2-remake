@@ -31,7 +31,7 @@ public:
     Sprite(Sprite&&) noexcept;
     Sprite& operator=(Sprite&&) noexcept;
 
-    void draw(SDL_Renderer* renderer) override;
+    void draw(SDL_Renderer* renderer, int it) override;
 
     void set_position(int x, int y) override;
 

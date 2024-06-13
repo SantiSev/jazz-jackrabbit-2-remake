@@ -6,9 +6,9 @@ Map::Map(const map_list_t& map_enum, std::shared_ptr<engine::ResourcePool> resou
     load_map(map_name);
 }
 
-void Map::draw(SDL_Renderer* renderer) {
+void Map::draw(SDL_Renderer* renderer, int it) {
     for (auto& sprite: sprites) {
-        sprite.draw(renderer);
+        sprite.draw(renderer, it);
     }
 }
 

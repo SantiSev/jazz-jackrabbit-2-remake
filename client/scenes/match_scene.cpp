@@ -16,26 +16,35 @@ MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
 void MatchScene::start() {
     init();
 
-    Uint32 frame_start = 0;
-    Uint32 frame_time;
-    const int frame_delay = 1000 / 60;
+    const Uint32 rate = 1000 / 60;
 
+    Uint32 frame_start = SDL_GetTicks();
+    Uint32 delta_time = 0;
+    int it = 0;
+
+    // Drop & Rest
     while (match_running) {
-        // Updates
-        int delta_time = SDL_GetTicks() - frame_start;
-        update_objects(delta_time);
-
-        frame_start = SDL_GetTicks();
-
         // Draw
         window.clear();
-        draw_objects();
-
+        draw_objects(it);
         window.render();
-        frame_time = SDL_GetTicks() - frame_start;
-        if (frame_delay > frame_time) {
-            SDL_Delay(frame_delay - frame_time);
+        update_objects(delta_time);
+
+        Uint32 frame_end = SDL_GetTicks();
+        delta_time = frame_end - frame_start;
+        int rest_time = rate - (delta_time);
+
+        if (rest_time < 0) {
+            Uint32 behind = -rest_time;
+            rest_time = rate - (behind % rate);
+            Uint32 lost = behind / rate;
+            frame_start += lost;
+            it = std::round(lost / rate);
         }
+
+        SDL_Delay(rest_time);
+        frame_start += rate;
+        it++;
     }
 }
 
@@ -76,7 +85,7 @@ void MatchScene::init() {
 
 void MatchScene::update_objects(int delta_time) {
     std::shared_ptr<GameStateDTO> game_state(nullptr);
-    while (game_state_q.try_pop(game_state)); // get last game state
+    while (game_state_q.try_pop(game_state));  // get last game state
 
     // update positions
     if (game_state != nullptr) {
@@ -116,31 +125,19 @@ void MatchScene::update_objects(int delta_time) {
             bullets.at(bullet.id)->set_position(bullet.x_pos, bullet.y_pos);
         }
     }
-
-    // update canvas objects
-    map->update(delta_time);
-    for (auto& obj: players) {
-        obj.second->update(delta_time);
-    }
-    for (auto& obj: enemies) {
-        obj.second->update(delta_time);
-    }
-    for (auto& obj: bullets) {
-        obj.second->update(delta_time);
-    }
 }
 
 
-void MatchScene::draw_objects() {
-    map->draw(renderer);
+void MatchScene::draw_objects(int it) {
+    map->draw(renderer, it);
     for (auto& obj: players) {
-        obj.second->draw(renderer);
+        obj.second->draw(renderer, it);
     }
     for (auto& obj: enemies) {
-        obj.second->draw(renderer);
+        obj.second->draw(renderer, it);
     }
     for (auto& obj: bullets) {
-        obj.second->draw(renderer);
+        obj.second->draw(renderer, it);
     }
 }
 

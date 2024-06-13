@@ -44,7 +44,7 @@ int main() {
         window.clear();
 
         // Draw
-        sprite.draw(renderer);
+        sprite.draw(renderer, it);
 
         window.render();
 

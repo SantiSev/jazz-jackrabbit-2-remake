@@ -17,7 +17,7 @@ void Button::is_hovered(bool hovered) {
     label->is_hovered(hovered);
 }
 
-void Button::draw(SDL_Renderer* renderer) {
+void Button::draw(SDL_Renderer* renderer, int it) {
     int err;
     if (is_hovered_m) {
         err = SDL_SetRenderDrawColor(renderer, hover_color.r, hover_color.g, hover_color.b,
@@ -34,7 +34,7 @@ void Button::draw(SDL_Renderer* renderer) {
         throw SDLError("Error drawing button: " + std::string(SDL_GetError()));
     }
 
-    label->draw(renderer);
+    label->draw(renderer, it);
 }
 
 void Button::set_position(int x, int y) {

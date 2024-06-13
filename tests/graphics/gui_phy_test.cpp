@@ -34,9 +34,9 @@
 //     }
 
 
-//     void draw(SDL_Renderer* renderer) override {
-//         color_rect.draw(renderer);
-//         gun_rect.draw(renderer);
+//     void draw(SDL_Renderer* renderer, int it) override {
+//         color_rect.draw(renderer, it);
+//         gun_rect.draw(renderer, it);
 //     }
 
 //     void update(int delta) override {
@@ -93,7 +93,7 @@
 //         this->color_rect = engine::ColorRect(color_values, platform_cube);
 //     }
 
-//     void draw(SDL_Renderer* renderer) override { color_rect.draw(renderer); }
+//     void draw(SDL_Renderer* renderer, int it) override { color_rect.draw(renderer, it); }
 
 //     void set_position(int x, int y) override {}
 
@@ -113,7 +113,7 @@
 //         this->color_rect = engine::ColorRect(color_values, collectable_cube);
 //     }
 
-//     void draw(SDL_Renderer* renderer) override { color_rect.draw(renderer); }
+//     void draw(SDL_Renderer* renderer, int it) override { color_rect.draw(renderer); }
 
 //     void set_position(int x, int y) override {}
 //     void update(int delta) override { color_rect.set_position(position.x, position.y); }
@@ -132,7 +132,7 @@
 //         this->color_rect = engine::ColorRect(color_values, collectable_cube);
 //     }
 
-//     void draw(SDL_Renderer* renderer) override { color_rect.draw(renderer); }
+//     void draw(SDL_Renderer* renderer, int it) override { color_rect.draw(renderer); }
 
 //     void set_position(int x, int y) override {}
 //     void update(int delta) override { color_rect.set_position(position.x, position.y); }
@@ -161,7 +161,7 @@
 //     bool is_intersecting(SDL_Point& point) const override { return false; }
 //     bool is_intersecting(SDL_Rect& rect) const override { return false; }
 
-//     void draw(SDL_Renderer* renderer) override { color_rect.draw(renderer); }
+//     void draw(SDL_Renderer* renderer, int it) override { color_rect.draw(renderer); }
 // };
 
 

@@ -24,7 +24,7 @@ public:
     void on_click() override;
     void on_key_press(const SDL_Keycode& key) override;
 
-    void draw(SDL_Renderer* renderer) override;
+    void draw(SDL_Renderer* renderer, int it) override;
 
     bool is_intersecting(SDL_Point& point) const override;
 
