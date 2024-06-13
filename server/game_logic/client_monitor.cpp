@@ -1,6 +1,7 @@
 #include "client_monitor.h"
 
 #include <algorithm>
+#include <iostream>
 
 
 ClientMonitor::ClientMonitor(): clientQueues() {}
@@ -28,6 +29,7 @@ void ClientMonitor::removeQueue(
         const std::shared_ptr<Queue<std::shared_ptr<Message>>>& queueToRemove) {
     for (auto it = clientQueues.begin(); it != clientQueues.end();) {
         if (it->get() == queueToRemove) {
+            std::cout << "removed client queue." << std::endl;
             it = clientQueues.erase(it);
         } else {
             ++it;

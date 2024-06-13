@@ -30,8 +30,8 @@ void ServerThreadManager::set_sender_queue(
 }
 
 void ServerThreadManager::stop() {
-    sender.stop();
     receiver.stop();
+    sender.stop();
     std::cout << "sender and receiver stopped" << std::endl;
     server_protocol.force_shutdown();
     std::cout << "protocol shutdown" << std::endl;

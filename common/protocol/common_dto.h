@@ -2,6 +2,7 @@
 #define _COMMON_DTO_H
 
 #include <cstdint>
+#include <map>
 #include <string>
 
 #include <arpa/inet.h>
@@ -10,8 +11,9 @@
 #include "../common_constants.h"
 #include "../map_enum.h"
 
-#define CLOSE_CONNECTION 0x0000
+#define NULL_MESSAGE 0X0000
 #define ACPT_CONNECTION 0x0001
+#define CLOSE_CONNECTION 0x0002
 
 #define SEND_GAME_STATE 0x0100
 #define RECV_COMMAND 0x0101
@@ -47,6 +49,21 @@ typedef enum: uint8_t {
     PAUSE_GAME = 0x10,
     TAUNT = 0x11,
 } command_t;
+
+const std::map<command_t, std::string> command_to_string = {
+        {MOVE_LEFT, "MOVE_LEFT"},
+        {MOVE_RIGHT, "MOVE_RIGHT"},
+        {MOVE_LEFT_FAST, "MOVE_LEFT_FAST"},
+        {MOVE_RIGHT_FAST, "MOVE_RIGHT_FAST"},
+        {JUMP, "JUMP"},
+        {SPECIAL_ATTACK, "SPECIAL_ATTACK"},
+        {CHANGE_WEAPON, "CHANGE_WEAPON"},
+        {LOOK_UP, "LOOK_UP"},
+        {DUCK_DOWN, "DUCK_DOWN"},
+        {SHOOT, "SHOOT"},
+        {PAUSE_GAME, "PAUSE_GAME"},
+        {TAUNT, "TAUNT"},
+};
 
 //------Messages send by client to server --------
 

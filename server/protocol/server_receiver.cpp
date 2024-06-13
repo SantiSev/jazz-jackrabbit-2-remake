@@ -17,7 +17,9 @@ void ServerReceiver::run() {
     try {
         while (_keep_running) {
             std::shared_ptr<Message> message = server_protocol.recv_message();
+            _keep_running = !server_protocol.is_closed();
             if (_keep_running) {
+                std::cout << "mensaje por pushear" << std::endl;
                 queue->push(message);
             }
         }
@@ -40,3 +42,5 @@ void ServerReceiver::change_receiver_queue(
         const std::shared_ptr<Queue<std::shared_ptr<Message>>>& sharedPtr) {
     queue = sharedPtr;
 }
+
+bool ServerReceiver::isAlive() { return _keep_running; }

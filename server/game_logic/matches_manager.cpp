@@ -14,7 +14,7 @@ MatchesManager::MatchesManager():
 void MatchesManager::run() {
     try {
         while (online) {
-            std::shared_ptr<Message> client_message;
+            std::shared_ptr<Message> client_message = nullptr;
             //            check_matches_status();
 
             manager_queue->try_pop(client_message);
@@ -27,7 +27,6 @@ void MatchesManager::run() {
         stop_all_matches();
         std::cout << "clearing all clients" << std::endl;
         clear_all_clients();
-        manager_queue->close();
         std::cout << "Server Closed" << std::endl;
     } catch (const std::exception& err) {
         if (online) {
@@ -112,17 +111,6 @@ void MatchesManager::add_new_client_to_manager(Socket client_socket) {
     std::cout << "Client " << clients_connected << " connected to server." << std::endl;
 }
 
-void MatchesManager::clear_all_clients() {
-    for (auto& client: clients) {
-        CloseConnectionDTO close_connection{client->get_client_id()};
-        auto game_ended_message = std::make_shared<CloseConnectionMessage>(close_connection);
-        client->get_sender_queue()->try_push(game_ended_message);
-        client->stop();
-        delete client;
-    }
-    clients.clear();
-}
-
 MatchInfoDTO MatchesManager::return_matches_lists() {
     MatchInfoDTO matches_lists{};
     matches_lists.num_games = matches.size();
@@ -170,25 +158,40 @@ void MatchesManager::check_matches_status() {
 
 void MatchesManager::stop_finished_match(Match* match) {
     std::vector<size_t> ids = match->get_clients_ids();
+    match->stop();
+    match->join();
     for (auto id: ids) {
         auto it = clients.begin();
         while (it != clients.end()) {
             if ((*it)->get_client_id() == id) {
-                (*it)->set_receiver_queue(manager_queue);
+                (*it)->set_receiver_queue(nullptr);
+                //                (*it)->set_receiver_queue(manager_queue);
                 break;
             } else {
                 ++it;
             }
         }
     }
-    match->stop();
-    match->join();
+}
+
+void MatchesManager::clear_all_clients() {
+    for (auto& client: clients) {
+        //        CloseConnectionDTO close_connection{client->get_client_id()};
+        //        auto game_ended_message =
+        //        std::make_shared<CloseConnectionMessage>(close_connection);
+        //        client->get_sender_queue()->try_push(game_ended_message);
+        client->stop();
+        delete client;
+    }
+    clients.clear();
 }
 
 void MatchesManager::stop_all_matches() {
     for (auto& match: matches) {
-        match.second->stop();
-        match.second->join();
+        std::cout << "Stopping match " << match.first << std::endl;
+        stop_finished_match(match.second.get());
+        //        match.second->stop();
+        //        match.second->join();
     }
     matches.clear();
 }
