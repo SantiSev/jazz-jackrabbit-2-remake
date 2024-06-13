@@ -1,4 +1,4 @@
-#include "menu.h"
+#include "menu_scene.h"
 
 MenuScene::MenuScene(engine::Window& window, EventLoop* event_loop,
                      std::shared_ptr<engine::ResourcePool> resource_pool,

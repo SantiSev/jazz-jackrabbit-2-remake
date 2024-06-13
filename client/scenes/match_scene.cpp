@@ -1,4 +1,4 @@
-#include "match.h"
+#include "match_scene.h"
 
 MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
                        std::shared_ptr<engine::ResourcePool> resource_pool,
@@ -76,7 +76,7 @@ void MatchScene::init() {
 
 void MatchScene::update_objects(int delta_time) {
     std::shared_ptr<GameStateDTO> game_state(nullptr);
-    game_state_q.try_pop(game_state);
+    while (game_state_q.try_pop(game_state)); // get last game state
 
     // update positions
     if (game_state != nullptr) {

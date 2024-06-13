@@ -23,8 +23,8 @@
 #include "game_objects/player_controller.h"
 #include "protocol/client_protocol.h"
 #include "protocol/client_thread_manager.h"
-#include "scenes/match.h"
-#include "scenes/menu.h"
+#include "scenes/match_scene.h"
+#include "scenes/menu_scene.h"
 
 #include "event_loop.h"
 
