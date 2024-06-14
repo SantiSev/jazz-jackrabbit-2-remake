@@ -11,7 +11,7 @@
 #include "../../common/assets.h"
 
 Match::Match(const map_list_t& map_selected, size_t required_players_setting,
-             std::shared_ptr<Queue<std::shared_ptr<Message>>>& lobby_queue, ClientMonitor& monitor):
+             Queue<std::shared_ptr<Message>>& lobby_queue, ClientMonitor& monitor):
         online(true),
         lobby_queue(lobby_queue),
         message_handler(*this),
@@ -47,20 +47,27 @@ void Match::run() {
         const double FPSMAX = 1000.0 / 60.0;
         std::cout << "Match map: " << map_list_to_string.at(map) << " Starting..." << std::endl;
         while (online) {
-            std::shared_ptr<Message> message = nullptr;
             auto endTime = std::chrono::system_clock::now();
             std::chrono::duration<double, std::milli> delta = endTime - startTime;
             startTime = endTime;
 
             auto frameStart = std::chrono::system_clock::now();
+            std::shared_ptr<Message> message;
 
-            size_t events = 0;
-            while (match_queue->try_pop(message) && events < MAX_EVENTS_PER_LOOP) {
-                events++;
-                if (message) {
-                    std::cout << "message received about to being runned" << std::endl;
-                    message->run(message_handler);
-                }
+            //            size_t events = 0;
+            //            while (match_queue->try_pop(message) && events < MAX_EVENTS_PER_LOOP) {
+            //                events++;
+            //                std::cout << message->get_header() << std::endl;
+            //                if (message) {
+            //                    std::cout << "message received about to being runned" <<
+            //                    std::endl; message->run(message_handler);
+            //                }
+            //            }
+
+            match_queue->try_pop(message);
+            if (message) {
+                std::cout << "message received about to being runned" << std::endl;
+                message->run(message_handler);
             }
 
             collision_manager->update();
@@ -367,7 +374,7 @@ void Match::delete_disconnected_player(id_client_t id_client) {
             //            erase_client_from_list(id_client);
             std::cout << "Player " << id_client << " disconnected from match " << std::endl;
             auto message = std::make_shared<CloseConnectionMessage>(dto);
-            lobby_queue->try_push(message);
+            lobby_queue.try_push(message);
             break;
         }
     }
@@ -384,7 +391,7 @@ void Match::delete_disconnected_player(id_client_t id_client) {
 
 //-------------------- Getter Methods -----------------
 
-std::shared_ptr<Queue<std::shared_ptr<Message>>>& Match::get_match_queue() { return match_queue; }
+Queue<std::shared_ptr<Message>>& Match::get_match_queue() { return *match_queue; }
 
 size_t Match::get_num_players() { return players.size(); }
 

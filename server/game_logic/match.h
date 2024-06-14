@@ -37,7 +37,7 @@ private:
     bool online;
     bool match_has_ended = false;
     int match_time = MATCH_DURATION;
-    std::shared_ptr<Queue<std::shared_ptr<Message>>>& lobby_queue;
+    Queue<std::shared_ptr<Message>>& lobby_queue;
     //    std::list<ServerThreadManager*> clients;
     MatchMessageHandler message_handler;
 
@@ -59,8 +59,7 @@ public:
     std::shared_ptr<Queue<std::shared_ptr<Message>>> match_queue;
     // Constructor
     explicit Match(const map_list_t& map_selected, size_t required_players_setting,
-                   std::shared_ptr<Queue<std::shared_ptr<Message>>>& lobby_queue,
-                   ClientMonitor& monitor);
+                   Queue<std::shared_ptr<Message>>& lobby_queue, ClientMonitor& monitor);
     void run() override;
     void stop() override;
     ~Match() override = default;
@@ -119,7 +118,7 @@ public:
 
     map_list_t get_map() const;
 
-    std::shared_ptr<Queue<std::shared_ptr<Message>>>& get_match_queue();
+    Queue<std::shared_ptr<Message>>& get_match_queue();
 
     //    ServerThreadManager& get_client_by_id(id_client_t id_client);
 

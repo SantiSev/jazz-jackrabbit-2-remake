@@ -21,12 +21,13 @@ private:
     size_t matches_number = 0;
     std::map<size_t, std::shared_ptr<Match>> matches;
     std::list<ServerThreadManager*> clients;
-    std::shared_ptr<Queue<std::shared_ptr<Message>>> manager_queue;
     MatchesManagerMessageHandler message_handler;
     std::mutex manager_mutex;
     ClientMonitor client_monitor;
 
 public:
+    Queue<std::shared_ptr<Message>> manager_queue;
+
     MatchesManager();
 
     void run() override;
@@ -59,6 +60,8 @@ public:
                                                               id_client_t client_id,
                                                               character_t character,
                                                               map_list_t map) const;
+
+    Queue<std::shared_ptr<Message>>& get_match_queue_by_id(size_t i);
 };
 
 

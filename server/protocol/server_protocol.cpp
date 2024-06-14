@@ -13,6 +13,8 @@ std::shared_ptr<RecvCommandMessage> ServerProtocol::recv_command() {
     CommandDTO command = {};
     skt.recvall(&command, sizeof(command), &was_closed);
     command.id_player = ntohs(command.id_player);
+    //    std::cout << "id_player " << command.id_player << "en server protocol convertido" <<
+    //    std::endl;
     return std::make_shared<RecvCommandMessage>(command);
 }
 
@@ -62,7 +64,7 @@ std::shared_ptr<RecvJoinMatchMessage> ServerProtocol::recv_join_match() {
 std::shared_ptr<Message> ServerProtocol::recv_message() {
     try {
         const uint16_t header = recv_two_bytes();
-        printf("El valor de header es: %u\n", header);
+        //        printf("El valor de header es: %u\n", header);
 
         switch (header) {
             case CLOSE_CONNECTION:
