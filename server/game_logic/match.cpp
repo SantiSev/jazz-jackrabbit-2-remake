@@ -25,7 +25,7 @@ Match::Match(const map_list_t& map_selected, size_t required_players_setting,
         map(map_selected),
         collision_manager(nullptr),
         resource_pool(resource_pool),
-        match_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()) {
+        match_queue(Queue<std::shared_ptr<Message>>()) {
     load_enviorment(map_selected);
     load_spawn_points();
     initiate_enemies();
@@ -59,7 +59,7 @@ void Match::run() {
             std::shared_ptr<Message> message;
 
             size_t events = 0;
-            while (match_queue->try_pop(message) && events < MAX_EVENTS_PER_LOOP) {
+            while (match_queue.try_pop(message) && events < MAX_EVENTS_PER_LOOP) {
 
                 events++;
                 if (message) {
@@ -372,7 +372,7 @@ void Match::delete_disconnected_player(id_client_t id_client) {
 
 //-------------------- Getter Methods -----------------
 
-Queue<std::shared_ptr<Message>>& Match::get_match_queue() { return *match_queue; }
+Queue<std::shared_ptr<Message>>& Match::get_match_queue() { return match_queue; }
 
 size_t Match::get_num_players() { return players.size(); }
 

@@ -59,7 +59,7 @@ private:
     const std::shared_ptr<engine::ResourcePool>& resource_pool;
 
 public:
-    std::shared_ptr<Queue<std::shared_ptr<Message>>> match_queue;
+    Queue<std::shared_ptr<Message>> match_queue;
     // Constructor
     explicit Match(const map_list_t& map_selected, size_t required_players_setting,
                    Queue<std::shared_ptr<Message>>& lobby_queue, ClientMonitor& monitor,

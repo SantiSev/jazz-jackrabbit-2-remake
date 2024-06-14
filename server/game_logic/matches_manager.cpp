@@ -53,7 +53,8 @@ void MatchesManager::create_new_match(const CreateGameDTO& dto) {
     auto match = std::make_shared<Match>(dto.map_name, dto.max_players, manager_queue,
                                          client_monitor, resource_pool);
 
-    matches.insert({matches_number, match});
+    //    matches.insert({matches_number, match});
+    matches[matches_number] = match;
 
     auto match_added = matches.find(matches_number)->second.get();
 
