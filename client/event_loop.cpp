@@ -6,16 +6,18 @@ EventLoop::EventLoop(std::atomic<bool>& game_running, std::atomic<bool>& menu_ru
         menu_running(menu_running),
         match_running(match_running),
         message_handler(message_handler),
-        mouse(0, 0),
-        recv_message() {}
+        mouse(0, 0) {}
 
 void EventLoop::run() {
+    const Uint32 rate = 1000 / 60;
+
+    Uint32 frame_start = SDL_GetTicks();
+    Uint32 frame_end;
+    int rest_time;
+    Uint32 behind;
+    Uint32 lost;
+
     while (_keep_running) {
-        std::shared_ptr<Message> msg;
-        recv_message.try_pop(msg);
-        if (msg) {
-            msg->run(message_handler);
-        }
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 message_handler.quit();
@@ -27,7 +29,19 @@ void EventLoop::run() {
             keyboard.update(event);
             mouse.update(event);
         }
-        SDL_Delay(10);  // delay to avoid 100% CPU usage
+
+        frame_end = SDL_GetTicks();
+        rest_time = rate - (frame_end - frame_start);
+
+        if (rest_time < 0) {
+            behind = -rest_time;
+            rest_time = rate - (behind % rate);
+            lost = behind / rate;
+            frame_start += lost;
+        }
+
+        SDL_Delay(rest_time);
+        frame_start += rate;
     }
 }
 

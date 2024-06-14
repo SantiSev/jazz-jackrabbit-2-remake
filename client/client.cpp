@@ -10,10 +10,12 @@ Client::Client(const std::string& host, const std::string& port):
         id_client(0),
         message_handler(*this),
         event_loop(new EventLoop(game_running, menu_running, match_running, message_handler)),
-        thread_manager(new ClientThreadManager(host, port, event_loop->recv_message,
+        message_runner(new MessageRunner(message_handler)),
+        thread_manager(new ClientThreadManager(host, port, message_runner->recv_message,
                                                message_handler.send_message)) {
     // Pre-load necessary resources
     pre_load_resources(resource_pool);
+    message_runner->start();
 }
 
 void Client::start() {
@@ -59,8 +61,11 @@ void Client::pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_
 }
 
 Client::~Client() {
+    message_runner->stop();
     event_loop->stop();
+    message_runner->join();
     event_loop->join();
     delete thread_manager;
+    delete message_runner;
     delete event_loop;
 }
