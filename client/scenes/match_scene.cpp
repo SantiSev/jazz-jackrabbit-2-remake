@@ -19,7 +19,10 @@ void MatchScene::start() {
     const Uint32 rate = 1000 / 60;
 
     Uint32 frame_start = SDL_GetTicks();
-    Uint32 delta_time = 0;
+    Uint32 frame_end;
+    int rest_time;
+    Uint32 behind;
+    Uint32 lost;
     int it = 0;
 
     // Drop & Rest
@@ -28,16 +31,15 @@ void MatchScene::start() {
         window.clear();
         draw_objects(it);
         window.render();
-        update_objects(delta_time);
+        update_objects(it);
 
-        Uint32 frame_end = SDL_GetTicks();
-        delta_time = frame_end - frame_start;
-        int rest_time = rate - (delta_time);
+        frame_end = SDL_GetTicks();
+        rest_time = rate - (frame_end - frame_start);
 
         if (rest_time < 0) {
-            Uint32 behind = -rest_time;
+            behind = -rest_time;
             rest_time = rate - (behind % rate);
-            Uint32 lost = behind / rate;
+            lost = behind / rate;
             frame_start += lost;
             it = std::round(lost / rate);
         }
