@@ -44,7 +44,6 @@ void MenuScene::start() {
 
     Uint32 frame_start = SDL_GetTicks();
     Uint32 frame_end;
-    int rest_time;
     Uint32 behind;
     Uint32 lost;
     int it = 0;
@@ -60,7 +59,7 @@ void MenuScene::start() {
         window.render();
 
         frame_end = SDL_GetTicks();
-        rest_time = rate - (frame_end - frame_start);
+        int rest_time = rate - (frame_end - frame_start);
 
         if (rest_time < 0) {
             behind = -rest_time;

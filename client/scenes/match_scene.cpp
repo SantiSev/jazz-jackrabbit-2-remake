@@ -20,7 +20,6 @@ void MatchScene::start() {
 
     Uint32 frame_start = SDL_GetTicks();
     Uint32 frame_end;
-    int rest_time;
     Uint32 behind;
     Uint32 lost;
     int it = 0;
@@ -34,7 +33,7 @@ void MatchScene::start() {
         update_objects(it);
 
         frame_end = SDL_GetTicks();
-        rest_time = rate - (frame_end - frame_start);
+        int rest_time = rate - (frame_end - frame_start);
 
         if (rest_time < 0) {
             behind = -rest_time;
@@ -87,7 +86,7 @@ void MatchScene::init() {
 
 void MatchScene::update_objects(int delta_time) {
     std::shared_ptr<GameStateDTO> game_state(nullptr);
-    while (game_state_q.try_pop(game_state));  // get last game state
+    while (game_state_q.try_pop(game_state)) {}  // get last game state
 
     // update positions
     if (game_state != nullptr) {

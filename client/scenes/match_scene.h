@@ -2,11 +2,11 @@
 #define TP_FINAL_MATCH_SCENE_H
 
 #include <atomic>
+#include <cmath>
 #include <map>
 #include <memory>
 #include <string>
 #include <utility>
-#include <cmath>
 
 #include <SDL2/SDL.h>
 
