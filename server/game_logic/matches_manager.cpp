@@ -11,6 +11,7 @@ MatchesManager::MatchesManager():
         client_monitor(),
         manager_queue(Queue<std::shared_ptr<Message>>()) {}
 
+
 void MatchesManager::run() {
     try {
         while (online) {
@@ -42,11 +43,13 @@ void MatchesManager::run() {
 
 void MatchesManager::create_new_match(const CreateGameDTO& dto) {
     matches_number++;
+
 #ifdef LOG_VERBOSE
     std::cout << "creating new match " << matches_number << std::endl;
 #endif
     auto match =
             std::make_shared<Match>(dto.map_name, dto.max_players, manager_queue, client_monitor);
+
     matches.insert({matches_number, match});
 
     auto match_added = matches.find(matches_number)->second.get();
@@ -213,6 +216,16 @@ void MatchesManager::stop_all_matches() {
         //        match.second->join();
     }
     matches.clear();
+}
+
+void MatchesManager::pre_load_resources() {
+    resource_pool->load_yaml(map_character_enum_to_string.at(JAZZ_CHARACTER));
+    resource_pool->load_yaml(map_character_enum_to_string.at(SPAZ_CHARACTER));
+    resource_pool->load_yaml(map_character_enum_to_string.at(LORI_CHARACTER));
+    resource_pool->load_yaml(map_character_enum_to_string.at(MAD_HATTER));
+    resource_pool->load_yaml(map_character_enum_to_string.at(LIZARD_GOON));
+    resource_pool->load_yaml(SFX_FILE);
+    resource_pool->load_yaml(map_list_to_string.at(MAP_1));
 }
 
 void MatchesManager::stop() { online = false; }

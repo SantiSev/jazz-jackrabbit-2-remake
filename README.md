@@ -7,6 +7,21 @@
 - Santiago Sevitz - 107520 - <ssevitz@fi.uba.ar>
 - Nicolas Ramiro Sanchez - 998792 - <nrsanchez@fi.uba.ar>
 
+## Librerias externas
+
+### Librerias externas: Threads
+
+Este trabajo practico utiliza librerias externas provistas por la Catedra de Taller de programacion I (Veiga) FIUBA
+(eldipa). Cuyo codigo, esta bajo la licencia: GPL v2. Dichas librerias implementan Threads y Queues (thread-safe)
+[https://github.com/eldipa/hands-on-threads](https://github.com/eldipa/hands-on-threads)
+
+### Librerias externas: Sockets
+
+Este trabajo practico utiliza librerias externas provistas por la Catedra de Taller de programacion I (Veiga) FIUBA
+(eldipa). Cuyo codigo, esta bajo la licencia: GPL v2. Dichas librerias implementan Sockets en C++ para ser utilizados
+con un protocolo en particular. El link al repositorio es:
+[https://github.com/eldipa/sockets-en-cpp](https://github.com/eldipa/sockets-en-cpp)
+
 ## Game requirements
 
 ```bash
@@ -20,14 +35,7 @@ cmake \
 catch2
 ```
 
-Para instalar y compilar el juego se puede usar el script `build.sh` o los comandos son:
-
-```bash
-mkdir build
-cd build
-cmake -DPRODUCTION=ON ..
-make
-```
+Para instalar y compilar el juego se puede usar el script `build.sh`, con el comando `./build.sh -debug log`
 
 Esta secuencia compilara dos archivos: `server` y `client`. Para ejecutar `server` es
 
@@ -50,9 +58,20 @@ cppcheck \
 valgrind
 
 pre-commit install
+
+TIBURONCIN_SRC="https://github.com/eldipa/tiburoncin.git"
+
+install_tiburoncin() {
+  git clone $TIBURONCIN_SRC > /dev/null
+  cd tiburoncin
+  make 1> /dev/null
+  sudo cp tiburoncin /usr/bin/
+  cd ..
+  rm -rf tiburoncin
+}
 ```
 
-```
+```txt
 How to run tests:
 Antes que nada, hace
 
@@ -70,6 +89,7 @@ pero que luego esta se libera al cerrar la aplicacion por el sistema operativo.
 
 Para suprimirlos primero generar archivo valgrind.log y procesarlo con el script valgrind_to_suppressions.py. Una
 vez hecho eso simplemente correr valgrind con el archivo de supresiones generado.
+
 ```bash
 valgrind --leak-check=full --show-leak-kinds=all --gen-suppressions=all --log-file=valgrind.log ./program
 python3 valgrind_to_suppressions.py valgrind.log suppressions.supp

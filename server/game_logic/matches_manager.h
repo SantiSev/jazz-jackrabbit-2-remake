@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 
+#include "../../game_engine/gui/basic/resource_pool.h"
 #include "../protocol/manager_message_handler.h"
 #include "../protocol/server_thread_manager.h"
 #include "./match.h"
@@ -24,6 +25,7 @@ private:
     MatchesManagerMessageHandler message_handler;
     std::mutex manager_mutex;
     ClientMonitor client_monitor;
+
 
 public:
     Queue<std::shared_ptr<Message>> manager_queue;

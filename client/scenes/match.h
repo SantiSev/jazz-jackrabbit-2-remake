@@ -21,7 +21,7 @@
 #include "../game_objects/bullet_factory.h"
 #include "../game_objects/character_factory.h"
 #include "../game_objects/map.h"
-#include "../game_objects/player.h"
+#include "../game_objects/player_controller.h"
 
 class MatchScene {
 private:

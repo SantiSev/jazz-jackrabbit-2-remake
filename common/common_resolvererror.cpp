@@ -1,3 +1,9 @@
+/*
+ * Este codigo se encuentra bajo licencia: GPL v2
+ * El autor del mismo es: Taller de programacion I (Veiga) FIUBA (eldipa)
+ * El link al repositorio es: https://github.com/eldipa/sockets-en-cpp
+ * */
+
 #include "common_resolvererror.h"
 
 #include <arpa/inet.h>

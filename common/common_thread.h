@@ -1,3 +1,9 @@
+/*
+ * Este codigo se encuentra bajo licencia: GPL v2
+ * El autor del mismo es: Taller de programacion I (Veiga) FIUBA (eldipa)
+ * El link al repositorio es: https://github.com/eldipa/hands-on-threads
+ * */
+
 #ifndef THREAD_H_
 #define THREAD_H_
 

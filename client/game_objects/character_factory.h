@@ -19,6 +19,7 @@ public:
             const std::shared_ptr<engine::ResourcePool>& resource_pool, character_t character_enum,
             const std::string& animation_name, int x, int y) {
         switch (character_enum) {
+            // Players
             case JAZZ_CHARACTER:
                 return std::make_unique<Jazz>(resource_pool, animation_name, x, y);
                 break;
@@ -28,6 +29,8 @@ public:
             case LORI_CHARACTER:
                 return std::make_unique<Lori>(resource_pool, animation_name, x, y);
                 break;
+
+            // Enemies
             case LIZARD_GOON:
                 return std::make_unique<LizardGoon>(resource_pool, animation_name, x, y);
                 break;

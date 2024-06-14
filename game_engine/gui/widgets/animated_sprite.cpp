@@ -100,10 +100,6 @@ void AnimatedSprite::set_animation(const std::string& animation_name) {
         return;
     }
 
-#ifdef LOG_VERBOSE
-    std::cout << "Setting animation: " << animation_name << std::endl;
-#endif
-
     current_animation = animation_name;
     YAML::Node yaml = *animations;
     YAML::Node animation = yaml[animation_name];

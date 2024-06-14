@@ -20,7 +20,7 @@
 #include "../game_engine/gui/basic/window.h"
 #include "../game_engine/gui/canvas_object.h"
 #include "../game_engine/gui/widgets/animated_sprite.h"
-#include "game_objects/player.h"
+#include "game_objects/player_controller.h"
 #include "protocol/client_protocol.h"
 #include "protocol/client_thread_manager.h"
 #include "scenes/match.h"

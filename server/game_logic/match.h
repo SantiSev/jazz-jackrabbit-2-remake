@@ -8,12 +8,14 @@
 #include <list>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
 #include <yaml-cpp/yaml.h>
 
 #include "../../common/assets.h"
+#include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/physics_engine/collision_manager.h"
 #include "../../server/game_logic/weapons/bullet.h"
 #include "../protocol/match_message_handler.h"
@@ -40,7 +42,7 @@ private:
     Queue<std::shared_ptr<Message>>& lobby_queue;
     MatchMessageHandler message_handler;
 
-    std::vector<std::shared_ptr<Player>> players;
+    std::unordered_map<uint16_t, std::shared_ptr<Player>> players;
     std::vector<std::shared_ptr<Enemy>> enemies;
     std::vector<std::shared_ptr<Bullet>> bullets;
     std::vector<std::shared_ptr<Collectable>> items;
@@ -54,11 +56,13 @@ private:
     std::vector<Vector2D> enemy_spawn_points;
     std::mutex match_mutex;
 
+    const std::shared_ptr<engine::ResourcePool>& resource_pool;
+
 public:
     std::shared_ptr<Queue<std::shared_ptr<Message>>> match_queue;
     // Constructor
     explicit Match(const map_list_t& map_selected, size_t required_players_setting,
-                   Queue<std::shared_ptr<Message>>& lobby_queue, ClientMonitor& monitor);
+    Queue<std::shared_ptr<Message>>& lobby_queue, ClientMonitor& monitor);
     void run() override;
     void stop() override;
     ~Match() override = default;

@@ -20,7 +20,7 @@
 #define INTOXICATON_COOLDOWN 4
 #define SPECIAL_COOLDOWN 3
 #define DEFAULT_SPEED_Y 10
-#define DEFAULT_SPEED_X 10
+#define DEFAULT_SPEED_X 15
 #define JUMP_SPEED 25
 #define GRAVITY 1
 #define FRICCTION 0.1f
@@ -55,11 +55,11 @@ public:
 
     //------- Getters --------
 
-    uint16_t get_id() const;
-    character_t get_character() const;
-    uint8_t get_state() const;
-    int get_health() const;
-    bool is_dead() const;
+    uint16_t get_id();
+    character_t get_character();
+    uint8_t get_state();
+    int get_health();
+    bool is_dead();
 
     //------- Health Methods --------
 

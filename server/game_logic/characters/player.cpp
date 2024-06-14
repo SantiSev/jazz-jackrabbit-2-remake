@@ -44,7 +44,15 @@ void Player::reload_weapon(size_t weapon_id, int ammo_amount) {
     this->weapons[weapon_id]->add_ammo(ammo_amount);
 }
 
-void Player::shoot_selected_weapon() { weapons[selected_weapon]->shoot(); }
+void Player::shoot_selected_weapon() {
+
+#ifdef LOG_VERBOSE
+    std::cout << "| Player id: " << this->id << " | Player::shoot_selected_weapon() |" << std::endl;
+#endif
+
+    weapons[selected_weapon]->shoot();
+    state = is_facing_right() ? STATE_SHOOTING_RIGHT : STATE_SHOOTING_LEFT;
+}
 
 void Player::select_next_weapon() { selected_weapon = (selected_weapon + 1) % weapons.size(); }
 
@@ -71,6 +79,10 @@ void Player::reset_special_attack() { special_cooldown = SPECIAL_COOLDOWN; }
 
 void Player::move_left() {
 
+#ifdef LOG_VERBOSE
+    std::cout << "| Player id: " << this->id << " | Player::move_left() |" << std::endl;
+#endif
+
     if (is_knocked_back) {
         return;
     }
@@ -88,6 +100,10 @@ void Player::move_left() {
 
 void Player::move_right() {
 
+#ifdef LOG_VERBOSE
+    std::cout << "| Player id: " << this->id << " | Player::move_right() |" << std::endl;
+#endif
+
     if (is_knocked_back) {
         return;
     }
@@ -104,6 +120,10 @@ void Player::move_right() {
 }
 
 void Player::jump() {
+
+#ifdef LOG_VERBOSE
+    std::cout << "| Player id: " << this->id << " | Player::jump() |" << std::endl;
+#endif
 
     if (on_floor) {
         on_floor = false;
@@ -128,10 +148,16 @@ void Player::do_special_attack() {
 
 void Player::update_body() {
 
-
     if (is_dead()) {  // if the player is dead, then it shouldnt move
         return;
     }
+
+
+    if (velocity.x == 0 && is_on_floor() && !is_knocked_back && state != STATE_SHOOTING_LEFT &&
+        state != STATE_SHOOTING_RIGHT) {
+        state = is_facing_right() ? STATE_IDLE_RIGHT : STATE_IDLE_LEFT;
+    }
+
 
     if (!on_floor) {
         if (velocity.y < MAX_FALL_SPEED) {
@@ -155,6 +181,10 @@ void Player::update_body() {
     }
 
     position += velocity;
+
+#ifdef LOG_VERBOSE
+    print_info();
+#endif
 }
 
 void Player::handle_colision(CollisionObject* other) {
@@ -226,48 +256,13 @@ void Player::execute_command(command_t command) {
         case MOVE_RIGHT:
             move_right();
             break;
-        case MOVE_LEFT_FAST:
-            if (is_on_floor()) {
-                // player.move_left_fast();
-                state = STATE_SPRINTING_LEFT;
-            }
-            break;
-        case MOVE_RIGHT_FAST:
-            if (is_on_floor()) {
-                // player.move_right_fast();
-                state = STATE_SPRINTING_RIGHT;
-            }
-            break;
         case JUMP:
             jump();
             break;
-        case SPECIAL_ATTACK:
-            if (is_player_intoxicated() || !is_special_available()) {
-                break;
-            }
-            //            player.especial_attack();
-            if (is_facing_right()) {
-                state = STATE_SPECIAL_RIGHT;
-            } else {
-                state = STATE_SPECIAL_LEFT;
-            }
-            reset_special_attack();
+        case SHOOT:
+            std::cout << "SHOOT" << std::endl;
+            shoot_selected_weapon();
             break;
-            // case SHOOT:
-            //     if (!is_player_intoxicated()) {
-            //         shoot();
-
-            //         Bullet bullet = shoot();
-            //         collision_manager.add_dynamic_body(bullet);
-            //         bullets.emplace_back(bullet);
-
-            //         if (is_facing_right()) {
-            //             state = STATE_SHOOTING_RIGHT);
-            //         } else {
-            //             state = STATE_SHOOTING_LEFT);
-            //         }
-            //     }
-            //     break;
         default:
             break;
     }

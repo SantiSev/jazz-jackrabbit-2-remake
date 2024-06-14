@@ -7,22 +7,34 @@ ClientMessageHandler::ClientMessageHandler(Client& client): client(client) {}
 void ClientMessageHandler::send_command(command_t command) {
     CommandDTO dto{client.id_client, command};
     send_message.push(std::make_shared<RecvCommandMessage>(dto));
+#ifdef LOG
+    std::cout << "Sending command: " << int(command) << std::endl;
+#endif
 }
 
 void ClientMessageHandler::create_match(character_t character, map_list_t map_name,
                                         uint8_t max_players) {
     CreateGameDTO dto = {client.id_client, character, map_name, max_players};
     send_message.push(std::make_shared<RecvCreateGameMessage>(dto));
+#ifdef LOG
+    std::cout << "Creating match" << std::endl;
+#endif
 }
 
 void ClientMessageHandler::join_match(id_match_t id_match, character_t character) {
     JoinMatchDTO dto = {client.id_client, id_match, character};
     send_message.push(std::make_shared<RecvJoinMatchMessage>(dto));
+#ifdef LOG
+    std::cout << "Joining match" << std::endl;
+#endif
 }
 
 void ClientMessageHandler::quit() {
     CloseConnectionDTO dto{client.id_client};
     send_message.push(std::make_shared<CloseConnectionMessage>(dto));
+#ifdef LOG
+    std::cout << "Quitting" << std::endl;
+#endif
 }
 
 void ClientMessageHandler::handle_acpt_connection(const id_client_t& client_id) {
@@ -53,16 +65,22 @@ void ClientMessageHandler::handle_connected_to_match(const ClientHasConnectedToM
 void ClientMessageHandler::handle_recv_active_games(const MatchInfoDTO& dto) {
     // TODO set menu active games list
     // send_message.push(std::make_shared<RecvActiveGames>(dto));
+#ifdef LOG
+    std::cout << "Received active games" << std::endl;
+#endif
 }
 
 void ClientMessageHandler::handle_recv_finish_match() {
-    // todo
-    //  client.mostrar_pantalla_score();
-    //  sleep
-    //  client.esperar_tecla_para_volver_a_menu();
-    //  client.cambiar_de_match_a_menu();
+    client.match_running.store(false);
+    client.menu_running.store(true);
+#ifdef LOG
+    std::cout << "Match Finished" << std::endl;
+#endif
 }
 
 void ClientMessageHandler::handle_recv_game_state(const GameStateDTO& dto) {
     game_state_q.push(std::make_shared<GameStateDTO>(dto));
+#ifdef LOG_VERBOSE
+    std::cout << "Received game state" << std::endl;
+#endif
 }

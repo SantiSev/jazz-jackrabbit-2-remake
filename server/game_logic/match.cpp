@@ -11,7 +11,8 @@
 #include "../../common/assets.h"
 
 Match::Match(const map_list_t& map_selected, size_t required_players_setting,
-             Queue<std::shared_ptr<Message>>& lobby_queue, ClientMonitor& monitor):
+             Queue<std::shared_ptr<Message>>& lobby_queue, ClientMonitor& monitor,
+             const std::shared_ptr<engine::ResourcePool>& resource_pool):
         online(true),
         lobby_queue(lobby_queue),
         message_handler(*this),
@@ -24,7 +25,7 @@ Match::Match(const map_list_t& map_selected, size_t required_players_setting,
         map(map_selected),
         collision_manager(nullptr),
         match_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()) {
-
+        resource_pool(resource_pool) {
     load_enviorment(map_selected);
     load_spawn_points();
     initiate_enemies();
@@ -58,6 +59,7 @@ void Match::run() {
 
             size_t events = 0;
             while (match_queue->try_pop(message) && events < MAX_EVENTS_PER_LOOP) {
+
                 events++;
                 if (message) {
 #ifdef LOG_VERBOSE
@@ -138,13 +140,13 @@ void Match::run_command(const CommandDTO& dto) {
 }
 
 void Match::respawn_players() {
-    for (auto& player: players) {
+    for (auto& pair: players) {
+        auto& player = pair.second;
         if (player->try_revive()) {
-            player->revive(player.get()->position);
+            player->revive(player->position);
         }
     }
 }
-
 void Match::respawn_enemies() {
     for (auto& enemy: enemies) {
         if (enemy->try_revive()) {
@@ -171,15 +173,18 @@ Vector2D Match::select_player_spawn_point() {
 
 void Match::add_player_to_game(const AddPlayerDTO& dto) {
     players_connected++;
+
     Vector2D pos = select_player_spawn_point();
     auto new_player = std::make_shared<Player>(dto.id_client, dto.name, dto.player_character, pos.x,
                                                pos.y, *collision_manager);
     collision_manager->track_dynamic_body(new_player);
-    players.push_back(new_player);
-#ifdef LOG_VERBOSE
-    std::cout << "Player connected: " << dto.id_client << "is playing as "
-              << map_character_enum_to_string.at(dto.player_character) << std::endl;
-#endif
+  
+    #ifdef LOG_VERBOSE
+        std::cout << "Player connected: " << dto.id_client << "is playing as "
+                  << map_character_enum_to_string.at(dto.player_character) << std::endl;
+    #endif
+
+    players[client_id] = new_player;
 }
 
 void Match::send_end_message_to_players() {
@@ -213,37 +218,39 @@ GameStateDTO Match::create_actual_snapshot() {
     game_state.num_enemies = enemies.size();
     game_state.num_bullets = bullets.size();
 
-    for (size_t i = 0; i < players.size(); ++i) {
-        game_state.players[i].id = players[i]->get_id();
+    size_t i = 0;
+    for (auto& player_pair: players) {
+        game_state.players[i].id = player_pair.first;
         snprintf(game_state.players[i].name, sizeof(game_state.players[i].name), "%s",
-                 players[i]->get_name().c_str());
-        game_state.players[i].health = players[i]->get_health();
-        game_state.players[i].points = players[i]->get_points();
-        game_state.players[i].character = players[i]->get_character();
-        game_state.players[i].state = players[i]->get_state();
-        game_state.players[i].x_pos = players[i].get()->position.x;
-        game_state.players[i].y_pos = players[i].get()->position.y;
+                 player_pair.second->get_name().c_str());
+        game_state.players[i].health = player_pair.second->get_health();
+        game_state.players[i].points = player_pair.second->get_points();
+        game_state.players[i].character = player_pair.second->get_character();
+        game_state.players[i].state = player_pair.second->get_state();
+        game_state.players[i].x_pos = player_pair.second->position.x;
+        game_state.players[i].y_pos = player_pair.second->position.y;
         for (size_t j = 0; j < NUM_OF_WEAPONS; ++j) {
-            game_state.players[i].weapons[j].ammo = players[i]->get_weapon(j)->get_ammo();
+            game_state.players[i].weapons[j].ammo = player_pair.second->get_weapon(j)->get_ammo();
             game_state.players[i].weapons[j].is_empty =
-                    players[i]->get_weapon(j)->get_ammo() == 0 ? (uint8_t)1 : (uint8_t)0;
+                    player_pair.second->get_weapon(j)->get_ammo() == 0 ? (uint8_t)1 : (uint8_t)0;
             game_state.players[i].weapons[j].weapon_name =
-                    (uint8_t)players[i]->get_weapon(j)->get_weapon_id();
+                    (uint8_t)player_pair.second->get_weapon(j)->get_weapon_id();
         }
+        ++i;
     }
-    for (size_t i = 0; i < enemies.size(); ++i) {
-        game_state.enemies[i].id = enemies[i]->get_id();
-        game_state.enemies[i].state = enemies[i]->get_state();
-        game_state.enemies[i].character = enemies[i]->get_character();
-        game_state.enemies[i].x_pos = enemies[i]->position.x;
-        game_state.enemies[i].y_pos = enemies[i]->position.y;
+    for (size_t j = 0; j < enemies.size(); ++j) {
+        game_state.enemies[j].id = enemies[j]->get_id();
+        game_state.enemies[j].state = enemies[j]->get_state();
+        game_state.enemies[j].character = enemies[j]->get_character();
+        game_state.enemies[j].x_pos = enemies[j]->position.x;
+        game_state.enemies[j].y_pos = enemies[j]->position.y;
     }
-    for (size_t i = 0; i < bullets.size(); ++i) {
-        game_state.bullets[i].id = bullets[i]->get_id();
-        game_state.bullets[i].direction = bullets[i]->get_direction();
-        game_state.bullets[i].bullet_type = bullets[i]->get_type();
-        game_state.bullets[i].x_pos = bullets[i]->position.x;
-        game_state.bullets[i].y_pos = bullets[i]->position.y;
+    for (size_t k = 0; k < bullets.size(); ++k) {
+        game_state.bullets[k].id = bullets[k]->get_id();
+        game_state.bullets[k].direction = bullets[k]->get_direction();
+        game_state.bullets[k].bullet_type = bullets[k]->get_type();
+        game_state.bullets[k].x_pos = bullets[k]->position.x;
+        game_state.bullets[k].y_pos = bullets[k]->position.y;
     }
 
     return game_state;
@@ -252,10 +259,9 @@ GameStateDTO Match::create_actual_snapshot() {
 //-------------------- Initialization Methods -----------------
 
 
-void Match::load_enviorment(map_list_t selected_map) {
-    // hardcoding for testing purposes
-    YAML::Node yaml =
-            YAML::LoadFile("/home/niko/Escritorio/taller/tp_final/assets/maps/grass_map.yaml");
+
+void Match::load_enviorment(map_list_t map) {
+    auto yaml = *resource_pool->get_yaml(map_list_to_string.at(map));
 
     if (yaml.IsNull()) {
         throw std::runtime_error("Error loading yaml file");
@@ -276,7 +282,6 @@ void Match::load_enviorment(map_list_t selected_map) {
         bool collision = obj["collision"].as<bool>();
 
         if (collision) {
-
             auto d_rect_list_yaml = obj["d_rect_list"];
             for (auto d_rect_obj: d_rect_list_yaml) {
                 auto d_rect_yaml = d_rect_obj["d_rect"];
@@ -289,23 +294,26 @@ void Match::load_enviorment(map_list_t selected_map) {
                 auto w = d_rect_yaml["w"].as<int>();
                 auto h = d_rect_yaml["h"].as<int>();
 
-                // create boxplatofrm shared pointer
-                auto new_box = std::make_shared<BoxPlatform>(x, y, w * repeat_h, h * repeat_v);
-                collision_manager->add_object(new_box);
+                // create horizontal boxplatofrm shared pointer
+                auto new_h_box = std::make_shared<BoxPlatform>(x, y, w * repeat_h, h);
+                collision_manager->add_object(new_h_box);
+
+                // create vertical boxplatofrm shared pointer (y + h to avoid overlapping with
+                // horizontal box)
+                auto new_v_box = std::make_shared<BoxPlatform>(x, y + h, w, h * repeat_v);
+                collision_manager->add_object(new_v_box);
             }
         }
     }
-    std::cout << "Map loaded !" << std::endl;
+#ifdef LOG
+    std::cout << "Map loaded!" << std::endl;
+#endif
 }
 
 
 void Match::load_spawn_points() {
+    auto yaml = *resource_pool->get_yaml(map_list_to_string.at(map));
 
-    //    std::string file_path = map_list_to_string.at(map) + YAML_EXTENSION;
-    YAML::Node yaml =
-            YAML::LoadFile("/home/niko/Escritorio/taller/tp_final/assets/maps/grass_map.yaml");
-
-    //    YAML::Node yaml = YAML::LoadFile(file_path);
     if (yaml.IsNull()) {
         std::cerr << "Error loading yaml file" << std::endl;
         exit(1);
@@ -372,11 +380,10 @@ map_list_t Match::get_map() const { return map; }
 size_t Match::get_max_players() const { return required_players; }
 
 std::shared_ptr<Player> Match::get_player(size_t id) {
-    auto it = std::find_if(
-            players.begin(), players.end(),
-            [id](const std::shared_ptr<Player>& player) { return player->get_id() == id; });
-    if (it != players.end()) {
-        return *it;
+
+    auto player = players.find(id);
+    if (player != players.end()) {
+        return player->second;
     } else {
         throw std::runtime_error("Player with the given ID not found");
     }
