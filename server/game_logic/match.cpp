@@ -45,7 +45,9 @@ void Match::run() {
         auto runTime = startTime;
 
         const double FPSMAX = 1000.0 / 60.0;
+#ifdef LOG_VERBOSE
         std::cout << "Match map: " << map_list_to_string.at(map) << " Starting..." << std::endl;
+#endif
         while (online) {
             auto endTime = std::chrono::system_clock::now();
             std::chrono::duration<double, std::milli> delta = endTime - startTime;
@@ -54,20 +56,15 @@ void Match::run() {
             auto frameStart = std::chrono::system_clock::now();
             std::shared_ptr<Message> message;
 
-            //            size_t events = 0;
-            //            while (match_queue->try_pop(message) && events < MAX_EVENTS_PER_LOOP) {
-            //                events++;
-            //                std::cout << message->get_header() << std::endl;
-            //                if (message) {
-            //                    std::cout << "message received about to being runned" <<
-            //                    std::endl; message->run(message_handler);
-            //                }
-            //            }
-
-            match_queue->try_pop(message);
-            if (message) {
-                std::cout << "message received about to being runned" << std::endl;
-                message->run(message_handler);
+            size_t events = 0;
+            while (match_queue->try_pop(message) && events < MAX_EVENTS_PER_LOOP) {
+                events++;
+                if (message) {
+#ifdef LOG_VERBOSE
+                    std::cout << "message received about to being runned" << std::endl;
+#endif
+                    message->run(message_handler);
+                }
             }
 
             collision_manager->update();
@@ -128,10 +125,14 @@ void Match::countdown_match(std::chrono::time_point<std::chrono::system_clock>& 
 }
 
 void Match::run_command(const CommandDTO& dto) {
+#ifdef LOG_VERBOSE
     std::cout << "Running command with id " << dto.id_player << "" << std::endl;
+#endif
     std::shared_ptr<Player> player = get_player(dto.id_player);
     if (player) {
+#ifdef LOG_VERBOSE
         std::cout << dto.id_player << "says: " << command_to_string.at(dto.command) << std::endl;
+#endif
         player->execute_command(dto.command);
     }
 }
@@ -175,21 +176,11 @@ void Match::add_player_to_game(const AddPlayerDTO& dto) {
                                                pos.y, *collision_manager);
     collision_manager->track_dynamic_body(new_player);
     players.push_back(new_player);
+#ifdef LOG_VERBOSE
     std::cout << "Player connected: " << dto.id_client << "is playing as "
               << map_character_enum_to_string.at(dto.player_character) << std::endl;
+#endif
 }
-
-
-void Match::add_client_to_match(ServerThreadManager* client, const std::string& player_name,
-                                const character_t& character) {
-    //    client_monitor.addClient(client->get_sender_queue());
-    //    client->set_receiver_queue(event_queue);
-    //    clients.push_back(client);
-    //    add_player_to_game(player_name, character, client->get_client_id());
-    //    std::cout << "Player connected: " << player_name << " is playing as "
-    //              << map_character_enum_to_string.at(character) << std::endl;
-}
-
 
 void Match::send_end_message_to_players() {
     //    auto game_ended_message = std::make_shared<SendFinishMatchMessage>();
@@ -203,12 +194,16 @@ bool Match::has_match_ended() const { return match_has_ended; }
 
 void Match::stop() {
     online = false;
+#ifdef LOG_VERBOSE
     std::cout << "stopping match " << std::endl;
+#endif
     //    event_queue->close();
     send_end_message_to_players();
     client_monitor.remove_all_queues();
     players.clear();
+#ifdef LOG_VERBOSE
     std::cout << "clients cleared in match" << std::endl;
+#endif
 }
 
 GameStateDTO Match::create_actual_snapshot() {
@@ -349,21 +344,6 @@ void Match::initiate_enemies() {
     }
 }
 
-// ServerThreadManager& Match::get_client_by_id(id_client_t id_client) {
-//     auto it =
-//             std::find_if(clients.begin(), clients.end(), [id_client](ServerThreadManager* client)
-//             {
-//                 return client->get_client_id() == id_client;
-//             });
-//
-//     if (it != clients.end()) {
-//         return **it;
-//     } else {
-//         throw std::runtime_error("Client with the given ID not found in match.");
-//     }
-// }
-
-
 void Match::delete_disconnected_player(id_client_t id_client) {
     std::unique_lock<std::mutex> lock(match_mutex);
     for (auto player = players.begin(); player != players.end(); ++player) {
@@ -371,23 +351,15 @@ void Match::delete_disconnected_player(id_client_t id_client) {
             CloseConnectionDTO dto{id_client};
             collision_manager->remove_object(*player);
             players.erase(player);
-            //            erase_client_from_list(id_client);
+#ifdef LOG_VERBOSE
             std::cout << "Player " << id_client << " disconnected from match " << std::endl;
+#endif
             auto message = std::make_shared<CloseConnectionMessage>(dto);
             lobby_queue.try_push(message);
             break;
         }
     }
 }
-
-// void Match::erase_client_from_list(id_client_t id_client) {
-//     for (auto it = clients.begin(); it != clients.end(); ++it) {
-//         if ((*it)->get_client_id() == id_client) {
-//             clients.erase(it);
-//             break;
-//         }
-//     }
-// }
 
 //-------------------- Getter Methods -----------------
 

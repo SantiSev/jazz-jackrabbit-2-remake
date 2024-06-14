@@ -13,8 +13,6 @@ std::shared_ptr<RecvCommandMessage> ServerProtocol::recv_command() {
     CommandDTO command = {};
     skt.recvall(&command, sizeof(command), &was_closed);
     command.id_player = ntohs(command.id_player);
-    //    std::cout << "id_player " << command.id_player << "en server protocol convertido" <<
-    //    std::endl;
     return std::make_shared<RecvCommandMessage>(command);
 }
 

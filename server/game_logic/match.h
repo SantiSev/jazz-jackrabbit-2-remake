@@ -38,7 +38,6 @@ private:
     bool match_has_ended = false;
     int match_time = MATCH_DURATION;
     Queue<std::shared_ptr<Message>>& lobby_queue;
-    //    std::list<ServerThreadManager*> clients;
     MatchMessageHandler message_handler;
 
     std::vector<std::shared_ptr<Player>> players;
@@ -81,12 +80,7 @@ public:
 
     //-------------------- Conection Methods ----------------------
 
-    // un add playuer to match
-
     void add_player_to_game(const AddPlayerDTO& dto);
-
-    void add_client_to_match(ServerThreadManager* client, const std::string& player_name,
-                             const character_t& character);
 
     void send_end_message_to_players();
 
@@ -108,8 +102,6 @@ public:
 
     bool has_match_ended() const;
 
-    //    std::string get_match_name() const;
-
     size_t get_num_players();
 
     size_t get_max_players() const;
@@ -119,10 +111,6 @@ public:
     map_list_t get_map() const;
 
     Queue<std::shared_ptr<Message>>& get_match_queue();
-
-    //    ServerThreadManager& get_client_by_id(id_client_t id_client);
-
-    //    void erase_client_from_list(id_client_t id_client);
 };
 
 #endif

@@ -11,33 +11,25 @@ ServerThreadManager::ServerThreadManager(Socket&& skt,
 
 ServerThreadManager::~ServerThreadManager() = default;
 
-// std::shared_ptr<Queue<std::shared_ptr<Message>>> ServerThreadManager::get_receiver_queue() {
-//     return receiver.get_receiver_queue();
-// }
-
 std::shared_ptr<Queue<std::shared_ptr<Message>>>& ServerThreadManager::get_sender_queue() {
     return sender.get_sender_queue();
 }
 
-// void ServerThreadManager::set_receiver_queue(
-//         const std::shared_ptr<Queue<std::shared_ptr<Message>>>& receiver_queue) {
-//     receiver.change_receiver_queue(receiver_queue);
-// }
-
-// void ServerThreadManager::set_sender_queue(
-//         const std::shared_ptr<Queue<std::shared_ptr<Message>>>& sender_queue) {
-//     sender.change_sender_queue(sender_queue);
-// }
-
 void ServerThreadManager::stop() {
     receiver.stop();
     sender.stop();
+#ifdef LOG_VERBOSE
     std::cout << "sender and receiver stopped" << std::endl;
+#endif
     server_protocol.force_shutdown();
+#ifdef LOG_VERBOSE
     std::cout << "protocol shutdown" << std::endl;
+#endif
     sender.join();
     receiver.join();
+#ifdef LOG_VERBOSE
     std::cout << "sender and receiver joined" << std::endl;
+#endif
 }
 
 void ServerThreadManager::set_client_id(const size_t& new_id) { this->client_id = new_id; }

@@ -21,12 +21,7 @@ public:
 
     void run() override;
 
-    //    std::shared_ptr<Queue<std::shared_ptr<Message>>>& get_receiver_queue();
-
     ~ServerReceiver();
-
-    //    void change_receiver_queue(const std::shared_ptr<Queue<std::shared_ptr<Message>>>&
-    //    sharedPtr);
 
     bool isAlive();
 };

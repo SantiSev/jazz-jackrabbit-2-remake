@@ -11,8 +11,10 @@ void MatchesManagerMessageHandler::handle_recv_create_game(const CreateGameDTO& 
 }
 
 void MatchesManagerMessageHandler::handle_recv_join_match(const JoinMatchDTO& dto) {
+#ifdef LOG_VERBOSE
     std::cout << "joining match message received "
               << "client id " << dto.id_client << " match id " << dto.id_match << std::endl;
+#endif
     matches_manager.join_match(dto);
 }
 
