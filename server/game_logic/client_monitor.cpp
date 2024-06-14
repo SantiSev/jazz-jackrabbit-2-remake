@@ -1,6 +1,7 @@
 #include "client_monitor.h"
 
 #include <algorithm>
+#include <iostream>
 
 
 ClientMonitor::ClientMonitor(): clientQueues() {}

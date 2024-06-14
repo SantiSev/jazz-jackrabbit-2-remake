@@ -5,6 +5,8 @@
 
 #include <arpa/inet.h>
 
+#include "../../common/common_liberror.h"
+
 ServerProtocol::ServerProtocol(Socket&& skt): CommonProtocol(std::move(skt)) {}
 
 std::shared_ptr<RecvCommandMessage> ServerProtocol::recv_command() {
@@ -42,6 +44,13 @@ std::shared_ptr<Message> ServerProtocol::recv_req_active_games() {
     return std::make_shared<SendRequestGamesMessage>(active_games);
 }
 
+std::shared_ptr<Message> ServerProtocol::recv_add_player() {
+    AddPlayerDTO dto = {};
+    skt.recvall(&dto, sizeof(dto), &was_closed);
+    dto.id_client = ntohs(dto.id_client);
+    return std::make_shared<AddPlayerMessage>(dto);
+}
+
 std::shared_ptr<RecvJoinMatchMessage> ServerProtocol::recv_join_match() {
     JoinMatchDTO join_match = {};
     skt.recvall(&join_match, sizeof(join_match), &was_closed);
@@ -51,27 +60,34 @@ std::shared_ptr<RecvJoinMatchMessage> ServerProtocol::recv_join_match() {
 }
 
 std::shared_ptr<Message> ServerProtocol::recv_message() {
-    const uint16_t header = recv_two_bytes();
-    printf("El valor de header es: %u\n", header);
+    try {
+        const uint16_t header = recv_two_bytes();
+        //        printf("El valor de header es: %u\n", header);
 
-    switch (header) {
-        case CLOSE_CONNECTION:
-            return recv_closed_connection();
-        case RECV_COMMAND:
-            return recv_command();
-        case RECV_CHEAT_COMMAND:
-            return recv_cheat_command();
-        case RECV_LEAVE_MATCH:
-            return recv_leave_match();
-        case RECV_CREATE_GAME:
-            return recv_create_game();
-        case RECV_JOIN_MATCH:
-            return recv_join_match();
-        case RECV_REQUEST_ACTIVE_GAMES:
-            return recv_req_active_games();
-        default:
-            return std::make_shared<InvalidMessage>();
+        switch (header) {
+            case CLOSE_CONNECTION:
+                return recv_closed_connection();
+            case RECV_COMMAND:
+                return recv_command();
+            case RECV_CHEAT_COMMAND:
+                return recv_cheat_command();
+            case RECV_LEAVE_MATCH:
+                return recv_leave_match();
+            case RECV_CREATE_GAME:
+                return recv_create_game();
+            case RECV_JOIN_MATCH:
+                return recv_join_match();
+            case RECV_REQUEST_ACTIVE_GAMES:
+                return recv_req_active_games();
+            case ADD_PLAYER:
+                return recv_add_player();
+            default:
+                return std::make_shared<InvalidMessage>();
+        }
+    } catch (const LibError& e) {
+        force_shutdown();
     }
+    return std::make_shared<InvalidMessage>();
 }
 
 bool ServerProtocol::is_closed() const { return was_closed; }

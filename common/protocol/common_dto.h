@@ -2,6 +2,7 @@
 #define _COMMON_DTO_H
 
 #include <cstdint>
+#include <map>
 #include <string>
 
 #include <arpa/inet.h>
@@ -10,14 +11,16 @@
 #include "../common_constants.h"
 #include "../map_enum.h"
 
-#define CLOSE_CONNECTION 0x0000
+#define NULL_MESSAGE 0X0000
 #define ACPT_CONNECTION 0x0001
+#define CLOSE_CONNECTION 0x0002
 
 #define SEND_GAME_STATE 0x0100
 #define RECV_COMMAND 0x0101
 #define RECV_CHEAT_COMMAND 0x0102
 #define RECV_LEAVE_MATCH 0x0103
 #define SEND_FINISH_MATCH 0x0104
+#define ADD_PLAYER 0x0105
 
 #define RECV_REQUEST_ACTIVE_GAMES 0x0200
 #define RECV_CREATE_GAME 0x0201
@@ -46,6 +49,21 @@ typedef enum: uint8_t {
     PAUSE_GAME = 0x10,
     TAUNT = 0x11,
 } command_t;
+
+const std::map<command_t, std::string> command_to_string = {
+        {MOVE_LEFT, "MOVE_LEFT"},
+        {MOVE_RIGHT, "MOVE_RIGHT"},
+        {MOVE_LEFT_FAST, "MOVE_LEFT_FAST"},
+        {MOVE_RIGHT_FAST, "MOVE_RIGHT_FAST"},
+        {JUMP, "JUMP"},
+        {SPECIAL_ATTACK, "SPECIAL_ATTACK"},
+        {CHANGE_WEAPON, "CHANGE_WEAPON"},
+        {LOOK_UP, "LOOK_UP"},
+        {DUCK_DOWN, "DUCK_DOWN"},
+        {SHOOT, "SHOOT"},
+        {PAUSE_GAME, "PAUSE_GAME"},
+        {TAUNT, "TAUNT"},
+};
 
 //------Messages send by client to server --------
 
@@ -76,6 +94,13 @@ struct JoinMatchDTO {
     id_client_t id_client;
     id_match_t id_match;
     character_t player_character;
+} __attribute__((packed));
+
+struct AddPlayerDTO {
+    char name[50];
+    id_client_t id_client;
+    character_t player_character;
+    map_list_t map_name;
 } __attribute__((packed));
 
 struct RequestActiveGamesDTO {
