@@ -47,27 +47,21 @@ void MatchesManager::run() {
 void MatchesManager::create_new_match(const CreateGameDTO& dto) {
     matches_number++;
 
-#ifdef LOG_VERBOSE
-    std::cout << "creating new match " << matches_number << std::endl;
-#endif
     auto match = std::make_shared<Match>(dto.map_name, dto.max_players, manager_queue,
                                          client_monitor, resource_pool);
 
-    //    matches.insert({matches_number, match});
     matches[matches_number] = match;
-
-    auto match_added = matches.find(matches_number)->second.get();
+    match->start();
 
     auto client = get_client_by_id(dto.id_client);
     client->set_match_joined_id(matches_number);
     client_monitor.addClient(client->get_sender_queue());
 
-    match->start();
 
-    std::string namestr = "Player 1";
+    std::string namestr = "Player " + std::to_string(dto.id_client);
     auto message =
             make_add_player_message(namestr, dto.id_client, dto.character_selected, dto.map_name);
-    match_added->get_match_queue().try_push(message);
+    match->match_queue.try_push(message);
 
     send_client_succesful_connect(dto.id_client, dto.map_name);
 }
@@ -94,7 +88,7 @@ void MatchesManager::join_match(const JoinMatchDTO& dto) {
         client_monitor.addClient(client->get_sender_queue());
         std::string namestr = "Player " + std::to_string(dto.id_client);
         auto message = make_add_player_message(namestr, dto.id_client, dto.player_character, map);
-        it->second->get_match_queue().try_push(message);
+        it->second->match_queue.try_push(message);
         send_client_succesful_connect(dto.id_client, map);
     }
 }
@@ -110,7 +104,7 @@ std::shared_ptr<AddPlayerMessage> MatchesManager::make_add_player_message(
     return std::make_shared<AddPlayerMessage>(AddDTO);
 }
 
-ServerThreadManager* MatchesManager::get_client_by_id(const size_t& id) {
+ServerThreadManager* MatchesManager::get_client_by_id(const uint16_t& id) {
     auto it = std::find_if(clients.begin(), clients.end(), [id](ServerThreadManager* client) {
         return client->get_client_id() == id;
     });

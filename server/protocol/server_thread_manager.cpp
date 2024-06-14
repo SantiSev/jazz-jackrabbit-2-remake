@@ -32,12 +32,10 @@ void ServerThreadManager::stop() {
 #endif
 }
 
-void ServerThreadManager::set_client_id(const size_t& new_id) { this->client_id = new_id; }
+void ServerThreadManager::set_client_id(const uint16_t& new_id) { this->client_id = new_id; }
 
 id_client_t ServerThreadManager::get_client_id() const { return client_id; }
 
-size_t ServerThreadManager::get_current_match_id() const { return match_joined_id; }
+int ServerThreadManager::get_current_match_id() const { return match_joined_id; }
 
-void ServerThreadManager::set_match_joined_id(const size_t& new_id) {
-    this->match_joined_id = new_id;
-}
+void ServerThreadManager::set_match_joined_id(const int& new_id) { this->match_joined_id = new_id; }

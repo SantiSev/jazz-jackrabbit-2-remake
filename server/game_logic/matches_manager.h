@@ -18,9 +18,9 @@ class Message;
 class MatchesManager: public Thread {
 private:
     bool online = true;
-    size_t clients_connected = 0;
-    size_t matches_number = 0;
-    std::map<size_t, std::shared_ptr<Match>> matches;
+    uint16_t clients_connected = 0;
+    int matches_number = 0;
+    std::map<int, std::shared_ptr<Match>> matches;
     std::list<ServerThreadManager*> clients;
     MatchesManagerMessageHandler message_handler;
     std::mutex manager_mutex;
@@ -54,7 +54,7 @@ public:
 
     void join_match(const JoinMatchDTO& dto);
 
-    ServerThreadManager* get_client_by_id(const size_t& id);
+    ServerThreadManager* get_client_by_id(const uint16_t& id);
 
     void send_client_succesful_connect(const uint16_t& id_client, const map_list_t& map);
 

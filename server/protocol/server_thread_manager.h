@@ -11,14 +11,14 @@ private:
     ServerReceiver receiver;
     ServerSender sender;
     id_client_t client_id = 0;
-    size_t match_joined_id = 0;
+    int match_joined_id = 0;
 
 public:
     ServerThreadManager(Socket&& skt, Queue<std::shared_ptr<Message>>& receiver_queue);
 
     std::shared_ptr<Queue<std::shared_ptr<Message>>>& get_sender_queue();
 
-    void set_client_id(const size_t& client_id);
+    void set_client_id(const uint16_t& new_id);
 
     id_client_t get_client_id() const;
 
@@ -26,9 +26,9 @@ public:
 
     ~ServerThreadManager();
 
-    size_t get_current_match_id() const;
+    int get_current_match_id() const;
 
-    void set_match_joined_id(const size_t& new_id);
+    void set_match_joined_id(const int& new_id);
 };
 
 #endif
