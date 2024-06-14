@@ -24,8 +24,8 @@ Match::Match(const map_list_t& map_selected, size_t required_players_setting,
         client_monitor(monitor),
         map(map_selected),
         collision_manager(nullptr),
-        match_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()),
-        resource_pool(resource_pool) {
+        resource_pool(resource_pool),
+        match_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()) {
     load_enviorment(map_selected);
     load_spawn_points();
     initiate_enemies();
@@ -185,7 +185,7 @@ void Match::add_player_to_game(const AddPlayerDTO& dto) {
               << map_character_enum_to_string.at(dto.player_character) << std::endl;
 #endif
 
-    players[client_id] = new_player;
+    players[dto.id_client] = new_player;
 }
 
 void Match::send_end_message_to_players() {
@@ -260,8 +260,8 @@ GameStateDTO Match::create_actual_snapshot() {
 //-------------------- Initialization Methods -----------------
 
 
-void Match::load_enviorment(map_list_t map) {
-    auto yaml = *resource_pool->get_yaml(map_list_to_string.at(map));
+void Match::load_enviorment(map_list_t selected_map) {
+    auto yaml = *resource_pool->get_yaml(map_list_to_string.at(selected_map));
 
     if (yaml.IsNull()) {
         throw std::runtime_error("Error loading yaml file");
@@ -355,9 +355,10 @@ void Match::initiate_enemies() {
 void Match::delete_disconnected_player(id_client_t id_client) {
     std::unique_lock<std::mutex> lock(match_mutex);
     for (auto player = players.begin(); player != players.end(); ++player) {
-        if (id_client == (*player)->get_id()) {
+        if (id_client == (*player).second->get_id()) {
             CloseConnectionDTO dto{id_client};
-            collision_manager->remove_object(*player);
+            collision_manager->remove_object(
+                    reinterpret_cast<const std::shared_ptr<CollisionObject>&>(*player));
             players.erase(player);
 #ifdef LOG_VERBOSE
             std::cout << "Player " << id_client << " disconnected from match " << std::endl;
@@ -392,6 +393,6 @@ std::shared_ptr<Player> Match::get_player(size_t id) {
 std::vector<size_t> Match::get_clients_ids() {
     std::vector<size_t> ids;
     std::transform(players.begin(), players.end(), std::back_inserter(ids),
-                   [](auto& player) { return player->get_id(); });
+                   [](const auto& pair) { return static_cast<size_t>(pair.first); });
     return ids;
 }

@@ -25,7 +25,9 @@ private:
     MatchesManagerMessageHandler message_handler;
     std::mutex manager_mutex;
     ClientMonitor client_monitor;
+    std::shared_ptr<engine::ResourcePool> resource_pool;
 
+    void pre_load_resources();
 
 public:
     Queue<std::shared_ptr<Message>> manager_queue;

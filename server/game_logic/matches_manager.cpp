@@ -9,7 +9,10 @@ MatchesManager::MatchesManager():
         matches_number(0),
         message_handler(*this, manager_queue),
         client_monitor(),
-        manager_queue(Queue<std::shared_ptr<Message>>()) {}
+        resource_pool(std::make_shared<engine::ResourcePool>()),
+        manager_queue(Queue<std::shared_ptr<Message>>()) {
+    pre_load_resources();
+}
 
 
 void MatchesManager::run() {
@@ -47,8 +50,8 @@ void MatchesManager::create_new_match(const CreateGameDTO& dto) {
 #ifdef LOG_VERBOSE
     std::cout << "creating new match " << matches_number << std::endl;
 #endif
-    auto match =
-            std::make_shared<Match>(dto.map_name, dto.max_players, manager_queue, client_monitor);
+    auto match = std::make_shared<Match>(dto.map_name, dto.max_players, manager_queue,
+                                         client_monitor, resource_pool);
 
     matches.insert({matches_number, match});
 
