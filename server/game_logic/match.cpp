@@ -24,7 +24,7 @@ Match::Match(const map_list_t& map_selected, size_t required_players_setting,
         client_monitor(monitor),
         map(map_selected),
         collision_manager(nullptr),
-        match_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()) {
+        match_queue(std::make_shared<Queue<std::shared_ptr<Message>>>()),
         resource_pool(resource_pool) {
     load_enviorment(map_selected);
     load_spawn_points();
@@ -36,7 +36,8 @@ void Match::run() {
 
         /* while (online && players.size() != required_players) {
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-            std::cout << "Match map: " << map << " Waiting for all players to connect to start..."
+            std::cout << "Match map: " << map << " Waiting for all players to connect to
+        start..."
         << std::endl;
         } */
 
@@ -178,11 +179,11 @@ void Match::add_player_to_game(const AddPlayerDTO& dto) {
     auto new_player = std::make_shared<Player>(dto.id_client, dto.name, dto.player_character, pos.x,
                                                pos.y, *collision_manager);
     collision_manager->track_dynamic_body(new_player);
-  
-    #ifdef LOG_VERBOSE
-        std::cout << "Player connected: " << dto.id_client << "is playing as "
-                  << map_character_enum_to_string.at(dto.player_character) << std::endl;
-    #endif
+
+#ifdef LOG_VERBOSE
+    std::cout << "Player connected: " << dto.id_client << "is playing as "
+              << map_character_enum_to_string.at(dto.player_character) << std::endl;
+#endif
 
     players[client_id] = new_player;
 }
@@ -257,7 +258,6 @@ GameStateDTO Match::create_actual_snapshot() {
 }
 
 //-------------------- Initialization Methods -----------------
-
 
 
 void Match::load_enviorment(map_list_t map) {

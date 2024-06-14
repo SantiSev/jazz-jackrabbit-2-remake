@@ -62,7 +62,7 @@ public:
     std::shared_ptr<Queue<std::shared_ptr<Message>>> match_queue;
     // Constructor
     explicit Match(const map_list_t& map_selected, size_t required_players_setting,
-    Queue<std::shared_ptr<Message>>& lobby_queue, ClientMonitor& monitor);
+                   Queue<std::shared_ptr<Message>>& lobby_queue, ClientMonitor& monitor);
     void run() override;
     void stop() override;
     ~Match() override = default;
