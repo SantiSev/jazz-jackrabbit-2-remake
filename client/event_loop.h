@@ -1,6 +1,7 @@
 #ifndef TP_FINAL_EVENT_LOOP_H
 #define TP_FINAL_EVENT_LOOP_H
 
+#include <chrono>
 #include <memory>
 
 #include <SDL2/SDL.h>
@@ -23,7 +24,6 @@ private:
 public:
     engine::Keyboard keyboard;
     engine::Mouse mouse;
-    Queue<std::shared_ptr<Message>> recv_message;
 
     explicit EventLoop(std::atomic<bool>& game_running, std::atomic<bool>& menu_running,
                        std::atomic<bool>& match_running, ClientMessageHandler& message_handler);

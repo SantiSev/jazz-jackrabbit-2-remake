@@ -37,7 +37,7 @@ public:
     Label(Label&& other) noexcept;
     Label& operator=(Label&& other) noexcept;
 
-    void draw(SDL_Renderer* renderer) override;
+    void draw(SDL_Renderer* renderer, int it) override;
 
     void is_hovered(bool) override;
 

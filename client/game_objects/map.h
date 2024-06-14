@@ -23,7 +23,7 @@ private:
 public:
     Map(const map_list_t& map_enum, std::shared_ptr<engine::ResourcePool> resource_pool);
 
-    void draw(SDL_Renderer* renderer) override;
+    void draw(SDL_Renderer* renderer, int it) override;
 
     ~Map() override;
 };

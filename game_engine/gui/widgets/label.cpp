@@ -15,7 +15,7 @@ Label::Label(std::shared_ptr<Font> font, SDL_Rect& rect, const SDL_Color& color,
 
 void Label::is_hovered(bool hovered) { is_hovered_m = hovered; }
 
-void Label::draw(SDL_Renderer* renderer) {
+void Label::draw(SDL_Renderer* renderer, int it) {
     int err = SDL_RenderCopy(renderer,
                              is_hovered_m ? hover_texture.get_texture() : texture.get_texture(),
                              nullptr, &rect);

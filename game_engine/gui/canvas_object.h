@@ -6,7 +6,7 @@
 namespace engine {
 class CanvasObject {
 public:
-    virtual void draw(SDL_Renderer* renderer) = 0;
+    virtual void draw(SDL_Renderer* renderer, int it) = 0;
     virtual void update(int delta) {}
 
     virtual void on_click() {}

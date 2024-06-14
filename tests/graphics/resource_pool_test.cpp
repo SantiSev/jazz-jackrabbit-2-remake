@@ -48,8 +48,8 @@ int main() {
         window.clear();
 
         // Draw
-        sprite.draw(renderer);
-        sprite2.draw(renderer);
+        sprite.draw(renderer, it);
+        sprite2.draw(renderer, it);
 
         window.render();
 

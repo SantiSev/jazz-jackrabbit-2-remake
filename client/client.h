@@ -23,8 +23,9 @@
 #include "game_objects/player_controller.h"
 #include "protocol/client_protocol.h"
 #include "protocol/client_thread_manager.h"
-#include "scenes/match.h"
-#include "scenes/menu.h"
+#include "protocol/message_runner.h"
+#include "scenes/match_scene.h"
+#include "scenes/menu_scene.h"
 
 #include "event_loop.h"
 
@@ -42,6 +43,7 @@ private:
 
     ClientMessageHandler message_handler;
     EventLoop* event_loop;
+    MessageRunner* message_runner;
     ClientThreadManager* thread_manager;
 
     void pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_pool);
