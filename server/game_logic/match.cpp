@@ -186,19 +186,18 @@ void Match::add_player_to_game(const AddPlayerDTO& dto) {
 }
 
 void Match::send_end_message_to_players() {
-    auto game_ended_message = std::make_shared<SendFinishMatchMessage>();
-    client_monitor.broadcastClients(game_ended_message);
+    //    auto game_ended_message = std::make_shared<SendFinishMatchMessage>();
+    //    client_monitor.broadcastClients(game_ended_message);
 
-    //    auto close_connection_message =
-    //    std::make_shared<CloseConnectionMessage>(CloseConnectionDTO());
-    //    client_monitor.broadcastClients(close_connection_message);
+    auto close_connection_message = std::make_shared<CloseConnectionMessage>(CloseConnectionDTO());
+    client_monitor.broadcastClients(close_connection_message);
 }
 
 bool Match::has_match_ended() const { return !online; }
 
 void Match::stop() {
     online = false;
-    send_end_message_to_players();
+//    send_end_message_to_players();
 #ifdef LOG_VERBOSE
     std::cout << "stopping match " << std::endl;
 #endif
@@ -353,8 +352,9 @@ void Match::delete_disconnected_player(id_client_t id_client) {
     std::unique_lock<std::mutex> lock(match_mutex);
     for (auto player = players.begin(); player != players.end(); ++player) {
         if (id_client == (*player).second->get_id()) {
-            collision_manager->remove_object(
-                    reinterpret_cast<const std::shared_ptr<CollisionObject>&>(*player));
+            //            collision_manager->remove_object(
+            //                    reinterpret_cast<const
+            //                    std::shared_ptr<CollisionObject>&>(*player));
             players.erase(player);
 #ifdef LOG_VERBOSE
             std::cout << "Player " << id_client << " disconnected from match " << std::endl;

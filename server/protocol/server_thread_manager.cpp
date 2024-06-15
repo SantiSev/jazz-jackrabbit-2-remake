@@ -11,7 +11,7 @@ ServerThreadManager::ServerThreadManager(Socket&& skt,
 
 ServerThreadManager::~ServerThreadManager() = default;
 
-std::shared_ptr<Queue<std::shared_ptr<Message>>>& ServerThreadManager::get_sender_queue() {
+Queue<std::shared_ptr<Message>>& ServerThreadManager::get_sender_queue() {
     return sender.get_sender_queue();
 }
 

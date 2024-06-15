@@ -75,7 +75,7 @@ void MatchesManager::send_client_succesful_connect(const uint16_t& id_client,
                                                    const map_list_t& map) {
     ClientHasConnectedToMatchDTO game_connected = {map};
     auto send_game_created = std::make_shared<SendConnectedToGameMessage>(game_connected);
-    get_client_by_id(id_client)->get_sender_queue()->push(send_game_created);
+    get_client_by_id(id_client)->get_sender_queue().push(send_game_created);
 }
 
 void MatchesManager::join_match(const JoinMatchDTO& dto) {
@@ -124,7 +124,7 @@ void MatchesManager::add_new_client_to_manager(Socket client_socket) {
     clients_connected++;
     auto client = new ServerThreadManager(std::move(client_socket), manager_queue);
     auto message = std::make_shared<AcptConnection>(clients_connected);  // le mando su id
-    client->get_sender_queue()->push(message);
+    client->get_sender_queue().push(message);
     client->set_client_id(clients_connected);
     client->set_match_joined_id(0);
     clients.push_back(client);
@@ -149,7 +149,7 @@ void MatchesManager::send_match_lists(RequestActiveGamesDTO dto) {
     std::unique_lock<std::mutex> lock(manager_mutex);
     auto matches_lists = return_matches_lists();
     auto matches_message = std::make_shared<RecvActiveGames>(matches_lists);
-    get_client_by_id(dto.id_client)->get_sender_queue()->push(matches_message);
+    get_client_by_id(dto.id_client)->get_sender_queue().push(matches_message);
 }
 
 void MatchesManager::delete_disconnected_client(const id_client_t& id_client) {
@@ -188,7 +188,7 @@ void MatchesManager::check_matches_status() {
             auto ids = it->second->get_clients_ids();
             for (auto id: ids) {
                 get_client_by_id(id)->set_match_joined_id(0);
-                get_client_by_id(id)->get_sender_queue()->push(
+                get_client_by_id(id)->get_sender_queue().push(
                         std::make_shared<SendFinishMatchMessage>());
             }
             it->second->stop();
@@ -206,7 +206,7 @@ void MatchesManager::clear_all_clients() {
     for (auto& client: clients) {
         CloseConnectionDTO close_connection{};
         auto game_ended_message = std::make_shared<CloseConnectionMessage>(close_connection);
-        client->get_sender_queue()->push(game_ended_message);
+        client->get_sender_queue().push(game_ended_message);
         client->stop();
         delete client;
     }
