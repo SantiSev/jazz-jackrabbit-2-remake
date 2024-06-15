@@ -50,7 +50,7 @@ void Match::run() {
 #ifdef LOG_VERBOSE
         std::cout << "Match map: " << map_list_to_string.at(map) << " Starting..." << std::endl;
 #endif
-        while (online) {
+        while (!match_has_ended && online) {
             auto endTime = std::chrono::system_clock::now();
             std::chrono::duration<double, std::milli> delta = endTime - startTime;
             startTime = endTime;
@@ -86,16 +86,16 @@ void Match::run() {
             auto frameEnd = std::chrono::system_clock::now();
             delta = frameEnd - frameStart;
 
-            if (match_has_ended) {
-                online = false;
-            }
-
             if (delta.count() < FPSMAX) {
                 std::this_thread::sleep_for(
                         std::chrono::milliseconds(static_cast<int>(FPSMAX - delta.count())));
             }
         }
-        stop();
+        lobby_queue.push(std::make_shared<SendFinishMatchMessage>());
+        while (online) {
+            // aca puede implementarse el scoreboard
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        }
     } catch (const std::exception& err) {
         if (online) {
             std::cerr << "An exception was caught in gameloop: " << err.what() << "\n";
@@ -109,7 +109,7 @@ void Match::run() {
 
 void Match::countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
                             const std::chrono::time_point<std::chrono::system_clock>& endTime) {
-    if (match_time != 0 && !match_has_ended) {
+    if (match_time != 0) {
         if (std::chrono::duration_cast<std::chrono::seconds>(endTime - runTime).count() >= 1) {
             match_time--;
             runTime = endTime;
@@ -119,11 +119,8 @@ void Match::countdown_match(std::chrono::time_point<std::chrono::system_clock>& 
                       << std::setw(2) << std::setfill('0') << seconds << std::endl;
         }
     } else {
-        if (!match_has_ended) {
-            std::cout << "Game Over" << std::endl;
-            match_has_ended = true;
-            online = false;
-        }
+        std::cout << "Game Over" << std::endl;
+        match_has_ended = true;
     }
 }
 
@@ -186,28 +183,27 @@ void Match::add_player_to_game(const AddPlayerDTO& dto) {
 #endif
 
     players.insert({dto.id_client, std::move(new_player)});
-    //    players[dto.id_client] = new_player;
 }
 
 void Match::send_end_message_to_players() {
-    //    auto game_ended_message = std::make_shared<SendFinishMatchMessage>();
-    //    client_monitor.broadcastClients(game_ended_message);
+    auto game_ended_message = std::make_shared<SendFinishMatchMessage>();
+    client_monitor.broadcastClients(game_ended_message);
 
-    auto close_connection_message = std::make_shared<CloseConnectionMessage>(CloseConnectionDTO());
-    client_monitor.broadcastClients(close_connection_message);
+    //    auto close_connection_message =
+    //    std::make_shared<CloseConnectionMessage>(CloseConnectionDTO());
+    //    client_monitor.broadcastClients(close_connection_message);
 }
 
-bool Match::has_match_ended() const { return match_has_ended; }
+bool Match::has_match_ended() const { return !online; }
 
 void Match::stop() {
     online = false;
+    send_end_message_to_players();
 #ifdef LOG_VERBOSE
     std::cout << "stopping match " << std::endl;
 #endif
-    //    event_queue->close();
-    send_end_message_to_players();
-    client_monitor.remove_all_queues();
     players.clear();
+    client_monitor.remove_all_queues();
 #ifdef LOG_VERBOSE
     std::cout << "clients cleared in match" << std::endl;
 #endif

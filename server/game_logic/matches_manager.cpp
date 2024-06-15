@@ -61,7 +61,6 @@ void MatchesManager::create_new_match(const CreateGameDTO& dto) {
 
     auto client = get_client_by_id(dto.id_client);
     client->set_match_joined_id(matches_number);
-    // TODO ACA ESTA EL PROBLEMA, LE ASIGNO A TODAS LAS PARTIDAS EL MISMO MONITOR
     new_monitor->addClient(client->get_sender_queue());
 
     std::string namestr = "Player " + std::to_string(dto.id_client);
@@ -121,11 +120,13 @@ ServerThreadManager* MatchesManager::get_client_by_id(const uint16_t& id) {
 }
 
 void MatchesManager::add_new_client_to_manager(Socket client_socket) {
+    std::unique_lock<std::mutex> lock(manager_mutex);
     clients_connected++;
     auto client = new ServerThreadManager(std::move(client_socket), manager_queue);
     auto message = std::make_shared<AcptConnection>(clients_connected);  // le mando su id
     client->get_sender_queue()->push(message);
     client->set_client_id(clients_connected);
+    client->set_match_joined_id(0);
     clients.push_back(client);
 #ifdef LOG_VERBOSE
     std::cout << "Client " << clients_connected << " connected to server." << std::endl;
@@ -145,20 +146,24 @@ MatchInfoDTO MatchesManager::return_matches_lists() {
 }
 
 void MatchesManager::send_match_lists(RequestActiveGamesDTO dto) {
+    std::unique_lock<std::mutex> lock(manager_mutex);
     auto matches_lists = return_matches_lists();
     auto matches_message = std::make_shared<RecvActiveGames>(matches_lists);
     get_client_by_id(dto.id_client)->get_sender_queue()->push(matches_message);
 }
 
 void MatchesManager::delete_disconnected_client(const id_client_t& id_client) {
+    std::unique_lock<std::mutex> lock(manager_mutex);
     for (auto client = clients.begin(); client != clients.end(); ++client) {
         if (id_client == (*client)->get_client_id()) {
 #ifdef LOG_VERBOSE
             std::cout << "Stopping client " << id_client << " in lobby." << std::endl;
 #endif
             CloseConnectionDTO dto = {id_client};
-            matches.at((*client)->get_current_match_id())
-                    ->match_queue.push(std::make_shared<CloseConnectionMessage>(dto));
+            if ((*client)->get_current_match_id() != 0) {
+                matches.at((*client)->get_current_match_id())
+                        ->match_queue.push(std::make_shared<CloseConnectionMessage>(dto));
+            }
             client_monitors.find((*client)->get_current_match_id())
                     ->second->removeQueue((*client)->get_sender_queue());
             (*client)->stop();
@@ -173,12 +178,21 @@ void MatchesManager::delete_disconnected_client(const id_client_t& id_client) {
 }
 
 void MatchesManager::check_matches_status() {
+    std::unique_lock<std::mutex> lock(manager_mutex);
     for (auto it = matches.begin(); it != matches.end();) {
         if (it->second->has_match_ended()) {
 #ifdef LOG_VERBOSE
-            std::cout << "Match " << it->first << " " << it->second->get_map() << " has ended.\n";
+            std::cout << "Match " << it->first << " map " << it->second->get_map()
+                      << " has ended.\n";
 #endif
-            stop_finished_match(it->second.get());
+            auto ids = it->second->get_clients_ids();
+            for (auto id: ids) {
+                get_client_by_id(id)->set_match_joined_id(0);
+                get_client_by_id(id)->get_sender_queue()->push(
+                        std::make_shared<SendFinishMatchMessage>());
+            }
+            it->second->stop();
+            it->second->join();
             matches.erase(it);
             break;
         } else {
@@ -187,30 +201,12 @@ void MatchesManager::check_matches_status() {
     }
 }
 
-void MatchesManager::stop_finished_match(Match* match) {
-    std::vector<size_t> ids = match->get_clients_ids();
-    match->stop();
-    match->join();
-    for (auto id: ids) {
-        auto it = clients.begin();
-        while (it != clients.end()) {
-            if ((*it)->get_client_id() == id) {
-                //                (*it)->set_receiver_queue(nullptr);
-                //                (*it)->set_receiver_queue(manager_queue);
-                break;
-            } else {
-                ++it;
-            }
-        }
-    }
-}
-
 void MatchesManager::clear_all_clients() {
+    std::unique_lock<std::mutex> lock(manager_mutex);
     for (auto& client: clients) {
-        //        CloseConnectionDTO close_connection{client->get_client_id()};
-        //        auto game_ended_message =
-        //        std::make_shared<CloseConnectionMessage>(close_connection);
-        //        client->get_sender_queue()->try_push(game_ended_message);
+        CloseConnectionDTO close_connection{};
+        auto game_ended_message = std::make_shared<CloseConnectionMessage>(close_connection);
+        client->get_sender_queue()->push(game_ended_message);
         client->stop();
         delete client;
     }
@@ -218,13 +214,13 @@ void MatchesManager::clear_all_clients() {
 }
 
 void MatchesManager::stop_all_matches() {
+    std::unique_lock<std::mutex> lock(manager_mutex);
     for (auto& match: matches) {
 #ifdef LOG_VERBOSE
         std::cout << "Stopping match " << match.first << std::endl;
 #endif
-        stop_finished_match(match.second.get());
-        //        match.second->stop();
-        //        match.second->join();
+        match.second->stop();
+        match.second->join();
     }
     matches.clear();
 }
@@ -256,12 +252,3 @@ void MatchesManager::clean_client_monitors() {
     }
     client_monitors.clear();
 }
-
-// ClientMonitor& MatchesManager::get_monitor_by_match_id(int match_id) {
-//     for(auto& monitor: client_monitors) {
-//         if(monitor.get_match_id() == match_id) {
-//             return monitor;
-//         }
-//     }
-//     throw std::runtime_error("Match with the given ID not found in monitor list.");
-// }
