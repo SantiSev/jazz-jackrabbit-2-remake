@@ -15,6 +15,7 @@ private:
     std::list<std::reference_wrapper<std::shared_ptr<Queue<std::shared_ptr<Message>>>>>
             clientQueues;
     std::mutex mutex;
+    int match_id = 0;
 
 public:
     // Constructor
@@ -33,5 +34,7 @@ public:
     ~ClientMonitor() = default;
 
     void remove_all_queues();
+
+    int get_match_id() const;
 };
 #endif

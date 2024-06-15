@@ -24,7 +24,8 @@ private:
     std::list<ServerThreadManager*> clients;
     MatchesManagerMessageHandler message_handler;
     std::mutex manager_mutex;
-    ClientMonitor client_monitor;
+    std::map<int, ClientMonitor*> client_monitors;
+    //    ClientMonitor client_monitor;
     std::shared_ptr<engine::ResourcePool> resource_pool;
 
     void pre_load_resources();
@@ -65,7 +66,9 @@ public:
                                                               character_t character,
                                                               map_list_t map) const;
 
-    Queue<std::shared_ptr<Message>>& get_match_queue_by_id(size_t i);
+    Queue<std::shared_ptr<Message>>& get_match_queue_by_id(int match_id);
+
+    void clean_client_monitors();
 };
 
 

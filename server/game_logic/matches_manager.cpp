@@ -8,7 +8,7 @@ MatchesManager::MatchesManager():
         online(true),
         matches_number(0),
         message_handler(*this, manager_queue),
-        client_monitor(),
+        client_monitors(),
         resource_pool(std::make_shared<engine::ResourcePool>()),
         manager_queue(Queue<std::shared_ptr<Message>>()) {
     pre_load_resources();
@@ -34,6 +34,10 @@ void MatchesManager::run() {
 #endif
         clear_all_clients();
 #ifdef LOG_VERBOSE
+        std::cout << "cleaning monitors" << std::endl;
+#endif
+        clean_client_monitors();
+#ifdef LOG_VERBOSE
         std::cout << "Server Closed" << std::endl;
 #endif
     } catch (const std::exception& err) {
@@ -47,16 +51,18 @@ void MatchesManager::run() {
 void MatchesManager::create_new_match(const CreateGameDTO& dto) {
     matches_number++;
 
-    auto match = std::make_shared<Match>(dto.map_name, dto.max_players, manager_queue,
-                                         client_monitor, resource_pool);
+    auto new_monitor = new ClientMonitor();
+    client_monitors.insert({matches_number, new_monitor});
+    auto match = std::make_shared<Match>(dto.map_name, dto.max_players, manager_queue, *new_monitor,
+                                         resource_pool);
 
     matches[matches_number] = match;
     match->start();
 
     auto client = get_client_by_id(dto.id_client);
     client->set_match_joined_id(matches_number);
-    client_monitor.addClient(client->get_sender_queue());
-
+    // TODO ACA ESTA EL PROBLEMA, LE ASIGNO A TODAS LAS PARTIDAS EL MISMO MONITOR
+    new_monitor->addClient(client->get_sender_queue());
 
     std::string namestr = "Player " + std::to_string(dto.id_client);
     auto message =
@@ -85,10 +91,13 @@ void MatchesManager::join_match(const JoinMatchDTO& dto) {
         auto client = get_client_by_id(dto.id_client);
         client->set_match_joined_id(dto.id_match);
         auto map = it->second->get_map();
-        client_monitor.addClient(client->get_sender_queue());
+        auto monitor = client_monitors.find(dto.id_match)->second;
+        monitor->addClient(client->get_sender_queue());
+
         std::string namestr = "Player " + std::to_string(dto.id_client);
         auto message = make_add_player_message(namestr, dto.id_client, dto.player_character, map);
         it->second->match_queue.try_push(message);
+
         send_client_succesful_connect(dto.id_client, map);
     }
 }
@@ -147,7 +156,11 @@ void MatchesManager::delete_disconnected_client(const id_client_t& id_client) {
 #ifdef LOG_VERBOSE
             std::cout << "Stopping client " << id_client << " in lobby." << std::endl;
 #endif
-            client_monitor.removeQueue(get_client_by_id(id_client)->get_sender_queue());
+            CloseConnectionDTO dto = {id_client};
+            matches.at((*client)->get_current_match_id())
+                    ->match_queue.push(std::make_shared<CloseConnectionMessage>(dto));
+            client_monitors.find((*client)->get_current_match_id())
+                    ->second->removeQueue((*client)->get_sender_queue());
             (*client)->stop();
             delete *client;
             clients.erase(client);
@@ -228,11 +241,27 @@ void MatchesManager::pre_load_resources() {
 
 void MatchesManager::stop() { online = false; }
 
-Queue<std::shared_ptr<Message>>& MatchesManager::get_match_queue_by_id(size_t i) {
-    auto it = matches.find(i);
+Queue<std::shared_ptr<Message>>& MatchesManager::get_match_queue_by_id(int match_id) {
+    auto it = matches.find(match_id);
     if (it != matches.end()) {
         return it->second->get_match_queue();
     } else {
         throw std::runtime_error("Match with the given ID not found.");
     }
 }
+
+void MatchesManager::clean_client_monitors() {
+    for (auto monitor: client_monitors) {
+        delete (monitor.second);
+    }
+    client_monitors.clear();
+}
+
+// ClientMonitor& MatchesManager::get_monitor_by_match_id(int match_id) {
+//     for(auto& monitor: client_monitors) {
+//         if(monitor.get_match_id() == match_id) {
+//             return monitor;
+//         }
+//     }
+//     throw std::runtime_error("Match with the given ID not found in monitor list.");
+// }

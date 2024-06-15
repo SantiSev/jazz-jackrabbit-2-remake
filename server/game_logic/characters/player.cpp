@@ -183,7 +183,7 @@ void Player::update_body() {
     position += velocity;
 
 #ifdef LOG_VERBOSE
-    print_info();
+    // print_info();
 #endif
 }
 

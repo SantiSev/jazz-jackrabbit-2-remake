@@ -151,7 +151,7 @@ void Match::respawn_players() {
 void Match::respawn_enemies() {
     for (auto& enemy: enemies) {
         if (enemy->try_revive()) {
-            enemy->revive(enemy.get()->spawn_position);
+            enemy->revive(enemy->spawn_position);
         }
     }
 }
@@ -159,7 +159,7 @@ void Match::respawn_enemies() {
 void Match::respawn_items() {
     for (auto& item: items) {
         if (item->try_respawn()) {
-            item->respawn(item.get()->position);
+            item->respawn(item->position);
         }
     }
 }
@@ -185,7 +185,8 @@ void Match::add_player_to_game(const AddPlayerDTO& dto) {
               << map_character_enum_to_string.at(dto.player_character) << std::endl;
 #endif
 
-    players[dto.id_client] = new_player;
+    players.insert({dto.id_client, std::move(new_player)});
+    //    players[dto.id_client] = new_player;
 }
 
 void Match::send_end_message_to_players() {
@@ -356,15 +357,12 @@ void Match::delete_disconnected_player(id_client_t id_client) {
     std::unique_lock<std::mutex> lock(match_mutex);
     for (auto player = players.begin(); player != players.end(); ++player) {
         if (id_client == (*player).second->get_id()) {
-            CloseConnectionDTO dto{id_client};
             collision_manager->remove_object(
                     reinterpret_cast<const std::shared_ptr<CollisionObject>&>(*player));
             players.erase(player);
 #ifdef LOG_VERBOSE
             std::cout << "Player " << id_client << " disconnected from match " << std::endl;
 #endif
-            auto message = std::make_shared<CloseConnectionMessage>(dto);
-            lobby_queue.try_push(message);
             break;
         }
     }

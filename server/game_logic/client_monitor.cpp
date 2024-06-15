@@ -40,3 +40,5 @@ void ClientMonitor::remove_all_queues() {
     std::lock_guard<std::mutex> lock(mutex);
     clientQueues.clear();
 }
+
+int ClientMonitor::get_match_id() const { return match_id; }
