@@ -1,6 +1,6 @@
 #include "./invalid_message.h"
 
-InvalidMessage::InvalidMessage(): Message(0xFFFF) {}
+InvalidMessage::InvalidMessage(): Message(NULL_MESSAGE) {}
 
 
 void InvalidMessage::run(MessageHandler& handler) {}

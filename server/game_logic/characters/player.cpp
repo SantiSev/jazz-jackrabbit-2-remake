@@ -228,6 +228,7 @@ void Player::revive(Vector2D new_position) {
 
 void Player::print_info() {
     std::cout << "--------------------------------" << std::endl;
+    std::cout << "| Id: " << id << " |" << std::endl;
     std::cout << "| Position: " << position.x << " , " << position.y << " |" << std::endl;
     std::cout << "| Velocity: " << velocity.x << " , " << velocity.y << " |" << std::endl;
     std::cout << "| Health: " << health << " |" << std::endl;

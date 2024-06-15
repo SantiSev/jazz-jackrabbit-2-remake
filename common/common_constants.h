@@ -26,7 +26,7 @@ const uint8_t CHEAT_EVENT = 0x00;
 const uint8_t PLAYER_EVENT = 0x01;
 
 // Gameloop
-const size_t MAX_EVENTS_PER_LOOP = 4;
+const size_t MAX_EVENTS_PER_LOOP = 20;
 const size_t MATCH_DURATION = 60;  // TODO match duration?
 
 // Player states

@@ -18,7 +18,9 @@ public:
 
     void handle_recv_close_connection(const CloseConnectionDTO& dto) override;
 
-    void handle_recv_cheat_command(const CheatCommandDTO& cheat_command);
+    void handle_recv_cheat_command(const CheatCommandDTO& cheat_command) override;
+
+    void handle_add_player(const AddPlayerDTO& dto) override;
 };
 
 

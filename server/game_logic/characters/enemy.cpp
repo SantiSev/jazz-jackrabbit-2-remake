@@ -40,7 +40,9 @@ void Enemy::handle_colision(CollisionObject* other) {
     CollisionFace face = is_touching(other);
 
     if (player && face != CollisionFace::NO_COLLISION) {
+#ifdef LOG_VERBOSE
         std::cout << "Enemy collided with player" << std::endl;
+#endif
 
         attack(player);
 

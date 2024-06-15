@@ -6,6 +6,7 @@
 #include <arpa/inet.h>
 #include <endian.h>
 
+#include "../common_liberror.h"
 #include "messages/connection_events/close_connection.h"
 
 CommonProtocol::CommonProtocol(Socket&& skt): skt(std::move(skt)), was_closed(false) {}
@@ -13,7 +14,7 @@ CommonProtocol::CommonProtocol(Socket&& skt): skt(std::move(skt)), was_closed(fa
 CommonProtocol::CommonProtocol(const std::string& hostname, const std::string& servname):
         skt(hostname.c_str(), servname.c_str()), was_closed(false) {}
 
-const uint16_t CommonProtocol::recv_two_bytes() {
+const uint16_t CommonProtocol::recv_two_bytes() {  // TODO handle receive socket closed
     uint16_t two_bytes;
 
     skt.recvall(&two_bytes, sizeof(two_bytes), &was_closed);
@@ -108,6 +109,12 @@ void CommonProtocol::send_game_created(const uint16_t header,
                                        ClientHasConnectedToMatchDTO& game_created) {
     send_header(header);
     skt.sendall(&game_created, sizeof(game_created), &was_closed);
+}
+
+void CommonProtocol::send_add_player(const uint16_t header, AddPlayerDTO dto) {
+    send_header(header);
+    dto.id_client = htons(dto.id_client);
+    skt.sendall(&dto, sizeof(dto), &was_closed);
 }
 
 void CommonProtocol::send_game_joined(const uint16_t header,
