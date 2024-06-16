@@ -91,6 +91,7 @@ void Match::run() {
                         std::chrono::milliseconds(static_cast<int>(FPSMAX - delta.count())));
             }
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         lobby_queue.push(std::make_shared<SendFinishMatchMessage>());
         while (online) {
             // aca puede implementarse el scoreboard
@@ -193,7 +194,7 @@ void Match::send_end_message_to_players() {
     client_monitor.broadcastClients(close_connection_message);
 }
 
-bool Match::has_match_ended() const { return !online; }
+bool Match::has_match_ended() const { return match_has_ended; }
 
 void Match::stop() {
     online = false;

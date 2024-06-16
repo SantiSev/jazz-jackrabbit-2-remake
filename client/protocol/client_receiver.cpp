@@ -17,7 +17,14 @@ void ClientReceiver::run() {
     try {
         while (_keep_running) {
             std::shared_ptr<Message> message = client_protocol.recv_message();
-            queue.push(message);
+            if (message->get_header() == SEND_FINISH_MATCH) {
+                std::cout << "about to push finish match" << std::endl;
+            }
+            std::cout << "message received" << std::endl;
+            _keep_running = !client_protocol.is_closed();
+            if (_keep_running) {
+                queue.push(message);
+            }
         }
     } catch (const ClosedQueue& err) {
         _keep_running = false;

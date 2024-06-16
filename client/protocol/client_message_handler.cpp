@@ -71,8 +71,8 @@ void ClientMessageHandler::handle_recv_active_games(const MatchInfoDTO& dto) {
 }
 
 void ClientMessageHandler::handle_recv_finish_match() {
-    client.match_running.store(false);
     client.menu_running.store(true);
+    client.match_running.store(false);
 #ifdef LOG
     std::cout << "Match Finished" << std::endl;
 #endif

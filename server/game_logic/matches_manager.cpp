@@ -163,9 +163,9 @@ void MatchesManager::delete_disconnected_client(const id_client_t& id_client) {
             if ((*client)->get_current_match_id() != 0) {
                 matches.at((*client)->get_current_match_id())
                         ->match_queue.push(std::make_shared<CloseConnectionMessage>(dto));
+                client_monitors.find((*client)->get_current_match_id())
+                        ->second->removeQueue((*client)->get_sender_queue());
             }
-            client_monitors.find((*client)->get_current_match_id())
-                    ->second->removeQueue((*client)->get_sender_queue());
             (*client)->stop();
             delete *client;
             clients.erase(client);

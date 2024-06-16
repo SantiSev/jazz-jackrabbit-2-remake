@@ -1,9 +1,12 @@
 #include "./client_protocol.h"
 
+#include <iostream>
 #include <vector>
 
 #include <arpa/inet.h>
 #include <endian.h>
+
+#include "../../common/common_liberror.h"
 
 ClientProtocol::ClientProtocol(const std::string& hostname, const std::string& servname):
         CommonProtocol(hostname, servname) {}
@@ -11,6 +14,7 @@ ClientProtocol::ClientProtocol(const std::string& hostname, const std::string& s
 std::shared_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
     FinishMatchDTO finish_match = {};
     skt.recvall(&finish_match, sizeof(finish_match), &was_closed);
+    std::cout << "returning finish match message" << std::endl;
     return std::make_shared<SendFinishMatchMessage>();
 }
 
@@ -66,26 +70,33 @@ std::shared_ptr<Message> ClientProtocol::recv_game_joined() {
 }
 
 std::shared_ptr<Message> ClientProtocol::recv_message() {
-    const uint16_t header = recv_two_bytes();
+    try {
+        const uint16_t header = recv_two_bytes();
 
-    switch (header) {
-        case CLOSE_CONNECTION:
-            return recv_closed_connection();
-        case SEND_FINISH_MATCH:
-            return recv_finish_match();
-        case SEND_GAME_STATE:
-            return recv_game_state();
-        case RECV_ACTIVE_GAMES:
-            return recv_active_games();
-        case SEND_GAME_CREATED:
-            return recv_game_created();
-        case ACPT_CONNECTION:
-            return recv_acpt_connection();
-        case SEND_GAME_JOINED:
-            return recv_game_joined();
-        default:
-            return std::make_shared<InvalidMessage>();
+        switch (header) {
+            case CLOSE_CONNECTION:
+                return recv_closed_connection();
+            case SEND_FINISH_MATCH:
+                return recv_finish_match();
+            case SEND_GAME_STATE:
+                return recv_game_state();
+            case RECV_ACTIVE_GAMES:
+                return recv_active_games();
+            case SEND_GAME_CREATED:
+                return recv_game_created();
+            case ACPT_CONNECTION:
+                return recv_acpt_connection();
+            case SEND_GAME_JOINED:
+                return recv_game_joined();
+            default:
+                return std::make_shared<InvalidMessage>();
+        }
+    } catch (const LibError& e) {
+        force_shutdown();
     }
+    return std::make_shared<InvalidMessage>();
 }
+
+bool ClientProtocol::is_closed() const { return was_closed; }
 
 ClientProtocol::~ClientProtocol() = default;
