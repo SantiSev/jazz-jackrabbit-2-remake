@@ -101,9 +101,7 @@ void MatchScene::update_objects(int delta_time) {
     while (game_state_q.try_pop(game_state)) {}  // get last game state
 
     // update positions
-    if (game_state != nullptr) {
-        last_game_state = game_state;
-    } else {
+    if (!game_state) {
         game_state = last_game_state;
     }
 
@@ -159,6 +157,7 @@ void MatchScene::update_objects(int delta_time) {
     }
 
     // TODO Remove objects that are not in the game state
+    last_game_state = game_state;
 }
 
 
