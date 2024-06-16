@@ -103,8 +103,19 @@ void MatchScene::update_objects(int delta_time) {
             players.at(player.id)->set_animation(map_states_to_animations.at(player.state));
         }
 
+        std::cout << "num_enemies: " << (int)game_state->num_enemies << std::endl;
+
         for (uint8_t i = 0; i < game_state->num_enemies; i++) {
             auto enemy = game_state->enemies[i];
+
+            // print all the enemy info
+            std::cout << "Enemy id: " << enemy.id << std::endl;
+            std::cout << "Enemy character: " << (int)enemy.character << std::endl;
+            std::cout << "Enemy state: " << (int)enemy.state << std::endl;
+            std::cout << "Enemy x_pos: " << enemy.x_pos << std::endl;
+            std::cout << "Enemy y_pos: " << enemy.y_pos << std::endl;
+            std::cout << "-----------------------------------" << std::endl;
+
             // If it's a new enemy create it
             enemies.try_emplace(enemy.id, CharacterFactory::create_character(
                                                   resource_pool, (character_t)enemy.character,

@@ -74,6 +74,16 @@ void Match::run() {
             respawn_players();
             respawn_items();
 
+
+            for (auto& enemy: enemies) {
+                enemy->print_info();
+            }
+
+            for (auto& player: players) {
+                player.second->print_info();
+            }
+
+
             countdown_match(runTime, endTime);
 
             auto snapshot = create_actual_snapshot();
@@ -213,7 +223,7 @@ GameStateDTO Match::create_actual_snapshot() {
     GameStateDTO game_state{};
     game_state.seconds = (uint16_t)match_time % 60;
 
-    game_state.num_players = players.size();
+    game_state.num_players = players.size();  // todo revise this
     size_t i = 0;
     for (auto& player_pair: players) {
         game_state.players[i].id = player_pair.first;
@@ -236,13 +246,14 @@ GameStateDTO Match::create_actual_snapshot() {
     }
 
     game_state.num_enemies = 0;
-    for (size_t j = 0; j < enemies.size(); ++j) {
-        if (!enemies[j]->is_dead()) {
-            game_state.enemies[j].id = enemies[j]->get_id();
-            game_state.enemies[j].state = enemies[j]->get_state();
-            game_state.enemies[j].character = enemies[j]->get_character();
-            game_state.enemies[j].x_pos = enemies[j]->position.x;
-            game_state.enemies[j].y_pos = enemies[j]->position.y;
+    for (const auto& enemy: enemies) {
+        if (!enemy->is_dead()) {
+            auto& enemy_state = game_state.enemies[game_state.num_enemies];
+            enemy_state.id = enemy->get_id();
+            enemy_state.state = enemy->get_state();
+            enemy_state.character = enemy->get_character();
+            enemy_state.x_pos = enemy->position.x;
+            enemy_state.y_pos = enemy->position.y;
             game_state.num_enemies++;
         }
     }
