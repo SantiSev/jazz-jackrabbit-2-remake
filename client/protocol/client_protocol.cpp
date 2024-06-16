@@ -1,8 +1,5 @@
 #include "./client_protocol.h"
 
-#include <iostream>
-#include <vector>
-
 #include <arpa/inet.h>
 #include <endian.h>
 
@@ -14,7 +11,6 @@ ClientProtocol::ClientProtocol(const std::string& hostname, const std::string& s
 std::shared_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
     FinishMatchDTO finish_match = {};
     skt.recvall(&finish_match, sizeof(finish_match), &was_closed);
-    std::cout << "returning finish match message" << std::endl;
     return std::make_shared<SendFinishMatchMessage>();
 }
 
