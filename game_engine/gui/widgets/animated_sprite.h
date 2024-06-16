@@ -30,11 +30,11 @@ private:
 
     int frames;
     int current_frame;
-    int ms_per_frame;
     int elapsed_time;
 
     short next_frame_offset;
     bool flipped;
+    int fps;
 
     void next_frame();
 
@@ -53,8 +53,7 @@ public:
     AnimatedSprite(AnimatedSprite&&) noexcept;
     AnimatedSprite& operator=(AnimatedSprite&&) noexcept;
 
-    void draw(SDL_Renderer* renderer) override;
-    void update(int delta) override;
+    void draw(SDL_Renderer* renderer, int it) override;
 
     void set_position(int x, int y) override;
     void set_position_with_correction(int x, int y);

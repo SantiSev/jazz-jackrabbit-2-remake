@@ -39,7 +39,7 @@ void PlayerController::on_key_press(const SDL_Keycode& key) {
 #endif
 }
 
-void PlayerController::draw(SDL_Renderer* renderer) {}
+void PlayerController::draw(SDL_Renderer* renderer, int it) {}
 
 // It should be clickable anywhere
 bool PlayerController::is_intersecting(SDL_Point& point) const { return true; }

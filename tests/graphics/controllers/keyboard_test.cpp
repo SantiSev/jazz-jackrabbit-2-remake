@@ -14,7 +14,7 @@ public:
         std::cout << "Key pressed: " << key << std::endl;
     }
 
-    void draw(SDL_Renderer* renderer) override {}
+    void draw(SDL_Renderer* renderer, int it) override {}
     void set_position(int x, int y) override {}
     bool is_intersecting(SDL_Point& point) const override { return false; }
     bool is_intersecting(SDL_Rect& rect) const override { return false; }

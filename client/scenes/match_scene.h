@@ -2,6 +2,7 @@
 #define TP_FINAL_MATCH_SCENE_H
 
 #include <atomic>
+#include <cmath>
 #include <map>
 #include <memory>
 #include <string>
@@ -42,7 +43,7 @@ private:
 
     void init();
     void update_objects(int delta_time);
-    void draw_objects();
+    void draw_objects(int it);
 
 public:
     MatchScene(engine::Window& window, EventLoop* event_loop,
