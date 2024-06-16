@@ -2,7 +2,9 @@
 
 MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
                        std::shared_ptr<engine::ResourcePool> resource_pool,
-                       std::atomic<bool>& match_running, ClientMessageHandler& message_handler):
+                       std::atomic<bool>& match_running, std::atomic<id_client_t>& id_client,
+                       ClientMessageHandler& message_handler):
+        id_client(id_client),
         window(window),
         renderer(window.get_renderer()),
         resource_pool(resource_pool),
@@ -10,6 +12,7 @@ MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
         message_handler(message_handler),
         game_state_q(message_handler.game_state_q),
         match_running(match_running),
+        camera(0, 0, window.get_width(), window.get_height()),
         map(nullptr),
         player_controller(message_handler) {}
 
@@ -51,7 +54,8 @@ void MatchScene::start() {
 
 
 void MatchScene::load_map(const map_list_t& map_enum) {
-    map = std::make_unique<Map>(map_enum, resource_pool);
+    map = std::make_shared<Map>(map_enum, resource_pool);
+    camera.set_map(map);
 }
 
 
@@ -64,18 +68,25 @@ void MatchScene::init() {
         players[player.id] = CharacterFactory::create_character(
                 resource_pool, (character_t)player.character,
                 map_states_to_animations.at(player.state), player.x_pos, player.y_pos);
+        camera.add_object(players[player.id]);
+
+        if (player.id == id_client) {
+            camera.recenter(players.at(player.id)->get_body());
+        }
     }
     for (uint8_t i = 0; i < first_state->num_enemies; i++) {
         auto enemy = first_state->enemies[i];
         enemies[enemy.id] = CharacterFactory::create_character(
                 resource_pool, (character_t)enemy.character,
                 map_states_to_animations.at(enemy.state), enemy.x_pos, enemy.y_pos);
+        camera.add_object(enemies[enemy.id]);
     }
     for (uint8_t i = 0; i < first_state->num_bullets; i++) {
         auto bullet = first_state->bullets[i];
         bullets[bullet.id] =
                 BulletFactory::create_bullet(resource_pool, (bullet_type_t)bullet.bullet_type,
                                              bullet.direction, bullet.x_pos, bullet.y_pos);
+        camera.add_object(bullets[bullet.id]);
     }
 
     // Connect player controler to keyboard and mouse signals
@@ -94,22 +105,34 @@ void MatchScene::update_objects(int delta_time) {
             auto player = game_state->players[i];
 
             // If it's a new player create it
-            players.try_emplace(player.id, CharacterFactory::create_character(
-                                                   resource_pool, (character_t)player.character,
-                                                   map_states_to_animations.at(player.state),
-                                                   player.x_pos, player.y_pos));
+            auto [it, inserted] = players.try_emplace(
+                    player.id,
+                    CharacterFactory::create_character(
+                            resource_pool, static_cast<character_t>(player.character),
+                            map_states_to_animations.at(player.state), player.x_pos, player.y_pos));
+
+            if (inserted) {
+                camera.add_object(it->second);
+            }
 
             players.at(player.id)->set_position(player.x_pos, player.y_pos);
+            if (player.id == id_client) {
+                camera.recenter(players.at(player.id)->get_body());
+            }
             players.at(player.id)->set_animation(map_states_to_animations.at(player.state));
         }
 
         for (uint8_t i = 0; i < game_state->num_enemies; i++) {
             auto enemy = game_state->enemies[i];
             // If it's a new enemy create it
-            enemies.try_emplace(enemy.id, CharacterFactory::create_character(
-                                                  resource_pool, (character_t)enemy.character,
-                                                  map_states_to_animations.at(enemy.state),
-                                                  enemy.x_pos, enemy.y_pos));
+            auto [it, inserted] = enemies.try_emplace(
+                    enemy.id,
+                    CharacterFactory::create_character(
+                            resource_pool, static_cast<character_t>(enemy.character),
+                            map_states_to_animations.at(enemy.state), enemy.x_pos, enemy.y_pos));
+            if (inserted) {
+                camera.add_object(it->second);
+            }
 
             enemies.at(enemy.id)->set_position(enemy.x_pos, enemy.y_pos);
             enemies.at(enemy.id)->set_animation(map_states_to_animations.at(enemy.state));
@@ -119,28 +142,24 @@ void MatchScene::update_objects(int delta_time) {
             auto bullet = game_state->bullets[i];
 
             // If it's a new bullet create it
-            bullets.try_emplace(bullet.id, BulletFactory::create_bullet(
-                                                   resource_pool, (bullet_type_t)bullet.bullet_type,
-                                                   bullet.direction, bullet.x_pos, bullet.y_pos));
+            auto [it, inserted] = bullets.try_emplace(
+                    bullet.id,
+                    BulletFactory::create_bullet(resource_pool,
+                                                 static_cast<bullet_type_t>(bullet.bullet_type),
+                                                 bullet.direction, bullet.x_pos, bullet.y_pos));
+            if (inserted) {
+                camera.add_object(it->second);
+            }
 
             bullets.at(bullet.id)->set_position(bullet.x_pos, bullet.y_pos);
         }
+
+        // TODO Remove objects that are not in the game state
     }
 }
 
 
-void MatchScene::draw_objects(int it) {
-    map->draw(renderer, it);
-    for (auto& obj: players) {
-        obj.second->draw(renderer, it);
-    }
-    for (auto& obj: enemies) {
-        obj.second->draw(renderer, it);
-    }
-    for (auto& obj: bullets) {
-        obj.second->draw(renderer, it);
-    }
-}
+void MatchScene::draw_objects(int it) { camera.draw(renderer, it); }
 
 
 MatchScene::~MatchScene() {

@@ -21,7 +21,8 @@ Client::Client(const std::string& host, const std::string& port):
 void Client::start() {
     MenuScene menu_scene(window, event_loop, resource_pool, game_running, menu_running,
                          message_handler);
-    MatchScene match_scene(window, event_loop, resource_pool, match_running, message_handler);
+    MatchScene match_scene(window, event_loop, resource_pool, match_running, id_client,
+                           message_handler);
     event_loop->start();
 
     while (game_running) {

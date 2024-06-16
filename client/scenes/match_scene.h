@@ -20,12 +20,14 @@
 #include "../../game_engine/gui/widgets/animated_sprite.h"
 #include "../event_loop.h"
 #include "../game_objects/bullet_factory.h"
+#include "../game_objects/camera.h"
 #include "../game_objects/character_factory.h"
 #include "../game_objects/map.h"
 #include "../game_objects/player_controller.h"
 
 class MatchScene {
 private:
+    std::atomic<id_client_t>& id_client;
     engine::Window& window;
     SDL_Renderer* renderer;
     std::shared_ptr<engine::ResourcePool> resource_pool;
@@ -35,10 +37,13 @@ private:
     Queue<std::shared_ptr<GameStateDTO>>& game_state_q;
 
     std::atomic<bool>& match_running;
-    std::unique_ptr<Map> map;
-    std::map<uint16_t, std::unique_ptr<engine::AnimatedSprite>> players;
-    std::map<uint16_t, std::unique_ptr<engine::AnimatedSprite>> enemies;
-    std::map<uint16_t, std::unique_ptr<engine::AnimatedSprite>> bullets;
+
+    engine::Camera camera;
+    std::shared_ptr<Map> map;
+    std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> players;
+    std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> enemies;
+    std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> bullets;
+
     PlayerController player_controller;
 
     void init();
@@ -48,7 +53,8 @@ private:
 public:
     MatchScene(engine::Window& window, EventLoop* event_loop,
                std::shared_ptr<engine::ResourcePool> resource_pool,
-               std::atomic<bool>& match_running, ClientMessageHandler& message_handler);
+               std::atomic<bool>& match_running, std::atomic<id_client_t>& id_client,
+               ClientMessageHandler& message_handler);
 
     // cant copy
     MatchScene(const MatchScene&) = delete;

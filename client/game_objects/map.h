@@ -15,8 +15,10 @@
 
 class Map: public engine::CanvasObject {
 private:
+    std::unique_ptr<engine::Sprite> background;
     std::list<engine::Sprite> sprites;
     std::shared_ptr<engine::ResourcePool> resource_pool;
+    SDL_Rect area;
 
     void load_map(const std::string& map_name);
 
@@ -24,6 +26,11 @@ public:
     Map(const map_list_t& map_enum, std::shared_ptr<engine::ResourcePool> resource_pool);
 
     void draw(SDL_Renderer* renderer, int it) override;
+    void draw_in_camera(SDL_Renderer* renderer, SDL_Rect& camera, int it);
+
+    SDL_Rect& get_body() override;
+
+    bool is_intersecting(SDL_Rect& other) const override;
 
     ~Map() override;
 };

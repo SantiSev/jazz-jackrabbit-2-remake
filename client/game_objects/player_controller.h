@@ -18,6 +18,7 @@ class ClientMessageHandler;
 class PlayerController: public engine::CanvasObject {
 private:
     ClientMessageHandler& message_handler;
+    SDL_Rect body;
 
 public:
     explicit PlayerController(ClientMessageHandler& message_handler);
@@ -26,6 +27,7 @@ public:
 
     void draw(SDL_Renderer* renderer, int it) override;
 
+    SDL_Rect& get_body() override;
     bool is_intersecting(SDL_Point& point) const override;
 
     ~PlayerController();
