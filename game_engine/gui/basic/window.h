@@ -14,6 +14,8 @@ class Window {
 private:
     SDL_Window* window;
     SDL_Renderer* renderer;
+    int width;
+    int height;
 
 public:
     Window(int width, int height, bool img_init, bool ttf_init);
@@ -29,6 +31,9 @@ public:
 
     SDL_Window* get_window() const;
     SDL_Renderer* get_renderer() const;
+
+    int get_width() const;
+    int get_height() const;
 
     ~Window();
 };

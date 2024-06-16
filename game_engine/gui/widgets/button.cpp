@@ -37,6 +37,8 @@ void Button::draw(SDL_Renderer* renderer, int it) {
     label->draw(renderer, it);
 }
 
+SDL_Rect& Button::get_body() { return rect; }
+
 void Button::set_position(int x, int y) {
     rect.x = x;
     rect.y = y;
