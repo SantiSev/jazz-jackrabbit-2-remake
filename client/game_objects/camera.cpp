@@ -4,7 +4,11 @@ using engine::Camera;
 
 Camera::Camera(int x, int y, int w, int h): screen({x, y, w, h}), map(nullptr) {}
 
-void Camera::add_object(std::shared_ptr<CanvasObject> object) { objects.push_back(object); }
+void Camera::add_object(std::shared_ptr<CanvasObject> object) {
+    std::cout << "Camera - "
+              << "x " << object->get_body().x << ", y " << object->get_body().y << std::endl;
+    objects.push_back(object);
+}
 
 void Camera::remove_object(std::shared_ptr<CanvasObject> object) { objects.remove(object); }
 

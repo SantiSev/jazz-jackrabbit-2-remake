@@ -62,6 +62,7 @@ void MatchScene::load_map(const map_list_t& map_enum) {
 void MatchScene::init() {
     // Blocking call to get first game state
     std::shared_ptr<GameStateDTO> first_state = game_state_q.pop();
+    last_game_state = first_state;
 
     for (uint8_t i = 0; i < first_state->num_players; i++) {
         auto player = first_state->players[i];
@@ -101,61 +102,63 @@ void MatchScene::update_objects(int delta_time) {
 
     // update positions
     if (game_state != nullptr) {
-        for (uint8_t i = 0; i < game_state->num_players; i++) {
-            auto player = game_state->players[i];
-
-            // If it's a new player create it
-            auto [it, inserted] = players.try_emplace(
-                    player.id,
-                    CharacterFactory::create_character(
-                            resource_pool, static_cast<character_t>(player.character),
-                            map_states_to_animations.at(player.state), player.x_pos, player.y_pos));
-
-            if (inserted) {
-                camera.add_object(it->second);
-            }
-
-            players.at(player.id)->set_position(player.x_pos, player.y_pos);
-            if (player.id == id_client) {
-                camera.recenter(players.at(player.id)->get_body());
-            }
-            players.at(player.id)->set_animation(map_states_to_animations.at(player.state));
-        }
-
-        for (uint8_t i = 0; i < game_state->num_enemies; i++) {
-            auto enemy = game_state->enemies[i];
-            // If it's a new enemy create it
-            auto [it, inserted] = enemies.try_emplace(
-                    enemy.id,
-                    CharacterFactory::create_character(
-                            resource_pool, static_cast<character_t>(enemy.character),
-                            map_states_to_animations.at(enemy.state), enemy.x_pos, enemy.y_pos));
-            if (inserted) {
-                camera.add_object(it->second);
-            }
-
-            enemies.at(enemy.id)->set_position(enemy.x_pos, enemy.y_pos);
-            enemies.at(enemy.id)->set_animation(map_states_to_animations.at(enemy.state));
-        }
-
-        for (uint8_t i = 0; i < game_state->num_bullets; i++) {
-            auto bullet = game_state->bullets[i];
-
-            // If it's a new bullet create it
-            auto [it, inserted] = bullets.try_emplace(
-                    bullet.id,
-                    BulletFactory::create_bullet(resource_pool,
-                                                 static_cast<bullet_type_t>(bullet.bullet_type),
-                                                 bullet.direction, bullet.x_pos, bullet.y_pos));
-            if (inserted) {
-                camera.add_object(it->second);
-            }
-
-            bullets.at(bullet.id)->set_position(bullet.x_pos, bullet.y_pos);
-        }
-
-        // TODO Remove objects that are not in the game state
+        last_game_state = game_state;
+    } else {
+        game_state = last_game_state;
     }
+
+    for (uint8_t i = 0; i < game_state->num_players; i++) {
+        auto player = game_state->players[i];
+
+        // If it's a new player create it
+        auto [it, inserted] = players.try_emplace(
+                player.id,
+                CharacterFactory::create_character(
+                        resource_pool, static_cast<character_t>(player.character),
+                        map_states_to_animations.at(player.state), player.x_pos, player.y_pos));
+
+        if (inserted) {
+            camera.add_object(it->second);
+        }
+        players[player.id]->set_position(player.x_pos, player.y_pos);
+        if (player.id == id_client) {
+            camera.recenter(players[player.id]->get_body());
+        }
+        players[player.id]->set_animation(map_states_to_animations.at(player.state));
+    }
+
+    for (uint8_t i = 0; i < game_state->num_enemies; i++) {
+        auto enemy = game_state->enemies[i];
+        // If it's a new enemy create it
+        auto [it, inserted] = enemies.try_emplace(
+                enemy.id,
+                CharacterFactory::create_character(
+                        resource_pool, static_cast<character_t>(enemy.character),
+                        map_states_to_animations.at(enemy.state), enemy.x_pos, enemy.y_pos));
+        if (inserted) {
+            camera.add_object(it->second);
+        }
+
+        enemies[enemy.id]->set_position(enemy.x_pos, enemy.y_pos);
+        enemies[enemy.id]->set_animation(map_states_to_animations.at(enemy.state));
+    }
+
+    for (uint8_t i = 0; i < game_state->num_bullets; i++) {
+        auto bullet = game_state->bullets[i];
+
+        // If it's a new bullet create it
+        auto [it, inserted] = bullets.try_emplace(
+                bullet.id, BulletFactory::create_bullet(
+                                   resource_pool, static_cast<bullet_type_t>(bullet.bullet_type),
+                                   bullet.direction, bullet.x_pos, bullet.y_pos));
+        if (inserted) {
+            camera.add_object(it->second);
+        }
+
+        bullets[bullet.id]->set_position(bullet.x_pos, bullet.y_pos);
+    }
+
+    // TODO Remove objects that are not in the game state
 }
 
 

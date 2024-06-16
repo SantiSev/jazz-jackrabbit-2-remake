@@ -65,6 +65,7 @@ void AnimatedSprite::set_position(int x, int y) {
         d_rect.y = y;
         return;
     }
+
     set_position_with_correction(x, y);
 }
 

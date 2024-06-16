@@ -35,6 +35,7 @@ private:
     EventLoop* event_loop;
     ClientMessageHandler& message_handler;
     Queue<std::shared_ptr<GameStateDTO>>& game_state_q;
+    std::shared_ptr<GameStateDTO> last_game_state;
 
     std::atomic<bool>& match_running;
 
