@@ -46,10 +46,6 @@ void Player::reload_weapon(size_t weapon_id, int ammo_amount) {
 
 void Player::shoot_selected_weapon() {
 
-#ifdef LOG_VERBOSE
-    std::cout << "| Player id: " << this->id << " | Player::shoot_selected_weapon() |" << std::endl;
-#endif
-
     weapons[selected_weapon]->shoot();
     state = is_facing_right() ? STATE_SHOOTING_RIGHT : STATE_SHOOTING_LEFT;
 }
@@ -79,10 +75,6 @@ void Player::reset_special_attack() { special_cooldown = SPECIAL_COOLDOWN; }
 
 void Player::move_left() {
 
-#ifdef LOG_VERBOSE
-    std::cout << "| Player id: " << this->id << " | Player::move_left() |" << std::endl;
-#endif
-
     if (is_knocked_back) {
         return;
     }
@@ -100,10 +92,6 @@ void Player::move_left() {
 
 void Player::move_right() {
 
-#ifdef LOG_VERBOSE
-    std::cout << "| Player id: " << this->id << " | Player::move_right() |" << std::endl;
-#endif
-
     if (is_knocked_back) {
         return;
     }
@@ -120,10 +108,6 @@ void Player::move_right() {
 }
 
 void Player::jump() {
-
-#ifdef LOG_VERBOSE
-    std::cout << "| Player id: " << this->id << " | Player::jump() |" << std::endl;
-#endif
 
     if (on_floor) {
         on_floor = false;
@@ -181,10 +165,6 @@ void Player::update_body() {
     }
 
     position += velocity;
-
-#ifdef LOG_VERBOSE
-    print_info();
-#endif
 }
 
 void Player::handle_colision(CollisionObject* other) {
@@ -217,7 +197,6 @@ void Player::knockback(int force) {
 
 void Player::revive(Vector2D new_position) {
     this->health = MAX_HEALTH;
-    this->revive_cooldown = REVIVE_COOLDOWN;
     this->state = STATE_IDLE_RIGHT;
     position = new_position;
 
@@ -260,7 +239,6 @@ void Player::execute_command(command_t command) {
             jump();
             break;
         case SHOOT:
-            std::cout << "SHOOT" << std::endl;
             shoot_selected_weapon();
             break;
         default:

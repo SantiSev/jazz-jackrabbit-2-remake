@@ -24,6 +24,8 @@ public:
 
     void update_body() override;
     void handle_colision(CollisionObject* other) override;
+    void take_damage(int damage) override;
+    void revive(Vector2D new_position) override;
     void print_info() override;
 
     //------- Movement Methods --------

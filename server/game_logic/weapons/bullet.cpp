@@ -20,7 +20,7 @@ Bullet::Bullet(const uint64_t& id, const uint8_t type, Player& player_owner,
         position.x = player_owner.get_right_hitbox_side() + OFFSET_BULLET_X;
         direction = GOING_RIGHT;
     } else {
-        position.x = player_owner.get_left_hitbox_side() + OFFSET_BULLET_X;
+        position.x = player_owner.get_left_hitbox_side() - OFFSET_BULLET_X;
         direction = GOING_LEFT;
     }
 }

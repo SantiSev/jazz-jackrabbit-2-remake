@@ -20,7 +20,7 @@
 #define INTOXICATON_COOLDOWN 4
 #define SPECIAL_COOLDOWN 3
 #define DEFAULT_SPEED_Y 10
-#define DEFAULT_SPEED_X 15
+#define DEFAULT_SPEED_X 10
 #define JUMP_SPEED 25
 #define GRAVITY 1
 #define FRICCTION 0.1f
@@ -29,23 +29,25 @@
 #define REVIVE_COOLDOWN 1000
 
 class CharacterBody: public DynamicBody {
+
 protected:
     // dto info
 
     uint16_t id;
     character_t character_reference;
-    uint8_t state = STATE_IDLE_RIGHT;  // estado del personaje TODO: cambiar a enum
+    _state state = STATE_IDLE_RIGHT;
 
     // game logic info
 
     int health;
-    int revive_cooldown = REVIVE_COOLDOWN;
+    int revive_cooldown;
     bool on_floor = true;
     int direction = RIGHT_DIR;
+    int revive_counter = revive_cooldown;
 
 public:
     CharacterBody(size_t id, const character_t& character, int x, int y, int w, int h,
-                  Vector2D velocity, int health, uint8_t state, size_t revive_cooldown);
+                  Vector2D velocity, int health, _state state, int revive_cooldown);
 
 
     //------- Overrided Methods --------
@@ -57,7 +59,7 @@ public:
 
     uint16_t get_id();
     character_t get_character();
-    uint8_t get_state();
+    _state get_state();
     int get_health();
     bool is_dead();
 
