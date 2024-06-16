@@ -19,14 +19,14 @@ void Camera::recenter(const SDL_Rect& body) {
     screen.x = body_center_x - screen.w / 2;
     if (screen.x < 0) {
         screen.x = 0;
-    } else if (screen.x + screen.w > 1280) {
-        screen.x = 1280 - screen.w;
+    } else if (screen.x + screen.w > map->get_body().w) {
+        screen.x = map->get_body().w - screen.w;
     }
     screen.y = body_center_y - screen.h / 2;
     if (screen.y < 0) {
         screen.y = 0;
-    } else if (screen.y + screen.h > 1000) {
-        screen.y = 1000 - screen.h;
+    } else if (screen.y + screen.h > map->get_body().h) {
+        screen.y = map->get_body().h - screen.h;
     }
 }
 

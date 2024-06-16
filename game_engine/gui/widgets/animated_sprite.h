@@ -25,7 +25,6 @@ private:
 
     SDL_Rect s_rect;
     SDL_Rect d_rect;
-    SDL_Rect body;
 
     int x_start;
 

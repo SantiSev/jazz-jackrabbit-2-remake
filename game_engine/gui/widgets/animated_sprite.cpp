@@ -10,7 +10,6 @@ AnimatedSprite::AnimatedSprite(std::shared_ptr<Texture> texture, SDL_Rect& s_rec
         animation_off_y(0),
         s_rect(s_rect),
         d_rect(d_rect),
-        body(d_rect),
         x_start(s_rect.x),
         frames(frames),
         current_frame(0),
@@ -148,7 +147,6 @@ AnimatedSprite::AnimatedSprite(AnimatedSprite&& other) noexcept:
         animation_off_y(other.animation_off_y),
         s_rect(other.s_rect),
         d_rect(other.d_rect),
-        body(other.body),
         x_start(other.x_start),
         frames(other.frames),
         current_frame(other.current_frame),
@@ -168,7 +166,6 @@ AnimatedSprite& AnimatedSprite::operator=(AnimatedSprite&& other) noexcept {
     animation_off_y = other.animation_off_y;
     s_rect = other.s_rect;
     d_rect = other.d_rect;
-    body = other.body;
     x_start = other.x_start;
     frames = other.frames;
     current_frame = other.current_frame;
