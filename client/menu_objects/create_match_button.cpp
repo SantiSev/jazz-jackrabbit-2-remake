@@ -13,7 +13,7 @@ void CreateMatchButton::on_click() {
 #ifdef LOG
     std::cout << "Clicked Create match." << std::endl;
 #endif
-    message_handler.create_match(JAZZ_CHARACTER, MAP_1, MAX_PLAYERS);
+    message_handler.create_match(SPAZ_CHARACTER, MAP_1, MAX_PLAYERS);
 }
 
 CreateMatchButton::~CreateMatchButton() = default;
