@@ -27,15 +27,6 @@ void MatchScene::start() {
     event_loop->keyboard.add_on_key_down_signal_obj(&player_controller);
     event_loop->mouse.add_on_click_signal_obj(&player_controller);
 
-    items.insert({(uint16_t)0, ItemFactory::create_item(resource_pool, BULLET_ONE_ITEM, 100, 500)});
-    items.insert({(uint16_t)1, ItemFactory::create_item(resource_pool, BULLET_TWO_ITEM, 200, 500)});
-    items.insert(
-            {(uint16_t)2, ItemFactory::create_item(resource_pool, BULLET_THREE_ITEM, 300, 500)});
-    items.insert({(uint16_t)3, ItemFactory::create_item(resource_pool, CARROT, 400, 500)});
-    items.insert({(uint16_t)4, ItemFactory::create_item(resource_pool, MEAT, 500, 500)});
-    items.insert({(uint16_t)5, ItemFactory::create_item(resource_pool, COIN, 600, 500)});
-    items.insert({(uint16_t)6, ItemFactory::create_item(resource_pool, HEALTH_ICON, 700, 500)});
-
     const Uint32 rate = 1000 / 60;
 
     Uint32 frame_start = SDL_GetTicks();
@@ -51,15 +42,6 @@ void MatchScene::start() {
         draw_objects(it);
         window.render();
         update_objects();
-
-        // reset items pos
-        items[(uint16_t)0]->set_position(100, 500);
-        items[(uint16_t)1]->set_position(200, 500);
-        items[(uint16_t)2]->set_position(300, 500);
-        items[(uint16_t)3]->set_position(400, 500);
-        items[(uint16_t)4]->set_position(500, 500);
-        items[(uint16_t)5]->set_position(600, 500);
-        items[(uint16_t)6]->set_position(700, 500);
 
         frame_end = SDL_GetTicks();
         int rest_time = rate - (frame_end - frame_start);
@@ -125,6 +107,17 @@ void MatchScene::update_objects() {
                                     bullet.direction, bullet.x_pos, bullet.y_pos));
         bullets[bullet.id]->set_position(bullet.x_pos, bullet.y_pos);
     }
+    // for (uint8_t i = 0; i < game_state->num_items; i++) {
+    //     auto item = game_state->items[i];
+
+    //     // If it's a new item create it
+    //     items.try_emplace(
+    //             item.id,
+    //             ItemFactory::create_item(
+    //                     resource_pool, static_cast<item_type_t>(item.item_type), item.x_pos,
+    //                     item.y_pos));
+    //     items[item.id]->set_position(item.x_pos, item.y_pos);
+    // }
 
     last_game_state = game_state;
 
@@ -185,6 +178,24 @@ void MatchScene::destroy_untracked_objects() {
             }
         }
     }
+
+    // Destroy untracked items
+    // if (last_game_state->num_items < items.size()) {
+    //     std::unordered_set<uint16_t> tracked_items;
+    //     for (int i = 0; i < last_game_state->num_items; ++i) {
+    //         tracked_items.insert(
+    //                 last_game_state->items[i].id);  // Assuming Item class has an 'id' attribute
+    //     }
+
+    //     for (auto it = items.begin(); it != items.end();) {
+    //         // If the item is not in the tracked items set, erase them
+    //         if (tracked_items.find(it->first) == tracked_items.end()) {
+    //             it = items.erase(it);
+    //         } else {
+    //             ++it;
+    //         }
+    //     }
+    // }
 }
 
 void MatchScene::draw_objects(int it) {
