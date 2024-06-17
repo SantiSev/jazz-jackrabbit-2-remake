@@ -18,6 +18,8 @@ void ColorRect::draw(SDL_Renderer* renderer, int it) {
     }
 }
 
+SDL_Rect& ColorRect::get_body() { return rect; }
+
 void ColorRect::set_position(int x, int y) {
     rect.x = x;
     rect.y = y;

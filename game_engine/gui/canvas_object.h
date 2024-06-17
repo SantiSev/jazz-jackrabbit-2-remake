@@ -13,6 +13,7 @@ public:
     virtual void is_hovered(bool) {}
     virtual void on_key_press(const SDL_Keycode&) {}
 
+    virtual SDL_Rect& get_body() = 0;
     virtual void set_position(int x, int y) {}
 
     virtual bool is_intersecting(SDL_Point&) const { return false; }

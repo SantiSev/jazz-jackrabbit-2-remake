@@ -21,13 +21,13 @@ Client::Client(const std::string& host, const std::string& port):
 void Client::start() {
     MenuScene menu_scene(window, event_loop, resource_pool, game_running, menu_running,
                          message_handler);
-    MatchScene match_scene(window, event_loop, resource_pool, match_running, message_handler);
     event_loop->start();
 
     while (game_running) {
         menu_scene.start();
         if (match_running && map_enum != NO_MAP) {
-            match_scene.load_map(map_enum);
+            MatchScene match_scene(window, event_loop, resource_pool, match_running, id_client,
+                                   message_handler, map_enum);
             match_scene.start();
         }
         // TODO Level editor

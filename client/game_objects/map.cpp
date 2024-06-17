@@ -1,7 +1,7 @@
 #include "map.h"
 
 Map::Map(const map_list_t& map_enum, std::shared_ptr<engine::ResourcePool> resource_pool):
-        resource_pool(resource_pool) {
+        background(nullptr), resource_pool(resource_pool), area({0, 0, 0, 0}) {
     std::string map_name = map_list_to_string.at(map_enum);
     load_map(map_name);
 }
@@ -12,9 +12,31 @@ void Map::draw(SDL_Renderer* renderer, int it) {
     }
 }
 
+void Map::draw_in_camera(SDL_Renderer* renderer, engine::Camera& camera, int it) {
+    background->draw(renderer, it);  // always visible
+    for (auto& sprite: sprites) {
+        bool is_visible = camera.adjust_relative_position(sprite);
+        if (is_visible) {
+            sprite.draw(renderer, it);
+        }
+    }
+}
+
 void Map::load_map(const std::string& map_name) {
     auto texture = resource_pool->get_texture(map_name);
     auto yaml = *resource_pool->get_yaml(map_name);
+
+    area.w = yaml["map_width"].as<int>();
+    area.h = yaml["map_height"].as<int>();
+
+    auto background_yaml = yaml["background"];
+    SDL_Rect back_s_rect = {
+            background_yaml["s_rect"]["x"].as<int>(), background_yaml["s_rect"]["y"].as<int>(),
+            background_yaml["s_rect"]["w"].as<int>(), background_yaml["s_rect"]["h"].as<int>()};
+    SDL_Rect back_d_rect = {
+            background_yaml["d_rect"]["x"].as<int>(), background_yaml["d_rect"]["y"].as<int>(),
+            background_yaml["d_rect"]["w"].as<int>(), background_yaml["d_rect"]["h"].as<int>()};
+    background = std::make_unique<engine::Sprite>(texture, back_s_rect, back_d_rect);
 
     for (auto obj: yaml["objects"]) {
         auto s_rect_yaml = obj["s_rect"];
@@ -47,5 +69,9 @@ void Map::load_map(const std::string& map_name) {
         }
     }
 }
+
+SDL_Rect& Map::get_body() { return area; }
+
+bool Map::is_intersecting(SDL_Rect& other) const { return SDL_HasIntersection(&area, &other); }
 
 Map::~Map() = default;

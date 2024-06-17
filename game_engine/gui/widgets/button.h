@@ -40,6 +40,7 @@ public:
     void on_click() override;
     void is_hovered(bool) override;
 
+    SDL_Rect& get_body() override;
     void set_position(int x, int y) override;
 
     bool is_intersecting(SDL_Point&) const override;
