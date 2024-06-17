@@ -4,32 +4,29 @@
 #include <list>
 #include <memory>
 
+#include <SDL2/SDL.h>
+
 #include "../../game_engine/gui/canvas_object.h"
 
-#include "map.h"
-
 namespace engine {
-class Camera: public CanvasObject {
+class Camera {
 private:
     SDL_Rect screen;
-    std::list<std::shared_ptr<CanvasObject>> objects;
-    std::shared_ptr<Map> map;
+    int limit_x;
+    int limit_y;
 
 public:
-    Camera(int x, int y, int w, int h);
-
-    void add_object(std::shared_ptr<CanvasObject> object);
-    void remove_object(std::shared_ptr<CanvasObject> object);
-    void set_map(std::shared_ptr<Map> map);
+    Camera(int w, int h, int limit_x, int limit_y);
 
     // Recenter the camera on the given body
     void recenter(const SDL_Rect& body);
 
-    void draw(SDL_Renderer* renderer, int it) override;
+    // Adjust the object's position relative to the camera
+    void adjust_relative_position(CanvasObject& object);
 
-    SDL_Rect& get_body() override;
+    SDL_Rect& get_body();
 
-    ~Camera() override;
+    ~Camera();
 };
 }  // namespace engine
 

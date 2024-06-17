@@ -1,18 +1,10 @@
 #include "camera.h"
 
 using engine::Camera;
+using engine::CanvasObject;
 
-Camera::Camera(int x, int y, int w, int h): screen({x, y, w, h}), map(nullptr) {}
-
-void Camera::add_object(std::shared_ptr<CanvasObject> object) {
-    std::cout << "Camera - "
-              << "x " << object->get_body().x << ", y " << object->get_body().y << std::endl;
-    objects.push_back(object);
-}
-
-void Camera::remove_object(std::shared_ptr<CanvasObject> object) { objects.remove(object); }
-
-void Camera::set_map(std::shared_ptr<Map> map) { this->map = map; }
+Camera::Camera(int w, int h, int limit_x, int limit_y):
+        screen({0, 0, w, h}), limit_x(limit_x), limit_y(limit_y) {}
 
 void Camera::recenter(const SDL_Rect& body) {
     // calculate body center
@@ -23,35 +15,25 @@ void Camera::recenter(const SDL_Rect& body) {
     screen.x = body_center_x - screen.w / 2;
     if (screen.x < 0) {
         screen.x = 0;
-    } else if (screen.x + screen.w > map->get_body().w) {
-        screen.x = map->get_body().w - screen.w;
+    } else if (screen.x + screen.w > limit_x) {
+        screen.x = limit_x - screen.w;
     }
     screen.y = body_center_y - screen.h / 2;
     if (screen.y < 0) {
         screen.y = 0;
-    } else if (screen.y + screen.h > map->get_body().h) {
-        screen.y = map->get_body().h - screen.h;
+    } else if (screen.y + screen.h > limit_y) {
+        screen.y = limit_y - screen.h;
     }
 }
 
-void Camera::draw(SDL_Renderer* renderer, int it) {
-    // draw the map
-    if (map != nullptr) {
-        map->draw_in_camera(renderer, screen, it);
-    }
+void Camera::adjust_relative_position(CanvasObject& object) {
+    if (object.is_intersecting(screen)) {
+        SDL_Rect& body = object.get_body();
 
-    for (auto& object: objects) {
-        if (object->is_intersecting(screen)) {
-            SDL_Rect& body = object->get_body();
-
-            // calculate the object's position on the screen
-            int x = body.x - screen.x;
-            int y = body.y - screen.y;
-
-            // draw the object
-            object->set_position(x, y);
-            object->draw(renderer, it);
-        }
+        // calculate the object's position on the screen
+        int x = body.x - screen.x;
+        int y = body.y - screen.y;
+        object.set_position(x, y);
     }
 }
 
