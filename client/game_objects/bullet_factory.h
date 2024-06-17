@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 
-#include "../../common/character_enum.h"
+#include "../../common/sfx_enum.h"
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/gui/widgets/animated_sprite.h"
 #include "./bullets/bullet_one.h"

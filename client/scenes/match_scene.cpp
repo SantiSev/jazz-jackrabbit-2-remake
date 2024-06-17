@@ -27,6 +27,15 @@ void MatchScene::start() {
     event_loop->keyboard.add_on_key_down_signal_obj(&player_controller);
     event_loop->mouse.add_on_click_signal_obj(&player_controller);
 
+    items.insert({(uint16_t)0, ItemFactory::create_item(resource_pool, BULLET_ONE_ITEM, 100, 500)});
+    items.insert({(uint16_t)1, ItemFactory::create_item(resource_pool, BULLET_TWO_ITEM, 200, 500)});
+    items.insert(
+            {(uint16_t)2, ItemFactory::create_item(resource_pool, BULLET_THREE_ITEM, 300, 500)});
+    items.insert({(uint16_t)3, ItemFactory::create_item(resource_pool, CARROT, 400, 500)});
+    items.insert({(uint16_t)4, ItemFactory::create_item(resource_pool, MEAT, 500, 500)});
+    items.insert({(uint16_t)5, ItemFactory::create_item(resource_pool, COIN, 600, 500)});
+    items.insert({(uint16_t)6, ItemFactory::create_item(resource_pool, HEALTH_ICON, 700, 500)});
+
     const Uint32 rate = 1000 / 60;
 
     Uint32 frame_start = SDL_GetTicks();
@@ -42,6 +51,15 @@ void MatchScene::start() {
         draw_objects(it);
         window.render();
         update_objects();
+
+        // reset items pos
+        items[(uint16_t)0]->set_position(100, 500);
+        items[(uint16_t)1]->set_position(200, 500);
+        items[(uint16_t)2]->set_position(300, 500);
+        items[(uint16_t)3]->set_position(400, 500);
+        items[(uint16_t)4]->set_position(500, 500);
+        items[(uint16_t)5]->set_position(600, 500);
+        items[(uint16_t)6]->set_position(700, 500);
 
         frame_end = SDL_GetTicks();
         int rest_time = rate - (frame_end - frame_start);
@@ -188,6 +206,12 @@ void MatchScene::draw_objects(int it) {
         bool is_visible = camera.adjust_relative_position(*bullet.second);
         if (is_visible) {
             bullet.second->draw(renderer, it);
+        }
+    }
+    for (auto& item: items) {
+        bool is_visible = camera.adjust_relative_position(*item.second);
+        if (is_visible) {
+            item.second->draw(renderer, it);
         }
     }
 }
