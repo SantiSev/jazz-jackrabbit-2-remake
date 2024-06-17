@@ -63,9 +63,6 @@ void Match::run() {
 
                 events++;
                 if (message) {
-#ifdef LOG_VERBOSE
-                    std::cout << "message received about to being runned" << std::endl;
-#endif
                     message->run(message_handler);
                 }
             }
@@ -76,6 +73,16 @@ void Match::run() {
             respawn_enemies();
             respawn_players();
             respawn_items();
+
+
+            for (auto& enemy: enemies) {
+                enemy->print_info();
+            }
+
+            for (auto& player: players) {
+                player.second->print_info();
+            }
+
 
             countdown_match(runTime, endTime);
 
@@ -113,10 +120,10 @@ void Match::countdown_match(std::chrono::time_point<std::chrono::system_clock>& 
         if (std::chrono::duration_cast<std::chrono::seconds>(endTime - runTime).count() >= 1) {
             match_time--;
             runTime = endTime;
-            size_t minutes = match_time / 60;
-            size_t seconds = match_time % 60;
-            std::cout << "Time Remaining: " << std::setw(2) << std::setfill('0') << minutes << ":"
-                      << std::setw(2) << std::setfill('0') << seconds << std::endl;
+            // size_t minutes = match_time / 60;
+            // size_t seconds = match_time % 60;
+            // std::cout << "Time Remaining: " << std::setw(2) << std::setfill('0') << minutes <<
+            // ":" << std::setw(2) << std::setfill('0') << seconds << std::endl;
         }
     } else {
         if (!match_has_ended) {
@@ -128,14 +135,8 @@ void Match::countdown_match(std::chrono::time_point<std::chrono::system_clock>& 
 }
 
 void Match::run_command(const CommandDTO& dto) {
-#ifdef LOG_VERBOSE
-    std::cout << "Running command with id " << dto.id_player << "" << std::endl;
-#endif
     std::shared_ptr<Player> player = get_player(dto.id_player);
     if (player) {
-#ifdef LOG_VERBOSE
-        std::cout << dto.id_player << "says: " << command_to_string.at(dto.command) << std::endl;
-#endif
         player->execute_command(dto.command);
     }
 }
@@ -144,14 +145,18 @@ void Match::respawn_players() {
     for (auto& pair: players) {
         auto& player = pair.second;
         if (player->try_revive()) {
-            player->revive(player->position);
+            std::cout << "| PLAYER respawned with ID:" << player->get_id() << " |" << std::endl;
+            player->revive(player->position);  // TODO set to random spawn position
+            collision_manager->track_dynamic_body(player);
         }
     }
 }
 void Match::respawn_enemies() {
     for (auto& enemy: enemies) {
         if (enemy->try_revive()) {
-            enemy->revive(enemy.get()->spawn_position);
+            std::cout << "| ENEMY respawned with ID:" << enemy->get_id() << " |" << std::endl;
+            enemy->revive(enemy.get()->spawn_position);  // TODO set to random spawn position
+            collision_manager->track_dynamic_body(enemy);
         }
     }
 }
@@ -159,7 +164,9 @@ void Match::respawn_enemies() {
 void Match::respawn_items() {
     for (auto& item: items) {
         if (item->try_respawn()) {
+            std::cout << "Item respawned" << std::endl;
             item->respawn(item.get()->position);
+            collision_manager->track_dynamic_body(item);
         }
     }
 }
@@ -215,10 +222,8 @@ void Match::stop() {
 GameStateDTO Match::create_actual_snapshot() {
     GameStateDTO game_state{};
     game_state.seconds = (uint16_t)match_time % 60;
-    game_state.num_players = players.size();
-    game_state.num_enemies = enemies.size();
-    game_state.num_bullets = bullets.size();
 
+    game_state.num_players = players.size();  // todo revise this
     size_t i = 0;
     for (auto& player_pair: players) {
         game_state.players[i].id = player_pair.first;
@@ -239,21 +244,35 @@ GameStateDTO Match::create_actual_snapshot() {
         }
         ++i;
     }
-    for (size_t j = 0; j < enemies.size(); ++j) {
-        game_state.enemies[j].id = enemies[j]->get_id();
-        game_state.enemies[j].state = enemies[j]->get_state();
-        game_state.enemies[j].character = enemies[j]->get_character();
-        game_state.enemies[j].x_pos = enemies[j]->position.x;
-        game_state.enemies[j].y_pos = enemies[j]->position.y;
-    }
-    for (size_t k = 0; k < bullets.size(); ++k) {
-        game_state.bullets[k].id = bullets[k]->get_id();
-        game_state.bullets[k].direction = bullets[k]->get_direction();
-        game_state.bullets[k].bullet_type = bullets[k]->get_type();
-        game_state.bullets[k].x_pos = bullets[k]->position.x;
-        game_state.bullets[k].y_pos = bullets[k]->position.y;
+
+    game_state.num_enemies = 0;
+    for (const auto& enemy: enemies) {
+        if (!enemy->is_dead()) {
+            auto& enemy_state = game_state.enemies[game_state.num_enemies];
+            enemy_state.id = enemy->get_id();
+            enemy_state.state = enemy->get_state();
+            enemy_state.character = enemy->get_character();
+            enemy_state.x_pos = enemy->position.x;
+            enemy_state.y_pos = enemy->position.y;
+            game_state.num_enemies++;
+        }
     }
 
+    game_state.num_bullets = 0;
+    collision_manager->iterateDynamicBodies(
+            [&game_state](const std::shared_ptr<DynamicBody>& body) {
+                auto bullet = std::dynamic_pointer_cast<Bullet>(body);
+
+                if (bullet) {
+
+                    game_state.bullets[game_state.num_bullets].id = bullet->get_id();
+                    game_state.bullets[game_state.num_bullets].direction = bullet->get_direction();
+                    game_state.bullets[game_state.num_bullets].bullet_type = bullet->get_type();
+                    game_state.bullets[game_state.num_bullets].x_pos = bullet->position.x;
+                    game_state.bullets[game_state.num_bullets].y_pos = bullet->position.y;
+                    game_state.num_bullets++;
+                }
+            });
     return game_state;
 }
 
@@ -305,6 +324,8 @@ void Match::load_enviorment(map_list_t selected_map) {
             }
         }
     }
+
+
 #ifdef LOG
     std::cout << "Map loaded!" << std::endl;
 #endif
@@ -334,7 +355,9 @@ void Match::load_spawn_points() {
 
 
 void Match::initiate_enemies() {
-    int i = 1;
+    // this is to avoid having the same id as a player, i doubt we will have 100 players, in the
+    // future we can change this to a more robust solution
+    int i = 100;
     if (enemy_spawn_points.empty()) {
         throw std::runtime_error("No enemy spawn points found in map.");
     }

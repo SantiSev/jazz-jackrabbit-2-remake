@@ -80,7 +80,4 @@ void ClientMessageHandler::handle_recv_finish_match() {
 
 void ClientMessageHandler::handle_recv_game_state(const GameStateDTO& dto) {
     game_state_q.push(std::make_shared<GameStateDTO>(dto));
-#ifdef LOG_VERBOSE
-    std::cout << "Received game state" << std::endl;
-#endif
 }

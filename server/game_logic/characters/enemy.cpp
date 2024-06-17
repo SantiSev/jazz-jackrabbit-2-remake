@@ -14,8 +14,8 @@
 
 Enemy::Enemy(uint16_t id, const character_t& character, int attack_damage, int health,
              int revive_cooldown, int x, int y, int w, int h, int speed):
-        CharacterBody(id, character, x, y, w, h, Vector2D(speed, 0), health, STATE_MOVING_RIGHT,
-                      revive_cooldown),
+        CharacterBody(id, character, x, y, w, h, Vector2D(speed, DEFAULT_SPEED_Y), health,
+                      STATE_MOVING_RIGHT, revive_cooldown),
         attack_damage(attack_damage),
         attack_cooldown(ATTACK_COOLDOWN),
         x_speed(speed),
@@ -26,11 +26,11 @@ Enemy::Enemy(uint16_t id, const character_t& character, int attack_damage, int h
 void Enemy::update_body() {
 
     if (!is_dead()) {
+        velocity.y = DEFAULT_SPEED_Y;
         patrol();
         position += velocity;
     } else {
         velocity = Vector2D(0, 0);
-        state = STATE_DEAD;
     }
 }
 
@@ -73,6 +73,20 @@ void Enemy::handle_colision(CollisionObject* other) {
     }
 }
 
+void Enemy::take_damage(int damage) {  // TODO ADD MORE STATES TO ENEMY
+    health -= damage;
+    if (health <= 0) {
+        health = 0;
+        set_active_status(false);
+    }
+}
+
+void Enemy::revive(Vector2D new_position) {
+    health = MAX_HEALTH;
+    position = new_position;
+    set_active_status(true);
+}
+
 void Enemy::print_info() {
     std::cout << "--------------------------------" << std::endl;
     std::cout << "| Enemy: " << id << std::endl;
@@ -81,6 +95,7 @@ void Enemy::print_info() {
     std::cout << "| Health: " << health << " |" << std::endl;
     std::cout << "| Active: " << is_active_object() << " |" << std::endl;
     std::cout << "| Revive Cooldown: " << revive_cooldown << std::endl;
+    std::cout << "| Revive Counter: " << revive_counter << std::endl;
     std::cout << "| Spawn Position: " << spawn_position.x << " , " << spawn_position.y << std::endl;
 }
 

@@ -14,20 +14,26 @@ void StaticBody::handle_colision(CollisionObject* other) {
     CollisionFace face = this->is_touching(other);
 
     switch (face) {
+
         case CollisionFace::TOP:  // other object is on top of me
+
             other->position.y = get_top_hitbox_side() - other->get_hitbox_height();
             break;
+
         case CollisionFace::LEFT:  // other object is on my left side
-            other->position.x = get_left_hitbox_side() - other->get_hitbox_width();
+
+            other->position.x = get_left_hitbox_side() - other->get_hitbox_width() - 32;
             break;
+
         case CollisionFace::RIGHT:  // other object is on the right of this object
-            other->position.x = get_right_hitbox_side();
+
+            other->position.x = get_right_hitbox_side() + 32;
             break;
+
         case CollisionFace::BOTTOM:  // other object is below me
             other->position.y = get_bottom_hitbox_side();
             break;
         default:
-            // No collision detected
             break;
     }
 }
