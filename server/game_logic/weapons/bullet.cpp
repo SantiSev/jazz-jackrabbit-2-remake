@@ -27,7 +27,7 @@ Bullet::Bullet(const uint64_t& id, const uint8_t type, Player& player_owner,
 
 uint64_t Bullet::get_id() const { return id; }
 
-uint8_t Bullet::get_direction() const { return player_owner.get_direction(); }
+uint8_t Bullet::get_direction() const { return direction; }
 
 uint8_t Bullet::get_type() const { return type; }
 
@@ -67,4 +67,12 @@ void Bullet::handle_colision(CollisionObject* other) {
             }
         }
     }
+}
+
+void Bullet::print_info() {
+    std::cout << "bullet id: " << (int)id << std::endl;
+    std::cout << "bullet type: " << (int)type << std::endl;
+    std::cout << "bullet direction: " << (int)direction << std::endl;
+    std::cout << "bullet pos: " << (int)position.x << "," << (int)position.y << std::endl;
+    std::cout << "+++++++++++++++++++++++++++++++++++++++++++" << std::endl;
 }

@@ -264,6 +264,7 @@ GameStateDTO Match::create_actual_snapshot() {
                 auto bullet = std::dynamic_pointer_cast<Bullet>(body);
 
                 if (bullet) {
+
                     game_state.bullets[game_state.num_bullets].id = bullet->get_id();
                     game_state.bullets[game_state.num_bullets].direction = bullet->get_direction();
                     game_state.bullets[game_state.num_bullets].bullet_type = bullet->get_type();
@@ -272,8 +273,6 @@ GameStateDTO Match::create_actual_snapshot() {
                     game_state.num_bullets++;
                 }
             });
-
-
     return game_state;
 }
 
@@ -325,6 +324,8 @@ void Match::load_enviorment(map_list_t selected_map) {
             }
         }
     }
+
+
 #ifdef LOG
     std::cout << "Map loaded!" << std::endl;
 #endif

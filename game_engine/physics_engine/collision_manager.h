@@ -9,6 +9,7 @@
 
 #include "../math/vector2D.h"
 #include "physics_object/dynamic_body.h"
+#include "physics_object/static_body.h"
 
 #include "collision_object.h"
 
@@ -24,18 +25,16 @@ private:
     void remove_object_from_grid(std::shared_ptr<CollisionObject> obj, Vector2D position);
 
     bool is_valid_cell(int x, int y) const;
-
     void detect_colisions(std::shared_ptr<DynamicBody> obj);
     void clear();
 
 public:
     std::vector<std::tuple<std::shared_ptr<DynamicBody>, Vector2D>> dynamic_bodies;
 
-    void iterateDynamicBodies(std::function<void(std::shared_ptr<DynamicBody>&)> func);
-
     CollisionManager(int levelWidth, int levelHeight);
+    void iterateDynamicBodies(std::function<void(std::shared_ptr<DynamicBody>&)> func);
     std::shared_ptr<CollisionObject> get_collision_object_at(int x, int y) const;
-    void add_object(std::shared_ptr<CollisionObject> obj);
+    void add_object(std::shared_ptr<StaticBody> obj);
     void track_dynamic_body(std::shared_ptr<DynamicBody> obj);
     bool can_be_placed(std::shared_ptr<CollisionObject> obj) const;
     void remove_object(std::shared_ptr<CollisionObject> obj);
@@ -44,6 +43,7 @@ public:
     void remove_inactive_bodies();
     int get_grid_width() const;
     int get_grid_height() const;
+
 
     ~CollisionManager();
 };

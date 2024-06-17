@@ -14,8 +14,8 @@
 
 Enemy::Enemy(uint16_t id, const character_t& character, int attack_damage, int health,
              int revive_cooldown, int x, int y, int w, int h, int speed):
-        CharacterBody(id, character, x, y, w, h, Vector2D(speed, 0), health, STATE_MOVING_RIGHT,
-                      revive_cooldown),
+        CharacterBody(id, character, x, y, w, h, Vector2D(speed, DEFAULT_SPEED_Y), health,
+                      STATE_MOVING_RIGHT, revive_cooldown),
         attack_damage(attack_damage),
         attack_cooldown(ATTACK_COOLDOWN),
         x_speed(speed),
@@ -26,11 +26,11 @@ Enemy::Enemy(uint16_t id, const character_t& character, int attack_damage, int h
 void Enemy::update_body() {
 
     if (!is_dead()) {
+        velocity.y = DEFAULT_SPEED_Y;
         patrol();
         position += velocity;
     } else {
         velocity = Vector2D(0, 0);
-        // state = STATE_DEAD;
     }
 }
 

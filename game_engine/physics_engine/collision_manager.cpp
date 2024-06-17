@@ -40,7 +40,9 @@ void CollisionManager::remove_object_from_grid(std::shared_ptr<CollisionObject> 
     }
 }
 
+
 // ----------------- public methods ---------------------
+
 
 bool CollisionManager::can_be_placed(std::shared_ptr<CollisionObject> obj) const {
     for (int i = obj->position.x; i < obj->position.x + obj->get_hitbox_width(); ++i) {
@@ -53,9 +55,7 @@ bool CollisionManager::can_be_placed(std::shared_ptr<CollisionObject> obj) const
     return true;
 }
 
-void CollisionManager::add_object(std::shared_ptr<CollisionObject> obj) {
-    place_object_in_grid(obj);
-}
+void CollisionManager::add_object(std::shared_ptr<StaticBody> obj) { place_object_in_grid(obj); }
 
 void CollisionManager::track_dynamic_body(std::shared_ptr<DynamicBody> obj) {
     dynamic_bodies.emplace_back(obj, obj->position);
@@ -97,15 +97,19 @@ void CollisionManager::detect_colisions(std::shared_ptr<DynamicBody> obj) {
 
 void CollisionManager::handle_out_of_bounds(std::shared_ptr<DynamicBody> obj) {
     if (obj->position.x < 0) {
-        obj->position.x = (0);
+        obj->position.x = 32;
+        obj->velocity.x = 0;
     } else if (obj->position.x + obj->get_hitbox_width() > grid_width) {
-        obj->position.x = (grid_width - obj->get_hitbox_width());
+        obj->position.x = (grid_width - obj->get_hitbox_width() - 32);
+        obj->velocity.x = 0;
     }
 
     if (obj->position.y < 0) {
-        obj->position.y = (0);
+        obj->position.y = 32;
+
     } else if (obj->position.y + obj->get_hitbox_height() > grid_height) {
-        obj->position.y = (grid_height - obj->get_hitbox_height());
+        // set the position to the middle of the map
+        obj->position.y = (grid_height - obj->get_hitbox_height() - 32);
     }
 }
 
