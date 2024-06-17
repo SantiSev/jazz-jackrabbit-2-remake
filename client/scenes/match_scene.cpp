@@ -108,10 +108,66 @@ void MatchScene::update_objects() {
         bullets[bullet.id]->set_position(bullet.x_pos, bullet.y_pos);
     }
 
-    // TODO Remove objects that are not in the game state
     last_game_state = game_state;
+
+    destroy_untracked_objects();
 }
 
+void MatchScene::destroy_untracked_objects() {
+    // Destroy untracked players
+    if (last_game_state->num_players < players.size()) {
+        std::unordered_set<uint16_t> tracked_players;
+        for (int i = 0; i < last_game_state->num_players; ++i) {
+            tracked_players.insert(
+                    last_game_state->players[i].id);  // Assuming Player class has an 'id' attribute
+        }
+
+        for (auto it = players.begin(); it != players.end();) {
+            // If the player is not in the tracked players set, erase them
+            if (tracked_players.find(it->first) == tracked_players.end()) {
+                it = players.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
+
+    // Destroy untracked enemies
+    if (last_game_state->num_enemies < enemies.size()) {
+        std::unordered_set<uint16_t> tracked_enemies;
+        for (int i = 0; i < last_game_state->num_enemies; ++i) {
+            tracked_enemies.insert(
+                    last_game_state->enemies[i].id);  // Assuming Enemy class has an 'id' attribute
+        }
+
+        for (auto it = enemies.begin(); it != enemies.end();) {
+            // If the enemy is not in the tracked enemies set, erase them
+            if (tracked_enemies.find(it->first) == tracked_enemies.end()) {
+                it = enemies.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
+
+    // Destroy untracked bullets
+    if (last_game_state->num_bullets < bullets.size()) {
+        std::unordered_set<uint16_t> tracked_bullets;
+        for (int i = 0; i < last_game_state->num_bullets; ++i) {
+            tracked_bullets.insert(
+                    last_game_state->bullets[i].id);  // Assuming Bullet class has an 'id' attribute
+        }
+
+        for (auto it = bullets.begin(); it != bullets.end();) {
+            // If the bullet is not in the tracked bullets set, erase them
+            if (tracked_bullets.find(it->first) == tracked_bullets.end()) {
+                it = bullets.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
+}
 
 void MatchScene::draw_objects(int it) {
     map->draw_in_camera(renderer, camera, it);

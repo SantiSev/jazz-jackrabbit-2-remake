@@ -6,6 +6,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <unordered_set>
 #include <utility>
 
 #include <SDL2/SDL.h>
@@ -47,6 +48,7 @@ private:
 
     PlayerController player_controller;
 
+    void destroy_untracked_objects();
     void update_objects();
     void draw_objects(int it);
 
