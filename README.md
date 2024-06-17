@@ -95,3 +95,23 @@ valgrind --leak-check=full --show-leak-kinds=all --gen-suppressions=all --log-fi
 python3 valgrind_to_suppressions.py valgrind.log suppressions.supp
 valgrind --leak-check=full --suppressions=suppressions.supp --your-other-flags ./program
 ```
+
+## Run docker
+
+Para correr con docker, primero debe correrse por unica vez:
+
+```bash
+sudo ./docker.sh build
+```
+
+Para correr el `server`, debe hacerse:
+
+```bash
+sudo ./docker.sh server
+```
+
+Para correr el `client`, debe hacerse:
+
+```bash
+sudo ./docker.sh client
+```
