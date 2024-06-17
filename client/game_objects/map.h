@@ -10,6 +10,7 @@
 #include "../../common/assets.h"
 #include "../../common/map_enum.h"
 #include "../../game_engine/gui/basic/resource_pool.h"
+#include "../../game_engine/gui/camera.h"
 #include "../../game_engine/gui/canvas_object.h"
 #include "../../game_engine/gui/widgets/sprite.h"
 
@@ -26,7 +27,7 @@ public:
     Map(const map_list_t& map_enum, std::shared_ptr<engine::ResourcePool> resource_pool);
 
     void draw(SDL_Renderer* renderer, int it) override;
-    void draw_in_camera(SDL_Renderer* renderer, SDL_Rect& camera, int it);
+    void draw_in_camera(SDL_Renderer* renderer, engine::Camera& camera, int it);
 
     SDL_Rect& get_body() override;
 

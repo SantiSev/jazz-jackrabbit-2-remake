@@ -17,10 +17,10 @@
 #include "../../common/protocol/common_dto.h"
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/gui/basic/window.h"
+#include "../../game_engine/gui/camera.h"
 #include "../../game_engine/gui/widgets/animated_sprite.h"
 #include "../event_loop.h"
 #include "../game_objects/bullet_factory.h"
-#include "../game_objects/camera.h"
 #include "../game_objects/character_factory.h"
 #include "../game_objects/map.h"
 #include "../game_objects/player_controller.h"
@@ -39,31 +39,28 @@ private:
 
     std::atomic<bool>& match_running;
 
-    engine::Camera camera;
     std::shared_ptr<Map> map;
     std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> players;
     std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> enemies;
     std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> bullets;
+    engine::Camera camera;
 
     PlayerController player_controller;
 
-    void init();
-    void update_objects(int delta_time);
+    void update_objects();
     void draw_objects(int it);
 
 public:
     MatchScene(engine::Window& window, EventLoop* event_loop,
                std::shared_ptr<engine::ResourcePool> resource_pool,
                std::atomic<bool>& match_running, std::atomic<id_client_t>& id_client,
-               ClientMessageHandler& message_handler);
+               ClientMessageHandler& message_handler, map_list_t map_enum);
 
     // cant copy
     MatchScene(const MatchScene&) = delete;
     MatchScene& operator=(const MatchScene&) = delete;
 
     void start();
-
-    void load_map(const map_list_t& map_enum);
 
     ~MatchScene();
 };

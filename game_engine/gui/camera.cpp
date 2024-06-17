@@ -26,7 +26,7 @@ void Camera::recenter(const SDL_Rect& body) {
     }
 }
 
-void Camera::adjust_relative_position(CanvasObject& object) {
+bool Camera::adjust_relative_position(CanvasObject& object) {
     if (object.is_intersecting(screen)) {
         SDL_Rect& body = object.get_body();
 
@@ -34,7 +34,9 @@ void Camera::adjust_relative_position(CanvasObject& object) {
         int x = body.x - screen.x;
         int y = body.y - screen.y;
         object.set_position(x, y);
+        return true;
     }
+    return false;
 }
 
 SDL_Rect& Camera::get_body() { return screen; }

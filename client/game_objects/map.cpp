@@ -12,18 +12,11 @@ void Map::draw(SDL_Renderer* renderer, int it) {
     }
 }
 
-void Map::draw_in_camera(SDL_Renderer* renderer, SDL_Rect& camera, int it) {
-    background->draw(renderer, it);
+void Map::draw_in_camera(SDL_Renderer* renderer, engine::Camera& camera, int it) {
+    background->draw(renderer, it);  // always visible
     for (auto& sprite: sprites) {
-        if (sprite.is_intersecting(camera)) {
-            SDL_Rect& body = sprite.get_body();
-
-            // calculate the sprite's position on the screen
-            int x = body.x - camera.x;
-            int y = body.y - camera.y;
-
-            // draw the sprite
-            sprite.set_position(x, y);
+        bool is_visible = camera.adjust_relative_position(sprite);
+        if (is_visible) {
             sprite.draw(renderer, it);
         }
     }
