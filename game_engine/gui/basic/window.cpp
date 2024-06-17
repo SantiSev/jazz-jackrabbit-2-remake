@@ -2,7 +2,7 @@
 
 using engine::Window;
 
-Window::Window(int width, int height, bool img_init, bool ttf_init) {
+Window::Window(int width, int height, bool img_init, bool ttf_init): width(width), height(height) {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
         throw SDLError("Error initializing SDL:" + std::string(SDL_GetError()));
     }
@@ -30,6 +30,10 @@ void Window::render() { SDL_RenderPresent(renderer); }
 SDL_Window* Window::get_window() const { return window; }
 
 SDL_Renderer* Window::get_renderer() const { return renderer; }
+
+int Window::get_width() const { return width; }
+
+int Window::get_height() const { return height; }
 
 Window::~Window() {
     SDL_DestroyRenderer(renderer);

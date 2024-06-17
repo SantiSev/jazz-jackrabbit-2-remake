@@ -24,6 +24,8 @@ void Label::draw(SDL_Renderer* renderer, int it) {
     }
 }
 
+SDL_Rect& Label::get_body() { return rect; }
+
 void Label::set_position(int x, int y) {
     rect.x = x;
     rect.y = y;

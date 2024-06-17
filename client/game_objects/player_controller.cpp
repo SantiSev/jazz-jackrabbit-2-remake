@@ -1,7 +1,7 @@
 #include "player_controller.h"
 
 PlayerController::PlayerController(ClientMessageHandler& message_handler):
-        message_handler(message_handler) {}
+        message_handler(message_handler), body({0, 0, 0, 0}) {}
 
 void PlayerController::on_click() {
     message_handler.send_command(SHOOT);
@@ -40,6 +40,8 @@ void PlayerController::on_key_press(const SDL_Keycode& key) {
 }
 
 void PlayerController::draw(SDL_Renderer* renderer, int it) {}
+
+SDL_Rect& PlayerController::get_body() { return body; }
 
 // It should be clickable anywhere
 bool PlayerController::is_intersecting(SDL_Point& point) const { return true; }
