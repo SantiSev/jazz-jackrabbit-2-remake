@@ -3,8 +3,8 @@ body_width: 24
 body_height: 40
 idle_right:
     flipped: false
-    frames: 13
-    fps: 8
+    frames: 6
+    fps: 16
     x: 8
     y: 49
     w: 47
@@ -12,9 +12,9 @@ idle_right:
     off_x: -12
     off_y: -7
 idle_left:
-    flipped: false
-    frames: 13
-    fps: 8
+    flipped: true
+    frames: 6
+    fps: 16
     x: 8
     y: 49
     w: 48
