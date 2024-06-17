@@ -1,6 +1,7 @@
 # width and height of the hitbox
 body_width: 24
 body_height: 40
+weapon_y: 14
 idle_right:
     flipped: false
     frames: 6
