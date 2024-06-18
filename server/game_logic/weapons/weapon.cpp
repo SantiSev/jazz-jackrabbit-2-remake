@@ -36,7 +36,7 @@ bool Weapon::is_weapon_empty() const { return ammo == 0; }
 
 void Weapon::shoot() {
 
-    if ((!infinite_ammo) && (is_weapon_empty() || !can_shoot)) {
+    if (is_weapon_empty() || !can_shoot) {
         return;
     }
 

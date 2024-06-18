@@ -207,7 +207,7 @@ void Player::revive(Vector2D new_position) {
 
 void Player::take_damage(int damage) {
 
-    if (is_invincible) {
+    if (!is_invincible) {
         health -= damage;
     }
 
@@ -273,10 +273,6 @@ void Player::activate_cheat_command(cheat_command_t command) {
                 weapon->change_infinite_ammo();
             }
             break;
-        case CHEAT_REVIVE:
-            revive_cooldown = NONE;
-            try_revive();
-            break;
         case CHEAT_MAX_HEALTH:
             health = MAX_HEALTH;
             break;
@@ -337,7 +333,7 @@ void Player::change_invincibility_cheat() {
         invincibility_cooldown = INVINCIBILITY_COOLDOWN;
     }
     if (!is_invincible) {
-        invincibility_cooldown = SIZE_MAX;
+        invincibility_cooldown = INT32_MAX;
     }
     is_invincible = !is_invincible;
 }

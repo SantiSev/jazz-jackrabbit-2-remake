@@ -6,7 +6,9 @@
 #include <cstring>
 #include <iomanip>
 #include <list>
+#include <map>
 #include <memory>
+#include <random>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -54,19 +56,12 @@ private:
     std::unique_ptr<CollisionManager> collision_manager;
     std::vector<Vector2D> player_spawn_points;
     std::vector<Vector2D> enemy_spawn_points;
+    std::vector<Vector2D> item_spawn_points;
     std::mutex match_mutex;
 
-    const std::shared_ptr<engine::ResourcePool>& resource_pool;
+    std::atomic<bool> cheat_revive_enabled = false;
 
-public:
-    Queue<std::shared_ptr<Message>> match_queue;
-    // Constructor
-    explicit Match(const map_list_t& map_selected, size_t required_players_setting,
-                   Queue<std::shared_ptr<Message>>& lobby_queue, ClientMonitor& monitor,
-                   const std::shared_ptr<engine::ResourcePool>& resource_pool);
-    void run() override;
-    void stop() override;
-    ~Match() override = default;
+    const std::shared_ptr<engine::ResourcePool>& resource_pool;
 
     //-------------------- Gameloop Methods ----------------------
 
@@ -79,9 +74,27 @@ public:
 
     void respawn_items();
 
-    void run_command(const CommandDTO& dto);
+    Vector2D get_random_spawn_point(std::vector<Vector2D> const& spawnpoints);
 
-    Vector2D select_player_spawn_point();
+    //-------------------- Initialization Methods -----------------
+
+    void load_enviorment(map_list_t map);
+
+    void initiate_enemies(std::vector<character_t> enemy_types);
+
+    void load_spawn_points();
+
+public:
+    Queue<std::shared_ptr<Message>> match_queue;
+    // Constructor
+    explicit Match(const map_list_t& map_selected, size_t required_players_setting,
+                   Queue<std::shared_ptr<Message>>& lobby_queue, ClientMonitor& monitor,
+                   const std::shared_ptr<engine::ResourcePool>& resource_pool);
+    void run() override;
+    void stop() override;
+    ~Match() override = default;
+
+    void run_command(const CommandDTO& dto);
 
     //-------------------- Conection Methods ----------------------
 
@@ -93,13 +106,11 @@ public:
 
     GameStateDTO create_actual_snapshot();
 
-    //-------------------- Initialization Methods -----------------
+    void run_cheat_command(const CheatCommandDTO& dto);
 
-    void load_enviorment(map_list_t map);
+    void kill_all_cheat();
 
-    void initiate_enemies();
-
-    void load_spawn_points();
+    void revive_all_cheat();
 
     //-------------------- Getter Methods -----------------
 
@@ -116,12 +127,6 @@ public:
     map_list_t get_map() const;
 
     Queue<std::shared_ptr<Message>>& get_match_queue();
-
-    void run_cheat_command(const CheatCommandDTO& dto);
-
-    void kill_all_cheat();
-
-    void revive_all_cheat();
 };
 
 #endif

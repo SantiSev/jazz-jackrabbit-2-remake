@@ -31,9 +31,9 @@ private:
     CollisionManager& collision_manager;
     bool is_knocked_back = false;
     bool is_intoxicated = false;
-    size_t special_cooldown = 0;
-    size_t intoxication_cooldown = INTOXICATON_COOLDOWN;
-    size_t invincibility_cooldown = INVINCIBILITY_COOLDOWN;
+    int special_cooldown = 0;
+    int intoxication_cooldown = INTOXICATON_COOLDOWN;
+    int invincibility_cooldown = INVINCIBILITY_COOLDOWN;
     bool is_invincible = false;
 
 public:
