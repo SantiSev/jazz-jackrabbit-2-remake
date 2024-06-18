@@ -119,7 +119,7 @@ void MatchesManager::add_new_client_to_manager(Socket client_socket) {
     client->set_client_id(client_id_counter);
     clients.push_back(client);
 #ifdef LOG_VERBOSE
-    std::cout << "Client " << clients_connected << " connected to server." << std::endl;
+    std::cout << "Client " << client_id_counter << " connected to server." << std::endl;
 #endif
 }
 
