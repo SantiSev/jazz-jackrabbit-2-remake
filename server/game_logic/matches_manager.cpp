@@ -19,11 +19,14 @@ void MatchesManager::run() {
     try {
         while (online) {
             std::shared_ptr<Message> client_message = nullptr;
-            manager_queue.try_pop(client_message);
-            if (client_message) {
-                client_message->run(message_handler);
+            size_t events = 0;
+            while (manager_queue.try_pop(client_message) && events < MAX_EVENTS_PER_LOOP) {
+                events++;
+                if (client_message) {
+                    client_message->run(message_handler);
+                }
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
 #ifdef LOG_VERBOSE
         std::cout << "stopping matches" << std::endl;
@@ -206,7 +209,8 @@ void MatchesManager::clear_all_clients() {
     for (auto& client: clients) {
         CloseConnectionDTO close_connection{};
         auto game_ended_message = std::make_shared<CloseConnectionMessage>(close_connection);
-        client->get_sender_queue().push(game_ended_message);
+        client->get_sender_queue().try_push(game_ended_message);
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
         client->stop();
         delete client;
     }

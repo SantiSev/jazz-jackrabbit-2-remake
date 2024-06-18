@@ -16,6 +16,9 @@ void ServerSender::run() {
     try {
         while (_keep_running) {
             std::shared_ptr<Message> msg = queue.pop();
+            if (msg->get_header() == CLOSE_CONNECTION) {
+                std::cout << "about to send close connection" << std::endl;
+            }
             server_protocol.send_message(msg);
         }
     } catch (const ClosedQueue& err) {

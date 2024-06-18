@@ -92,7 +92,6 @@ void Match::run() {
             }
         }
         send_end_message_to_players();
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         lobby_queue.push(std::make_shared<SendFinishMatchMessage>());
         while (online) {
             // aca puede implementarse el scoreboard
@@ -191,9 +190,9 @@ void Match::send_end_message_to_players() {
     auto game_ended_message = std::make_shared<SendFinishMatchMessage>();
     client_monitor.broadcastClients(game_ended_message);
 
-    //    auto close_connection_message =
-    //    std::make_shared<CloseConnectionMessage>(CloseConnectionDTO());
-    //    client_monitor.broadcastClients(close_connection_message);
+    //        auto close_connection_message =
+    //        std::make_shared<CloseConnectionMessage>(CloseConnectionDTO());
+    //        client_monitor.broadcastClients(close_connection_message);
 }
 
 bool Match::has_match_ended() const { return match_has_ended; }
