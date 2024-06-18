@@ -36,7 +36,7 @@ public:
     std::shared_ptr<CollisionObject> get_collision_object_at(int x, int y) const;
     void add_object(std::shared_ptr<StaticBody> obj);
     void track_dynamic_body(std::shared_ptr<DynamicBody> obj);
-    bool can_be_placed(std::shared_ptr<CollisionObject> obj) const;
+    bool can_be_placed(std::shared_ptr<CollisionObject> obj, Vector2D new_position) const;
     void remove_object(std::shared_ptr<CollisionObject> obj);
     void update_object(std::shared_ptr<CollisionObject> obj);
     void update();

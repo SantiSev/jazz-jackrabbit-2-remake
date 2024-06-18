@@ -16,8 +16,6 @@
 #include "character.h"
 
 // player config
-#define PLAYER_WIDTH 50
-#define PLAYER_HEIGHT 50
 #define MAX_FALL_SPEED 10
 
 class Weapon;
@@ -35,7 +33,7 @@ private:
     size_t intoxication_cooldown = INTOXICATON_COOLDOWN;
 
 public:
-    Player(uint16_t id, std::string name, const character_t& character, int x, int y,
+    Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w, int h,
            CollisionManager& collision_manager);
 
     //------- Overrided Methods --------

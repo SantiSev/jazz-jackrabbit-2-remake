@@ -44,9 +44,10 @@ void CollisionManager::remove_object_from_grid(std::shared_ptr<CollisionObject> 
 // ----------------- public methods ---------------------
 
 
-bool CollisionManager::can_be_placed(std::shared_ptr<CollisionObject> obj) const {
-    for (int i = obj->position.x; i < obj->position.x + obj->get_hitbox_width(); ++i) {
-        for (int j = obj->position.y; j < obj->position.y + obj->get_hitbox_height(); ++j) {
+bool CollisionManager::can_be_placed(std::shared_ptr<CollisionObject> obj,
+                                     Vector2D new_position) const {
+    for (int i = new_position.x; i < new_position.x + obj->get_hitbox_width(); ++i) {
+        for (int j = new_position.y; j < new_position.y + obj->get_hitbox_height(); ++j) {
             if (grid[i][j] != nullptr) {
                 return false;
             }
