@@ -6,6 +6,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <unordered_set>
 #include <utility>
 
 #include <SDL2/SDL.h>
@@ -14,6 +15,7 @@
 #include "../../common/character_enum.h"
 #include "../../common/common_constants.h"
 #include "../../common/common_queue.h"
+#include "../../common/item_enum.h"
 #include "../../common/protocol/common_dto.h"
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/gui/basic/window.h"
@@ -22,6 +24,7 @@
 #include "../event_loop.h"
 #include "../game_objects/bullet_factory.h"
 #include "../game_objects/character_factory.h"
+#include "../game_objects/item_factory.h"
 #include "../game_objects/map.h"
 #include "../game_objects/player_controller.h"
 
@@ -43,10 +46,12 @@ private:
     std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> players;
     std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> enemies;
     std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> bullets;
+    std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> items;
     engine::Camera camera;
 
     PlayerController player_controller;
 
+    void destroy_untracked_objects();
     void update_objects();
     void draw_objects(int it);
 

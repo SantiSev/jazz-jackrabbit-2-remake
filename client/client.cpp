@@ -44,6 +44,7 @@ void Client::pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_
     resource_pool->load_texture(map_character_enum_to_string.at(SPAZ_CHARACTER));
     resource_pool->load_texture(map_character_enum_to_string.at(LORI_CHARACTER));
     resource_pool->load_texture(SFX_FILE);
+    resource_pool->load_texture(ITEMS_FILE);
     resource_pool->load_texture(ENEMIES_FILE);
     resource_pool->load_texture(map_list_to_string.at(MAP_1));
 
@@ -57,6 +58,7 @@ void Client::pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_
     resource_pool->load_yaml(map_character_enum_to_string.at(MAD_HATTER));
     resource_pool->load_yaml(map_character_enum_to_string.at(LIZARD_GOON));
     resource_pool->load_yaml(SFX_FILE);
+    resource_pool->load_yaml(ITEMS_FILE);
     resource_pool->load_yaml(map_list_to_string.at(MAP_1));
 }
 

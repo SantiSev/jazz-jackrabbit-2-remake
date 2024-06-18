@@ -107,11 +107,96 @@ void MatchScene::update_objects() {
                                     bullet.direction, bullet.x_pos, bullet.y_pos));
         bullets[bullet.id]->set_position(bullet.x_pos, bullet.y_pos);
     }
+    // for (uint8_t i = 0; i < game_state->num_items; i++) {
+    //     auto item = game_state->items[i];
 
-    // TODO Remove objects that are not in the game state
+    //     // If it's a new item create it
+    //     items.try_emplace(
+    //             item.id,
+    //             ItemFactory::create_item(
+    //                     resource_pool, static_cast<item_type_t>(item.item_type), item.x_pos,
+    //                     item.y_pos));
+    //     items[item.id]->set_position(item.x_pos, item.y_pos);
+    // }
+
     last_game_state = game_state;
+
+    destroy_untracked_objects();
 }
 
+void MatchScene::destroy_untracked_objects() {
+    // Destroy untracked players
+    if (last_game_state->num_players < players.size()) {
+        std::unordered_set<uint16_t> tracked_players;
+        for (int i = 0; i < last_game_state->num_players; ++i) {
+            tracked_players.insert(
+                    last_game_state->players[i].id);  // Assuming Player class has an 'id' attribute
+        }
+
+        for (auto it = players.begin(); it != players.end();) {
+            // If the player is not in the tracked players set, erase them
+            if (tracked_players.find(it->first) == tracked_players.end()) {
+                it = players.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
+
+    // Destroy untracked enemies
+    if (last_game_state->num_enemies < enemies.size()) {
+        std::unordered_set<uint16_t> tracked_enemies;
+        for (int i = 0; i < last_game_state->num_enemies; ++i) {
+            tracked_enemies.insert(
+                    last_game_state->enemies[i].id);  // Assuming Enemy class has an 'id' attribute
+        }
+
+        for (auto it = enemies.begin(); it != enemies.end();) {
+            // If the enemy is not in the tracked enemies set, erase them
+            if (tracked_enemies.find(it->first) == tracked_enemies.end()) {
+                it = enemies.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
+
+    // Destroy untracked bullets
+    if (last_game_state->num_bullets < bullets.size()) {
+        std::unordered_set<uint16_t> tracked_bullets;
+        for (int i = 0; i < last_game_state->num_bullets; ++i) {
+            tracked_bullets.insert(
+                    last_game_state->bullets[i].id);  // Assuming Bullet class has an 'id' attribute
+        }
+
+        for (auto it = bullets.begin(); it != bullets.end();) {
+            // If the bullet is not in the tracked bullets set, erase them
+            if (tracked_bullets.find(it->first) == tracked_bullets.end()) {
+                it = bullets.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
+
+    // Destroy untracked items
+    // if (last_game_state->num_items < items.size()) {
+    //     std::unordered_set<uint16_t> tracked_items;
+    //     for (int i = 0; i < last_game_state->num_items; ++i) {
+    //         tracked_items.insert(
+    //                 last_game_state->items[i].id);  // Assuming Item class has an 'id' attribute
+    //     }
+
+    //     for (auto it = items.begin(); it != items.end();) {
+    //         // If the item is not in the tracked items set, erase them
+    //         if (tracked_items.find(it->first) == tracked_items.end()) {
+    //             it = items.erase(it);
+    //         } else {
+    //             ++it;
+    //         }
+    //     }
+    // }
+}
 
 void MatchScene::draw_objects(int it) {
     map->draw_in_camera(renderer, camera, it);
@@ -132,6 +217,12 @@ void MatchScene::draw_objects(int it) {
         bool is_visible = camera.adjust_relative_position(*bullet.second);
         if (is_visible) {
             bullet.second->draw(renderer, it);
+        }
+    }
+    for (auto& item: items) {
+        bool is_visible = camera.adjust_relative_position(*item.second);
+        if (is_visible) {
+            item.second->draw(renderer, it);
         }
     }
 }
