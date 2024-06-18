@@ -30,6 +30,27 @@ void PlayerController::on_key_press(const SDL_Keycode& key) {
         case SDLK_r:
             message_handler.send_command(CHANGE_WEAPON);
             break;
+        case SDLK_1:
+            message_handler.send_cheat_command(CHEAT_MAX_AMMO);
+            break;
+        case SDLK_2:
+            message_handler.send_cheat_command(CHEAT_MAX_HEALTH);
+            break;
+        case SDLK_3:
+            message_handler.send_cheat_command(CHEAT_INVINCIBLE);
+            break;
+        case SDLK_4:
+            message_handler.send_cheat_command(CHEAT_REVIVE);
+            break;
+        case SDLK_5:
+            message_handler.send_cheat_command(CHEAT_INFINITE_AMMO);
+            break;
+        case SDLK_6:
+            message_handler.send_cheat_command(CHEAT_REVIVE_ALL);
+            break;
+        case SDLK_7:
+            message_handler.send_cheat_command(CHEAT_KILL_ALL);
+            break;
         default:
             break;
     }

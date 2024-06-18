@@ -83,10 +83,6 @@ void Match::run() {
                 player.second->print_info();
             }
 #endif
-            for (auto& player: players) {
-                player.second->print_info();
-            }
-
 
             countdown_match(runTime, endTime);
 
@@ -148,7 +144,7 @@ void Match::run_command(const CommandDTO& dto) {
 void Match::respawn_players() {
     for (auto& pair: players) {
         auto& player = pair.second;
-        if (player->try_revive()) {
+        if (player->try_revive() || cheat_revive_enabled) {
 
             bool can_be_placed = false;
             Vector2D new_position = get_random_spawn_point(player_spawn_points);
@@ -167,7 +163,7 @@ void Match::respawn_players() {
 }
 void Match::respawn_enemies() {
     for (auto& enemy: enemies) {
-        if (enemy->try_revive()) {
+        if (enemy->try_revive() || cheat_revive_enabled) {
             std::cout << "| ENEMY respawned with ID:" << enemy->get_id() << " |" << std::endl;
             enemy->revive(enemy.get()->spawn_position);  // TODO set to random spawn position
             collision_manager->track_dynamic_body(enemy);
@@ -193,6 +189,39 @@ Vector2D Match::get_random_spawn_point(std::vector<Vector2D> const& spawnpoints)
     return player_spawn_points[i];
 }
 
+void Match::run_cheat_command(const CheatCommandDTO& dto) {
+    if (dto.command == CHEAT_KILL_ALL) {
+        kill_all_cheat();
+    } else if (dto.command == CHEAT_REVIVE_ALL) {
+        revive_all_cheat();
+    } else if (dto.command == CHEAT_REVIVE) {
+        std::shared_ptr<Player> player = get_player(dto.id_player);
+        if (player) {
+            player->revive(get_random_spawn_point(player_spawn_points));
+        }
+    } else {
+        std::shared_ptr<Player> player = get_player(dto.id_player);
+        if (player) {
+            player->activate_cheat_command(dto.command);
+        }
+    }
+}
+
+void Match::kill_all_cheat() {
+    for (auto& enemy: enemies) {
+        enemy->take_damage(9999);
+    }
+    for (auto& player: players) {
+        player.second->take_damage(9999);
+    }
+}
+
+void Match::revive_all_cheat() {
+    cheat_revive_enabled = true;
+    respawn_enemies();
+    respawn_players();
+    cheat_revive_enabled = false;
+}
 
 //-------------------- Conection Methods -----------------
 
@@ -421,7 +450,7 @@ void Match::initiate_enemies(std::vector<character_t> enemy_types) {
                            std::cerr << "Error loading yaml file" << std::endl;
                            exit(1);
                        }
-                       auto& enemy_resources = *enemy_resources_ptr;
+                       const auto& enemy_resources = *enemy_resources_ptr;
                        return {enemy_type,
                                {enemy_resources["body_width"].as<int>(),
                                 enemy_resources["body_height"].as<int>()}};

@@ -12,6 +12,14 @@ void ClientMessageHandler::send_command(command_t command) {
 #endif
 }
 
+void ClientMessageHandler::send_cheat_command(cheat_command_t cheat_command) {
+    CheatCommandDTO dto{client.id_client, cheat_command};
+    send_message.push(std::make_shared<RecvCheatCommandMessage>(dto));
+#ifdef LOG_VERBOSE
+    std::cout << "Sending cheat command: " << int(cheat_command) << std::endl;
+#endif
+}
+
 void ClientMessageHandler::create_match(character_t character, map_list_t map_name,
                                         uint8_t max_players) {
     CreateGameDTO dto = {client.id_client, character, map_name, max_players};

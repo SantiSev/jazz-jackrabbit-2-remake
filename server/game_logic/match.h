@@ -59,6 +59,8 @@ private:
     std::vector<Vector2D> item_spawn_points;
     std::mutex match_mutex;
 
+    std::atomic<bool> cheat_revive_enabled = false;
+
     const std::shared_ptr<engine::ResourcePool>& resource_pool;
 
     //-------------------- Gameloop Methods ----------------------
@@ -103,6 +105,12 @@ public:
     void delete_disconnected_player(id_client_t id_client);
 
     GameStateDTO create_actual_snapshot();
+
+    void run_cheat_command(const CheatCommandDTO& dto);
+
+    void kill_all_cheat();
+
+    void revive_all_cheat();
 
     //-------------------- Getter Methods -----------------
 

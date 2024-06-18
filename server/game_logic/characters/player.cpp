@@ -204,6 +204,21 @@ void Player::revive(Vector2D new_position) {
     }
 }
 
+void Player::take_damage(int damage) {
+
+    if (!is_invincible) {
+        health -= damage;
+    }
+
+    if (health < NONE) {
+        health = NONE;
+        state = STATE_DEAD;
+        set_active_status(false);
+    } else {
+        state = STATE_DAMAGED;
+    }
+}
+
 void Player::print_info() {
     std::cout << "--------------------------------" << std::endl;
     std::cout << "| Id: " << id << " |" << std::endl;
@@ -250,6 +265,29 @@ void Player::execute_command(command_t command) {
     }
 }
 
+void Player::activate_cheat_command(cheat_command_t command) {
+    switch (command) {
+        case CHEAT_MAX_AMMO:
+            for (auto& weapon: weapons) {
+                weapon->add_ammo(weapon->get_max_ammo());
+            }
+            break;
+        case CHEAT_INFINITE_AMMO:
+            for (auto& weapon: weapons) {
+                weapon->change_infinite_ammo();
+            }
+            break;
+        case CHEAT_MAX_HEALTH:
+            health = MAX_HEALTH;
+            break;
+        case CHEAT_INVINCIBLE:
+            change_invincibility_cheat();
+            break;
+        default:
+            break;
+    }
+}
+
 void Player::update_status(Vector2D spawn_point) {  // todo check if its needed
 
     if (is_dead()) {
@@ -286,4 +324,20 @@ void Player::update_status(Vector2D spawn_point) {  // todo check if its needed
             state = STATE_IDLE_LEFT;
         }
     }
+    if (is_invincible) {
+        invincibility_cooldown--;
+        if (invincibility_cooldown == NONE) {
+            is_invincible = false;
+        }
+    }
+}
+
+void Player::change_invincibility_cheat() {
+    if (is_invincible) {
+        invincibility_cooldown = INVINCIBILITY_COOLDOWN;
+    }
+    if (!is_invincible) {
+        invincibility_cooldown = INT32_MAX;
+    }
+    is_invincible = !is_invincible;
 }
