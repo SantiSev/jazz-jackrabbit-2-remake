@@ -69,9 +69,9 @@ typedef enum: uint8_t {
     CHEAT_MAX_HEALTH = 0x01,
     CHEAT_INVINCIBLE = 0x02,
     CHEAT_REVIVE = 0x03,
-    CHEAT_REVIVE_ALL = 0x04,
-    CHEAT_KILL_ALL = 0x05,
-    CHEAT_INFINITE_AMMO = 0x06,
+    CHEAT_INFINITE_AMMO = 0x04,
+    CHEAT_REVIVE_ALL = 0x05,
+    CHEAT_KILL_ALL = 0x06,
 } cheat_command_t;
 
 //------Messages send by client to server --------

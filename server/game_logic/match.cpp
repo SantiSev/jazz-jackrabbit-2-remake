@@ -75,13 +75,13 @@ void Match::run() {
             respawn_items();
 
 
-            for (auto& enemy: enemies) {
-                enemy->print_info();
-            }
-
-            for (auto& player: players) {
-                player.second->print_info();
-            }
+            //            for (auto& enemy: enemies) {
+            //                enemy->print_info();
+            //            }
+            //
+            //            for (auto& player: players) {
+            //                player.second->print_info();
+            //            }
 
 
             countdown_match(runTime, endTime);
@@ -421,11 +421,34 @@ std::vector<size_t> Match::get_clients_ids() {
 }
 
 void Match::run_cheat_command(const CheatCommandDTO& dto) {
-    std::shared_ptr<Player> player = get_player(dto.id_player);
-    if (player) {
-#ifdef LOG_VERBOSE
-        std::cout << dto.id_player << "says: " << command_to_string.at(dto.command) << std::endl;
-#endif
-        player->activate_cheat_command(dto.command);
+    if (dto.command == CHEAT_KILL_ALL) {
+        kill_all_cheat();
+    } else if (dto.command == CHEAT_REVIVE_ALL) {
+        revive_all_cheat();
+    } else {
+        std::shared_ptr<Player> player = get_player(dto.id_player);
+        if (player) {
+            player->activate_cheat_command(dto.command);
+        }
     }
+}
+
+void Match::kill_all_cheat() {
+    for (auto& enemy: enemies) {
+        enemy->take_damage(1000);
+    }
+    for (auto& player: players) {
+        player.second->take_damage(1000);
+    }
+}
+
+void Match::revive_all_cheat() {
+    for (auto& enemy: enemies) {
+        enemy->increase_health(1000);
+    }
+    respawn_enemies();
+    for (auto& player: players) {
+        player.second->increase_health(1000);
+    }
+    respawn_players();
 }

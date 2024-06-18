@@ -118,6 +118,10 @@ public:
     Queue<std::shared_ptr<Message>>& get_match_queue();
 
     void run_cheat_command(const CheatCommandDTO& dto);
+
+    void kill_all_cheat();
+
+    void revive_all_cheat();
 };
 
 #endif

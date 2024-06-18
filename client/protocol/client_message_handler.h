@@ -34,6 +34,8 @@ public:
     void handle_recv_active_games(const MatchInfoDTO& dto) override;
     void handle_recv_game_state(const GameStateDTO& dto) override;
     void handle_recv_finish_match() override;
+
+    void send_cheat_command(cheat_command_t cheat_command);
 };
 
 
