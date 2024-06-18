@@ -1,11 +1,10 @@
 #include "player.h"
 
 
-Player::Player(uint16_t id, std::string name, const character_t& character, int x, int y,
-               CollisionManager& collision_manager):
-        CharacterBody(id, character, x, y, PLAYER_WIDTH, PLAYER_HEIGHT,
-                      Vector2D(NONE, MAX_FALL_SPEED), MAX_HEALTH, STATE_IDLE_RIGHT,
-                      REVIVE_COOLDOWN),
+Player::Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w,
+               int h, CollisionManager& collision_manager):
+        CharacterBody(id, character, x, y, w, h, Vector2D(NONE, MAX_FALL_SPEED), MAX_HEALTH,
+                      STATE_IDLE_RIGHT, REVIVE_COOLDOWN),
         name(std::move(name)),
         weapons(NUM_OF_WEAPONS),
         collision_manager(collision_manager) {
@@ -46,10 +45,6 @@ void Player::reload_weapon(size_t weapon_id, int ammo_amount) {
 
 void Player::shoot_selected_weapon() {
 
-#ifdef LOG_VERBOSE
-    std::cout << "| Player id: " << this->id << " | Player::shoot_selected_weapon() |" << std::endl;
-#endif
-
     weapons[selected_weapon]->shoot();
     state = is_facing_right() ? STATE_SHOOTING_RIGHT : STATE_SHOOTING_LEFT;
 }
@@ -79,10 +74,6 @@ void Player::reset_special_attack() { special_cooldown = SPECIAL_COOLDOWN; }
 
 void Player::move_left() {
 
-#ifdef LOG_VERBOSE
-    std::cout << "| Player id: " << this->id << " | Player::move_left() |" << std::endl;
-#endif
-
     if (is_knocked_back) {
         return;
     }
@@ -100,10 +91,6 @@ void Player::move_left() {
 
 void Player::move_right() {
 
-#ifdef LOG_VERBOSE
-    std::cout << "| Player id: " << this->id << " | Player::move_right() |" << std::endl;
-#endif
-
     if (is_knocked_back) {
         return;
     }
@@ -120,10 +107,6 @@ void Player::move_right() {
 }
 
 void Player::jump() {
-
-#ifdef LOG_VERBOSE
-    std::cout << "| Player id: " << this->id << " | Player::jump() |" << std::endl;
-#endif
 
     if (on_floor) {
         on_floor = false;
@@ -181,10 +164,6 @@ void Player::update_body() {
     }
 
     position += velocity;
-
-#ifdef LOG_VERBOSE
-    // print_info();
-#endif
 }
 
 void Player::handle_colision(CollisionObject* other) {
@@ -217,12 +196,26 @@ void Player::knockback(int force) {
 
 void Player::revive(Vector2D new_position) {
     this->health = MAX_HEALTH;
-    this->revive_cooldown = REVIVE_COOLDOWN;
     this->state = STATE_IDLE_RIGHT;
     position = new_position;
 
     for (auto& weapon: weapons) {
         weapon->reset_ammo();
+    }
+}
+
+void Player::take_damage(int damage) {
+
+    if (!is_invincible) {
+        health -= damage;
+    }
+
+    if (health < NONE) {
+        health = NONE;
+        state = STATE_DEAD;
+        set_active_status(false);
+    } else {
+        state = STATE_DAMAGED;
     }
 }
 
@@ -240,6 +233,8 @@ void Player::print_info() {
               << std::endl;
     std::cout << "| points: " << points << " |" << std::endl;
     std::cout << "| state: " << (int)get_state() << " |" << std::endl;
+    std::cout << "| respawn time: " << revive_cooldown << " |" << std::endl;
+    std::cout << "| respawn counter: " << revive_counter << " |" << std::endl;
 }
 
 //------- Match Methods --------
@@ -260,8 +255,33 @@ void Player::execute_command(command_t command) {
             jump();
             break;
         case SHOOT:
-            std::cout << "SHOOT" << std::endl;
             shoot_selected_weapon();
+            break;
+        case CHANGE_WEAPON:
+            select_next_weapon();
+            break;
+        default:
+            break;
+    }
+}
+
+void Player::activate_cheat_command(cheat_command_t command) {
+    switch (command) {
+        case CHEAT_MAX_AMMO:
+            for (auto& weapon: weapons) {
+                weapon->add_ammo(weapon->get_max_ammo());
+            }
+            break;
+        case CHEAT_INFINITE_AMMO:
+            for (auto& weapon: weapons) {
+                weapon->change_infinite_ammo();
+            }
+            break;
+        case CHEAT_MAX_HEALTH:
+            health = MAX_HEALTH;
+            break;
+        case CHEAT_INVINCIBLE:
+            change_invincibility_cheat();
             break;
         default:
             break;
@@ -304,4 +324,20 @@ void Player::update_status(Vector2D spawn_point) {  // todo check if its needed
             state = STATE_IDLE_LEFT;
         }
     }
+    if (is_invincible) {
+        invincibility_cooldown--;
+        if (invincibility_cooldown == NONE) {
+            is_invincible = false;
+        }
+    }
+}
+
+void Player::change_invincibility_cheat() {
+    if (is_invincible) {
+        invincibility_cooldown = INVINCIBILITY_COOLDOWN;
+    }
+    if (!is_invincible) {
+        invincibility_cooldown = INT32_MAX;
+    }
+    is_invincible = !is_invincible;
 }
