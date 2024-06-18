@@ -126,6 +126,7 @@ void MatchScene::update_objects(int delta_time) {
                                                    bullet.direction, bullet.x_pos, bullet.y_pos));
 
             bullets.at(bullet.id)->set_position(bullet.x_pos, bullet.y_pos);
+            // sound_manager->play_sound(SHOOT_SOUND, 0.5); // IDK if this works
         }
     }
 }
