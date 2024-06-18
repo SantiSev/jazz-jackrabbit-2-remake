@@ -37,29 +37,29 @@ void Client::start() {
     }
 }
 
-void Client::pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_pool) {
+void Client::pre_load_resources(std::shared_ptr<engine::ResourcePool>& pool) {
     // Textures
-    resource_pool->load_texture(BACKGROUNDS);
-    resource_pool->load_texture(map_character_enum_to_string.at(JAZZ_CHARACTER));
-    resource_pool->load_texture(map_character_enum_to_string.at(SPAZ_CHARACTER));
-    resource_pool->load_texture(map_character_enum_to_string.at(LORI_CHARACTER));
-    resource_pool->load_texture(SFX_FILE);
-    resource_pool->load_texture(ITEMS_FILE);
-    resource_pool->load_texture(ENEMIES_FILE);
-    resource_pool->load_texture(map_list_to_string.at(MAP_1));
+    pool->load_texture(BACKGROUNDS);
+    pool->load_texture(map_character_enum_to_string.at(JAZZ_CHARACTER));
+    pool->load_texture(map_character_enum_to_string.at(SPAZ_CHARACTER));
+    pool->load_texture(map_character_enum_to_string.at(LORI_CHARACTER));
+    pool->load_texture(SFX_FILE);
+    pool->load_texture(ITEMS_FILE);
+    pool->load_texture(ENEMIES_FILE);
+    pool->load_texture(map_list_to_string.at(MAP_1));
 
     // Fonts
-    resource_pool->load_font(FONT, FONT_SIZE);
+    pool->load_font(FONT, FONT_SIZE);
 
     // Yaml
-    resource_pool->load_yaml(map_character_enum_to_string.at(JAZZ_CHARACTER));
-    resource_pool->load_yaml(map_character_enum_to_string.at(SPAZ_CHARACTER));
-    resource_pool->load_yaml(map_character_enum_to_string.at(LORI_CHARACTER));
-    resource_pool->load_yaml(map_character_enum_to_string.at(MAD_HATTER));
-    resource_pool->load_yaml(map_character_enum_to_string.at(LIZARD_GOON));
-    resource_pool->load_yaml(SFX_FILE);
-    resource_pool->load_yaml(ITEMS_FILE);
-    resource_pool->load_yaml(map_list_to_string.at(MAP_1));
+    pool->load_yaml(map_character_enum_to_string.at(JAZZ_CHARACTER));
+    pool->load_yaml(map_character_enum_to_string.at(SPAZ_CHARACTER));
+    pool->load_yaml(map_character_enum_to_string.at(LORI_CHARACTER));
+    pool->load_yaml(map_character_enum_to_string.at(MAD_HATTER));
+    pool->load_yaml(map_character_enum_to_string.at(LIZARD_GOON));
+    pool->load_yaml(SFX_FILE);
+    pool->load_yaml(ITEMS_FILE);
+    pool->load_yaml(map_list_to_string.at(MAP_1));
 }
 
 Client::~Client() {
