@@ -1,26 +1,24 @@
 
 #include "enemies.h"
 
+#define OFFSET(h) ((h)*0.45)
+
 #define MAD_HATTER_ATTACK_DAMAGE 10
 #define MAD_HATTER_HEALTH 100
 #define MAD_HATTER_REVIVE_COOLDOWN 120
-#define MAD_HATTER_WIDTH 32
-#define MAD_HATTER_HEIGHT 45
+
 #define MAD_HATTER_SPEED 3
 
 #define LIZARD_GOON_ATTACK_DAMAGE 10
 #define LIZARD_GOON_HEALTH 100
 #define LIZARD_GOON_REVIVE_COUNTDOWN 120
-#define LIZARD_GOON_WIDTH 35
-#define LIZARD_GOON_HEIGHT 43
+
 #define LIZARD_GOON_SPEED 1
 
-MadHatter::MadHatter(uint16_t id, int x, int y):
+MadHatter::MadHatter(uint16_t id, int x, int y, int w, int h):
         Enemy(id, MAD_HATTER, MAD_HATTER_ATTACK_DAMAGE, MAD_HATTER_HEALTH,
-              MAD_HATTER_REVIVE_COOLDOWN, x, y, MAD_HATTER_WIDTH, MAD_HATTER_HEIGHT,
-              MAD_HATTER_SPEED) {}
+              MAD_HATTER_REVIVE_COOLDOWN, x, y, w, h - OFFSET(h), MAD_HATTER_SPEED) {}
 
-LizardGoon::LizardGoon(uint16_t id, int x, int y):
+LizardGoon::LizardGoon(uint16_t id, int x, int y, int w, int h):
         Enemy(id, LIZARD_GOON, LIZARD_GOON_ATTACK_DAMAGE, LIZARD_GOON_HEALTH,
-              LIZARD_GOON_REVIVE_COUNTDOWN, x, y, LIZARD_GOON_WIDTH, LIZARD_GOON_HEIGHT,
-              LIZARD_GOON_SPEED) {}
+              LIZARD_GOON_REVIVE_COUNTDOWN, x, y, w, h - OFFSET(h), LIZARD_GOON_SPEED) {}

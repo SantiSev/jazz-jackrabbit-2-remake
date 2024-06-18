@@ -1,11 +1,10 @@
 #include "player.h"
 
 
-Player::Player(uint16_t id, std::string name, const character_t& character, int x, int y,
-               CollisionManager& collision_manager):
-        CharacterBody(id, character, x, y, PLAYER_WIDTH, PLAYER_HEIGHT,
-                      Vector2D(NONE, MAX_FALL_SPEED), MAX_HEALTH, STATE_IDLE_RIGHT,
-                      REVIVE_COOLDOWN),
+Player::Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w,
+               int h, CollisionManager& collision_manager):
+        CharacterBody(id, character, x, y, w, h, Vector2D(NONE, MAX_FALL_SPEED), MAX_HEALTH,
+                      STATE_IDLE_RIGHT, REVIVE_COOLDOWN),
         name(std::move(name)),
         weapons(NUM_OF_WEAPONS),
         collision_manager(collision_manager) {
@@ -234,6 +233,8 @@ void Player::print_info() {
               << std::endl;
     std::cout << "| points: " << points << " |" << std::endl;
     std::cout << "| state: " << (int)get_state() << " |" << std::endl;
+    std::cout << "| respawn time: " << revive_cooldown << " |" << std::endl;
+    std::cout << "| respawn counter: " << revive_counter << " |" << std::endl;
 }
 
 //------- Match Methods --------
@@ -255,6 +256,9 @@ void Player::execute_command(command_t command) {
             break;
         case SHOOT:
             shoot_selected_weapon();
+            break;
+        case CHANGE_WEAPON:
+            select_next_weapon();
             break;
         default:
             break;
