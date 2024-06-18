@@ -6,6 +6,7 @@ Client::Client(const std::string& host, const std::string& port):
         game_running(true),
         menu_running(true),
         match_running(false),
+        editor_running(false),
         map_enum(NO_MAP),
         id_client(0),
         message_handler(*this),
@@ -20,7 +21,7 @@ Client::Client(const std::string& host, const std::string& port):
 
 void Client::start() {
     MenuScene menu_scene(window, event_loop, resource_pool, game_running, menu_running,
-                         message_handler);
+                         editor_running, message_handler);
     event_loop->start();
 
     while (game_running) {
@@ -30,16 +31,16 @@ void Client::start() {
                                    message_handler, map_enum);
             match_scene.start();
         }
-        // TODO Level editor
-        // if (editor_running) {
-        //     editor_scene.start();
-        // }
+        if (editor_running) {
+            std::cout << "Editor running" << std::endl;
+            // editor_scene.start();
+        }
     }
 }
 
 void Client::pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_pool) {
     // Textures
-    resource_pool->load_texture(BACKGROUNDS);
+    resource_pool->load_texture(BACKGROUNDS_FILE);
     resource_pool->load_texture(map_character_enum_to_string.at(JAZZ_CHARACTER));
     resource_pool->load_texture(map_character_enum_to_string.at(SPAZ_CHARACTER));
     resource_pool->load_texture(map_character_enum_to_string.at(LORI_CHARACTER));
@@ -52,6 +53,7 @@ void Client::pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_
     resource_pool->load_font(FONT, FONT_SIZE);
 
     // Yaml
+    resource_pool->load_yaml(BACKGROUNDS_FILE);
     resource_pool->load_yaml(map_character_enum_to_string.at(JAZZ_CHARACTER));
     resource_pool->load_yaml(map_character_enum_to_string.at(SPAZ_CHARACTER));
     resource_pool->load_yaml(map_character_enum_to_string.at(LORI_CHARACTER));

@@ -21,6 +21,7 @@
 #include "../game_engine/gui/basic/window.h"
 #include "../game_engine/gui/canvas_object.h"
 #include "../game_engine/gui/widgets/animated_sprite.h"
+#include "./shared/background.h"
 #include "game_objects/player_controller.h"
 #include "protocol/client_protocol.h"
 #include "protocol/client_thread_manager.h"
@@ -38,6 +39,7 @@ private:
     std::atomic<bool> game_running;
     std::atomic<bool> menu_running;
     std::atomic<bool> match_running;
+    std::atomic<bool> editor_running;
 
     std::atomic<map_list_t> map_enum;
     std::atomic<id_client_t> id_client;
