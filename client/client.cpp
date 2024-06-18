@@ -25,6 +25,8 @@ void Client::start() {
     MatchScene match_scene(window, event_loop, resource_pool, match_running, message_handler);
     event_loop->start();
 
+    sound_manager->play_sound(BACKGROUND, 0.5);
+
     while (game_running) {
         menu_scene.start();
         if (match_running && map_enum != NO_MAP) {
