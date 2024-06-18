@@ -2,10 +2,12 @@
 
 MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
                        std::shared_ptr<engine::ResourcePool> resource_pool,
+                       std::shared_ptr<engine::SoundManager> sound_manager,
                        std::atomic<bool>& match_running, ClientMessageHandler& message_handler):
         window(window),
         renderer(window.get_renderer()),
         resource_pool(resource_pool),
+        sound_manager(sound_manager),
         event_loop(event_loop),
         message_handler(message_handler),
         game_state_q(message_handler.game_state_q),
