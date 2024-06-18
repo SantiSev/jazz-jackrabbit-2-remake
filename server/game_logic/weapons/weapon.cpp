@@ -36,11 +36,14 @@ bool Weapon::is_weapon_empty() const { return ammo == 0; }
 
 void Weapon::shoot() {
 
-    if (is_weapon_empty() || !can_shoot) {
+    if ((!infinite_ammo) && (is_weapon_empty() || !can_shoot)) {
         return;
     }
 
-    ammo--;
+    if (!infinite_ammo) {
+        ammo--;
+    }
+
     shoot_rate_counter = 0;
 
     uint64_t bullet_id = create_bullet_id();
@@ -69,7 +72,7 @@ void Weapon::reset_ammo() {
 // -------------- Private Methods --------------
 
 uint64_t Weapon::create_bullet_id() {
-    uint16_t weapon_id = this->weapon_id;
+    uint16_t id_weapon = this->weapon_id;
     uint16_t player_id = this->player_owner.get_id();
 
     bullet_counter++;
@@ -77,12 +80,22 @@ uint64_t Weapon::create_bullet_id() {
     uint64_t bullet_id = 0;  // Initialize bullet_id
 
     // Shift and combine values
-    bullet_id |= static_cast<uint64_t>(weapon_id) << 48;  // Shift weapon_id to the leftmost 16 bits
+    bullet_id |= static_cast<uint64_t>(id_weapon) << 48;  // Shift weapon_id to the leftmost 16 bits
     bullet_id |= static_cast<uint64_t>(player_id) << 32;  // Shift player_id to the next 16 bits
     bullet_id |=
             static_cast<uint64_t>(bullet_counter);  // bullet_counter occupies the remaining bits
 
     return bullet_id;
+}
+
+void Weapon::change_infinite_ammo() {
+    if (ammo == 0) {
+        ammo = 1;
+    }
+    if (infinite_ammo && ammo == 1) {
+        ammo = 0;
+    }
+    infinite_ammo = !infinite_ammo;
 }
 
 Weapon::~Weapon() = default;

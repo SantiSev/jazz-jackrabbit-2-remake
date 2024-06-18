@@ -33,8 +33,6 @@ typedef uint16_t id_client_t;
 typedef uint16_t id_player_t;
 typedef uint16_t id_match_t;
 
-typedef enum: uint8_t { INFINITY_AMMO } cheat_command_t;
-
 typedef enum: uint8_t {
     MOVE_LEFT = 0x00,
     MOVE_RIGHT = 0x01,
@@ -50,6 +48,7 @@ typedef enum: uint8_t {
     TAUNT = 0x11,
 } command_t;
 
+
 const std::map<command_t, std::string> command_to_string = {
         {MOVE_LEFT, "MOVE_LEFT"},
         {MOVE_RIGHT, "MOVE_RIGHT"},
@@ -64,6 +63,16 @@ const std::map<command_t, std::string> command_to_string = {
         {PAUSE_GAME, "PAUSE_GAME"},
         {TAUNT, "TAUNT"},
 };
+
+typedef enum: uint8_t {
+    CHEAT_MAX_AMMO = 0x00,
+    CHEAT_MAX_HEALTH = 0x01,
+    CHEAT_INVINCIBLE = 0x02,
+    CHEAT_REVIVE = 0x03,
+    CHEAT_REVIVE_ALL = 0x04,
+    CHEAT_KILL_ALL = 0x05,
+    CHEAT_INFINITE_AMMO = 0x06,
+} cheat_command_t;
 
 //------Messages send by client to server --------
 

@@ -419,3 +419,13 @@ std::vector<size_t> Match::get_clients_ids() {
                    [](const auto& pair) { return static_cast<size_t>(pair.first); });
     return ids;
 }
+
+void Match::run_cheat_command(const CheatCommandDTO& dto) {
+    std::shared_ptr<Player> player = get_player(dto.id_player);
+    if (player) {
+#ifdef LOG_VERBOSE
+        std::cout << dto.id_player << "says: " << command_to_string.at(dto.command) << std::endl;
+#endif
+        player->activate_cheat_command(dto.command);
+    }
+}

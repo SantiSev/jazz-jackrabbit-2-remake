@@ -27,6 +27,7 @@
 #define LEFT_DIR -1
 #define RIGHT_DIR 1
 #define REVIVE_COOLDOWN 1000
+#define INVINCIBILITY_COOLDOWN 3000
 
 class CharacterBody: public DynamicBody {
 

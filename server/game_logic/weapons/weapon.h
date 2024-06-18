@@ -16,6 +16,7 @@ class CollisionManager;
 class Weapon {
 private:
     int bullet_counter = 0;
+    bool infinite_ammo = false;
 
 protected:
     uint8_t weapon_id = 0;
@@ -51,6 +52,7 @@ public:
     virtual void shoot();
     void add_ammo(int added_ammo);
     void reset_ammo();
+    void change_infinite_ammo();
 
     ~Weapon();
 };

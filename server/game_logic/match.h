@@ -116,6 +116,8 @@ public:
     map_list_t get_map() const;
 
     Queue<std::shared_ptr<Message>>& get_match_queue();
+
+    void run_cheat_command(const CheatCommandDTO& dto);
 };
 
 #endif
