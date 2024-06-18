@@ -1,7 +1,7 @@
 
 #include "enemies.h"
 
-#define OFFSET(h) ((h)*0.5)
+#define OFFSET(h) ((h)*0.45)
 
 #define MAD_HATTER_ATTACK_DAMAGE 10
 #define MAD_HATTER_HEALTH 100

@@ -1,11 +1,10 @@
 #include "player.h"
 
 
-Player::Player(uint16_t id, std::string name, const character_t& character, int x, int y,
-               CollisionManager& collision_manager):
-        CharacterBody(id, character, x, y, PLAYER_WIDTH, PLAYER_HEIGHT,
-                      Vector2D(NONE, MAX_FALL_SPEED), MAX_HEALTH, STATE_IDLE_RIGHT,
-                      REVIVE_COOLDOWN),
+Player::Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w,
+               int h, CollisionManager& collision_manager):
+        CharacterBody(id, character, x, y, w, h, Vector2D(NONE, MAX_FALL_SPEED), MAX_HEALTH,
+                      STATE_IDLE_RIGHT, REVIVE_COOLDOWN),
         name(std::move(name)),
         weapons(NUM_OF_WEAPONS),
         collision_manager(collision_manager) {

@@ -200,16 +200,56 @@ void Match::add_player_to_game(const AddPlayerDTO& dto) {
     players_connected++;
 
     Vector2D pos = get_random_spawn_point(player_spawn_points);
-    auto new_player = std::make_shared<Player>(dto.id_client, dto.name, dto.player_character, pos.x,
-                                               pos.y, *collision_manager);
-    collision_manager->track_dynamic_body(new_player);
+
+    auto player_resources_ptr =
+            resource_pool->get_yaml(map_character_enum_to_string.at(dto.player_character));
+
+    if (!player_resources_ptr || player_resources_ptr->IsNull()) {
+        std::cerr << "Error loading yaml file" << std::endl;
+        exit(1);
+    }
+
+    int player_width = (*player_resources_ptr)["body_width"].as<int>();
+    int player_height = (*player_resources_ptr)["body_height"].as<int>();
+
+    switch (dto.player_character) {
+        case JAZZ_CHARACTER: {
+
+            auto jazz_player =
+                    std::make_shared<Jazz>(dto.id_client, dto.name, pos.x, pos.y, player_width,
+                                           player_height, *collision_manager);
+            collision_manager->track_dynamic_body(jazz_player);
+            players[dto.id_client] = jazz_player;
+            break;
+        }
+        case SPAZ_CHARACTER: {
+
+            auto spaz_player =
+                    std::make_shared<Spaz>(dto.id_client, dto.name, pos.x, pos.y, player_width,
+                                           player_height, *collision_manager);
+            collision_manager->track_dynamic_body(spaz_player);
+            players[dto.id_client] = spaz_player;
+            break;
+        }
+        case LORI_CHARACTER: {
+
+            auto lori_player =
+                    std::make_shared<Lori>(dto.id_client, dto.name, pos.x, pos.y, player_width,
+                                           player_height, *collision_manager);
+            collision_manager->track_dynamic_body(lori_player);
+            players[dto.id_client] = lori_player;
+            break;
+        }
+        default:
+            std::cerr << "Invalid character" << std::endl;
+            break;
+    }
+
 
 #ifdef LOG_VERBOSE
     std::cout << "Player connected: " << dto.id_client << "is playing as "
               << map_character_enum_to_string.at(dto.player_character) << std::endl;
 #endif
-
-    players[dto.id_client] = new_player;
 }
 
 void Match::send_end_message_to_players() {
