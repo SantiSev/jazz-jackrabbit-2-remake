@@ -219,6 +219,8 @@ void Player::print_info() {
               << std::endl;
     std::cout << "| points: " << points << " |" << std::endl;
     std::cout << "| state: " << (int)get_state() << " |" << std::endl;
+    std::cout << "| respawn time: " << revive_cooldown << " |" << std::endl;
+    std::cout << "| respawn counter: " << revive_counter << " |" << std::endl;
 }
 
 //------- Match Methods --------
@@ -240,6 +242,9 @@ void Player::execute_command(command_t command) {
             break;
         case SHOOT:
             shoot_selected_weapon();
+            break;
+        case CHANGE_WEAPON:
+            select_next_weapon();
             break;
         default:
             break;

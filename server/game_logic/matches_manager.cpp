@@ -112,11 +112,11 @@ ServerThreadManager* MatchesManager::get_client_by_id(const uint16_t& id) {
 }
 
 void MatchesManager::add_new_client_to_manager(Socket client_socket) {
-    clients_connected++;
+    client_id_counter++;
     auto client = new ServerThreadManager(std::move(client_socket), manager_queue);
-    auto message = std::make_shared<AcptConnection>(clients_connected);  // le mando su id
+    auto message = std::make_shared<AcptConnection>(client_id_counter);  // le mando su id
     client->get_sender_queue()->push(message);
-    client->set_client_id(clients_connected);
+    client->set_client_id(client_id_counter);
     clients.push_back(client);
 #ifdef LOG_VERBOSE
     std::cout << "Client " << clients_connected << " connected to server." << std::endl;

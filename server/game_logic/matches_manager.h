@@ -18,7 +18,7 @@ class Message;
 class MatchesManager: public Thread {
 private:
     bool online = true;
-    uint16_t clients_connected = 0;
+    uint16_t client_id_counter = 100;
     int matches_number = 0;
     std::map<int, std::shared_ptr<Match>> matches;
     std::list<ServerThreadManager*> clients;
