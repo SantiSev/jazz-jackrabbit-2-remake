@@ -47,7 +47,7 @@ private:
     MessageRunner* message_runner;
     ClientThreadManager* thread_manager;
 
-    void pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_pool);
+    void pre_load_resources();
 
     friend class ClientMessageHandler;
 
