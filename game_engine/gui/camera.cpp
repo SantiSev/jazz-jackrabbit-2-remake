@@ -3,13 +3,24 @@
 using engine::Camera;
 using engine::CanvasObject;
 
-Camera::Camera(int w, int h, int lower_lim_x, int upper_lim_x, int lower_limit_y,
-               int upper_limit_y):
-        screen({lower_lim_x, lower_limit_y, w, h}),
+Camera::Camera(int w, int h, int lower_lim_x, int upper_lim_x, int lower_lim_y, int upper_lim_y):
+        screen({lower_lim_x, upper_lim_y - h, w, h}),
         lower_limit_x(lower_lim_x),
         upper_limit_x(upper_lim_x),
-        lower_limit_y(lower_limit_y),
-        upper_limit_y(upper_limit_y) {}
+        lower_limit_y(lower_lim_y),
+        upper_limit_y(upper_lim_y) {
+    if (screen.x < lower_limit_x) {
+        screen.x = lower_limit_x;
+    } else if (screen.x + screen.w > upper_limit_x) {
+        screen.x = upper_limit_x - screen.w;
+    }
+
+    if (screen.y < lower_limit_y) {
+        screen.y = lower_limit_y;
+    } else if (screen.y + screen.h > upper_limit_y) {
+        screen.y = upper_limit_y - screen.h;
+    }
+}
 
 void Camera::recenter(const SDL_Rect& body) {
     // calculate body center
