@@ -19,10 +19,6 @@
 #include "../protocol/client_message_handler.h"
 #include "../shared/background.h"
 
-#define Y_BUTTON_START 200
-#define BUTTON_MARGIN 10
-#define BUTTON_WIDTH 150
-#define BUTTON_HEIGHT 25
 
 class MenuScene {
 private:

@@ -32,8 +32,9 @@ void Client::start() {
             match_scene.start();
         }
         if (editor_running) {
-            std::cout << "Editor running" << std::endl;
-            // editor_scene.start();
+            EditorScene editor_scene(window, event_loop, resource_pool, menu_running,
+                                     editor_running, message_handler);
+            editor_scene.start();
         }
     }
 }
@@ -48,6 +49,8 @@ void Client::pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_
     resource_pool->load_texture(ITEMS_FILE);
     resource_pool->load_texture(ENEMIES_FILE);
     resource_pool->load_texture(map_list_to_string.at(MAP_1));
+    resource_pool->load_texture(map_list_to_string.at(MAP_2));
+    resource_pool->load_texture(EDITOR_FILE);
 
     // Fonts
     resource_pool->load_font(FONT, FONT_SIZE);
@@ -62,6 +65,8 @@ void Client::pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_
     resource_pool->load_yaml(SFX_FILE);
     resource_pool->load_yaml(ITEMS_FILE);
     resource_pool->load_yaml(map_list_to_string.at(MAP_1));
+    resource_pool->load_yaml(map_list_to_string.at(MAP_2));
+    resource_pool->load_yaml(EDITOR_FILE);
 }
 
 Client::~Client() {

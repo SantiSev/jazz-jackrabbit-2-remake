@@ -26,6 +26,7 @@
 #include "protocol/client_protocol.h"
 #include "protocol/client_thread_manager.h"
 #include "protocol/message_runner.h"
+#include "scenes/editor_scene.h"
 #include "scenes/match_scene.h"
 #include "scenes/menu_scene.h"
 

@@ -1,5 +1,10 @@
 #include "menu_scene.h"
 
+#define Y_BUTTON_START 200
+#define BUTTON_MARGIN 10
+#define BUTTON_WIDTH 150
+#define BUTTON_HEIGHT 25
+
 MenuScene::MenuScene(engine::Window& window, EventLoop* event_loop,
                      std::shared_ptr<engine::ResourcePool> resource_pool,
                      std::atomic<bool>& game_running, std::atomic<bool>& menu_running,
@@ -81,7 +86,7 @@ void MenuScene::create_buttons(ClientMessageHandler& message_handler) {
 
     SDL_Rect map_editor_d_rect = {0, y_start, w, h};
     EditorButton* map_editor = new EditorButton(renderer, resource_pool, map_editor_d_rect,
-                                                menu_running, editor_running, message_handler);
+                                                menu_running, editor_running);
     y_start += h + BUTTON_MARGIN;
 
     SDL_Rect quit_button_d_rect = {0, y_start, w, h};
