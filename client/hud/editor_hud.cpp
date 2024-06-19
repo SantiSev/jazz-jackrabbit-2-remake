@@ -40,7 +40,8 @@ void EditorHud::create_buttons(std::atomic<bool>& menu_running, std::atomic<bool
 
     SDL_Rect create_match_button_d_rect = {800 - (w + 10), y_start, w, h};
     save_and_exit_button = std::make_unique<SaveExitEditorButton>(
-            renderer, resource_pool, create_match_button_d_rect, menu_running, editor_running);
+            renderer, resource_pool, create_match_button_d_rect, menu_running, editor_running,
+            tile_manager);
     event_loop->mouse.add_on_click_signal_obj(save_and_exit_button.get());
 
     // Create selection tiles

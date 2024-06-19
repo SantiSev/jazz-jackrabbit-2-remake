@@ -4,7 +4,11 @@
 
 EditorTile::EditorTile(SDL_Rect& d_rect, SDL_Rect& s_rect, std::shared_ptr<engine::Texture> texture,
                        TileManager& tile_manager):
-        engine::Sprite(texture, s_rect, d_rect), tile_manager(tile_manager), visible(false) {}
+        engine::Sprite(texture, s_rect, d_rect),
+        tile_manager(tile_manager),
+        s_rect(s_rect),
+        d_rect(d_rect),
+        visible(false) {}
 
 void EditorTile::on_click() {
     if (!visible)
@@ -12,7 +16,13 @@ void EditorTile::on_click() {
 #ifdef LOG
     std::cout << "Clicked editor tile." << std::endl;
 #endif
-    this->change_source(tile_manager.get_selected_tile());
+    auto new_rect = tile_manager.get_selected_tile();
+    this->change_source(new_rect);
+    this->s_rect = new_rect;
 }
+
+SDL_Rect& EditorTile::get_d_rect() { return d_rect; }
+
+SDL_Rect& EditorTile::get_s_rect() { return s_rect; }
 
 EditorTile::~EditorTile() = default;

@@ -31,4 +31,8 @@ void TileManager::set_selected_tile(const SDL_Rect& src_rect) { selected_tile = 
 
 SDL_Rect TileManager::get_selected_tile() { return selected_tile; }
 
+std::unordered_map<uint16_t, std::shared_ptr<EditorTile>>& TileManager::get_tiles() {
+    return tiles;
+}
+
 TileManager::~TileManager() = default;

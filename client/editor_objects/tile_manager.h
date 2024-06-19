@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 #include <SDL2/SDL.h>
+#include <yaml-cpp/yaml.h>
 
 #include "../../common/assets.h"
 #include "../../common/map_enum.h"
@@ -28,6 +29,8 @@ public:
 
     void set_selected_tile(const SDL_Rect& src_rect);
     SDL_Rect get_selected_tile();
+
+    std::unordered_map<uint16_t, std::shared_ptr<EditorTile>>& get_tiles();
 
     ~TileManager();
 };

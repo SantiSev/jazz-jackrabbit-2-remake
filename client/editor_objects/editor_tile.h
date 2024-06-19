@@ -15,6 +15,8 @@ class TileManager;
 class EditorTile: public engine::Sprite {
 private:
     TileManager& tile_manager;
+    SDL_Rect s_rect;
+    SDL_Rect d_rect;
 
 public:
     std::atomic<bool> visible;
@@ -23,6 +25,9 @@ public:
                TileManager& tile_manager);
 
     void on_click() override;
+
+    SDL_Rect& get_d_rect();
+    SDL_Rect& get_s_rect();
 
     ~EditorTile() override;
 };
