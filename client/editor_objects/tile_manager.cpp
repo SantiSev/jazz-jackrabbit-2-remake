@@ -13,7 +13,7 @@ TileManager::TileManager(std::shared_ptr<engine::ResourcePool> resource_pool, Ev
     int num_tiles_per_row = map_width / tile_width;
     int num_tiles_per_col = map_height / tile_height;
 
-    auto texture = resource_pool->get_texture(map_list_to_string.at(MAP_1));
+    auto texture = resource_pool->get_texture(EDITOR_FILE);
     SDL_Rect src_rect = {0, 0, tile_width, tile_height};
 
     for (int i = 0; i < num_tiles_per_row; i++) {

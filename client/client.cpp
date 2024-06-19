@@ -10,7 +10,8 @@ Client::Client(const std::string& host, const std::string& port):
         map_enum(NO_MAP),
         id_client(0),
         message_handler(*this),
-        event_loop(new EventLoop(game_running, menu_running, match_running, message_handler)),
+        event_loop(new EventLoop(game_running, menu_running, match_running, editor_running,
+                                 message_handler)),
         message_runner(new MessageRunner(message_handler)),
         thread_manager(new ClientThreadManager(host, port, message_runner->recv_message,
                                                message_handler.send_message)) {
