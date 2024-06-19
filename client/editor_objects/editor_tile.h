@@ -1,6 +1,7 @@
 #ifndef EDITOR_TILE_H
 #define EDITOR_TILE_H
 
+#include <atomic>
 #include <memory>
 
 #include <SDL2/SDL.h>
@@ -16,6 +17,8 @@ private:
     TileManager& tile_manager;
 
 public:
+    std::atomic<bool> visible;
+
     EditorTile(SDL_Rect& d_rect, SDL_Rect& s_rect, std::shared_ptr<engine::Texture> texture,
                TileManager& tile_manager);
 
