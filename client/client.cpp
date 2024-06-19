@@ -15,7 +15,7 @@ Client::Client(const std::string& host, const std::string& port):
                                                message_handler.send_message)),
         sound_manager(std::make_shared<engine::SoundManager>(resource_pool)) {
     // Pre-load necessary resources
-    pre_load_resources(resource_pool);
+    pre_load_resources();
     message_runner->start();
 }
 
@@ -40,7 +40,7 @@ void Client::start() {
     }
 }
 
-void Client::pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_pool) {
+void Client::pre_load_resources() {
     // Textures
     resource_pool->load_texture(BACKGROUNDS);
     resource_pool->load_texture(map_character_enum_to_string.at(JAZZ_CHARACTER));

@@ -50,7 +50,7 @@ void Match::run() {
 #ifdef LOG_VERBOSE
         std::cout << "Match map: " << map_list_to_string.at(map) << " Starting..." << std::endl;
 #endif
-        while (online) {
+        while (!match_has_ended && online) {
             auto endTime = std::chrono::system_clock::now();
             std::chrono::duration<double, std::milli> delta = endTime - startTime;
             startTime = endTime;
@@ -93,16 +93,17 @@ void Match::run() {
             auto frameEnd = std::chrono::system_clock::now();
             delta = frameEnd - frameStart;
 
-            if (match_has_ended) {
-                online = false;
-            }
-
             if (delta.count() < FPSMAX) {
                 std::this_thread::sleep_for(
                         std::chrono::milliseconds(static_cast<int>(FPSMAX - delta.count())));
             }
         }
-        stop();
+        send_end_message_to_players();
+        lobby_queue.push(std::make_shared<SendFinishMatchMessage>());
+        while (online) {
+            // aca puede implementarse el scoreboard
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        }
     } catch (const std::exception& err) {
         if (online) {
             std::cerr << "An exception was caught in gameloop: " << err.what() << "\n";
@@ -116,7 +117,7 @@ void Match::run() {
 
 void Match::countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
                             const std::chrono::time_point<std::chrono::system_clock>& endTime) {
-    if (match_time != 0 && !match_has_ended) {
+    if (match_time != 0) {
         if (std::chrono::duration_cast<std::chrono::seconds>(endTime - runTime).count() >= 1) {
             match_time--;
             runTime = endTime;
@@ -226,8 +227,6 @@ void Match::revive_all_cheat() {
 //-------------------- Conection Methods -----------------
 
 void Match::add_player_to_game(const AddPlayerDTO& dto) {
-    players_connected++;
-
     Vector2D pos = get_random_spawn_point(player_spawn_points);
 
     auto player_resources_ptr =
@@ -282,51 +281,51 @@ void Match::add_player_to_game(const AddPlayerDTO& dto) {
 }
 
 void Match::send_end_message_to_players() {
-    //    auto game_ended_message = std::make_shared<SendFinishMatchMessage>();
-    //    client_monitor.broadcastClients(game_ended_message);
+    auto game_ended_message = std::make_shared<SendFinishMatchMessage>();
+    client_monitor.broadcastClients(game_ended_message);
 
-    auto close_connection_message = std::make_shared<CloseConnectionMessage>(CloseConnectionDTO());
-    client_monitor.broadcastClients(close_connection_message);
+    //        auto close_connection_message =
+    //        std::make_shared<CloseConnectionMessage>(CloseConnectionDTO());
+    //        client_monitor.broadcastClients(close_connection_message);
 }
 
 bool Match::has_match_ended() const { return match_has_ended; }
 
 void Match::stop() {
     online = false;
+//    send_end_message_to_players();
 #ifdef LOG_VERBOSE
     std::cout << "stopping match " << std::endl;
 #endif
-    //    event_queue->close();
-    send_end_message_to_players();
-    client_monitor.remove_all_queues();
     players.clear();
+    client_monitor.remove_all_queues();
 #ifdef LOG_VERBOSE
     std::cout << "clients cleared in match" << std::endl;
 #endif
 }
 
 GameStateDTO Match::create_actual_snapshot() {
-    GameStateDTO game_state{};
+    GameStateDTO game_state{};  // TODO memset
     game_state.seconds = (uint16_t)match_time % 60;
 
-    game_state.num_players = players.size();  // todo revise this
+    game_state.num_players = players.size();
     size_t i = 0;
-    for (auto& player_pair: players) {
-        game_state.players[i].id = player_pair.first;
+    for (auto player = players.begin(); player != players.end(); ++player) {
+        game_state.players[i].id = player->second->get_id();
         snprintf(game_state.players[i].name, sizeof(game_state.players[i].name), "%s",
-                 player_pair.second->get_name().c_str());
-        game_state.players[i].health = player_pair.second->get_health();
-        game_state.players[i].points = player_pair.second->get_points();
-        game_state.players[i].character = player_pair.second->get_character();
-        game_state.players[i].state = player_pair.second->get_state();
-        game_state.players[i].x_pos = player_pair.second->position.x;
-        game_state.players[i].y_pos = player_pair.second->position.y;
+                 player->second->get_name().c_str());
+        game_state.players[i].health = player->second->get_health();
+        game_state.players[i].points = player->second->get_points();
+        game_state.players[i].character = player->second->get_character();
+        game_state.players[i].state = player->second->get_state();
+        game_state.players[i].x_pos = player->second->position.x;
+        game_state.players[i].y_pos = player->second->position.y;
         for (size_t j = 0; j < NUM_OF_WEAPONS; ++j) {
-            game_state.players[i].weapons[j].ammo = player_pair.second->get_weapon(j)->get_ammo();
+            game_state.players[i].weapons[j].ammo = player->second->get_weapon(j)->get_ammo();
             game_state.players[i].weapons[j].is_empty =
-                    player_pair.second->get_weapon(j)->get_ammo() == 0 ? (uint8_t)1 : (uint8_t)0;
+                    player->second->get_weapon(j)->get_ammo() == 0 ? (uint8_t)1 : (uint8_t)0;
             game_state.players[i].weapons[j].weapon_name =
-                    (uint8_t)player_pair.second->get_weapon(j)->get_weapon_id();
+                    (uint8_t)player->second->get_weapon(j)->get_weapon_id();
         }
         ++i;
     }
@@ -491,15 +490,13 @@ void Match::delete_disconnected_player(id_client_t id_client) {
     std::unique_lock<std::mutex> lock(match_mutex);
     for (auto player = players.begin(); player != players.end(); ++player) {
         if (id_client == (*player).second->get_id()) {
-            CloseConnectionDTO dto{id_client};
-            collision_manager->remove_object(
-                    reinterpret_cast<const std::shared_ptr<CollisionObject>&>(*player));
+            //            collision_manager->remove_object(
+            //                    reinterpret_cast<const
+            //                    std::shared_ptr<CollisionObject>&>(*player));
             players.erase(player);
 #ifdef LOG_VERBOSE
             std::cout << "Player " << id_client << " disconnected from match " << std::endl;
 #endif
-            auto message = std::make_shared<CloseConnectionMessage>(dto);
-            lobby_queue.try_push(message);
             break;
         }
     }

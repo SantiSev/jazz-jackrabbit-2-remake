@@ -96,21 +96,26 @@ void CollisionManager::detect_colisions(std::shared_ptr<DynamicBody> obj) {
     }
 }
 
-void CollisionManager::handle_out_of_bounds(std::shared_ptr<DynamicBody> obj) {
+void CollisionManager::handle_out_of_bounds(
+        std::shared_ptr<DynamicBody> obj) {  // TODO refactor this :D
     if (obj->position.x < 0) {
         obj->position.x = 32;
         obj->velocity.x = 0;
+        obj->handle_out_of_bounds();
     } else if (obj->position.x + obj->get_hitbox_width() > grid_width) {
         obj->position.x = (grid_width - obj->get_hitbox_width() - 32);
         obj->velocity.x = 0;
+        obj->handle_out_of_bounds();
     }
 
     if (obj->position.y < 0) {
         obj->position.y = 32;
+        obj->handle_out_of_bounds();
 
     } else if (obj->position.y + obj->get_hitbox_height() > grid_height) {
         // set the position to the middle of the map
         obj->position.y = (grid_height - obj->get_hitbox_height() - 32);
+        obj->handle_out_of_bounds();
     }
 }
 

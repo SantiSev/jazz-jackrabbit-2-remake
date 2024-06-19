@@ -36,7 +36,7 @@ protected:
 
     uint16_t id;
     character_t character_reference;
-    _state state = STATE_IDLE_RIGHT;
+    state_t state = STATE_IDLE_RIGHT;
 
     // game logic info
 
@@ -48,7 +48,7 @@ protected:
 
 public:
     CharacterBody(size_t id, const character_t& character, int x, int y, int w, int h,
-                  Vector2D velocity, int health, _state state, int revive_cooldown);
+                  Vector2D velocity, int health, state_t state, int revive_cooldown);
 
 
     //------- Overrided Methods --------
@@ -60,7 +60,7 @@ public:
 
     uint16_t get_id();
     character_t get_character();
-    _state get_state();
+    state_t get_state();
     int get_health();
     bool is_dead();
 

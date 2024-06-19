@@ -48,10 +48,9 @@ private:
     EventLoop* event_loop;
     MessageRunner* message_runner;
     ClientThreadManager* thread_manager;
-
     std::shared_ptr<engine::SoundManager> sound_manager;
-
-    void pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_pool);
+  
+    void pre_load_resources();
 
     friend class ClientMessageHandler;
 

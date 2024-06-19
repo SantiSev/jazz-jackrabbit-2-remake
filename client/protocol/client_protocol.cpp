@@ -1,9 +1,9 @@
 #include "./client_protocol.h"
 
-#include <vector>
-
 #include <arpa/inet.h>
 #include <endian.h>
+
+#include "../../common/common_liberror.h"
 
 ClientProtocol::ClientProtocol(const std::string& hostname, const std::string& servname):
         CommonProtocol(hostname, servname) {}
@@ -66,26 +66,33 @@ std::shared_ptr<Message> ClientProtocol::recv_game_joined() {
 }
 
 std::shared_ptr<Message> ClientProtocol::recv_message() {
-    const uint16_t header = recv_two_bytes();
+    try {
+        const uint16_t header = recv_two_bytes();
 
-    switch (header) {
-        case CLOSE_CONNECTION:
-            return recv_closed_connection();
-        case SEND_FINISH_MATCH:
-            return recv_finish_match();
-        case SEND_GAME_STATE:
-            return recv_game_state();
-        case RECV_ACTIVE_GAMES:
-            return recv_active_games();
-        case SEND_GAME_CREATED:
-            return recv_game_created();
-        case ACPT_CONNECTION:
-            return recv_acpt_connection();
-        case SEND_GAME_JOINED:
-            return recv_game_joined();
-        default:
-            return std::make_shared<InvalidMessage>();
+        switch (header) {
+            case CLOSE_CONNECTION:
+                return recv_closed_connection();
+            case SEND_FINISH_MATCH:
+                return recv_finish_match();
+            case SEND_GAME_STATE:
+                return recv_game_state();
+            case RECV_ACTIVE_GAMES:
+                return recv_active_games();
+            case SEND_GAME_CREATED:
+                return recv_game_created();
+            case ACPT_CONNECTION:
+                return recv_acpt_connection();
+            case SEND_GAME_JOINED:
+                return recv_game_joined();
+            default:
+                return std::make_shared<InvalidMessage>();
+        }
+    } catch (const LibError& e) {
+        force_shutdown();
     }
+    return std::make_shared<InvalidMessage>();
 }
+
+bool ClientProtocol::is_closed() const { return was_closed; }
 
 ClientProtocol::~ClientProtocol() = default;
