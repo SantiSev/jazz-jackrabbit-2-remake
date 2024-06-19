@@ -12,7 +12,9 @@ EditorScene::EditorScene(engine::Window& window, EventLoop* event_loop,
         editor_running(editor_running),
         background(nullptr),
         tile_manager(resource_pool, event_loop, tiles),
-        hud(renderer, resource_pool, event_loop, tile_manager, menu_running, editor_running) {
+        hud(renderer, resource_pool, event_loop, tile_manager, menu_running, editor_running),
+        camera(window.get_width(), 576 - 32, 0, 1280, 0, 640),
+        controller(camera, event_loop) {
     load_background();
 }
 
@@ -32,7 +34,11 @@ void EditorScene::start() {
         window.clear();
         background->draw(renderer, it);
         for (auto& tile: tiles) {
-            tile.second->draw(renderer, it);
+            bool is_visible = camera.adjust_relative_position(*tile.second);
+            tile.second->visible.store(is_visible);
+            if (is_visible) {
+                tile.second->draw(renderer, it);
+            }
         }
         hud.draw(renderer, it);
         window.render();
@@ -65,4 +71,8 @@ void EditorScene::load_background() {
     background = std::make_unique<engine::Sprite>(texture, back_s_rect, back_d_rect);
 }
 
-EditorScene::~EditorScene() {}
+EditorScene::~EditorScene() {
+    for (auto& tile: tiles) {
+        event_loop->mouse.remove_on_click_signal_obj(tile.second.get());
+    }
+}

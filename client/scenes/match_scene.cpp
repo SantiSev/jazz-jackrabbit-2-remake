@@ -14,7 +14,7 @@ MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
         last_game_state(nullptr),
         match_running(match_running),
         map(std::make_shared<Map>(map_enum, resource_pool)),
-        camera(window.get_width(), window.get_height(), map->get_body().w, map->get_body().h),
+        camera(window.get_width(), window.get_height(), 0, map->get_body().w, 0, map->get_body().h),
         player_controller(message_handler) {
     // Blocking call to get first game state
     std::shared_ptr<GameStateDTO> first_state = game_state_q.pop();

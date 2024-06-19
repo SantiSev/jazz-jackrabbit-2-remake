@@ -3,9 +3,9 @@
 
 #include <atomic>
 #include <cmath>
-#include <map>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 #include <utility>
 
@@ -43,10 +43,10 @@ private:
     std::atomic<bool>& match_running;
 
     std::shared_ptr<Map> map;
-    std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> players;
-    std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> enemies;
-    std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> bullets;
-    std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> items;
+    std::unordered_map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> players;
+    std::unordered_map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> enemies;
+    std::unordered_map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> bullets;
+    std::unordered_map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> items;
     engine::Camera camera;
 
     PlayerController player_controller;

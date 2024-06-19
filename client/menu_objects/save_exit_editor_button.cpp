@@ -15,8 +15,8 @@ void SaveExitEditorButton::on_click() {
 #ifdef LOG
     std::cout << "Clicked save and exit button." << std::endl;
 #endif
-    editor_running.store(false);
     menu_running.store(true);
+    editor_running.store(false);
 }
 
 SaveExitEditorButton::~SaveExitEditorButton() = default;

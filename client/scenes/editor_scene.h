@@ -11,6 +11,8 @@
 #include "../../common/assets.h"
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/gui/basic/window.h"
+#include "../../game_engine/gui/camera.h"
+#include "../editor_objects/editor_controller.h"
 #include "../editor_objects/editor_tile.h"
 #include "../editor_objects/tile_manager.h"
 #include "../event_loop.h"
@@ -33,6 +35,8 @@ private:
     std::unordered_map<uint16_t, std::shared_ptr<EditorTile>> tiles;
     TileManager tile_manager;
     EditorHud hud;
+    engine::Camera camera;
+    EditorController controller;
 
     void load_background();
 

@@ -10,6 +10,7 @@
 
 #include "../../common/assets.h"
 #include "../../game_engine/gui/canvas_object.h"
+#include "../../game_engine/gui/widgets/color_rect.h"
 #include "../editor_objects/tile_manager.h"
 #include "../event_loop.h"
 #include "../menu_objects/save_exit_editor_button.h"
@@ -24,6 +25,7 @@ private:
     std::shared_ptr<engine::ResourcePool> resource_pool;
     TileManager& tile_manager;
 
+    engine::ColorRect background;
     std::list<Tile> tiles;
     std::unique_ptr<SaveExitEditorButton> save_and_exit_button;
 

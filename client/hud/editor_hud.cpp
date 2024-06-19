@@ -1,17 +1,18 @@
 #include "editor_hud.h"
 
-#define Y_BUTTON_START 10
+#define Y_BUTTON_START 555
 #define BUTTON_WIDTH 150
 #define BUTTON_HEIGHT 25
 
 EditorHud::EditorHud(SDL_Renderer* renderer, std::shared_ptr<engine::ResourcePool> resource_pool,
                      EventLoop* event_loop, TileManager& tile_manager,
                      std::atomic<bool>& menu_running, std::atomic<bool>& editor_running):
-        body({0, 0, 0, 0}),
+        body({0, 544, 800, 56}),
         renderer(renderer),
         event_loop(event_loop),
         resource_pool(resource_pool),
         tile_manager(tile_manager),
+        background({0, 0, 0, 128}, body),
         save_and_exit_button(nullptr) {
     create_buttons(menu_running, editor_running);
 }
