@@ -18,6 +18,10 @@ Window::Window(int width, int height, bool img_init, bool ttf_init): width(width
     if (ttf_init && TTF_Init() < 0) {
         throw SDLError("Error initializing SDL_ttf:" + std::string(TTF_GetError()));
     }
+
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        throw SDLError("Error initializing SDL_Mixer:" + std::string(Mix_GetError()));
+    }
 }
 
 void Window::clear() {
@@ -40,5 +44,6 @@ Window::~Window() {
     SDL_DestroyWindow(window);
     IMG_Quit();
     TTF_Quit();
+    Mix_CloseAudio();
     SDL_Quit();
 }
