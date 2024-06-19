@@ -108,7 +108,7 @@ void MatchScene::update_objects() {
                                     resource_pool, static_cast<bullet_type_t>(bullet.bullet_type),
                                     bullet.direction, bullet.x_pos, bullet.y_pos));
         bullets[bullet.id]->set_position(bullet.x_pos, bullet.y_pos);
-      // sound_manager->play_sound(SHOOT_SOUND, 0.5); // IDK if this works
+        // sound_manager->play_sound(SHOOT_SOUND, 0.5); // IDK if this works
     }
     // for (uint8_t i = 0; i < game_state->num_items; i++) {
     //     auto item = game_state->items[i];

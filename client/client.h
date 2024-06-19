@@ -49,7 +49,7 @@ private:
     MessageRunner* message_runner;
     ClientThreadManager* thread_manager;
     std::shared_ptr<engine::SoundManager> sound_manager;
-  
+
     void pre_load_resources();
 
     friend class ClientMessageHandler;
