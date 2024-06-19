@@ -41,6 +41,7 @@ public:
 
     void is_hovered(bool) override;
 
+    SDL_Rect& get_body() override;
     void set_position(int x, int y) override;
 
     std::string get_text();

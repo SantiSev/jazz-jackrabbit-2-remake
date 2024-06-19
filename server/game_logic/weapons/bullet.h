@@ -13,7 +13,7 @@
 #define OFFSET_BULLET_X 3
 #define BULLET_POINTS 10
 #define BULLET_BONUS_POINTS 50
-#define GOING_LEFT 0
+#define GOING_LEFT 0x00
 #define GOING_RIGHT 1
 
 class Player;
@@ -39,6 +39,8 @@ public:
     void update_body() override;
 
     void handle_colision(CollisionObject* other) override;
+
+    void print_info() override;
 };
 
 

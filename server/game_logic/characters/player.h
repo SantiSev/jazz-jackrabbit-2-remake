@@ -16,8 +16,6 @@
 #include "character.h"
 
 // player config
-#define PLAYER_WIDTH 50
-#define PLAYER_HEIGHT 50
 #define MAX_FALL_SPEED 10
 
 class Weapon;
@@ -31,11 +29,13 @@ private:
     CollisionManager& collision_manager;
     bool is_knocked_back = false;
     bool is_intoxicated = false;
-    size_t special_cooldown = 0;
-    size_t intoxication_cooldown = INTOXICATON_COOLDOWN;
+    int special_cooldown = 0;
+    int intoxication_cooldown = INTOXICATON_COOLDOWN;
+    int invincibility_cooldown = INVINCIBILITY_COOLDOWN;
+    bool is_invincible = false;
 
 public:
-    Player(uint16_t id, std::string name, const character_t& character, int x, int y,
+    Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w, int h,
            CollisionManager& collision_manager);
 
     //------- Overrided Methods --------
@@ -45,6 +45,7 @@ public:
     void knockback(int force) override;
     void print_info() override;
     void revive(Vector2D new_position) override;
+    void take_damage(int damage) override;
 
     //------- Getters --------
 
@@ -104,6 +105,10 @@ public:
         }
         weapons.clear();
     }
+
+    void activate_cheat_command(cheat_command_t command);
+
+    void change_invincibility_cheat();
 };
 
 #endif

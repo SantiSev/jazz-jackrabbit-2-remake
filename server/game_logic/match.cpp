@@ -28,7 +28,7 @@ Match::Match(const map_list_t& map_selected, size_t required_players_setting,
         match_queue(Queue<std::shared_ptr<Message>>()) {
     load_enviorment(map_selected);
     load_spawn_points();
-    initiate_enemies();
+    initiate_enemies({character_t::MAD_HATTER, character_t::LIZARD_GOON});
 }
 
 void Match::run() {
@@ -63,9 +63,6 @@ void Match::run() {
 
                 events++;
                 if (message) {
-#ifdef LOG_VERBOSE
-                    std::cout << "message received about to being runned" << std::endl;
-#endif
                     message->run(message_handler);
                 }
             }
@@ -76,6 +73,16 @@ void Match::run() {
             respawn_enemies();
             respawn_players();
             respawn_items();
+
+#ifdef LOG_VERBOSE
+            for (auto& enemy: enemies) {
+                enemy->print_info();
+            }
+
+            for (auto& player: players) {
+                player.second->print_info();
+            }
+#endif
 
             countdown_match(runTime, endTime);
 
@@ -113,10 +120,10 @@ void Match::countdown_match(std::chrono::time_point<std::chrono::system_clock>& 
         if (std::chrono::duration_cast<std::chrono::seconds>(endTime - runTime).count() >= 1) {
             match_time--;
             runTime = endTime;
-            size_t minutes = match_time / 60;
-            size_t seconds = match_time % 60;
-            std::cout << "Time Remaining: " << std::setw(2) << std::setfill('0') << minutes << ":"
-                      << std::setw(2) << std::setfill('0') << seconds << std::endl;
+            // size_t minutes = match_time / 60;
+            // size_t seconds = match_time % 60;
+            // std::cout << "Time Remaining: " << std::setw(2) << std::setfill('0') << minutes <<
+            // ":" << std::setw(2) << std::setfill('0') << seconds << std::endl;
         }
     } else {
         if (!match_has_ended) {
@@ -128,14 +135,8 @@ void Match::countdown_match(std::chrono::time_point<std::chrono::system_clock>& 
 }
 
 void Match::run_command(const CommandDTO& dto) {
-#ifdef LOG_VERBOSE
-    std::cout << "Running command with id " << dto.id_player << "" << std::endl;
-#endif
     std::shared_ptr<Player> player = get_player(dto.id_player);
     if (player) {
-#ifdef LOG_VERBOSE
-        std::cout << dto.id_player << "says: " << command_to_string.at(dto.command) << std::endl;
-#endif
         player->execute_command(dto.command);
     }
 }
@@ -143,15 +144,29 @@ void Match::run_command(const CommandDTO& dto) {
 void Match::respawn_players() {
     for (auto& pair: players) {
         auto& player = pair.second;
-        if (player->try_revive()) {
-            player->revive(player->position);
+        if (player->try_revive() || cheat_revive_enabled) {
+
+            bool can_be_placed = false;
+            Vector2D new_position = get_random_spawn_point(player_spawn_points);
+            while (!can_be_placed) {
+                can_be_placed = collision_manager->can_be_placed(
+                        player, new_position);  // chequeo si la posicion es valida
+                if (!can_be_placed) {
+                    new_position = get_random_spawn_point(player_spawn_points);
+                }
+            }
+
+            player->revive(get_random_spawn_point(player_spawn_points));
+            collision_manager->track_dynamic_body(player);
         }
     }
 }
 void Match::respawn_enemies() {
     for (auto& enemy: enemies) {
-        if (enemy->try_revive()) {
-            enemy->revive(enemy.get()->spawn_position);
+        if (enemy->try_revive() || cheat_revive_enabled) {
+            std::cout << "| ENEMY respawned with ID:" << enemy->get_id() << " |" << std::endl;
+            enemy->revive(enemy.get()->spawn_position);  // TODO set to random spawn position
+            collision_manager->track_dynamic_body(enemy);
         }
     }
 }
@@ -159,33 +174,111 @@ void Match::respawn_enemies() {
 void Match::respawn_items() {
     for (auto& item: items) {
         if (item->try_respawn()) {
+            std::cout << "Item respawned" << std::endl;
             item->respawn(item.get()->position);
+            collision_manager->track_dynamic_body(item);
         }
     }
 }
 
-Vector2D Match::select_player_spawn_point() {
+Vector2D Match::get_random_spawn_point(std::vector<Vector2D> const& spawnpoints) {
+    if (spawnpoints.empty()) {
+        throw std::runtime_error("No spawn points found in map.");
+    }
     int i = rand() % player_spawn_points.size();
     return player_spawn_points[i];
 }
 
+void Match::run_cheat_command(const CheatCommandDTO& dto) {
+    if (dto.command == CHEAT_KILL_ALL) {
+        kill_all_cheat();
+    } else if (dto.command == CHEAT_REVIVE_ALL) {
+        revive_all_cheat();
+    } else if (dto.command == CHEAT_REVIVE) {
+        std::shared_ptr<Player> player = get_player(dto.id_player);
+        if (player) {
+            player->revive(get_random_spawn_point(player_spawn_points));
+        }
+    } else {
+        std::shared_ptr<Player> player = get_player(dto.id_player);
+        if (player) {
+            player->activate_cheat_command(dto.command);
+        }
+    }
+}
+
+void Match::kill_all_cheat() {
+    for (auto& enemy: enemies) {
+        enemy->take_damage(9999);
+    }
+    for (auto& player: players) {
+        player.second->take_damage(9999);
+    }
+}
+
+void Match::revive_all_cheat() {
+    cheat_revive_enabled = true;
+    respawn_enemies();
+    respawn_players();
+    cheat_revive_enabled = false;
+}
 
 //-------------------- Conection Methods -----------------
 
 void Match::add_player_to_game(const AddPlayerDTO& dto) {
     players_connected++;
 
-    Vector2D pos = select_player_spawn_point();
-    auto new_player = std::make_shared<Player>(dto.id_client, dto.name, dto.player_character, pos.x,
-                                               pos.y, *collision_manager);
-    collision_manager->track_dynamic_body(new_player);
+    Vector2D pos = get_random_spawn_point(player_spawn_points);
+
+    auto player_resources_ptr =
+            resource_pool->get_yaml(map_character_enum_to_string.at(dto.player_character));
+
+    if (!player_resources_ptr || player_resources_ptr->IsNull()) {
+        std::cerr << "Error loading yaml file" << std::endl;
+        exit(1);
+    }
+
+    int player_width = (*player_resources_ptr)["body_width"].as<int>();
+    int player_height = (*player_resources_ptr)["body_height"].as<int>();
+
+    switch (dto.player_character) {
+        case JAZZ_CHARACTER: {
+
+            auto jazz_player =
+                    std::make_shared<Jazz>(dto.id_client, dto.name, pos.x, pos.y, player_width,
+                                           player_height, *collision_manager);
+            collision_manager->track_dynamic_body(jazz_player);
+            players[dto.id_client] = jazz_player;
+            break;
+        }
+        case SPAZ_CHARACTER: {
+
+            auto spaz_player =
+                    std::make_shared<Spaz>(dto.id_client, dto.name, pos.x, pos.y, player_width,
+                                           player_height, *collision_manager);
+            collision_manager->track_dynamic_body(spaz_player);
+            players[dto.id_client] = spaz_player;
+            break;
+        }
+        case LORI_CHARACTER: {
+
+            auto lori_player =
+                    std::make_shared<Lori>(dto.id_client, dto.name, pos.x, pos.y, player_width,
+                                           player_height, *collision_manager);
+            collision_manager->track_dynamic_body(lori_player);
+            players[dto.id_client] = lori_player;
+            break;
+        }
+        default:
+            std::cerr << "Invalid character" << std::endl;
+            break;
+    }
+
 
 #ifdef LOG_VERBOSE
     std::cout << "Player connected: " << dto.id_client << "is playing as "
               << map_character_enum_to_string.at(dto.player_character) << std::endl;
 #endif
-
-    players[dto.id_client] = new_player;
 }
 
 void Match::send_end_message_to_players() {
@@ -215,10 +308,8 @@ void Match::stop() {
 GameStateDTO Match::create_actual_snapshot() {
     GameStateDTO game_state{};
     game_state.seconds = (uint16_t)match_time % 60;
-    game_state.num_players = players.size();
-    game_state.num_enemies = enemies.size();
-    game_state.num_bullets = bullets.size();
 
+    game_state.num_players = players.size();  // todo revise this
     size_t i = 0;
     for (auto& player_pair: players) {
         game_state.players[i].id = player_pair.first;
@@ -239,21 +330,35 @@ GameStateDTO Match::create_actual_snapshot() {
         }
         ++i;
     }
-    for (size_t j = 0; j < enemies.size(); ++j) {
-        game_state.enemies[j].id = enemies[j]->get_id();
-        game_state.enemies[j].state = enemies[j]->get_state();
-        game_state.enemies[j].character = enemies[j]->get_character();
-        game_state.enemies[j].x_pos = enemies[j]->position.x;
-        game_state.enemies[j].y_pos = enemies[j]->position.y;
-    }
-    for (size_t k = 0; k < bullets.size(); ++k) {
-        game_state.bullets[k].id = bullets[k]->get_id();
-        game_state.bullets[k].direction = bullets[k]->get_direction();
-        game_state.bullets[k].bullet_type = bullets[k]->get_type();
-        game_state.bullets[k].x_pos = bullets[k]->position.x;
-        game_state.bullets[k].y_pos = bullets[k]->position.y;
+
+    game_state.num_enemies = 0;
+    for (const auto& enemy: enemies) {
+        if (!enemy->is_dead()) {
+            auto& enemy_state = game_state.enemies[game_state.num_enemies];
+            enemy_state.id = enemy->get_id();
+            enemy_state.state = enemy->get_state();
+            enemy_state.character = enemy->get_character();
+            enemy_state.x_pos = enemy->position.x;
+            enemy_state.y_pos = enemy->position.y;
+            game_state.num_enemies++;
+        }
     }
 
+    game_state.num_bullets = 0;
+    collision_manager->iterateDynamicBodies(
+            [&game_state](const std::shared_ptr<DynamicBody>& body) {
+                auto bullet = std::dynamic_pointer_cast<Bullet>(body);
+
+                if (bullet) {
+
+                    game_state.bullets[game_state.num_bullets].id = bullet->get_id();
+                    game_state.bullets[game_state.num_bullets].direction = bullet->get_direction();
+                    game_state.bullets[game_state.num_bullets].bullet_type = bullet->get_type();
+                    game_state.bullets[game_state.num_bullets].x_pos = bullet->position.x;
+                    game_state.bullets[game_state.num_bullets].y_pos = bullet->position.y;
+                    game_state.num_bullets++;
+                }
+            });
     return game_state;
 }
 
@@ -305,6 +410,7 @@ void Match::load_enviorment(map_list_t selected_map) {
             }
         }
     }
+
 #ifdef LOG
     std::cout << "Map loaded!" << std::endl;
 #endif
@@ -319,34 +425,63 @@ void Match::load_spawn_points() {
         exit(1);
     }
 
-    for (auto obj: yaml["player_spawnpoints"]) {
-        auto x = obj["x"].as<int>();
-        auto y = obj["y"].as<int>();
-        player_spawn_points.emplace_back(x, y);
-    }
+    std::transform(yaml["player_spawnpoints"].begin(), yaml["player_spawnpoints"].end(),
+                   std::back_inserter(player_spawn_points), [](const YAML::Node& sp) {
+                       return Vector2D(sp["x"].as<int>(), sp["y"].as<int>());
+                   });
 
-    for (auto obj: yaml["enemy_spawnpoints"]) {
-        auto x = obj["x"].as<int>();
-        auto y = obj["y"].as<int>();
-        enemy_spawn_points.emplace_back(x, y);
-    }
+    std::transform(yaml["enemy_spawnpoints"].begin(), yaml["enemy_spawnpoints"].end(),
+                   std::back_inserter(enemy_spawn_points), [](const YAML::Node& sp) {
+                       return Vector2D(sp["x"].as<int>(), sp["y"].as<int>());
+                   });
 }
 
 
-void Match::initiate_enemies() {
-    int i = 1;
+void Match::initiate_enemies(std::vector<character_t> enemy_types) {
+
+    // create a hashmap that stores vector of size 4
+    std::map<character_t, std::vector<int>> get_wh;
+
+    std::transform(enemy_types.begin(), enemy_types.end(), std::inserter(get_wh, get_wh.end()),
+                   [&](const character_t& enemy_type) -> std::pair<character_t, std::vector<int>> {
+                       auto enemy_resources_ptr =
+                               resource_pool->get_yaml(map_character_enum_to_string.at(enemy_type));
+                       if (!enemy_resources_ptr || enemy_resources_ptr->IsNull()) {
+                           std::cerr << "Error loading yaml file" << std::endl;
+                           exit(1);
+                       }
+                       const auto& enemy_resources = *enemy_resources_ptr;
+                       return {enemy_type,
+                               {enemy_resources["body_width"].as<int>(),
+                                enemy_resources["body_height"].as<int>()}};
+                   });
+
+    // this is to avoid having the same id as a player, i doubt we will have 100 players, in the
+    // future we can change this to a more robust solution
+    int i = 0;
     if (enemy_spawn_points.empty()) {
         throw std::runtime_error("No enemy spawn points found in map.");
     }
+
     for (auto& spawn_point: enemy_spawn_points) {
-        if (i % 2 == 0) {
-            auto lizard_goon = std::make_shared<LizardGoon>(i, spawn_point.x, spawn_point.y);
+
+        character_t current_enemy_type = enemy_types[i % enemy_types.size()];
+
+
+        if (current_enemy_type == LIZARD_GOON) {
+            auto lizard_goon =
+                    std::make_shared<LizardGoon>(i, spawn_point.x, spawn_point.y,
+                                                 get_wh[LIZARD_GOON][0], get_wh[LIZARD_GOON][1]);
             collision_manager->track_dynamic_body(lizard_goon);
             enemies.emplace_back(lizard_goon);
-        } else {
-            auto mad_hatter = std::make_shared<MadHatter>(i, spawn_point.x, spawn_point.y);
+        } else if (current_enemy_type == MAD_HATTER) {
+            auto mad_hatter = std::make_shared<MadHatter>(
+                    i, spawn_point.x, spawn_point.y, get_wh[MAD_HATTER][0], get_wh[MAD_HATTER][1]);
             collision_manager->track_dynamic_body(mad_hatter);
             enemies.emplace_back(mad_hatter);
+
+        } else {
+            throw std::runtime_error("Invalid enemy type");
         }
         i++;
     }

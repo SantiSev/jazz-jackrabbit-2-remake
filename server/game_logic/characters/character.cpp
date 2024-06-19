@@ -6,13 +6,14 @@
 #include "../../../common/character_enum.h"
 
 CharacterBody::CharacterBody(size_t id, const character_t& character, int x, int y, int w, int h,
-                             Vector2D velocity, int health, uint8_t state, size_t revive_cooldown):
+                             Vector2D velocity, int health, _state state, int revive_cooldown):
         DynamicBody(x, y, w, h, Vector2D(velocity)),
         id(id),
         character_reference(character),
         state(state),
         health(health),
-        revive_cooldown(revive_cooldown) {}
+        revive_cooldown(revive_cooldown),
+        revive_counter(revive_cooldown) {}
 
 //------- Getters --------
 
@@ -20,7 +21,7 @@ uint16_t CharacterBody::get_id() { return id; }
 
 character_t CharacterBody::get_character() { return character_reference; }
 
-uint8_t CharacterBody::get_state() { return state; }
+_state CharacterBody::get_state() { return state; }
 
 int CharacterBody::get_health() { return health; }
 
@@ -58,18 +59,18 @@ bool CharacterBody::try_revive() {
         return false;
     }
 
-    if (revive_cooldown == NONE && !is_active_object()) {
+    if (revive_counter == NONE && !is_active_object()) {
         set_active_status(true);
+        revive_counter = revive_cooldown;
         return true;
     } else {
-        this->revive_cooldown--;
+        this->revive_counter--;
         return false;
     }
 }
 
 void CharacterBody::revive(Vector2D new_position) {
     this->health = MAX_HEALTH;
-    this->revive_cooldown = REVIVE_COOLDOWN;
     this->state = STATE_IDLE_RIGHT;
     position = new_position;
 }

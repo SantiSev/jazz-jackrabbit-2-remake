@@ -14,6 +14,7 @@
 #include "../common/assets.h"
 #include "../common/character_enum.h"
 #include "../common/common_queue.h"
+#include "../common/item_enum.h"
 #include "../common/map_enum.h"
 #include "../common/sfx_enum.h"
 #include "../common/sound_enum.h"

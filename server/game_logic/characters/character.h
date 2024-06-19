@@ -27,25 +27,28 @@
 #define LEFT_DIR -1
 #define RIGHT_DIR 1
 #define REVIVE_COOLDOWN 1000
+#define INVINCIBILITY_COOLDOWN 3000
 
 class CharacterBody: public DynamicBody {
+
 protected:
     // dto info
 
     uint16_t id;
     character_t character_reference;
-    uint8_t state = STATE_IDLE_RIGHT;  // estado del personaje TODO: cambiar a enum
+    _state state = STATE_IDLE_RIGHT;
 
     // game logic info
 
     int health;
-    int revive_cooldown = REVIVE_COOLDOWN;
+    int revive_cooldown;
     bool on_floor = true;
     int direction = RIGHT_DIR;
+    int revive_counter = revive_cooldown;
 
 public:
     CharacterBody(size_t id, const character_t& character, int x, int y, int w, int h,
-                  Vector2D velocity, int health, uint8_t state, size_t revive_cooldown);
+                  Vector2D velocity, int health, _state state, int revive_cooldown);
 
 
     //------- Overrided Methods --------
@@ -57,7 +60,7 @@ public:
 
     uint16_t get_id();
     character_t get_character();
-    uint8_t get_state();
+    _state get_state();
     int get_health();
     bool is_dead();
 
