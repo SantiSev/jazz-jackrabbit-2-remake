@@ -41,6 +41,8 @@ public:
     void handle_colision(CollisionObject* other) override;
 
     void print_info() override;
+
+    void handle_out_of_bounds() override;
 };
 
 

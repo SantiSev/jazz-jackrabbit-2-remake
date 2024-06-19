@@ -227,8 +227,6 @@ void Match::revive_all_cheat() {
 //-------------------- Conection Methods -----------------
 
 void Match::add_player_to_game(const AddPlayerDTO& dto) {
-    players_connected++;
-
     Vector2D pos = get_random_spawn_point(player_spawn_points);
 
     auto player_resources_ptr =
@@ -307,27 +305,27 @@ void Match::stop() {
 }
 
 GameStateDTO Match::create_actual_snapshot() {
-    GameStateDTO game_state{};
+    GameStateDTO game_state{};  // TODO memset
     game_state.seconds = (uint16_t)match_time % 60;
 
-    game_state.num_players = players.size();  // todo revise this
+    game_state.num_players = players.size();
     size_t i = 0;
-    for (auto& player_pair: players) {
-        game_state.players[i].id = player_pair.first;
+    for (auto player = players.begin(); player != players.end(); ++player) {
+        game_state.players[i].id = player->second->get_id();
         snprintf(game_state.players[i].name, sizeof(game_state.players[i].name), "%s",
-                 player_pair.second->get_name().c_str());
-        game_state.players[i].health = player_pair.second->get_health();
-        game_state.players[i].points = player_pair.second->get_points();
-        game_state.players[i].character = player_pair.second->get_character();
-        game_state.players[i].state = player_pair.second->get_state();
-        game_state.players[i].x_pos = player_pair.second->position.x;
-        game_state.players[i].y_pos = player_pair.second->position.y;
+                 player->second->get_name().c_str());
+        game_state.players[i].health = player->second->get_health();
+        game_state.players[i].points = player->second->get_points();
+        game_state.players[i].character = player->second->get_character();
+        game_state.players[i].state = player->second->get_state();
+        game_state.players[i].x_pos = player->second->position.x;
+        game_state.players[i].y_pos = player->second->position.y;
         for (size_t j = 0; j < NUM_OF_WEAPONS; ++j) {
-            game_state.players[i].weapons[j].ammo = player_pair.second->get_weapon(j)->get_ammo();
+            game_state.players[i].weapons[j].ammo = player->second->get_weapon(j)->get_ammo();
             game_state.players[i].weapons[j].is_empty =
-                    player_pair.second->get_weapon(j)->get_ammo() == 0 ? (uint8_t)1 : (uint8_t)0;
+                    player->second->get_weapon(j)->get_ammo() == 0 ? (uint8_t)1 : (uint8_t)0;
             game_state.players[i].weapons[j].weapon_name =
-                    (uint8_t)player_pair.second->get_weapon(j)->get_weapon_id();
+                    (uint8_t)player->second->get_weapon(j)->get_weapon_id();
         }
         ++i;
     }
