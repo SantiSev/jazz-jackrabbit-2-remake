@@ -16,7 +16,8 @@ void SoundEffect::play_sound(int loops) {
 
     this->channel = Mix_PlayChannel(-1, sound, loops);
     if (this->channel < 0) {
-        throw SDLError("Error playing channel: " + std::string(Mix_GetError()));
+        // throw SDLError("Error playing channel (Sound effect): " + std::string(Mix_GetError()));
+        return;
     }
 }
 

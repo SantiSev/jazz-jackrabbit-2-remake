@@ -9,11 +9,14 @@
 typedef enum: uint8_t {
     BACKGROUND = 0x00,
     SHOOT_SOUND = 0x01,
+    DEAD_ENEMY_SOUND = 0x02,
+    DEAD_PLAYER_SOUND = 0x03,
 } sound_type_t;
 
 const std::map<sound_type_t, std::string> sound_to_string = {
         {BACKGROUND, "assets/sounds/background"},
         {SHOOT_SOUND, "assets/sounds/shoot"},
-};
+        {DEAD_ENEMY_SOUND, "assets/sounds/dead_enemy"},
+        {DEAD_PLAYER_SOUND, "assets/sounds/dead_player"}};
 
 #endif

@@ -143,6 +143,7 @@ void MatchScene::destroy_untracked_objects() {
             // If the player is not in the tracked players set, erase them
             if (tracked_players.find(it->first) == tracked_players.end()) {
                 it = players.erase(it);
+                // sound_manager->play_sound(DEAD_PLAYER_SOUND, 1);
             } else {
                 ++it;
             }
@@ -161,6 +162,7 @@ void MatchScene::destroy_untracked_objects() {
             // If the enemy is not in the tracked enemies set, erase them
             if (tracked_enemies.find(it->first) == tracked_enemies.end()) {
                 it = enemies.erase(it);
+                // sound_manager->play_sound(DEAD_ENEMY_SOUND, 1);
             } else {
                 ++it;
             }

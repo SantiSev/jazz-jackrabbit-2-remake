@@ -15,7 +15,7 @@ void Music::play_sound(int loops) {
     }
 
     if (Mix_PlayMusic(sound, loops) < 0) {
-        throw SDLError("Error playing channel: " + std::string(Mix_GetError()));
+        throw SDLError("Error playing channel (Music): " + std::string(Mix_GetError()));
     }
 }
 

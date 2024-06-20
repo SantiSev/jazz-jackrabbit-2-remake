@@ -24,13 +24,13 @@ void Client::start() {
                          message_handler);
     event_loop->start();
 
-    sound_manager->play_sound(BACKGROUND, 0.5);
+    sound_manager->play_sound(BACKGROUND, 0.15);
 
     while (game_running) {
         menu_scene.start();
         if (match_running && map_enum != NO_MAP) {
-            MatchScene match_scene(window, event_loop, resource_pool, sound_manager, match_running, id_client,
-                                   message_handler, map_enum);
+            MatchScene match_scene(window, event_loop, resource_pool, sound_manager, match_running,
+                                   id_client, message_handler, map_enum);
             match_scene.start();
         }
         // TODO Level editor
@@ -67,6 +67,8 @@ void Client::pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_
     // Sounds
     resource_pool->load_music(sound_to_string.at(BACKGROUND));
     resource_pool->load_sound_effect(sound_to_string.at(SHOOT_SOUND));
+    resource_pool->load_sound_effect(sound_to_string.at(DEAD_ENEMY_SOUND));
+    resource_pool->load_sound_effect(sound_to_string.at(DEAD_PLAYER_SOUND));
 }
 
 Client::~Client() {
