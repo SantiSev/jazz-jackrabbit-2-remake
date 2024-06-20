@@ -109,7 +109,7 @@ void MatchScene::update_objects() {
                                    bullet.direction, bullet.x_pos, bullet.y_pos));
         if (inserted) {
             std::cout << "Shoot sound" << std::endl;
-            sound_manager->play_sound(SHOOT_SOUND, 0.5);
+            sound_manager->play_sound(SHOOT_SOUND, 0.75);
         }
         bullets[bullet.id]->set_position(bullet.x_pos, bullet.y_pos);
     }
