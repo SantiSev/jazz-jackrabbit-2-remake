@@ -16,7 +16,6 @@ class SoundEffect: public Sound {
 private:
     Mix_Chunk* sound;
     int channel;
-    bool is_playing;
 
 public:
     explicit SoundEffect(const std::string& file);
