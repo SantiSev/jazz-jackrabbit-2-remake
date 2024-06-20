@@ -163,7 +163,7 @@ struct GameStateDTO {
     uint8_t num_bullets;
     PlayerDTO players[MAX_PLAYERS];
     EnemyDTO enemies[MAX_ENEMIES];
-    BulletDTO bullets[50 * MAX_PLAYERS];
+    BulletDTO bullets[75 * MAX_PLAYERS];
     uint16_t seconds;
 } __attribute__((packed));
 

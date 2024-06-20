@@ -43,7 +43,7 @@ public:
                 return std::make_shared<HealthIcon>(resource_pool, x, y);
                 break;
             default:
-                throw std::invalid_argument("Invalid character enum");
+                throw std::invalid_argument("in item factory:Invalid character enum");
         }
     }
 };

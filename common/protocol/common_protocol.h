@@ -16,7 +16,7 @@ protected:
     Socket skt;
     bool was_closed;
 
-    const uint16_t recv_two_bytes();
+    uint16_t recv_two_bytes();
     void send_header(const uint16_t header);
 
 public:

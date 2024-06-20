@@ -76,3 +76,9 @@ void Bullet::print_info() {
     std::cout << "bullet pos: " << (int)position.x << "," << (int)position.y << std::endl;
     std::cout << "+++++++++++++++++++++++++++++++++++++++++++" << std::endl;
 }
+
+void Bullet::handle_out_of_bounds() {
+    if (is_active_object()) {
+        set_active_status(false);
+    }
+}

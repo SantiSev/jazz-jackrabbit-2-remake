@@ -2,12 +2,14 @@
 
 MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
                        std::shared_ptr<engine::ResourcePool> resource_pool,
+                       std::shared_ptr<engine::SoundManager> sound_manager,
                        std::atomic<bool>& match_running, std::atomic<id_client_t>& id_client,
                        ClientMessageHandler& message_handler, map_list_t map_enum):
         id_client(id_client),
         window(window),
         renderer(window.get_renderer()),
         resource_pool(resource_pool),
+        sound_manager(sound_manager),
         event_loop(event_loop),
         message_handler(message_handler),
         game_state_q(message_handler.game_state_q),
@@ -106,6 +108,7 @@ void MatchScene::update_objects() {
                                     resource_pool, static_cast<bullet_type_t>(bullet.bullet_type),
                                     bullet.direction, bullet.x_pos, bullet.y_pos));
         bullets[bullet.id]->set_position(bullet.x_pos, bullet.y_pos);
+        // sound_manager->play_sound(SHOOT_SOUND, 0.5); // IDK if this works
     }
     // for (uint8_t i = 0; i < game_state->num_items; i++) {
     //     auto item = game_state->items[i];
@@ -168,7 +171,6 @@ void MatchScene::destroy_untracked_objects() {
             tracked_bullets.insert(
                     last_game_state->bullets[i].id);  // Assuming Bullet class has an 'id' attribute
         }
-
         for (auto it = bullets.begin(); it != bullets.end();) {
             // If the bullet is not in the tracked bullets set, erase them
             if (tracked_bullets.find(it->first) == tracked_bullets.end()) {

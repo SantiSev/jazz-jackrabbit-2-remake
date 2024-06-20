@@ -14,7 +14,7 @@ CommonProtocol::CommonProtocol(Socket&& skt): skt(std::move(skt)), was_closed(fa
 CommonProtocol::CommonProtocol(const std::string& hostname, const std::string& servname):
         skt(hostname.c_str(), servname.c_str()), was_closed(false) {}
 
-const uint16_t CommonProtocol::recv_two_bytes() {  // TODO handle receive socket closed
+uint16_t CommonProtocol::recv_two_bytes() {
     uint16_t two_bytes;
 
     skt.recvall(&two_bytes, sizeof(two_bytes), &was_closed);
@@ -96,7 +96,10 @@ void CommonProtocol::send_game_state(const uint16_t header, GameStateDTO& game_s
     skt.sendall(&game_state, sizeof(game_state), &was_closed);
 }
 
-void CommonProtocol::send_finish_match(const uint16_t header) { send_header(header); }
+void CommonProtocol::send_finish_match(const uint16_t header) {
+    std::cout << "sending finish match" << std::endl;
+    send_header(header);
+}
 
 void CommonProtocol::send_request_active_games(const uint16_t header,
                                                RequestActiveGamesDTO& active_games) {
