@@ -11,23 +11,25 @@
 
 #include <SDL2/SDL.h>
 
-#include "../../common/assets.h"
+//#include "../../common/assets.h"
 #include "../../common/character_enum.h"
 #include "../../common/common_constants.h"
 #include "../../common/common_queue.h"
 #include "../../common/item_enum.h"
 #include "../../common/protocol/common_dto.h"
-#include "../../game_engine/gui/basic/resource_pool.h"
-#include "../../game_engine/gui/basic/window.h"
+//#include "../../game_engine/gui/basic/resource_pool.h"
+//#include "../../game_engine/gui/basic/window.h"
 #include "../../game_engine/gui/camera.h"
 #include "../../game_engine/gui/widgets/animated_sprite.h"
 #include "../../game_engine/gui/widgets/sound_manager.h"
-#include "../event_loop.h"
+//#include "../event_loop.h"
 #include "../game_objects/bullet_factory.h"
 #include "../game_objects/character_factory.h"
 #include "../game_objects/item_factory.h"
 #include "../game_objects/map.h"
 #include "../game_objects/player_controller.h"
+
+#include "score_scene.h"
 
 class MatchScene {
 private:
@@ -43,6 +45,7 @@ private:
     std::shared_ptr<GameStateDTO> last_game_state;
 
     std::atomic<bool>& match_running;
+    std::atomic<bool>& menu_running;
 
     std::shared_ptr<Map> map;
     std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> players;
@@ -61,8 +64,9 @@ public:
     MatchScene(engine::Window& window, EventLoop* event_loop,
                std::shared_ptr<engine::ResourcePool> resource_pool,
                std::shared_ptr<engine::SoundManager> sound_manager,
-               std::atomic<bool>& match_running, std::atomic<id_client_t>& id_client,
-               ClientMessageHandler& message_handler, map_list_t map_enum);
+               std::atomic<bool>& match_running, std::atomic<bool>& menu_running,
+               ClientMessageHandler& message_handler, map_list_t map_enum,
+               std::atomic<id_client_t>& id_client);
 
     // cant copy
     MatchScene(const MatchScene&) = delete;

@@ -26,7 +26,7 @@ public:
     engine::Mouse mouse;
 
     explicit EventLoop(std::atomic<bool>& game_running, std::atomic<bool>& menu_running,
-                       std::atomic<bool>& match_running, ClientMessageHandler& message_handler);
+                       ClientMessageHandler& message_handler, std::atomic<bool>& match_running);
 
     void run() override;
 

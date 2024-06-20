@@ -3,8 +3,9 @@
 MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
                        std::shared_ptr<engine::ResourcePool> resource_pool,
                        std::shared_ptr<engine::SoundManager> sound_manager,
-                       std::atomic<bool>& match_running, std::atomic<id_client_t>& id_client,
-                       ClientMessageHandler& message_handler, map_list_t map_enum):
+                       std::atomic<bool>& match_running, std::atomic<bool>& menu_running,
+                       ClientMessageHandler& message_handler, map_list_t map_enum,
+                       std::atomic<id_client_t>& id_client):
         id_client(id_client),
         window(window),
         renderer(window.get_renderer()),
@@ -15,6 +16,7 @@ MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
         game_state_q(message_handler.game_state_q),
         last_game_state(nullptr),
         match_running(match_running),
+        menu_running(menu_running),
         map(std::make_shared<Map>(map_enum, resource_pool)),
         camera(window.get_width(), window.get_height(), map->get_body().w, map->get_body().h),
         player_controller(message_handler) {
@@ -60,6 +62,10 @@ void MatchScene::start() {
         frame_start += rate;
         it++;
     }
+    std::atomic<bool> scoreboard_running = true;
+    ScoreScene score_scene(window, event_loop, resource_pool, menu_running, scoreboard_running,
+                           message_handler, last_game_state);
+    score_scene.start();
 }
 
 void MatchScene::update_objects() {

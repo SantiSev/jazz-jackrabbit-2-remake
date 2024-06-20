@@ -52,6 +52,9 @@ void MatchesManager::run() {
 }
 
 void MatchesManager::create_new_match(const CreateGameDTO& dto) {
+    if (get_client_by_id(dto.id_client)->get_current_match_id() != 0) {
+        return;
+    }
     matches_number++;
 
     auto new_monitor = new ClientMonitor();
@@ -82,6 +85,9 @@ void MatchesManager::send_client_succesful_connect(const uint16_t& id_client,
 }
 
 void MatchesManager::join_match(const JoinMatchDTO& dto) {
+    if (get_client_by_id(dto.id_client)->get_current_match_id() != 0) {
+        return;
+    }
 #ifdef LOG_VERBOSE
     std::cout << "Joining match id " << dto.id_match << std::endl;
 #endif

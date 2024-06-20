@@ -9,7 +9,7 @@ Client::Client(const std::string& host, const std::string& port):
         map_enum(NO_MAP),
         id_client(0),
         message_handler(*this),
-        event_loop(new EventLoop(game_running, menu_running, match_running, message_handler)),
+        event_loop(new EventLoop(game_running, menu_running, message_handler, match_running)),
         message_runner(new MessageRunner(message_handler)),
         thread_manager(new ClientThreadManager(host, port, message_runner->recv_message,
                                                message_handler.send_message)),
@@ -24,13 +24,13 @@ void Client::start() {
                          message_handler);
     event_loop->start();
 
-    sound_manager->play_sound(BACKGROUND, 0.5);
+    sound_manager->play_sound(BACKGROUND, 0.2);
 
     while (game_running) {
         menu_scene.start();
         if (match_running && map_enum != NO_MAP) {
             MatchScene match_scene(window, event_loop, resource_pool, sound_manager, match_running,
-                                   id_client, message_handler, map_enum);
+                                   menu_running, message_handler, map_enum, id_client);
             match_scene.start();
         }
         // TODO Level editor

@@ -3,3 +3,8 @@ background_1:
   y: 16
   w: 640
   h: 480
+scorboard:
+  x: 16
+  y: 1952
+  w: 640
+  h: 480
