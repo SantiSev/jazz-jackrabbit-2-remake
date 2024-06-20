@@ -49,12 +49,15 @@ void SaveExitEditorButton::save_map() {
         switch (type) {
             case PLAYER_SPAWN:
                 player_spawnpoints.push_back(d_rect);
+                continue;
                 break;
             case ENEMY_SPAWN:
                 enemy_spawnpoints.push_back(d_rect);
+                continue;
                 break;
             case ITEM_SPAWN:
                 item_spawnpoints.push_back(d_rect);
+                continue;
                 break;
             case NULL_TILE:
                 continue;
