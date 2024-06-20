@@ -10,6 +10,8 @@
 #include "../../game_engine/gui/canvas_object.h"
 #include "../../game_engine/gui/widgets/sprite.h"
 
+#include "tile_enum.h"
+
 class TileManager;
 
 class EditorTile: public engine::Sprite {
@@ -19,6 +21,7 @@ private:
     SDL_Rect d_rect;
 
 public:
+    TileType type;
     std::atomic<bool> visible;
 
     EditorTile(SDL_Rect& d_rect, SDL_Rect& s_rect, std::shared_ptr<engine::Texture> texture,

@@ -49,11 +49,12 @@ void EditorHud::create_buttons(std::atomic<bool>& menu_running, std::atomic<bool
     auto yaml = *resource_pool->get_yaml(EDITOR_FILE);
 
     for (auto obj: yaml["objects"]) {
+        TileType tile_type = static_cast<TileType>(obj["type"].as<int>());
         SDL_Rect s_rect = {obj["x"].as<int>(), obj["y"].as<int>(), obj["w"].as<int>(),
                            obj["h"].as<int>()};
         SDL_Rect d_rect = {x_start, y_start, s_rect.w, s_rect.h};
         x_start += s_rect.w + 10;
-        tiles.emplace_back(d_rect, s_rect, texture, tile_manager);
+        tiles.emplace_back(d_rect, s_rect, texture, tile_manager, tile_type);
         event_loop->mouse.add_on_click_signal_obj(&tiles.back());
     }
 }

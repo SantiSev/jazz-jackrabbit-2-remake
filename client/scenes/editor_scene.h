@@ -20,6 +20,8 @@
 #include "../hud/tile.h"
 #include "../menu_objects/save_exit_editor_button.h"
 
+#define MAP_WIDTH 1280
+#define MAP_HEIGHT 640
 
 class EditorScene {
 private:

@@ -5,6 +5,7 @@ TileManager::TileManager(std::shared_ptr<engine::ResourcePool> resource_pool, Ev
         event_loop(event_loop),
         resource_pool(resource_pool),
         selected_tile({0, 0, 0, 0}),
+        selected_tile_type(TileType::NULL_TILE),
         tiles(tiles_map) {
     int map_width = 1280;
     int map_height = 640;
@@ -27,9 +28,14 @@ TileManager::TileManager(std::shared_ptr<engine::ResourcePool> resource_pool, Ev
     }
 }
 
-void TileManager::set_selected_tile(const SDL_Rect& src_rect) { selected_tile = src_rect; }
+void TileManager::set_selected_tile(const SDL_Rect& src_rect, const TileType& type) {
+    selected_tile = src_rect;
+    selected_tile_type = type;
+}
 
-SDL_Rect TileManager::get_selected_tile() { return selected_tile; }
+std::pair<SDL_Rect, TileType> TileManager::get_selected_tile() {
+    return {selected_tile, selected_tile_type};
+}
 
 std::unordered_map<uint16_t, std::shared_ptr<EditorTile>>& TileManager::get_tiles() {
     return tiles;

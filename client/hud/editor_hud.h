@@ -11,6 +11,7 @@
 #include "../../common/assets.h"
 #include "../../game_engine/gui/canvas_object.h"
 #include "../../game_engine/gui/widgets/color_rect.h"
+#include "../editor_objects/tile_enum.h"
 #include "../editor_objects/tile_manager.h"
 #include "../event_loop.h"
 #include "../menu_objects/save_exit_editor_button.h"

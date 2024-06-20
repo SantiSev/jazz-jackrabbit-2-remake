@@ -13,7 +13,7 @@ EditorScene::EditorScene(engine::Window& window, EventLoop* event_loop,
         background(nullptr),
         tile_manager(resource_pool, event_loop, tiles),
         hud(renderer, resource_pool, event_loop, tile_manager, menu_running, editor_running),
-        camera(window.get_width(), 576 - 32, 0, 1280, 0, 640),
+        camera(window.get_width(), hud.get_body().y, 0, MAP_WIDTH, 0, MAP_HEIGHT),
         controller(camera, event_loop) {
     load_background();
 }

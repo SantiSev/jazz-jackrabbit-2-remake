@@ -8,6 +8,7 @@ EditorTile::EditorTile(SDL_Rect& d_rect, SDL_Rect& s_rect, std::shared_ptr<engin
         tile_manager(tile_manager),
         s_rect(s_rect),
         d_rect(d_rect),
+        type(NULL_TILE),
         visible(false) {}
 
 void EditorTile::on_click() {
@@ -16,9 +17,10 @@ void EditorTile::on_click() {
 #ifdef LOG
     std::cout << "Clicked editor tile." << std::endl;
 #endif
-    auto new_rect = tile_manager.get_selected_tile();
-    this->change_source(new_rect);
-    this->s_rect = new_rect;
+    auto [rect, tile_type] = tile_manager.get_selected_tile();
+    this->change_source(rect);
+    type = tile_type;
+    s_rect = rect;
 }
 
 SDL_Rect& EditorTile::get_d_rect() { return d_rect; }
