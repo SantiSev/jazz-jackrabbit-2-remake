@@ -33,34 +33,17 @@ Match::Match(const map_list_t& map_selected, size_t required_players_setting,
 
 void Match::run() {
     try {
-
-        /* while (online && players.size() != required_players) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-            std::cout << "Match map: " << map << " Waiting for all players to connect to
-        start..."
-        << std::endl;
-        } */
-
-        // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-
-        auto startTime = std::chrono::system_clock::now();
+        auto startTime = std::chrono::steady_clock::now();
         auto runTime = startTime;
 
         const double FPSMAX = 1000.0 / 60.0;
-#ifdef LOG_VERBOSE
-        std::cout << "Match map: " << map_list_to_string.at(map) << " Starting..." << std::endl;
-#endif
-        while (!match_has_ended && online) {
-            auto endTime = std::chrono::system_clock::now();
-            std::chrono::duration<double, std::milli> delta = endTime - startTime;
-            startTime = endTime;
 
-            auto frameStart = std::chrono::system_clock::now();
+        while (!match_has_ended && online) {
+            auto frameStart = std::chrono::steady_clock::now();
             std::shared_ptr<Message> message;
 
             size_t events = 0;
             while (match_queue.try_pop(message) && events < MAX_EVENTS_PER_LOOP) {
-
                 events++;
                 if (message) {
                     message->run(message_handler);
@@ -84,19 +67,20 @@ void Match::run() {
             }
 #endif
 
-            countdown_match(runTime, endTime);
+            countdown_match(runTime, frameStart);
 
             auto snapshot = create_actual_snapshot();
             auto snapshot_message = std::make_shared<SendGameStateMessage>(snapshot);
             client_monitor.broadcastClients(snapshot_message);
 
-            auto frameEnd = std::chrono::system_clock::now();
-            delta = frameEnd - frameStart;
+            auto frameEnd = std::chrono::steady_clock::now();
+            std::chrono::duration<double, std::milli> delta = frameEnd - frameStart;
 
             if (delta.count() < FPSMAX) {
                 std::this_thread::sleep_for(
                         std::chrono::milliseconds(static_cast<int>(FPSMAX - delta.count())));
             }
+            startTime = frameStart;
         }
         send_end_message_to_players();
         lobby_queue.push(std::make_shared<SendFinishMatchMessage>());
@@ -115,8 +99,8 @@ void Match::run() {
 //-------------------- Gameloop Methods ----------------------
 
 
-void Match::countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
-                            const std::chrono::time_point<std::chrono::system_clock>& endTime) {
+void Match::countdown_match(std::chrono::time_point<std::chrono::steady_clock>& runTime,
+                            const std::chrono::time_point<std::chrono::steady_clock>& endTime) {
     if (match_time != 0) {
         if (std::chrono::duration_cast<std::chrono::seconds>(endTime - runTime).count() >= 1) {
             match_time--;

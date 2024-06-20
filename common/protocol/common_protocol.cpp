@@ -94,36 +94,6 @@ void CommonProtocol::send_game_state(const uint16_t header, GameStateDTO game_st
         game_state.bullets[i].y_pos = htons(game_state.bullets[i].y_pos);
     }
 
-    std::cout << "----------------------------------------------------" << std::endl;
-    std::cout << "Game State Info:" << std::endl;
-    std::cout << "Number of players: " << static_cast<int>(game_state.num_players) << std::endl;
-    std::cout << "Number of enemies: " << static_cast<int>(game_state.num_enemies) << std::endl;
-    std::cout << "Number of bullets: " << static_cast<int>(game_state.num_bullets) << std::endl;
-    std::cout << "Game time (seconds): " << game_state.seconds << std::endl;
-
-    for (uint8_t i = 0; i < game_state.num_players; i++) {
-        std::cout << "Player " << static_cast<int>(i) << ": ID " << game_state.players[i].id
-                  << ", Character " << static_cast<int>(game_state.players[i].character)
-                  << ", State " << static_cast<int>(game_state.players[i].state) << ", Position ("
-                  << game_state.players[i].x_pos << ", " << game_state.players[i].y_pos << ")"
-                  << std::endl;
-    }
-    for (uint8_t i = 0; i < game_state.num_enemies; i++) {
-        std::cout << "Enemy " << static_cast<int>(i) << ": Type "
-                  << static_cast<int>(game_state.enemies[i].character) << ", State "
-                  << static_cast<int>(game_state.enemies[i].state) << ", Position ("
-                  << game_state.enemies[i].x_pos << ", " << game_state.enemies[i].y_pos << ")"
-                  << std::endl;
-    }
-
-    for (uint8_t i = 0; i < game_state.num_bullets; i++) {
-        std::cout << "Bullet " << static_cast<int>(i) << ": Type ID "
-                  << static_cast<int>(game_state.bullets[i].bullet_type) << ", Position ("
-                  << game_state.bullets[i].x_pos << ", " << game_state.bullets[i].y_pos << ")"
-                  << ", Direction (" << static_cast<int>(game_state.bullets[i].direction) << ")"
-                  << std::endl;
-    }
-
     skt.sendall(&game_state, sizeof(game_state), &was_closed);
 }
 
