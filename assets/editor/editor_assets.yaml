@@ -5,41 +5,49 @@ background:
     h: 255
 objects:
     - name: "grass_block_1"
+      type: 4
       x: 96
       y: 0
       w: 32
       h: 32
     - name: "dirt_block_1"
+      type: 4
       x: 64
       y: 32
       w: 32
       h: 32
     - name: "carrot_block_1"
+      type: 4
       x: 192
       y: 62
       w: 32
       h: 32
+    - name: "platform_1"
+      type: 4
+      x: 225
+      y: 0
+      w: 32
+      h: 32
     - name: "player_spawnpoints"
+      type: 1
       x: 224
       y: 1023
       w: 32
       h: 32
     - name: "enemy_spawnpoints"
+      type: 2
       x: 224
       y: 1055
       w: 32
       h: 32
     - name: "item_spawnpoints"
+      type: 3
       x: 224
       y: 991
       w: 32
       h: 32
-    - name: "platform_1"
-      x: 225
-      y: 0
-      w: 32
-      h: 32
     - name: "null_tile"
+      type: 0
       x: 0
       y: 0
       w: 32
