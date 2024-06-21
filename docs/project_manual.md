@@ -6,7 +6,6 @@
 - Distribucion
 - Organizacion
 - Librerias externas
-- Conclusiones
 
 ## Integrantes
 
@@ -106,5 +105,3 @@ Este trabajo practico utiliza el programa provisto por la Catedra de Taller de p
 (eldipa). Cuyo codigo, esta bajo la licencia: GPL v3.0. El link al repositorio es:
 [https://github.com/eldipa/tiburoncin](https://github.com/eldipa/tiburoncin). Para su instalacion, revisar el
 [Manual de usuario](./user_manual.md)
-
-## Conclusiones
