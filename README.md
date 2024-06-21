@@ -13,12 +13,11 @@ El corrector de este trabajo práctico es:
 
 - [Martin Di Paola](https://github.com/eldipa) (eldipa) - <martinp.dipaola@gmail.com>
 
-### Librerias externas: Sockets
+## Informacion del projecto
 
-Este trabajo practico utiliza librerias externas provistas por la Catedra de Taller de programacion I (Veiga) FIUBA
-(eldipa). Cuyo codigo, esta bajo la licencia: GPL v2. Dichas librerias implementan Sockets en C++ para ser utilizados
-con un protocolo en particular. El link al repositorio es:
-[https://github.com/eldipa/sockets-en-cpp](https://github.com/eldipa/sockets-en-cpp)
+- [Documentacion tecnica](./docs/documentation.md)
+- [Manual de projecto](./docs/project_manual.md)
+- [Manual de usuario](./docs/user_manual.md)
 
 ## Game requirements
 
