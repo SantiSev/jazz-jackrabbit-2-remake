@@ -21,7 +21,8 @@ $ sudo apt-get install \
     gdb \
     build-essential \
     unzip \
-    cmake
+    cmake \
+    python3
 ```
 
 ### Instalacion de librerias externas
