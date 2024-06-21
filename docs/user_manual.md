@@ -14,14 +14,14 @@ proveemos un comando, para aquel que quiera usar este projecto dentro de un ento
 ```bash
 $ sudo apt-get update
 $ sudo apt-get install \
-  make \
-  git \
-  gcc \
-  g++ \
-  gdb \
-  build-essential \
-  unzip \
-  cmake
+    make \
+    git \
+    gcc \
+    g++ \
+    gdb \
+    build-essential \
+    unzip \
+    cmake
 ```
 
 ### Instalacion de librerias externas
