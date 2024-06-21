@@ -35,7 +35,7 @@ void SaveExitEditorButton::save_map() {
     // Emit YAML for the map
     add_metadata(out);
 
-    out << YAML::Key << "objects" << YAML::Value << YAML::BeginMap;
+    out << YAML::Key << "objects" << YAML::Value << YAML::BeginSeq;
 
     // Iterate through tiles and export each EditorTile
     for (const auto& pair: map) {
@@ -66,6 +66,7 @@ void SaveExitEditorButton::save_map() {
         }
 
         // Emit YAML for the current tile
+        out << YAML::BeginMap;
         out << YAML::Key << "collision" << YAML::Value << true;  // Example value for collision
         out << YAML::Key << "s_rect" << YAML::Value;
         out << YAML::BeginMap;
@@ -87,10 +88,11 @@ void SaveExitEditorButton::save_map() {
         out << YAML::EndMap;
         out << YAML::EndMap;
         out << YAML::EndSeq;
+        out << YAML::EndMap;
     }
 
     // End objects map
-    out << YAML::EndMap;
+    out << YAML::EndSeq;
 
     add_spawns(out, PLAYER_SPAWN, player_spawnpoints);
     add_spawns(out, ENEMY_SPAWN, enemy_spawnpoints);
