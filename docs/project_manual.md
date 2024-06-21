@@ -37,15 +37,37 @@ Aqui se prensenta la distribucion de cada parte, para mas informacion acerca de 
 
 ### Semana 1
 
+- Planificacion
+
 ### Semana 2
+
+- Planificacion
 
 ### Semana 3
 
+- Implementacion del Client
+- Implementacion del Protocol
+- Implementacion del Physical engine
+- Implementacion del Server
+
 ### Semana 4
+
+- Implementacion del Client
+- Implementacion del Protocol
+- Implementacion del Physical engine
+- Implementacion del Server
 
 ### Semana 5
 
+- Integracion y testeo
+- Arreglando bugs
+
 ### Semana 6
+
+- Integracion y testeo
+- Arreglando bugs
+- Implementacion del editor
+- Documentacion
 
 ## Librerias externas
 
