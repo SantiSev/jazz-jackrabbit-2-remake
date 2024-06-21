@@ -80,3 +80,31 @@ Mientras que, para ejecutar uno o varios `client` es
 ```bash
 ./client <servname> <port>
 ```
+
+## Usabilidad del juego
+
+Dentro del menu del juego, existen cuatro opciones:
+
+1. Crear un partida
+2. Unirse a un partida
+3. Editar un mapa
+4. Salir del juego
+
+### Crear un partida y unirse a una partida
+
+Tanto crear, como unirse a un partida, permite elegir uno de tres personajes que son:
+
+- Jazz
+- Spaz
+- Lori
+
+Cuando se crea una partida, te permite elegir un mapa, ya sea los default o los creados por el usuario. Mientras que,
+unirse a una partida, permite elegir a que partida unirse.
+
+Dentro del juego, los movimientos y sus correspondientes teclas son:
+
+- Mover a izquierda (a)
+- Mover a derecha (d)
+- Saltar (space)
+- Disparar (click izquierdo)
+- Cambiar de arma (e)
