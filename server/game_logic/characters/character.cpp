@@ -17,13 +17,13 @@ CharacterBody::CharacterBody(size_t id, const character_t& character, int x, int
 
 //------- Getters --------
 
-uint16_t CharacterBody::get_id() { return id; }
+uint16_t CharacterBody::get_id() const { return id; }
 
-character_t CharacterBody::get_character() { return character_reference; }
+character_t CharacterBody::get_character() const { return character_reference; }
 
-state_t CharacterBody::get_state() { return state; }
+state_t CharacterBody::get_state() const { return state; }
 
-int CharacterBody::get_health() { return health; }
+int CharacterBody::get_health() const { return health; }
 
 bool CharacterBody::is_dead() { return health == 0; }
 
