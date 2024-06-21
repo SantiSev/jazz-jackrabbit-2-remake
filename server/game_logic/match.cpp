@@ -101,7 +101,6 @@ void Match::run() {
         send_end_message_to_players();
         lobby_queue.push(std::make_shared<SendFinishMatchMessage>());
         while (online) {
-            // aca puede implementarse el scoreboard
             std::this_thread::sleep_for(std::chrono::milliseconds(200));
         }
     } catch (const std::exception& err) {

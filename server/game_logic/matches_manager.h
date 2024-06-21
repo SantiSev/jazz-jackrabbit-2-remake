@@ -3,9 +3,9 @@
 
 #include <cstdio>
 #include <list>
-#include <map>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "../../game_engine/gui/basic/resource_pool.h"
@@ -20,12 +20,13 @@ private:
     bool online = true;
     uint16_t client_id_counter = 100;
     int matches_number = 0;
-    std::map<int, std::shared_ptr<Match>> matches;
+    std::unordered_map<int, std::shared_ptr<Match>> matches;
     std::list<ServerThreadManager*> clients;
     MatchesManagerMessageHandler message_handler;
     std::mutex manager_mutex;
-    std::map<int, ClientMonitor*> client_monitors;
+    std::unordered_map<int, ClientMonitor*> client_monitors;
     std::shared_ptr<engine::ResourcePool> resource_pool;
+    ClientMonitor lobby_monitor;
 
     void pre_load_resources();
 
@@ -36,7 +37,7 @@ public:
 
     void run() override;
     void stop() override;
-    ~MatchesManager() override = default;
+    ~MatchesManager() override;
 
     void add_new_client_to_manager(Socket client_socket);
     void create_new_match(const CreateGameDTO& dto);

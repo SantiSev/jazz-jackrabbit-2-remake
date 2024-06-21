@@ -1,5 +1,7 @@
 #include "./client_protocol.h"
 
+#include <iostream>
+
 #include <arpa/inet.h>
 #include <endian.h>
 
@@ -9,8 +11,7 @@ ClientProtocol::ClientProtocol(const std::string& hostname, const std::string& s
         CommonProtocol(hostname, servname) {}
 
 std::shared_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
-    FinishMatchDTO finish_match = {};
-    skt.recvall(&finish_match, sizeof(finish_match), &was_closed);
+    std::cout << "about to receive finish match" << std::endl;
     return std::make_shared<SendFinishMatchMessage>();
 }
 
@@ -51,6 +52,7 @@ std::shared_ptr<SendRequestGamesMessage> ClientProtocol::recv_active_games() {
 std::shared_ptr<SendConnectedToGameMessage> ClientProtocol::recv_game_created() {
     ClientHasConnectedToMatchDTO game_created = {};
     skt.recvall(&game_created, sizeof(game_created), &was_closed);
+    std::cout << "game created" << std::endl;
     return std::make_shared<SendConnectedToGameMessage>(game_created);
 }
 
@@ -59,15 +61,12 @@ std::shared_ptr<AcptConnection> ClientProtocol::recv_acpt_connection() {
     return std::make_shared<AcptConnection>(id_client);
 }
 
-std::shared_ptr<Message> ClientProtocol::recv_game_joined() {
-    ClientHasConnectedToMatchDTO game_joined = {};
-    skt.recvall(&game_joined, sizeof(game_joined), &was_closed);
-    return std::make_shared<SendConnectedToGameMessage>(game_joined);
-}
-
 std::shared_ptr<Message> ClientProtocol::recv_message() {
     try {
         const uint16_t header = recv_two_bytes();
+        if (header != 0x0100) {
+            std::cout << "header: " << header << std::endl;
+        }
 
         switch (header) {
             case CLOSE_CONNECTION:
@@ -78,17 +77,18 @@ std::shared_ptr<Message> ClientProtocol::recv_message() {
                 return recv_game_state();
             case RECV_ACTIVE_GAMES:
                 return recv_active_games();
-            case SEND_GAME_CREATED:
+            case SEND_CONNECTED_TO_MATCH:
                 return recv_game_created();
             case ACPT_CONNECTION:
                 return recv_acpt_connection();
-            case SEND_GAME_JOINED:
-                return recv_game_joined();
             default:
-                return std::make_shared<InvalidMessage>();
+                CloseConnectionDTO dto = {};
+                return std::make_shared<CloseConnectionMessage>(dto);
         }
     } catch (const LibError& e) {
         force_shutdown();
+        CloseConnectionDTO dto = {};
+        return std::make_shared<CloseConnectionMessage>(dto);
     }
     return std::make_shared<InvalidMessage>();
 }

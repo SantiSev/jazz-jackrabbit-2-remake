@@ -43,9 +43,9 @@ public:
 
     void start();
 
-    ~ScoreScene();
+    void create_score_labels();
 
-    void order_players_by_score();
+    ~ScoreScene();
 };
 
 

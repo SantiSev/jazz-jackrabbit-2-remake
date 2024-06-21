@@ -2,6 +2,11 @@
 
 #include <algorithm>
 
+#define LABEL_X 100
+#define LABEL_Y 320
+#define OFFSET_Y 75
+#define LABEL_W 600
+#define LABEL_H 50
 
 ScoreScene::ScoreScene(engine::Window& window, EventLoop* event_loop,
                        const std::shared_ptr<engine::ResourcePool>& resource_pool,
@@ -29,6 +34,9 @@ ScoreScene::ScoreScene(engine::Window& window, EventLoop* event_loop,
             new ReturnMenuButton(renderer, resource_pool, create_match_button_d_rect, menu_running,
                                  scoreboard_running, message_handler);
     buttons.push_back(create_return_button);
+
+    // Create labels
+    create_score_labels();
 }
 
 void ScoreScene::start() {
@@ -47,7 +55,6 @@ void ScoreScene::start() {
 
     // Drop & Rest
     while (scoreboard_running) {
-        order_players_by_score();
         // Draw
         window.clear();
         background->draw(renderer, it);
@@ -81,15 +88,13 @@ void ScoreScene::start() {
     }
 }
 
-void ScoreScene::order_players_by_score() {
+void ScoreScene::create_score_labels() {
     std::vector<PlayerDTO> players;
-
+    if (game_state->num_players == 0) {
+        return;
+    }
     for (uint8_t i = 0; i < game_state->num_players; i++) {
         players.push_back(game_state->players[i]);
-    }
-
-    if (players.empty()) {
-        return;
     }
 
     if (players.size() > 1) {
@@ -97,24 +102,29 @@ void ScoreScene::order_players_by_score() {
         std::sort(players.begin(), players.end(),
                   [](const PlayerDTO& a, const PlayerDTO& b) { return a.points > b.points; });
     }
+
     std::string first_place = "First Place: player " + std::to_string(players[0].id) + " with " +
                               std::to_string(players[0].points) + " points";
-    auto score_1 = new engine::Label(resource_pool->get_font(FONT), {300, 400, 200, 50},
-                                     {255, 255, 255, 255}, {0, 0, 0, 255}, first_place, renderer);
+    SDL_Rect first_place_d_rect = {LABEL_X, LABEL_Y, LABEL_W, LABEL_H};
+    auto score_1 = new engine::Label(resource_pool->get_font(FONT), first_place_d_rect,
+                                     {250, 0, 0, 0}, {0, 0, 0, 255}, first_place, renderer);
     labels.push_back(score_1);
 
-    auto score_2 = new engine::Label(resource_pool->get_font(FONT), {300, 500, 200, 50},
-                                     {255, 255, 255, 255}, {0, 0, 0, 255}, first_place, renderer);
-    std::string second_place = "Second Place: player " + std::to_string(players[0].id) + " with " +
-                               std::to_string(players[0].points) + " points";
-    labels.push_back(score_2);
+    if (players.size() > 1) {
+        SDL_Rect second_place_d_rect = {LABEL_X, LABEL_Y + OFFSET_Y, LABEL_W, LABEL_H};
+        std::string second_place = "Second Place: player " + std::to_string(players[1].id) +
+                                   " with " + std::to_string(players[1].points) + " points";
+        auto score_2 = new engine::Label(resource_pool->get_font(FONT), second_place_d_rect,
+                                         {250, 0, 0, 0}, {0, 0, 0, 255}, second_place, renderer);
+        labels.push_back(score_2);
+    }
 
     if (players.size() > 2) {
-        auto score_3 =
-                new engine::Label(resource_pool->get_font(FONT), {300, 600, 200, 50},
-                                  {255, 255, 255, 255}, {0, 0, 0, 255}, first_place, renderer);
-        std::string third_place = "Third Place: player " + std::to_string(players[0].id) +
-                                  " with " + std::to_string(players[0].points) + " points";
+        SDL_Rect third_place_d_rect = {LABEL_X, LABEL_Y + 2 * OFFSET_Y, LABEL_W, LABEL_H};
+        std::string third_place = "Third Place: player " + std::to_string(players[2].id) +
+                                  " with " + std::to_string(players[2].points) + " points";
+        auto score_3 = new engine::Label(resource_pool->get_font(FONT), third_place_d_rect,
+                                         {250, 0, 0, 0}, {0, 0, 0, 255}, third_place, renderer);
         labels.push_back(score_3);
     }
 }
