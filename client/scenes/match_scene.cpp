@@ -112,20 +112,8 @@ void MatchScene::update_objects() {
         // sound_manager->play_sound(SHOOT_SOUND, 0.5); // IDK if this works
     }
 
-
-    std::cout << "----------------------------------------------" << std::endl;
-    std::cout << "num_items: " << (int)game_state->num_items << std::endl;
-
-
     for (uint8_t i = 0; i < game_state->num_items; i++) {
         auto item = game_state->items[i];
-
-        // print all values in items i
-        // std::cout << "id: " << item.id << std::endl;
-        // std::cout << "type: " << (int)item.type << std::endl;
-        // std::cout << "x_pos: " << item.x_pos << std::endl;
-        // std::cout << "y_pos: " << item.y_pos << std::endl;
-
 
         // If it's a new item create it
         items.try_emplace(item.id,

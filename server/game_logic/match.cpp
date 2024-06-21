@@ -446,6 +446,7 @@ void Match::load_items() {
     for (auto& spawn_point: item_spawn_points) {
         item_t current_item_type = static_cast<item_t>(i % ITEM_AMOUNTS);
         uint16_t id = static_cast<uint16_t>(i);
+        std::cout << "Item type: " << (int)current_item_type << std::endl;
         switch (current_item_type) {
             case BULLET_ONE_ITEM: {
                 auto bullet_one_item = std::make_shared<AmmoGunOne>(
