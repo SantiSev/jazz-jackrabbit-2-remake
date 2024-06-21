@@ -10,7 +10,7 @@
 // Game Settings
 const uint8_t MAX_MATCHES_TO_CREATE = 16;
 const size_t MAX_PLAYERS =
-        16;  // The match doesn't start without this many players connected to the match.
+        8;  // The match doesn't start without this many players connected to the match.
 const size_t MAX_ENEMIES = 12;
 #define PLAYER_KILL_POINTS 15
 #define ENEMY_KILL_POINTS 5
@@ -27,10 +27,10 @@ const uint8_t PLAYER_EVENT = 0x01;
 
 // Gameloop
 const size_t MAX_EVENTS_PER_LOOP = 20;
-const size_t MATCH_DURATION = 10;
+const size_t MATCH_DURATION = 300;
 
 // Player states
-typedef enum _state: uint8_t {
+typedef enum: uint8_t {
     STATE_IDLE_RIGHT = 0x00,
     STATE_IDLE_LEFT = 0X01,
     STATE_SHOOTING_RIGHT = 0x02,

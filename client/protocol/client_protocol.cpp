@@ -19,7 +19,7 @@ std::shared_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() {
     GameStateDTO game_state = {};
     skt.recvall(&game_state, sizeof(game_state), &was_closed);
     game_state.seconds = ntohs(game_state.seconds);
-    for (int i = 0; i < game_state.num_players; i++) {
+    for (size_t i = 0; i < game_state.num_players; i++) {
         game_state.players[i].id = ntohs(game_state.players[i].id);
         game_state.players[i].health = ntohs(game_state.players[i].health);
         game_state.players[i].points = ntohs(game_state.players[i].points);
@@ -29,12 +29,12 @@ std::shared_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() {
             game_state.players[i].weapons[j].ammo = ntohs(game_state.players[i].weapons[j].ammo);
         }
     }
-    for (int i = 0; i < game_state.num_enemies; i++) {
+    for (size_t i = 0; i < game_state.num_enemies; i++) {
         game_state.enemies[i].id = ntohs(game_state.enemies[i].id);
         game_state.enemies[i].x_pos = ntohs(game_state.enemies[i].x_pos);
         game_state.enemies[i].y_pos = ntohs(game_state.enemies[i].y_pos);
     }
-    for (int i = 0; i < game_state.num_bullets; i++) {
+    for (size_t i = 0; i < game_state.num_bullets; i++) {
         game_state.bullets[i].id = be64toh(game_state.bullets[i].id);
         game_state.bullets[i].x_pos = ntohs(game_state.bullets[i].x_pos);
         game_state.bullets[i].y_pos = ntohs(game_state.bullets[i].y_pos);

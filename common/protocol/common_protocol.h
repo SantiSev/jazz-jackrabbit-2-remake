@@ -28,7 +28,7 @@ public:
     void send_command(const uint16_t header, CommandDTO& command);
     void send_leave_match(const uint16_t header, LeaveMatchDTO& leave_match);
     void send_finish_match(const uint16_t header);
-    void send_game_state(const uint16_t header, GameStateDTO& game_state);
+    void send_game_state(const uint16_t header, GameStateDTO game_state);
     void send_create_game(const uint16_t header, CreateGameDTO& create_game);
     void send_join_match(const uint16_t header, JoinMatchDTO& join_match);
     void send_request_active_games(const uint16_t header, RequestActiveGamesDTO& active_games);
