@@ -99,6 +99,7 @@ void MatchScene::update_objects() {
         enemies[enemy.id]->set_animation(map_states_to_animations.at(enemy.state));
     }
 
+
     for (uint8_t i = 0; i < game_state->num_bullets; i++) {
         auto bullet = game_state->bullets[i];
 
@@ -110,17 +111,28 @@ void MatchScene::update_objects() {
         bullets[bullet.id]->set_position(bullet.x_pos, bullet.y_pos);
         // sound_manager->play_sound(SHOOT_SOUND, 0.5); // IDK if this works
     }
-    // for (uint8_t i = 0; i < game_state->num_items; i++) {
-    //     auto item = game_state->items[i];
 
-    //     // If it's a new item create it
-    //     items.try_emplace(
-    //             item.id,
-    //             ItemFactory::create_item(
-    //                     resource_pool, static_cast<item_type_t>(item.item_type), item.x_pos,
-    //                     item.y_pos));
-    //     items[item.id]->set_position(item.x_pos, item.y_pos);
-    // }
+
+    std::cout << "----------------------------------------------" << std::endl;
+    std::cout << "num_items: " << (int)game_state->num_items << std::endl;
+
+
+    for (uint8_t i = 0; i < game_state->num_items; i++) {
+        auto item = game_state->items[i];
+
+        // print all values in items i
+        // std::cout << "id: " << item.id << std::endl;
+        // std::cout << "type: " << (int)item.type << std::endl;
+        // std::cout << "x_pos: " << item.x_pos << std::endl;
+        // std::cout << "y_pos: " << item.y_pos << std::endl;
+
+
+        // If it's a new item create it
+        items.try_emplace(item.id,
+                          ItemFactory::create_item(resource_pool, static_cast<item_t>(item.type),
+                                                   item.x_pos, item.y_pos));
+        items[item.id]->set_position(item.x_pos, item.y_pos);
+    }
 
     last_game_state = game_state;
 
@@ -182,22 +194,22 @@ void MatchScene::destroy_untracked_objects() {
     }
 
     // Destroy untracked items
-    // if (last_game_state->num_items < items.size()) {
-    //     std::unordered_set<uint16_t> tracked_items;
-    //     for (int i = 0; i < last_game_state->num_items; ++i) {
-    //         tracked_items.insert(
-    //                 last_game_state->items[i].id);  // Assuming Item class has an 'id' attribute
-    //     }
+    if (last_game_state->num_items < items.size()) {
+        std::unordered_set<uint16_t> tracked_items;
+        for (int i = 0; i < last_game_state->num_items; ++i) {
+            tracked_items.insert(
+                    last_game_state->items[i].id);  // Assuming Item class has an 'id' attribute
+        }
 
-    //     for (auto it = items.begin(); it != items.end();) {
-    //         // If the item is not in the tracked items set, erase them
-    //         if (tracked_items.find(it->first) == tracked_items.end()) {
-    //             it = items.erase(it);
-    //         } else {
-    //             ++it;
-    //         }
-    //     }
-    // }
+        for (auto it = items.begin(); it != items.end();) {
+            // If the item is not in the tracked items set, erase them
+            if (tracked_items.find(it->first) == tracked_items.end()) {
+                it = items.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
 }
 
 void MatchScene::draw_objects(int it) {

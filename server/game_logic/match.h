@@ -17,6 +17,7 @@
 #include <yaml-cpp/yaml.h>
 
 #include "../../common/assets.h"
+#include "../../common/item_enum.h"
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/physics_engine/collision_manager.h"
 #include "../../server/game_logic/weapons/bullet.h"
@@ -74,6 +75,8 @@ private:
 
     void respawn_items();
 
+    Collectable create_random_item(Vector2D position);
+
     Vector2D get_random_spawn_point(std::vector<Vector2D> const& spawnpoints);
 
     //-------------------- Initialization Methods -----------------
@@ -83,6 +86,8 @@ private:
     void initiate_enemies(std::vector<character_t> enemy_types);
 
     void load_spawn_points();
+
+    void load_items();
 
 public:
     Queue<std::shared_ptr<Message>> match_queue;

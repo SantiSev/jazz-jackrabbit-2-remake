@@ -1,4 +1,3 @@
-// create healthItem clss with ifdef and everything, ahve it be inhereted from collectable
 
 #ifndef HEALTH_ITEM_H
 #define HEALTH_ITEM_H
@@ -12,9 +11,9 @@ private:
     int health_amount;
 
 public:
-    HealthItem(int health_amount, int x, int y, int hitbox_width, int hitbox_height,
-               int appearance_time):
-            Collectable(x, y, hitbox_width, hitbox_height, appearance_time),
+    HealthItem(uint16_t id, int health_amount, int x, int y, int hitbox_width, int hitbox_height,
+               item_t item_type, int appearance_time):
+            Collectable(id, x, y, hitbox_width, hitbox_height, item_type, appearance_time),
             health_amount(health_amount) {}
 
     void handle_colision(CollisionObject* other) override {

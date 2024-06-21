@@ -137,6 +137,14 @@ struct BulletDTO {
     uint16_t y_pos;
 } __attribute__((packed));
 
+struct ItemDTO {
+    uint16_t id;
+    uint16_t x_pos;
+    uint16_t y_pos;
+    uint8_t type;
+} __attribute__((packed));
+
+
 struct EnemyDTO {
     uint16_t id;
     uint8_t character;
@@ -161,9 +169,11 @@ struct GameStateDTO {
     uint8_t num_players;
     uint8_t num_enemies;
     uint8_t num_bullets;
+    uint8_t num_items;
     PlayerDTO players[MAX_PLAYERS];
     EnemyDTO enemies[MAX_ENEMIES];
     BulletDTO bullets[75 * MAX_PLAYERS];
+    ItemDTO items[MAX_ITEMS];
     uint16_t seconds;
 } __attribute__((packed));
 

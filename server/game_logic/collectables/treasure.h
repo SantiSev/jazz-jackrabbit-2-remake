@@ -1,6 +1,3 @@
-//
-// Created by santi on 08/06/24.
-//
 
 #ifndef TREASURE_H
 #define TREASURE_H
@@ -14,8 +11,10 @@ private:
     int value = 100;
 
 public:
-    Treasure(int value, int x, int y, int hitbox_width, int hitbox_height, int appearance_time):
-            Collectable(x, y, hitbox_width, hitbox_height, appearance_time), value(value) {}
+    Treasure(uint16_t id, int value, int x, int y, int hitbox_width, int hitbox_height,
+             item_t item_type, int appearance_time):
+            Collectable(id, x, y, hitbox_width, hitbox_height, item_type, appearance_time),
+            value(value) {}
 
     void handle_colision(CollisionObject* other) override {
 

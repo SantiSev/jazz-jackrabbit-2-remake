@@ -3,12 +3,10 @@
 #include <algorithm>
 #include <chrono>
 #include <cstring>
-#include <iomanip>
 #include <memory>
 #include <string>
 #include <utility>
 
-#include "../../common/assets.h"
 
 Match::Match(const map_list_t& map_selected, size_t required_players_setting,
              Queue<std::shared_ptr<Message>>& lobby_queue, ClientMonitor& monitor,
@@ -28,6 +26,7 @@ Match::Match(const map_list_t& map_selected, size_t required_players_setting,
         match_queue(Queue<std::shared_ptr<Message>>()) {
     load_enviorment(map_selected);
     load_spawn_points();
+    load_items();
     initiate_enemies({character_t::MAD_HATTER, character_t::LIZARD_GOON});
 }
 
@@ -175,12 +174,12 @@ void Match::respawn_enemies() {
 void Match::respawn_items() {
     for (auto& item: items) {
         if (item->try_respawn()) {
-            std::cout << "Item respawned" << std::endl;
             item->respawn(item.get()->position);
             collision_manager->track_dynamic_body(item);
         }
     }
 }
+
 
 Vector2D Match::get_random_spawn_point(std::vector<Vector2D> const& spawnpoints) {
     if (spawnpoints.empty()) {
@@ -305,7 +304,7 @@ void Match::stop() {
 }
 
 GameStateDTO Match::create_actual_snapshot() {
-    GameStateDTO game_state{};  // TODO memset
+    GameStateDTO game_state{};
     game_state.seconds = (uint16_t)match_time % 60;
 
     game_state.num_players = players.size();
@@ -358,6 +357,19 @@ GameStateDTO Match::create_actual_snapshot() {
                     game_state.num_bullets++;
                 }
             });
+
+    game_state.num_items = 0;
+    for (const auto& items: items) {
+        if (!items->is_collected()) {
+            auto& item_state = game_state.items[game_state.num_items];
+            item_state.id = items->get_id();
+            item_state.type = items->get_item_type();
+            item_state.x_pos = items->position.x;
+            item_state.y_pos = items->position.y;
+            game_state.num_items++;
+        }
+    }
+
     return game_state;
 }
 
@@ -415,6 +427,76 @@ void Match::load_enviorment(map_list_t selected_map) {
 #endif
 }
 
+void Match::load_items() {
+    auto items_yaml = *resource_pool->get_yaml(ITEMS_FILE);
+
+    int item_width = items_yaml["body_width"].as<int>();
+    int item_height = items_yaml["body_height"].as<int>();
+
+    if (items_yaml.IsNull()) {
+        std::cerr << "Error loading yaml file" << std::endl;
+        exit(1);
+    }
+
+    int i = 0;
+    if (item_spawn_points.empty()) {
+        throw std::runtime_error("No item spawn points found in map.");
+    }
+
+    for (auto& spawn_point: item_spawn_points) {
+        item_t current_item_type = static_cast<item_t>(i % ITEM_AMOUNTS);
+        uint16_t id = static_cast<uint16_t>(i);
+        switch (current_item_type) {
+            case BULLET_ONE_ITEM: {
+                auto bullet_one_item = std::make_shared<AmmoGunOne>(
+                        id, spawn_point.x, spawn_point.y, item_width, item_height);
+                collision_manager->track_dynamic_body(bullet_one_item);
+                items.emplace_back(bullet_one_item);
+                break;
+            }
+            case BULLET_TWO_ITEM: {
+                auto bullet_two_item = std::make_shared<AmmoGunTwo>(
+                        id, spawn_point.x, spawn_point.y, item_width, item_height);
+                collision_manager->track_dynamic_body(bullet_two_item);
+                items.emplace_back(bullet_two_item);
+                break;
+            }
+            case BULLET_THREE_ITEM: {
+                auto bullet_three_item = std::make_shared<AmmoGunThree>(
+                        id, spawn_point.x, spawn_point.y, item_width, item_height);
+                collision_manager->track_dynamic_body(bullet_three_item);
+                items.emplace_back(bullet_three_item);
+                break;
+            }
+            case CARROT: {
+                auto carrot = std::make_shared<Carrot>(id, spawn_point.x, spawn_point.y, item_width,
+                                                       item_height);
+                collision_manager->track_dynamic_body(carrot);
+                items.emplace_back(carrot);
+                break;
+            }
+            case MEAT: {
+                auto meat = std::make_shared<Meat>(id, spawn_point.x, spawn_point.y, item_width,
+                                                   item_height);
+                collision_manager->track_dynamic_body(meat);
+                items.emplace_back(meat);
+                break;
+            }
+            case COIN: {
+                auto coin = std::make_shared<Coin>(id, spawn_point.x, spawn_point.y, item_width,
+                                                   item_height);
+                collision_manager->track_dynamic_body(coin);
+                items.emplace_back(coin);
+                break;
+            }
+            default:
+                throw std::runtime_error("Invalid item type at spawnpoint");
+        }
+
+        i++;
+    }
+}
+
 
 void Match::load_spawn_points() {
     auto yaml = *resource_pool->get_yaml(map_list_to_string.at(map));
@@ -423,7 +505,6 @@ void Match::load_spawn_points() {
         std::cerr << "Error loading yaml file" << std::endl;
         exit(1);
     }
-
     std::transform(yaml["player_spawnpoints"].begin(), yaml["player_spawnpoints"].end(),
                    std::back_inserter(player_spawn_points), [](const YAML::Node& sp) {
                        return Vector2D(sp["x"].as<int>(), sp["y"].as<int>());
@@ -431,6 +512,11 @@ void Match::load_spawn_points() {
 
     std::transform(yaml["enemy_spawnpoints"].begin(), yaml["enemy_spawnpoints"].end(),
                    std::back_inserter(enemy_spawn_points), [](const YAML::Node& sp) {
+                       return Vector2D(sp["x"].as<int>(), sp["y"].as<int>());
+                   });
+
+    std::transform(yaml["item_spawnpoints"].begin(), yaml["item_spawnpoints"].end(),
+                   std::back_inserter(item_spawn_points), [](const YAML::Node& sp) {
                        return Vector2D(sp["x"].as<int>(), sp["y"].as<int>());
                    });
 }
