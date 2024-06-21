@@ -82,6 +82,20 @@ Mientras que, para ejecutar uno o varios `client` es
 ./client <servname> <port>
 ```
 
+### Valgrind notes
+
+Valgrind detectara falsos positivos relacionados a la libreria SDL2, ya que deja memoria sin liberar
+pero que luego esta se libera al cerrar la aplicacion por el sistema operativo.
+
+Para suprimirlos primero generar archivo valgrind.log y procesarlo con el script valgrind_to_suppressions.py. Una
+vez hecho eso simplemente correr valgrind con el archivo de supresiones generado.
+
+```bash
+$ valgrind --leak-check=full --show-leak-kinds=all --gen-suppressions=all --log-file=valgrind.log ./program
+$ python3 valgrind_to_suppressions.py valgrind.log suppressions.supp
+$ valgrind --leak-check=full --suppressions=suppressions.supp --your-other-flags ./program
+```
+
 ## Usabilidad del juego
 
 Dentro del menu del juego, existen cuatro opciones:
