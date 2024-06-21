@@ -11,12 +11,11 @@
 #include "../../common/assets.h"
 #include "../../game_engine/gui/canvas_object.h"
 #include "../../game_engine/gui/widgets/color_rect.h"
+#include "../editor_objects/save_exit_editor_button.h"
 #include "../editor_objects/tile_enum.h"
 #include "../editor_objects/tile_manager.h"
+#include "../editor_objects/tile_selector.h"
 #include "../event_loop.h"
-#include "../menu_objects/save_exit_editor_button.h"
-
-#include "tile.h"
 
 class EditorHud: public engine::CanvasObject {
 private:
@@ -27,7 +26,7 @@ private:
     TileManager& tile_manager;
 
     engine::ColorRect background;
-    std::list<Tile> tiles;
+    std::list<TileSelector> tiles;
     std::unique_ptr<SaveExitEditorButton> save_and_exit_button;
 
     void create_buttons(std::atomic<bool>& menu_running, std::atomic<bool>& editor_running);

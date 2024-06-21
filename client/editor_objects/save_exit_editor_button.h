@@ -16,9 +16,10 @@
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/gui/widgets/button.h"
 #include "../../game_engine/gui/widgets/label.h"
-#include "../editor_objects/tile_enum.h"
-#include "../editor_objects/tile_manager.h"
 #include "../protocol/client_message_handler.h"
+
+#include "tile_enum.h"
+#include "tile_manager.h"
 
 class SaveExitEditorButton: public engine::Button {
 private:

@@ -129,14 +129,14 @@ void SaveExitEditorButton::add_spawns(YAML::Emitter& out, TileType type,
     out << YAML::Key << seq_name << YAML::Value << YAML::BeginSeq;
     if (d_rects.empty()) {
         out << YAML::BeginMap;
-        out << YAML::Key << "x" << YAML::Value << std::rand() % (1280 - 32);
-        out << YAML::Key << "y" << YAML::Value << std::rand() % (640 / 2);
+        out << YAML::Key << "x" << YAML::Value << std::rand() % (1200) + 100;
+        out << YAML::Key << "y" << YAML::Value << std::rand() % (640 / 2) + 100;
         out << YAML::EndMap;
     }
     for (const auto& d_rect: d_rects) {
         out << YAML::BeginMap;
         out << YAML::Key << "x" << YAML::Value << d_rect.x;
-        out << YAML::Key << "y" << YAML::Value << d_rect.y;
+        out << YAML::Key << "y" << YAML::Value << d_rect.y - 64;
         out << YAML::EndMap;
     }
     out << YAML::EndSeq;

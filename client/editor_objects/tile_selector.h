@@ -12,7 +12,7 @@
 
 class TileManager;
 
-class Tile: public engine::Sprite {
+class TileSelector: public engine::Sprite {
 private:
     TileManager& tile_manager;
 
@@ -20,12 +20,12 @@ public:
     TileType type;
     SDL_Rect src_rect;
 
-    Tile(SDL_Rect& d_rect, SDL_Rect& s_rect, std::shared_ptr<engine::Texture> texture,
-         TileManager& tile_manager, TileType type);
+    TileSelector(SDL_Rect& d_rect, SDL_Rect& s_rect, std::shared_ptr<engine::Texture> texture,
+                 TileManager& tile_manager, TileType type);
 
     void on_click() override;
 
-    ~Tile() override;
+    ~TileSelector() override;
 };
 
 #endif  // TILE_H

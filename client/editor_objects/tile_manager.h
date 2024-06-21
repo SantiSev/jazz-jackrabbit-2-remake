@@ -13,9 +13,9 @@
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/gui/widgets/sprite.h"
 #include "../event_loop.h"
-#include "../hud/tile.h"
 
 #include "editor_tile.h"
+#include "tile_selector.h"
 
 class TileManager {
 private:

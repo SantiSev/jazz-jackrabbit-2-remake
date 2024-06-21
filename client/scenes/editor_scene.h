@@ -14,11 +14,11 @@
 #include "../../game_engine/gui/camera.h"
 #include "../editor_objects/editor_controller.h"
 #include "../editor_objects/editor_tile.h"
+#include "../editor_objects/save_exit_editor_button.h"
 #include "../editor_objects/tile_manager.h"
+#include "../editor_objects/tile_selector.h"
 #include "../event_loop.h"
 #include "../hud/editor_hud.h"
-#include "../hud/tile.h"
-#include "../menu_objects/save_exit_editor_button.h"
 
 #define MAP_WIDTH 1280
 #define MAP_HEIGHT 640
