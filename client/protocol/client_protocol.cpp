@@ -41,11 +41,13 @@ std::shared_ptr<SendGameStateMessage> ClientProtocol::recv_game_state() {
     return std::make_shared<SendGameStateMessage>(game_state);
 }
 
-std::shared_ptr<SendRequestGamesMessage> ClientProtocol::recv_active_games() {
-    RequestActiveGamesDTO active_games = {};
+std::shared_ptr<RecvActiveGames> ClientProtocol::recv_active_games() {
+    MatchInfoDTO active_games = {};
     skt.recvall(&active_games, sizeof(active_games), &was_closed);
-    active_games.id_client = ntohs(active_games.id_client);
-    return std::make_shared<SendRequestGamesMessage>(active_games);
+    for (int i = 0; i < active_games.num_games; i++) {
+        active_games.active_games[i].map_id = ntohs(active_games.active_games[i].map_id);
+    }
+    return std::make_shared<RecvActiveGames>(active_games);
 }
 
 std::shared_ptr<SendConnectedToGameMessage> ClientProtocol::recv_game_created() {
