@@ -8,7 +8,7 @@ ResourcePool::ResourcePool(): renderer(nullptr) {}
 
 ResourcePool::ResourcePool(SDL_Renderer* renderer): renderer(renderer) {}
 
-void ResourcePool::load_texture(const std::string& name) {
+const std::shared_ptr<Texture>& ResourcePool::load_texture(const std::string& name) {
     if (renderer == nullptr) {
         throw BadParams("Object was not initialized with a renderer");
     }
@@ -17,9 +17,10 @@ void ResourcePool::load_texture(const std::string& name) {
         auto texture = std::make_shared<Texture>(asset_manager.get_full_path(file), renderer);
         textures.insert({name, texture});
     }
+    return textures[name];
 }
 
-void ResourcePool::load_font(const std::string& name, int size) {
+const std::shared_ptr<Font>& ResourcePool::load_font(const std::string& name, int size) {
     if (renderer == nullptr) {
         throw BadParams("Object was not initialized with a renderer");
     }
@@ -28,14 +29,16 @@ void ResourcePool::load_font(const std::string& name, int size) {
         auto font = std::make_shared<Font>(asset_manager.get_full_path(file), size);
         fonts.insert({name, font});
     }
+    return fonts[name];
 }
 
-void ResourcePool::load_yaml(const std::string& name) {
+const std::shared_ptr<YAML::Node>& ResourcePool::load_yaml(const std::string& name) {
     std::string file = name + YAML_EXTENSION;
     if (yamls.find(name) == yamls.end()) {
         auto yaml = std::make_shared<YAML::Node>(YAML::LoadFile(asset_manager.get_full_path(file)));
         yamls.insert({name, yaml});
     }
+    return yamls[name];
 }
 
 const std::shared_ptr<Texture>& ResourcePool::get_texture(const std::string& name) const {

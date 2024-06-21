@@ -50,7 +50,7 @@ private:
     size_t players_connected = 0;
     size_t required_players;
     ClientMonitor& client_monitor;
-    map_list_t map;
+    uint16_t map;
     std::unique_ptr<CollisionManager> collision_manager;
     std::vector<Vector2D> player_spawn_points;
     std::vector<Vector2D> enemy_spawn_points;
@@ -61,7 +61,7 @@ private:
 public:
     Queue<std::shared_ptr<Message>> match_queue;
     // Constructor
-    explicit Match(const map_list_t& map_selected, size_t required_players_setting,
+    explicit Match(const uint16_t& map_selected, size_t required_players_setting,
                    Queue<std::shared_ptr<Message>>& lobby_queue, ClientMonitor& monitor,
                    const std::shared_ptr<engine::ResourcePool>& resource_pool);
     void run() override;
@@ -95,7 +95,7 @@ public:
 
     //-------------------- Initialization Methods -----------------
 
-    void load_enviorment(map_list_t map);
+    void load_enviorment(uint16_t map);
 
     void initiate_enemies();
 
@@ -113,7 +113,7 @@ public:
 
     std::vector<size_t> get_clients_ids();
 
-    map_list_t get_map() const;
+    uint16_t get_map() const;
 
     Queue<std::shared_ptr<Message>>& get_match_queue();
 };

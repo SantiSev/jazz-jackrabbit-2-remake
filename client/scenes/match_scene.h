@@ -59,7 +59,7 @@ public:
     MatchScene(engine::Window& window, EventLoop* event_loop,
                std::shared_ptr<engine::ResourcePool> resource_pool,
                std::atomic<bool>& match_running, std::atomic<id_client_t>& id_client,
-               ClientMessageHandler& message_handler, map_list_t map_enum);
+               ClientMessageHandler& message_handler, uint16_t map_id);
 
     // cant copy
     MatchScene(const MatchScene&) = delete;

@@ -56,14 +56,14 @@ public:
 
     ServerThreadManager* get_client_by_id(const uint16_t& id);
 
-    void send_client_succesful_connect(const uint16_t& id_client, const map_list_t& map);
+    void send_client_succesful_connect(const uint16_t& id_client, const uint16_t& map);
 
     void delete_disconnected_client(const id_client_t& id_client);
 
     std::shared_ptr<AddPlayerMessage> make_add_player_message(const std::string& player_name,
                                                               id_client_t client_id,
                                                               character_t character,
-                                                              map_list_t map) const;
+                                                              uint16_t map) const;
 
     Queue<std::shared_ptr<Message>>& get_match_queue_by_id(size_t i);
 };

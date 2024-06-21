@@ -40,9 +40,9 @@ public:
     ResourcePool(const ResourcePool&) = delete;
     ResourcePool& operator=(const ResourcePool&) = delete;
 
-    void load_texture(const std::string& name);
-    void load_font(const std::string& name, int size);
-    void load_yaml(const std::string& name);
+    const std::shared_ptr<Texture>& load_texture(const std::string& name);
+    const std::shared_ptr<Font>& load_font(const std::string& name, int size);
+    const std::shared_ptr<YAML::Node>& load_yaml(const std::string& name);
 
     // Thread-safe, read only getters
     const std::shared_ptr<Texture>& get_texture(const std::string& name) const;

@@ -47,7 +47,7 @@ void MatchesManager::run() {
 void MatchesManager::create_new_match(const CreateGameDTO& dto) {
     matches_number++;
 
-    auto match = std::make_shared<Match>(dto.map_name, dto.max_players, manager_queue,
+    auto match = std::make_shared<Match>(dto.map_id, dto.max_players, manager_queue,
                                          client_monitor, resource_pool);
 
     matches[matches_number] = match;
@@ -60,14 +60,14 @@ void MatchesManager::create_new_match(const CreateGameDTO& dto) {
 
     std::string namestr = "Player " + std::to_string(dto.id_client);
     auto message =
-            make_add_player_message(namestr, dto.id_client, dto.character_selected, dto.map_name);
+            make_add_player_message(namestr, dto.id_client, dto.character_selected, dto.map_id);
     match->match_queue.try_push(message);
 
-    send_client_succesful_connect(dto.id_client, dto.map_name);
+    send_client_succesful_connect(dto.id_client, dto.map_id);
 }
 
 void MatchesManager::send_client_succesful_connect(const uint16_t& id_client,
-                                                   const map_list_t& map) {
+                                                   const uint16_t& map) {
     ClientHasConnectedToMatchDTO game_connected = {map};
     auto send_game_created = std::make_shared<SendConnectedToGameMessage>(game_connected);
     get_client_by_id(id_client)->get_sender_queue()->push(send_game_created);
@@ -95,12 +95,12 @@ void MatchesManager::join_match(const JoinMatchDTO& dto) {
 
 std::shared_ptr<AddPlayerMessage> MatchesManager::make_add_player_message(
         const std::string& player_name, id_client_t id_client, character_t character,
-        map_list_t map) const {
+        uint16_t map) const {
     AddPlayerDTO AddDTO = {};
     snprintf(AddDTO.name, sizeof(AddDTO.name), "%s", player_name.c_str());
     AddDTO.id_client = id_client;
     AddDTO.player_character = character;
-    AddDTO.map_name = map;
+    AddDTO.map_id = map;
     return std::make_shared<AddPlayerMessage>(AddDTO);
 }
 
@@ -128,7 +128,7 @@ MatchInfoDTO MatchesManager::return_matches_lists() {
     matches_lists.num_games = matches.size();
     size_t i = 0;
     for (auto& match: matches) {
-        matches_lists.active_games[i].map = match.second->get_map();
+        matches_lists.active_games[i].map_id = match.second->get_map();
         matches_lists.active_games[i].players_ingame = match.second->get_num_players();
         matches_lists.active_games[i].players_max = match.second->get_max_players();
     }
@@ -223,7 +223,7 @@ void MatchesManager::pre_load_resources() {
     resource_pool->load_yaml(map_character_enum_to_string.at(MAD_HATTER));
     resource_pool->load_yaml(map_character_enum_to_string.at(LIZARD_GOON));
     resource_pool->load_yaml(SFX_FILE);
-    resource_pool->load_yaml(map_list_to_string.at(MAP_1));
+    resource_pool->load_yaml(MAPS_FILE);
 }
 
 void MatchesManager::stop() { online = false; }

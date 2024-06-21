@@ -42,7 +42,7 @@ private:
     std::atomic<bool> match_running;
     std::atomic<bool> editor_running;
 
-    std::atomic<map_list_t> map_enum;
+    std::atomic<uint16_t> map_enum;
     std::atomic<id_client_t> id_client;
 
     ClientMessageHandler message_handler;

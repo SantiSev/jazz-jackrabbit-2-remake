@@ -86,7 +86,7 @@ struct LeaveMatchDTO {
 struct CreateGameDTO {
     id_client_t id_client;
     character_t character_selected;
-    map_list_t map_name;
+    uint16_t map_id;
     uint8_t max_players;
 } __attribute__((packed));
 
@@ -100,7 +100,7 @@ struct AddPlayerDTO {
     char name[50];
     id_client_t id_client;
     character_t player_character;
-    map_list_t map_name;
+    uint16_t map_id;
 } __attribute__((packed));
 
 struct RequestActiveGamesDTO {
@@ -159,11 +159,11 @@ struct GameStateDTO {
 } __attribute__((packed));
 
 struct ClientHasConnectedToMatchDTO {
-    map_list_t map;
+    uint16_t map_id;
 } __attribute__((packed));
 
 struct ActiveGamesDTO {
-    map_list_t map;
+    uint16_t map_id;
     uint8_t players_ingame;
     uint8_t players_max;
 } __attribute__((packed));
