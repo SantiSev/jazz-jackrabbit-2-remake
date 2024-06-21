@@ -281,7 +281,7 @@ GameStateDTO Match::create_actual_snapshot() {
 
 void Match::load_enviorment(uint16_t selected_map) {
     auto yaml_maps = *resource_pool->get_yaml(MAPS_FILE);
-    auto yaml_path = yaml_maps[selected_map]["yaml"].as<std::string>();
+    auto yaml_path = yaml_maps["maps"][selected_map]["yaml"].as<std::string>();
     auto yaml = *resource_pool->load_yaml(yaml_path);
 
     if (yaml.IsNull()) {
@@ -336,7 +336,7 @@ void Match::load_enviorment(uint16_t selected_map) {
 
 void Match::load_spawn_points() {
     auto yaml_maps = *resource_pool->get_yaml(MAPS_FILE);
-    auto yaml_path = yaml_maps[map]["yaml"].as<std::string>();
+    auto yaml_path = yaml_maps["maps"][map]["yaml"].as<std::string>();
     auto yaml = *resource_pool->get_yaml(yaml_path);
 
     if (yaml.IsNull()) {

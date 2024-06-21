@@ -51,6 +51,7 @@ std::shared_ptr<SendRequestGamesMessage> ClientProtocol::recv_active_games() {
 std::shared_ptr<SendConnectedToGameMessage> ClientProtocol::recv_game_created() {
     ClientHasConnectedToMatchDTO game_created = {};
     skt.recvall(&game_created, sizeof(game_created), &was_closed);
+    game_created.map_id = ntohs(game_created.map_id);
     return std::make_shared<SendConnectedToGameMessage>(game_created);
 }
 
@@ -62,6 +63,7 @@ std::shared_ptr<AcptConnection> ClientProtocol::recv_acpt_connection() {
 std::shared_ptr<Message> ClientProtocol::recv_game_joined() {
     ClientHasConnectedToMatchDTO game_joined = {};
     skt.recvall(&game_joined, sizeof(game_joined), &was_closed);
+    game_joined.map_id = ntohs(game_joined.map_id);
     return std::make_shared<SendConnectedToGameMessage>(game_joined);
 }
 

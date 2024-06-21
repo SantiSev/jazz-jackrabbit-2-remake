@@ -34,6 +34,7 @@ std::shared_ptr<RecvCreateGameMessage> ServerProtocol::recv_create_game() {
     CreateGameDTO create_game = {};
     skt.recvall(&create_game, sizeof(create_game), &was_closed);
     create_game.id_client = ntohs(create_game.id_client);
+    create_game.map_id = ntohs(create_game.map_id);
     return std::make_shared<RecvCreateGameMessage>(create_game);
 }
 
@@ -48,6 +49,7 @@ std::shared_ptr<Message> ServerProtocol::recv_add_player() {
     AddPlayerDTO dto = {};
     skt.recvall(&dto, sizeof(dto), &was_closed);
     dto.id_client = ntohs(dto.id_client);
+    dto.map_id = ntohs(dto.map_id);
     return std::make_shared<AddPlayerMessage>(dto);
 }
 

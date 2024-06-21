@@ -23,8 +23,8 @@ void Map::draw_in_camera(SDL_Renderer* renderer, engine::Camera& camera, int it)
 
 void Map::load_map(const uint16_t& map_id) {
     auto maps_yaml = *resource_pool->get_yaml(MAPS_FILE);
-    auto texture_path = maps_yaml[map_id]["texture"].as<std::string>();
-    auto yaml_path = maps_yaml[map_id]["yaml"].as<std::string>();
+    auto texture_path = maps_yaml["maps"][map_id]["texture"].as<std::string>();
+    auto yaml_path = maps_yaml["maps"][map_id]["yaml"].as<std::string>();
     auto texture = resource_pool->load_texture(texture_path);
     auto yaml = *resource_pool->load_yaml(yaml_path);
 

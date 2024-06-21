@@ -109,6 +109,7 @@ void CommonProtocol::send_request_active_games(const uint16_t header,
 void CommonProtocol::send_game_created(const uint16_t header,
                                        ClientHasConnectedToMatchDTO& game_created) {
     send_header(header);
+    game_created.map_id = htons(game_created.map_id);
     skt.sendall(&game_created, sizeof(game_created), &was_closed);
 }
 
