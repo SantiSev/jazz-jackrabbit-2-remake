@@ -5,7 +5,7 @@
 - Maximo Damian Utrera - 109651 - <mutrera@fi.uba.ar>
 - Agustín Barbalase - 109071 - <abarbalase@fi.uba.ar>
 - Santiago Sevitz - 107520 - <ssevitz@fi.uba.ar>
-- Nicolas Ramiro Sanchez - 998792 - <nrsanchez@fi.uba.ar>
+- Nicolas Ramiro Sanchez - 99872 - <nrsanchez@fi.uba.ar>
 
 ## Librerias externas
 
