@@ -9,8 +9,6 @@ ClientProtocol::ClientProtocol(const std::string& hostname, const std::string& s
         CommonProtocol(hostname, servname) {}
 
 std::shared_ptr<SendFinishMatchMessage> ClientProtocol::recv_finish_match() {
-    FinishMatchDTO finish_match = {};
-    skt.recvall(&finish_match, sizeof(finish_match), &was_closed);
     return std::make_shared<SendFinishMatchMessage>();
 }
 

@@ -54,7 +54,7 @@ public:
     void reset_ammo();
     void change_infinite_ammo();
 
-    ~Weapon();
+    virtual ~Weapon();
 };
 
 #endif

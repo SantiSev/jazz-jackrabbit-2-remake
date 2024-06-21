@@ -72,17 +72,23 @@ void Player::reset_special_attack() { special_cooldown = SPECIAL_COOLDOWN; }
 
 // ------------ Movement Methods --------------
 
-void Player::move_left() {
+void Player::sprint() { is_sprinting = !is_sprinting; }
 
+void Player::move_left() {
     if (is_knocked_back) {
         return;
     }
-
     direction = -1;
-    velocity.x = -DEFAULT_SPEED_X;
+    if (is_sprinting && !is_intoxicated) {
+        velocity.x = -DEFAULT_SPEED_X - (int)(DEFAULT_SPEED_X * 0.35);
+    } else {
+        velocity.x = -DEFAULT_SPEED_X;
+    }
     if (is_on_floor()) {
-        if (is_player_intoxicated()) {
+        if (is_intoxicated) {
             state = STATE_INTOXICATED_MOV_LEFT;
+        } else if (is_sprinting) {
+            state = STATE_MOVING_LEFT;  // TODO CAMBIAR CUANDO ESTÉ EL SPRITE DE SPRINT
         } else {
             state = STATE_MOVING_LEFT;
         }
@@ -90,16 +96,20 @@ void Player::move_left() {
 }
 
 void Player::move_right() {
-
     if (is_knocked_back) {
         return;
     }
-
     direction = 1;
-    velocity.x = DEFAULT_SPEED_X;
+    if (is_sprinting && !is_intoxicated) {
+        velocity.x = DEFAULT_SPEED_X + (int)(DEFAULT_SPEED_X * 0.35);
+    } else {
+        velocity.x = DEFAULT_SPEED_X;
+    }
     if (is_on_floor()) {
-        if (is_player_intoxicated()) {
+        if (is_intoxicated) {
             state = STATE_INTOXICATED_MOV_RIGHT;
+        } else if (is_sprinting) {
+            state = STATE_MOVING_RIGHT;  // TODO CAMBIAR CUANDO ESTÉ EL SPRITE DE SPRINT
         } else {
             state = STATE_MOVING_RIGHT;
         }
@@ -107,7 +117,6 @@ void Player::move_right() {
 }
 
 void Player::jump() {
-
     if (on_floor) {
         on_floor = false;
         velocity.y = -JUMP_SPEED;
@@ -250,6 +259,11 @@ void Player::execute_command(command_t command) {
             break;
         case MOVE_RIGHT:
             move_right();
+            break;
+        case SPRINT:
+            if (is_sprint_allowed) {
+                sprint();
+            }
             break;
         case JUMP:
             jump();

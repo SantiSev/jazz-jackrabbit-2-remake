@@ -36,24 +36,22 @@ typedef uint16_t id_match_t;
 typedef enum: uint8_t {
     MOVE_LEFT = 0x00,
     MOVE_RIGHT = 0x01,
-    MOVE_LEFT_FAST = 0x02,
-    MOVE_RIGHT_FAST = 0x03,
-    JUMP = 0x04,
-    SPECIAL_ATTACK = 0x05,
-    CHANGE_WEAPON = 0x06,
-    LOOK_UP = 0x07,
-    DUCK_DOWN = 0x08,
-    SHOOT = 0x09,
-    PAUSE_GAME = 0x10,
-    TAUNT = 0x11,
+    SPRINT = 0x02,
+    JUMP = 0x03,
+    SPECIAL_ATTACK = 0x04,
+    CHANGE_WEAPON = 0x05,
+    LOOK_UP = 0x06,
+    DUCK_DOWN = 0x07,
+    SHOOT = 0x08,
+    PAUSE_GAME = 0x9,
+    TAUNT = 0x10,
 } command_t;
 
 
 const std::map<command_t, std::string> command_to_string = {
         {MOVE_LEFT, "MOVE_LEFT"},
         {MOVE_RIGHT, "MOVE_RIGHT"},
-        {MOVE_LEFT_FAST, "MOVE_LEFT_FAST"},
-        {MOVE_RIGHT_FAST, "MOVE_RIGHT_FAST"},
+        {SPRINT, "SPRINT"},
         {JUMP, "JUMP"},
         {SPECIAL_ATTACK, "SPECIAL_ATTACK"},
         {CHANGE_WEAPON, "CHANGE_WEAPON"},
@@ -118,10 +116,6 @@ struct RequestActiveGamesDTO {
 
 
 //------Messages send by server to client --------
-
-
-struct FinishMatchDTO {
-} __attribute__((packed));
 
 struct WeaponDTO {
     uint8_t weapon_name;
