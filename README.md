@@ -1,19 +1,17 @@
 # tp-final-veiga (Jazz Jackrabbit 2)
 
-## Participants
+## Integrantes
 
-- Maximo Damian Utrera - 109651 - <mutrera@fi.uba.ar>
-- Agustín Barbalase - 109071 - <abarbalase@fi.uba.ar>
-- Santiago Sevitz - 107520 - <ssevitz@fi.uba.ar>
-- Nicolas Ramiro Sanchez - 99872 - <nrsanchez@fi.uba.ar>
+Los integrantes del proyecto son:
 
-## Librerias externas
+- [Maximo Damian Utrera](https://github.com/maxogod) (Maxo) - 109651 - <mutrera@fi.uba.ar>
+- [Agustín Barbalase](https://github.com/agustinbarbalase) (Agus) - 109071 - <abarbalase@fi.uba.ar>
+- [Santiago Sevitz](https://github.com/SantiSev) (Santi) - 107520 - <ssevitz@fi.uba.ar>
+- [Nicolas Ramiro Sanchez](https://github.com/nrsanchezfiuba) (Niko) - 99872 - <nrsanchez@fi.uba.ar>
 
-### Librerias externas: Threads
+El corrector de este trabajo práctico es:
 
-Este trabajo practico utiliza librerias externas provistas por la Catedra de Taller de programacion I (Veiga) FIUBA
-(eldipa). Cuyo codigo, esta bajo la licencia: GPL v2. Dichas librerias implementan Threads y Queues (thread-safe)
-[https://github.com/eldipa/hands-on-threads](https://github.com/eldipa/hands-on-threads)
+- [Martin Di Paola](https://github.com/eldipa) (eldipa) - <martinp.dipaola@gmail.com>
 
 ### Librerias externas: Sockets
 
