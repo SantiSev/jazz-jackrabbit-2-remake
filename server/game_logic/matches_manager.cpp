@@ -47,8 +47,8 @@ void MatchesManager::run() {
 void MatchesManager::create_new_match(const CreateGameDTO& dto) {
     matches_number++;
 
-    auto match = std::make_shared<Match>(dto.map_id, dto.max_players, manager_queue,
-                                         client_monitor, resource_pool);
+    auto match = std::make_shared<Match>(dto.map_id, dto.max_players, manager_queue, client_monitor,
+                                         resource_pool);
 
     matches[matches_number] = match;
     match->start();
@@ -66,8 +66,7 @@ void MatchesManager::create_new_match(const CreateGameDTO& dto) {
     send_client_succesful_connect(dto.id_client, dto.map_id);
 }
 
-void MatchesManager::send_client_succesful_connect(const uint16_t& id_client,
-                                                   const uint16_t& map) {
+void MatchesManager::send_client_succesful_connect(const uint16_t& id_client, const uint16_t& map) {
     ClientHasConnectedToMatchDTO game_connected = {map};
     auto send_game_created = std::make_shared<SendConnectedToGameMessage>(game_connected);
     get_client_by_id(id_client)->get_sender_queue()->push(send_game_created);
