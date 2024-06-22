@@ -167,10 +167,17 @@ void Player::update_body() {
         return;
     }
 
+    handle_intoxication();
+    handle_invincibility();
+
 
     if (velocity.x == 0 && is_on_floor() && !is_knocked_back && state != STATE_SHOOTING_LEFT &&
         state != STATE_SHOOTING_RIGHT) {
-        state = is_facing_right() ? STATE_IDLE_RIGHT : STATE_IDLE_LEFT;
+        if (is_intoxicated) {
+            state = STATE_INTOXICATED_IDLE;
+        } else {
+            state = is_facing_right() ? STATE_IDLE_RIGHT : STATE_IDLE_LEFT;
+        }
     }
 
 
@@ -267,6 +274,8 @@ void Player::print_info() {
     std::cout << "| state: " << (int)get_state() << " |" << std::endl;
     std::cout << "| respawn time: " << revive_cooldown << " |" << std::endl;
     std::cout << "| respawn counter: " << revive_counter << " |" << std::endl;
+    std::cout << "| intoxication cooldown: " << intoxication_cooldown << " |" << std::endl;
+    std::cout << "| invincibility cooldown: " << invincibility_cooldown << " |" << std::endl;
 }
 
 //------- Match Methods --------
