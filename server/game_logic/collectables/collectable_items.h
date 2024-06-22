@@ -1,41 +1,62 @@
 
-// create the CollectableItem class header
-
 #ifndef COLLECTABLE_ITEM_H
 #define COLLECTABLE_ITEM_H
 
+#include <cstdlib>
+#include <ctime>
+
 #include "ammo.h"
+#include "health_item.h"
 #include "treasure.h"
 
-#define AMMO_WIDTH 15
-#define AMMO_HEIGHT 15
-
-#define TREASURE_WIDTH 10
-#define TREASURE_HEIGHT 10
 
 class AmmoGunOne: public Ammo {
 public:
-    AmmoGunOne(int x, int y): Ammo(1, 10, x, y, AMMO_WIDTH, AMMO_HEIGHT, 10) {}
+    AmmoGunOne(uint16_t id, int x, int y, int w, int h):
+            Ammo(id, 1, 10, x, y, w, h, BULLET_ONE_ITEM, 100) {}
 };
 
 class AmmoGunTwo: public Ammo {
 public:
-    AmmoGunTwo(int x, int y): Ammo(2, 10, x, y, AMMO_WIDTH, AMMO_HEIGHT, 20) {}
+    AmmoGunTwo(uint16_t id, int x, int y, int w, int h):
+            Ammo(id, 2, 10, x, y, w, h, BULLET_TWO_ITEM, 100) {}
 };
 
 class AmmoGunThree: public Ammo {
 public:
-    AmmoGunThree(int x, int y): Ammo(3, 10, x, y, AMMO_WIDTH, AMMO_HEIGHT, 30) {}
+    AmmoGunThree(uint16_t id, int x, int y, int w, int h):
+            Ammo(id, 3, 10, x, y, w, h, BULLET_THREE_ITEM, 100) {}
 };
 
 class Coin: public Treasure {
 public:
-    Coin(int x, int y): Treasure(5, x, y, TREASURE_WIDTH, TREASURE_HEIGHT, 10) {}
+    Coin(uint16_t id, int x, int y, int w, int h): Treasure(id, 5, x, y, w, h, COIN, 100) {}
 };
 
-class Gem: public Treasure {
+class Meat: public HealthItem {
 public:
-    Gem(int x, int y): Treasure(10, x, y, TREASURE_WIDTH, TREASURE_HEIGHT, 10) {}
+    Meat(uint16_t id, int x, int y, int w, int h): HealthItem(id, 50, x, y, w, h, MEAT, 100) {}
+};
+
+class Carrot: public Collectable {
+public:
+    Carrot(uint16_t id, int x, int y, int w, int h): Collectable(id, x, y, w, h, CARROT, 100) {}
+
+    void handle_colision(CollisionObject* other) override {
+
+        Player* player = dynamic_cast<Player*>(other);
+        if (!is_collected() && player) {
+
+            int carrot_condition = rand() % 2;
+
+            if (carrot_condition == 0) {
+                player->start_intoxication();
+            } else {
+                player->start_invincibility();
+            }
+            has_been_collected();
+        }
+    };
 };
 
 #endif  // COLLECTABLE_ITEM_H

@@ -45,6 +45,10 @@ void Player::reload_weapon(size_t weapon_id, int ammo_amount) {
 
 void Player::shoot_selected_weapon() {
 
+    if (is_intoxicated) {
+        return;
+    }
+
     weapons[selected_weapon]->shoot();
     state = is_facing_right() ? STATE_SHOOTING_RIGHT : STATE_SHOOTING_LEFT;
 }
@@ -54,13 +58,37 @@ void Player::select_next_weapon() { selected_weapon = (selected_weapon + 1) % we
 
 // ------------ Intoxication Methods --------------
 
-bool Player::is_player_intoxicated() const { return is_intoxicated; }
+void Player::start_intoxication() {
+    is_intoxicated = true;
+    is_invincible = false;
+    intoxication_cooldown = INTOXICATON_COOLDOWN;
+}
 
-void Player::reset_intoxication() { is_intoxicated = false; }
+void Player::handle_intoxication() {
+    if (is_intoxicated) {
+        intoxication_cooldown--;
+        if (intoxication_cooldown == NONE) {
+            is_intoxicated = false;
+        }
+    }
+}
 
-void Player::decrease_intoxication_cooldown() { intoxication_cooldown--; }
+// ------------ Invinvibility Methods --------------
 
-size_t Player::get_intoxication_cooldown() const { return intoxication_cooldown; }
+void Player::start_invincibility() {
+    is_invincible = true;
+    is_intoxicated = false;
+    invincibility_cooldown = INVINCIBILITY_COOLDOWN;
+}
+
+void Player::handle_invincibility() {
+    if (is_invincible) {
+        invincibility_cooldown--;
+        if (invincibility_cooldown == NONE) {
+            is_invincible = false;
+        }
+    }
+}
 
 // ------------ Special Attack Methods --------------
 
@@ -81,7 +109,7 @@ void Player::move_left() {
     direction = -1;
     velocity.x = -DEFAULT_SPEED_X;
     if (is_on_floor()) {
-        if (is_player_intoxicated()) {
+        if (is_intoxicated) {
             state = STATE_INTOXICATED_MOV_LEFT;
         } else {
             state = STATE_MOVING_LEFT;
@@ -98,7 +126,7 @@ void Player::move_right() {
     direction = 1;
     velocity.x = DEFAULT_SPEED_X;
     if (is_on_floor()) {
-        if (is_player_intoxicated()) {
+        if (is_intoxicated) {
             state = STATE_INTOXICATED_MOV_RIGHT;
         } else {
             state = STATE_MOVING_RIGHT;
@@ -107,6 +135,10 @@ void Player::move_right() {
 }
 
 void Player::jump() {
+
+    if (is_intoxicated) {
+        return;
+    }
 
     if (on_floor) {
         on_floor = false;
@@ -135,10 +167,17 @@ void Player::update_body() {
         return;
     }
 
+    handle_intoxication();
+    handle_invincibility();
+
 
     if (velocity.x == 0 && is_on_floor() && !is_knocked_back && state != STATE_SHOOTING_LEFT &&
         state != STATE_SHOOTING_RIGHT) {
-        state = is_facing_right() ? STATE_IDLE_RIGHT : STATE_IDLE_LEFT;
+        if (is_intoxicated) {
+            state = STATE_INTOXICATED_IDLE;
+        } else {
+            state = is_facing_right() ? STATE_IDLE_RIGHT : STATE_IDLE_LEFT;
+        }
     }
 
 
@@ -235,6 +274,8 @@ void Player::print_info() {
     std::cout << "| state: " << (int)get_state() << " |" << std::endl;
     std::cout << "| respawn time: " << revive_cooldown << " |" << std::endl;
     std::cout << "| respawn counter: " << revive_counter << " |" << std::endl;
+    std::cout << "| intoxication cooldown: " << intoxication_cooldown << " |" << std::endl;
+    std::cout << "| invincibility cooldown: " << invincibility_cooldown << " |" << std::endl;
 }
 
 //------- Match Methods --------
@@ -290,23 +331,17 @@ void Player::activate_cheat_command(cheat_command_t command) {
 
 void Player::update_status(Vector2D spawn_point) {  // todo check if its needed
 
-    if (is_dead()) {
+    if (is_dead() || health == NONE) {
+        velocity = Vector2D(0, 0);
+        state = STATE_DEAD;
         return;
     }
 
-    if (is_player_intoxicated()) {
-        decrease_intoxication_cooldown();
-        if (get_intoxication_cooldown() == NONE) {
-            reset_intoxication();
-        }
-    }
-    if (!is_special_available()) {
-        decrease_special_attack_cooldown();
-    }
-    if (!is_dead() && get_health() == NONE) {
-        velocity = Vector2D(0, 0);
-        state = STATE_DEAD;
-    }
+    handle_intoxication();
+
+    handle_invincibility();
+
+
     if (is_on_floor() && (get_state() == STATE_FALLING)) {
         if (is_facing_right()) {
             state = STATE_IDLE_RIGHT;
