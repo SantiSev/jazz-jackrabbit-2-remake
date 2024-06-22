@@ -28,6 +28,48 @@ objects:
       y: 0
       w: 32
       h: 32
+    - name: "pumpkin"
+      type: 4
+      x: 192
+      y: 608
+      w: 32
+      h: 32
+    - name: "bush"
+      type: 4
+      x: 287
+      y: 263
+      w: 32
+      h: 32
+    - name: "purple_block"
+      type: 4
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    - name: "h_tube_end"
+      type: 4
+      x: 479
+      y: 64
+      w: 32
+      h: 32
+    - name: "h_tube"
+      type: 4
+      x: 511
+      y: 64
+      w: 32
+      h: 32
+    - name: "v_tube_end"
+      type: 4
+      x: 543
+      y: 128
+      w: 32
+      h: 32
+    - name: "v_tube"
+      type: 4
+      x: 543
+      y: 96
+      w: 32
+      h: 32
     - name: "player_spawnpoints"
       type: 1
       x: 224
