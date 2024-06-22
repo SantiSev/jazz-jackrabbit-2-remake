@@ -58,10 +58,10 @@ public:
 
     //------- Getters --------
 
-    uint16_t get_id();
-    character_t get_character();
-    state_t get_state();
-    int get_health();
+    uint16_t get_id() const;
+    character_t get_character() const;
+    state_t get_state() const;
+    int get_health() const;
     bool is_dead();
 
     //------- Health Methods --------

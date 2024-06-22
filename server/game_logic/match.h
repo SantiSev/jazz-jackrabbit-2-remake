@@ -66,8 +66,8 @@ private:
 
     //-------------------- Gameloop Methods ----------------------
 
-    void countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
-                         const std::chrono::time_point<std::chrono::system_clock>& endTime);
+    void countdown_match(std::chrono::time_point<std::chrono::steady_clock>& runTime,
+                         const std::chrono::time_point<std::chrono::steady_clock>& endTime);
 
     void respawn_players();
 
