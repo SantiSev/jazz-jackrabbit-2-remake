@@ -21,10 +21,10 @@ private:
     std::shared_ptr<engine::ResourcePool> resource_pool;
     SDL_Rect area;
 
-    void load_map(const std::string& map_name);
+    void load_map(const uint16_t& map_id);
 
 public:
-    Map(const map_list_t& map_enum, std::shared_ptr<engine::ResourcePool> resource_pool);
+    Map(const uint16_t& map_id, std::shared_ptr<engine::ResourcePool> resource_pool);
 
     void draw(SDL_Renderer* renderer, int it) override;
     void draw_in_camera(SDL_Renderer* renderer, engine::Camera& camera, int it);

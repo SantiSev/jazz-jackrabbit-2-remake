@@ -8,7 +8,7 @@
 #include <utility>
 
 
-Match::Match(const map_list_t& map_selected, size_t required_players_setting,
+Match::Match(const uint16_t& map_selected, size_t required_players_setting,
              Queue<std::shared_ptr<Message>>& lobby_queue, ClientMonitor& monitor,
              const std::shared_ptr<engine::ResourcePool>& resource_pool):
         online(true),
@@ -24,7 +24,7 @@ Match::Match(const map_list_t& map_selected, size_t required_players_setting,
         collision_manager(nullptr),
         resource_pool(resource_pool),
         match_queue(Queue<std::shared_ptr<Message>>()) {
-    load_enviorment(map_selected);
+    load_environment();
     load_spawn_points();
     load_items();
     initiate_enemies({character_t::MAD_HATTER, character_t::LIZARD_GOON});
@@ -361,8 +361,10 @@ GameStateDTO Match::create_actual_snapshot() {
 //-------------------- Initialization Methods -----------------
 
 
-void Match::load_enviorment(map_list_t selected_map) {
-    auto yaml = *resource_pool->get_yaml(map_list_to_string.at(selected_map));
+void Match::load_environment() {
+    auto yaml_maps = *resource_pool->get_yaml(MAPS_FILE);
+    auto yaml_path = yaml_maps["maps"][map]["yaml"].as<std::string>();
+    auto yaml = *resource_pool->load_yaml(yaml_path);
 
     if (yaml.IsNull()) {
         throw std::runtime_error("Error loading yaml file");
@@ -414,7 +416,6 @@ void Match::load_enviorment(map_list_t selected_map) {
 
 void Match::load_items() {
     auto items_yaml = *resource_pool->get_yaml(ITEMS_FILE);
-
     int item_width = items_yaml["body_width"].as<int>();
     int item_height = items_yaml["body_height"].as<int>();
 
@@ -485,7 +486,9 @@ void Match::load_items() {
 
 
 void Match::load_spawn_points() {
-    auto yaml = *resource_pool->get_yaml(map_list_to_string.at(map));
+    auto yaml_maps = *resource_pool->get_yaml(MAPS_FILE);
+    auto yaml_path = yaml_maps["maps"][map]["yaml"].as<std::string>();
+    auto yaml = *resource_pool->get_yaml(yaml_path);
 
     if (yaml.IsNull()) {
         std::cerr << "Error loading yaml file" << std::endl;
@@ -580,7 +583,7 @@ Queue<std::shared_ptr<Message>>& Match::get_match_queue() { return match_queue; 
 
 size_t Match::get_num_players() { return players.size(); }
 
-map_list_t Match::get_map() const { return map; }
+uint16_t Match::get_map() const { return map; }
 
 size_t Match::get_max_players() const { return required_players; }
 

@@ -4,7 +4,7 @@ MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
                        std::shared_ptr<engine::ResourcePool> resource_pool,
                        std::shared_ptr<engine::SoundManager> sound_manager,
                        std::atomic<bool>& match_running, std::atomic<id_client_t>& id_client,
-                       ClientMessageHandler& message_handler, map_list_t map_enum):
+                       ClientMessageHandler& message_handler, uint16_t map_id):
         id_client(id_client),
         window(window),
         renderer(window.get_renderer()),
@@ -15,8 +15,8 @@ MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
         game_state_q(message_handler.game_state_q),
         last_game_state(nullptr),
         match_running(match_running),
-        map(std::make_shared<Map>(map_enum, resource_pool)),
-        camera(window.get_width(), window.get_height(), map->get_body().w, map->get_body().h),
+        map(std::make_shared<Map>(map_id, resource_pool)),
+        camera(window.get_width(), window.get_height(), 0, map->get_body().w, 0, map->get_body().h),
         player_controller(message_handler) {
     // Blocking call to get first game state
     std::shared_ptr<GameStateDTO> first_state = game_state_q.pop();
@@ -39,6 +39,7 @@ void MatchScene::start() {
 
     // Drop & Rest
     while (match_running) {
+        std::cout << "It: " << it << std::endl;
         // Draw
         window.clear();
         draw_objects(it);
@@ -53,7 +54,7 @@ void MatchScene::start() {
             rest_time = rate - (behind % rate);
             lost = behind / rate;
             frame_start += lost;
-            it = std::round(lost / rate);
+            it += std::floor(lost / rate);
         }
 
         SDL_Delay(rest_time);

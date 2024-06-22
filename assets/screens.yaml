@@ -1,5 +1,15 @@
-background_1:
-  x: 16
-  y: 16
-  w: 640
-  h: 480
+main_menu:
+    x: 660
+    y: 1468
+    w: 640
+    h: 480
+main_menu_2:
+    x: 16
+    y: 1468
+    w: 640
+    h: 480
+main_menu_3:
+    x: 16
+    y: 984
+    w: 640
+    h: 480

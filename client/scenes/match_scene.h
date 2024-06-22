@@ -3,9 +3,9 @@
 
 #include <atomic>
 #include <cmath>
-#include <map>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 #include <utility>
 
@@ -45,10 +45,10 @@ private:
     std::atomic<bool>& match_running;
 
     std::shared_ptr<Map> map;
-    std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> players;
-    std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> enemies;
-    std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> bullets;
-    std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> items;
+    std::unordered_map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> players;
+    std::unordered_map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> enemies;
+    std::unordered_map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> bullets;
+    std::unordered_map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> items;
     engine::Camera camera;
 
     PlayerController player_controller;
@@ -62,7 +62,7 @@ public:
                std::shared_ptr<engine::ResourcePool> resource_pool,
                std::shared_ptr<engine::SoundManager> sound_manager,
                std::atomic<bool>& match_running, std::atomic<id_client_t>& id_client,
-               ClientMessageHandler& message_handler, map_list_t map_enum);
+               ClientMessageHandler& message_handler, uint16_t map_id);
 
     // cant copy
     MatchScene(const MatchScene&) = delete;

@@ -11,6 +11,7 @@
 
 class CreateMatchButton: public engine::Button {
 private:
+    std::shared_ptr<engine::ResourcePool>& resource_pool;
     ClientMessageHandler& message_handler;
 
 public:
