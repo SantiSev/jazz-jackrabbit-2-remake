@@ -37,6 +37,7 @@ void MatchScene::start() {
 
     // Drop & Rest
     while (match_running) {
+        std::cout << "It: " << it << std::endl;
         // Draw
         window.clear();
         draw_objects(it);
@@ -51,7 +52,7 @@ void MatchScene::start() {
             rest_time = rate - (behind % rate);
             lost = behind / rate;
             frame_start += lost;
-            it = std::round(lost / rate);
+            it += std::floor(lost / rate);
         }
 
         SDL_Delay(rest_time);

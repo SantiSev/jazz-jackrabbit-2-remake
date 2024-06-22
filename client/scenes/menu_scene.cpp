@@ -53,7 +53,7 @@ void MenuScene::start() {
             rest_time = rate - (behind % rate);
             lost = behind / rate;
             frame_start += lost;
-            it = std::round(lost / rate);
+            it += std::floor(lost / rate);
         }
 
         SDL_Delay(rest_time);
