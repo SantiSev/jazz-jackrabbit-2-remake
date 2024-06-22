@@ -2,12 +2,14 @@
 
 MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
                        std::shared_ptr<engine::ResourcePool> resource_pool,
+                       std::shared_ptr<engine::SoundManager> sound_manager,
                        std::atomic<bool>& match_running, std::atomic<id_client_t>& id_client,
                        ClientMessageHandler& message_handler, uint16_t map_id):
         id_client(id_client),
         window(window),
         renderer(window.get_renderer()),
         resource_pool(resource_pool),
+        sound_manager(sound_manager),
         event_loop(event_loop),
         message_handler(message_handler),
         game_state_q(message_handler.game_state_q),
@@ -98,6 +100,7 @@ void MatchScene::update_objects() {
         enemies[enemy.id]->set_animation(map_states_to_animations.at(enemy.state));
     }
 
+
     for (uint8_t i = 0; i < game_state->num_bullets; i++) {
         auto bullet = game_state->bullets[i];
 
@@ -107,18 +110,18 @@ void MatchScene::update_objects() {
                                     resource_pool, static_cast<bullet_type_t>(bullet.bullet_type),
                                     bullet.direction, bullet.x_pos, bullet.y_pos));
         bullets[bullet.id]->set_position(bullet.x_pos, bullet.y_pos);
+        // sound_manager->play_sound(SHOOT_SOUND, 0.5); // IDK if this works
     }
-    // for (uint8_t i = 0; i < game_state->num_items; i++) {
-    //     auto item = game_state->items[i];
 
-    //     // If it's a new item create it
-    //     items.try_emplace(
-    //             item.id,
-    //             ItemFactory::create_item(
-    //                     resource_pool, static_cast<item_type_t>(item.item_type), item.x_pos,
-    //                     item.y_pos));
-    //     items[item.id]->set_position(item.x_pos, item.y_pos);
-    // }
+    for (uint8_t i = 0; i < game_state->num_items; i++) {
+        auto item = game_state->items[i];
+
+        // If it's a new item create it
+        items.try_emplace(item.id,
+                          ItemFactory::create_item(resource_pool, static_cast<item_t>(item.type),
+                                                   item.x_pos, item.y_pos));
+        items[item.id]->set_position(item.x_pos, item.y_pos);
+    }
 
     last_game_state = game_state;
 
@@ -169,7 +172,6 @@ void MatchScene::destroy_untracked_objects() {
             tracked_bullets.insert(
                     last_game_state->bullets[i].id);  // Assuming Bullet class has an 'id' attribute
         }
-
         for (auto it = bullets.begin(); it != bullets.end();) {
             // If the bullet is not in the tracked bullets set, erase them
             if (tracked_bullets.find(it->first) == tracked_bullets.end()) {
@@ -181,22 +183,22 @@ void MatchScene::destroy_untracked_objects() {
     }
 
     // Destroy untracked items
-    // if (last_game_state->num_items < items.size()) {
-    //     std::unordered_set<uint16_t> tracked_items;
-    //     for (int i = 0; i < last_game_state->num_items; ++i) {
-    //         tracked_items.insert(
-    //                 last_game_state->items[i].id);  // Assuming Item class has an 'id' attribute
-    //     }
+    if (last_game_state->num_items < items.size()) {
+        std::unordered_set<uint16_t> tracked_items;
+        for (int i = 0; i < last_game_state->num_items; ++i) {
+            tracked_items.insert(
+                    last_game_state->items[i].id);  // Assuming Item class has an 'id' attribute
+        }
 
-    //     for (auto it = items.begin(); it != items.end();) {
-    //         // If the item is not in the tracked items set, erase them
-    //         if (tracked_items.find(it->first) == tracked_items.end()) {
-    //             it = items.erase(it);
-    //         } else {
-    //             ++it;
-    //         }
-    //     }
-    // }
+        for (auto it = items.begin(); it != items.end();) {
+            // If the item is not in the tracked items set, erase them
+            if (tracked_items.find(it->first) == tracked_items.end()) {
+                it = items.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
 }
 
 void MatchScene::draw_objects(int it) {

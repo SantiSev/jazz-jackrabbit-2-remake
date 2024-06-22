@@ -33,8 +33,6 @@ typedef uint16_t id_client_t;
 typedef uint16_t id_player_t;
 typedef uint16_t id_match_t;
 
-typedef enum: uint8_t { INFINITY_AMMO } cheat_command_t;
-
 typedef enum: uint8_t {
     MOVE_LEFT = 0x00,
     MOVE_RIGHT = 0x01,
@@ -50,6 +48,7 @@ typedef enum: uint8_t {
     TAUNT = 0x11,
 } command_t;
 
+
 const std::map<command_t, std::string> command_to_string = {
         {MOVE_LEFT, "MOVE_LEFT"},
         {MOVE_RIGHT, "MOVE_RIGHT"},
@@ -64,6 +63,16 @@ const std::map<command_t, std::string> command_to_string = {
         {PAUSE_GAME, "PAUSE_GAME"},
         {TAUNT, "TAUNT"},
 };
+
+typedef enum: uint8_t {
+    CHEAT_MAX_AMMO = 0x00,
+    CHEAT_MAX_HEALTH = 0x01,
+    CHEAT_INVINCIBLE = 0x02,
+    CHEAT_REVIVE = 0x03,
+    CHEAT_INFINITE_AMMO = 0x04,
+    CHEAT_REVIVE_ALL = 0x05,
+    CHEAT_KILL_ALL = 0x06,
+} cheat_command_t;
 
 //------Messages send by client to server --------
 
@@ -128,10 +137,18 @@ struct BulletDTO {
     uint16_t y_pos;
 } __attribute__((packed));
 
+struct ItemDTO {
+    uint16_t id;
+    uint16_t x_pos;
+    uint16_t y_pos;
+    uint8_t type;
+} __attribute__((packed));
+
+
 struct EnemyDTO {
     uint16_t id;
-    uint8_t character;
-    uint8_t state;
+    character_t character;
+    state_t state;
     uint16_t x_pos;
     uint16_t y_pos;
 } __attribute__((packed));
@@ -142,7 +159,7 @@ struct PlayerDTO {
     uint16_t health;
     character_t character;
     uint16_t points;
-    uint8_t state;
+    state_t state;
     uint16_t x_pos;
     uint16_t y_pos;
     WeaponDTO weapons[NUM_OF_WEAPONS];
@@ -152,9 +169,11 @@ struct GameStateDTO {
     uint8_t num_players;
     uint8_t num_enemies;
     uint8_t num_bullets;
+    uint8_t num_items;
     PlayerDTO players[MAX_PLAYERS];
     EnemyDTO enemies[MAX_ENEMIES];
-    BulletDTO bullets[50 * MAX_PLAYERS];
+    BulletDTO bullets[75 * MAX_PLAYERS];
+    ItemDTO items[MAX_ITEMS];
     uint16_t seconds;
 } __attribute__((packed));
 

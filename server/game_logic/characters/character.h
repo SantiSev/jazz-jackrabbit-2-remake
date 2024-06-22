@@ -17,16 +17,17 @@
 #define NONE 0
 #define MAX_HEALTH 100
 #define REVIVE_COOLDOWN 1000
-#define INTOXICATON_COOLDOWN 4
+#define INTOXICATON_COOLDOWN 600
 #define SPECIAL_COOLDOWN 3
 #define DEFAULT_SPEED_Y 10
-#define DEFAULT_SPEED_X 10
+#define DEFAULT_SPEED_X 15
 #define JUMP_SPEED 25
 #define GRAVITY 1
 #define FRICCTION 0.1f
 #define LEFT_DIR -1
 #define RIGHT_DIR 1
 #define REVIVE_COOLDOWN 1000
+#define INVINCIBILITY_COOLDOWN 600
 
 class CharacterBody: public DynamicBody {
 
@@ -35,7 +36,7 @@ protected:
 
     uint16_t id;
     character_t character_reference;
-    _state state = STATE_IDLE_RIGHT;
+    state_t state = STATE_IDLE_RIGHT;
 
     // game logic info
 
@@ -47,7 +48,7 @@ protected:
 
 public:
     CharacterBody(size_t id, const character_t& character, int x, int y, int w, int h,
-                  Vector2D velocity, int health, _state state, int revive_cooldown);
+                  Vector2D velocity, int health, state_t state, int revive_cooldown);
 
 
     //------- Overrided Methods --------
@@ -57,10 +58,10 @@ public:
 
     //------- Getters --------
 
-    uint16_t get_id();
-    character_t get_character();
-    _state get_state();
-    int get_health();
+    uint16_t get_id() const;
+    character_t get_character() const;
+    state_t get_state() const;
+    int get_health() const;
     bool is_dead();
 
     //------- Health Methods --------

@@ -21,6 +21,7 @@
 #include "../../game_engine/gui/basic/window.h"
 #include "../../game_engine/gui/camera.h"
 #include "../../game_engine/gui/widgets/animated_sprite.h"
+#include "../../game_engine/gui/widgets/sound_manager.h"
 #include "../event_loop.h"
 #include "../game_objects/bullet_factory.h"
 #include "../game_objects/character_factory.h"
@@ -34,6 +35,7 @@ private:
     engine::Window& window;
     SDL_Renderer* renderer;
     std::shared_ptr<engine::ResourcePool> resource_pool;
+    std::shared_ptr<engine::SoundManager> sound_manager;
 
     EventLoop* event_loop;
     ClientMessageHandler& message_handler;
@@ -58,6 +60,7 @@ private:
 public:
     MatchScene(engine::Window& window, EventLoop* event_loop,
                std::shared_ptr<engine::ResourcePool> resource_pool,
+               std::shared_ptr<engine::SoundManager> sound_manager,
                std::atomic<bool>& match_running, std::atomic<id_client_t>& id_client,
                ClientMessageHandler& message_handler, uint16_t map_id);
 

@@ -12,11 +12,15 @@
 
 #include "asset_manager.h"
 #include "font.h"
+#include "music.h"
+#include "sound_effect.h"
 #include "texture.h"
 
 #define PNG_EXTENSION ".png"
 #define YAML_EXTENSION ".yaml"
 #define TTF_EXTENSION ".ttf"
+#define WAV_EXTENSION ".wav"
+#define MP3_EXTENSION ".mp3"
 
 namespace engine {
 // Uses a path pseudo-relative to the project root directory to load and retrieve resources
@@ -28,6 +32,7 @@ private:
     std::unordered_map<std::string, std::shared_ptr<Texture>> textures;
     std::unordered_map<std::string, std::shared_ptr<Font>> fonts;
     std::unordered_map<std::string, std::shared_ptr<YAML::Node>> yamls;
+    std::unordered_map<std::string, std::shared_ptr<Sound>> sounds;
 
 public:
     // Load files that don't depend on the renderer only
@@ -43,11 +48,14 @@ public:
     const std::shared_ptr<Texture>& load_texture(const std::string& name);
     const std::shared_ptr<Font>& load_font(const std::string& name, int size);
     const std::shared_ptr<YAML::Node>& load_yaml(const std::string& name);
+    void load_sound_effect(const std::string& name);
+    void load_music(const std::string& name);
 
     // Thread-safe, read only getters
     const std::shared_ptr<Texture>& get_texture(const std::string& name) const;
     const std::shared_ptr<Font>& get_font(const std::string& name) const;
     const std::shared_ptr<YAML::Node>& get_yaml(const std::string& name) const;
+    const std::shared_ptr<Sound>& get_sound(const std::string& name) const;
 
     ~ResourcePool();
 };

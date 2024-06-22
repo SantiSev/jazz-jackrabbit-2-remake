@@ -31,7 +31,7 @@ public:
                 return std::make_shared<BulletThree>(resource_pool, direction, x, y);
                 break;
             default:
-                throw std::invalid_argument("Invalid character enum");
+                throw std::invalid_argument("in bullet factory:Invalid character enum");
         }
     }
 };

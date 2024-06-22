@@ -14,7 +14,7 @@ CommonProtocol::CommonProtocol(Socket&& skt): skt(std::move(skt)), was_closed(fa
 CommonProtocol::CommonProtocol(const std::string& hostname, const std::string& servname):
         skt(hostname.c_str(), servname.c_str()), was_closed(false) {}
 
-const uint16_t CommonProtocol::recv_two_bytes() {  // TODO handle receive socket closed
+uint16_t CommonProtocol::recv_two_bytes() {
     uint16_t two_bytes;
 
     skt.recvall(&two_bytes, sizeof(two_bytes), &was_closed);
@@ -71,10 +71,10 @@ void CommonProtocol::send_join_match(const uint16_t header, JoinMatchDTO& join_m
     skt.sendall(&join_match, sizeof(join_match), &was_closed);
 }
 
-void CommonProtocol::send_game_state(const uint16_t header, GameStateDTO& game_state) {
+void CommonProtocol::send_game_state(const uint16_t header, GameStateDTO game_state) {
     send_header(header);
     game_state.seconds = htons(game_state.seconds);
-    for (int i = 0; i < game_state.num_players; i++) {
+    for (size_t i = 0; i < game_state.num_players; i++) {
         game_state.players[i].id = htons(game_state.players[i].id);
         game_state.players[i].health = htons(game_state.players[i].health);
         game_state.players[i].points = htons(game_state.players[i].points);
@@ -84,20 +84,24 @@ void CommonProtocol::send_game_state(const uint16_t header, GameStateDTO& game_s
             game_state.players[i].weapons[j].ammo = htons(game_state.players[i].weapons[j].ammo);
         }
     }
-    for (int i = 0; i < game_state.num_enemies; i++) {
+    for (size_t i = 0; i < game_state.num_enemies; i++) {
         game_state.enemies[i].id = htons(game_state.enemies[i].id);
         game_state.enemies[i].x_pos = htons(game_state.enemies[i].x_pos);
         game_state.enemies[i].y_pos = htons(game_state.enemies[i].y_pos);
     }
-    for (int i = 0; i < game_state.num_bullets; i++) {
+    for (size_t i = 0; i < game_state.num_bullets; i++) {
         game_state.bullets[i].id = htobe64(game_state.bullets[i].id);
         game_state.bullets[i].x_pos = htons(game_state.bullets[i].x_pos);
         game_state.bullets[i].y_pos = htons(game_state.bullets[i].y_pos);
     }
+
     skt.sendall(&game_state, sizeof(game_state), &was_closed);
 }
 
-void CommonProtocol::send_finish_match(const uint16_t header) { send_header(header); }
+void CommonProtocol::send_finish_match(const uint16_t header) {
+    std::cout << "sending finish match" << std::endl;
+    send_header(header);
+}
 
 void CommonProtocol::send_request_active_games(const uint16_t header,
                                                RequestActiveGamesDTO& active_games) {

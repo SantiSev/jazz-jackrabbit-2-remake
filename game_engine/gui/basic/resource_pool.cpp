@@ -1,7 +1,10 @@
 #include "resource_pool.h"
 
 using engine::Font;
+using engine::Music;
 using engine::ResourcePool;
+using engine::Sound;
+using engine::SoundEffect;
 using engine::Texture;
 
 ResourcePool::ResourcePool(): renderer(nullptr) {}
@@ -41,6 +44,22 @@ const std::shared_ptr<YAML::Node>& ResourcePool::load_yaml(const std::string& na
     return yamls[name];
 }
 
+void ResourcePool::load_sound_effect(const std::string& name) {
+    std::string file = name + WAV_EXTENSION;
+    if (sounds.find(name) == sounds.end()) {
+        auto sound = std::make_shared<SoundEffect>(asset_manager.get_full_path(file));
+        sounds.insert({name, sound});
+    }
+}
+
+void ResourcePool::load_music(const std::string& name) {
+    std::string file = name + MP3_EXTENSION;
+    if (sounds.find(name) == sounds.end()) {
+        auto sound = std::make_shared<Music>(asset_manager.get_full_path(file));
+        sounds.insert({name, sound});
+    }
+}
+
 const std::shared_ptr<Texture>& ResourcePool::get_texture(const std::string& name) const {
     return textures.at(name);
 }
@@ -51,6 +70,10 @@ const std::shared_ptr<Font>& ResourcePool::get_font(const std::string& name) con
 
 const std::shared_ptr<YAML::Node>& ResourcePool::get_yaml(const std::string& name) const {
     return yamls.at(name);
+}
+
+const std::shared_ptr<Sound>& ResourcePool::get_sound(const std::string& name) const {
+    return sounds.at(name);
 }
 
 ResourcePool::~ResourcePool() = default;

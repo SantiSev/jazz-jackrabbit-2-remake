@@ -6,7 +6,9 @@
 #include <cstring>
 #include <iomanip>
 #include <list>
+#include <map>
 #include <memory>
+#include <random>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -15,6 +17,7 @@
 #include <yaml-cpp/yaml.h>
 
 #include "../../common/assets.h"
+#include "../../common/item_enum.h"
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/physics_engine/collision_manager.h"
 #include "../../server/game_logic/weapons/bullet.h"
@@ -54,9 +57,37 @@ private:
     std::unique_ptr<CollisionManager> collision_manager;
     std::vector<Vector2D> player_spawn_points;
     std::vector<Vector2D> enemy_spawn_points;
+    std::vector<Vector2D> item_spawn_points;
     std::mutex match_mutex;
 
+    std::atomic<bool> cheat_revive_enabled = false;
+
     const std::shared_ptr<engine::ResourcePool>& resource_pool;
+
+    //-------------------- Gameloop Methods ----------------------
+
+    void countdown_match(std::chrono::time_point<std::chrono::steady_clock>& runTime,
+                         const std::chrono::time_point<std::chrono::steady_clock>& endTime);
+
+    void respawn_players();
+
+    void respawn_enemies();
+
+    void respawn_items();
+
+    Collectable create_random_item(Vector2D position);
+
+    Vector2D get_random_spawn_point(std::vector<Vector2D> const& spawnpoints);
+
+    //-------------------- Initialization Methods -----------------
+
+    void load_enviorment(map_list_t map);
+
+    void initiate_enemies(std::vector<character_t> enemy_types);
+
+    void load_spawn_points();
+
+    void load_items();
 
 public:
     Queue<std::shared_ptr<Message>> match_queue;
@@ -68,20 +99,7 @@ public:
     void stop() override;
     ~Match() override = default;
 
-    //-------------------- Gameloop Methods ----------------------
-
-    void countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
-                         const std::chrono::time_point<std::chrono::system_clock>& endTime);
-
-    void respawn_players();
-
-    void respawn_enemies();
-
-    void respawn_items();
-
     void run_command(const CommandDTO& dto);
-
-    Vector2D select_player_spawn_point();
 
     //-------------------- Conection Methods ----------------------
 
@@ -93,13 +111,11 @@ public:
 
     GameStateDTO create_actual_snapshot();
 
-    //-------------------- Initialization Methods -----------------
+    void run_cheat_command(const CheatCommandDTO& dto);
 
-    void load_enviorment(uint16_t map);
+    void kill_all_cheat();
 
-    void initiate_enemies();
-
-    void load_spawn_points();
+    void revive_all_cheat();
 
     //-------------------- Getter Methods -----------------
 
