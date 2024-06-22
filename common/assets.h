@@ -7,6 +7,7 @@
 #define FONT "assets/fonts/atus"
 #define FONT_SIZE 20
 
+#define CHARACTER_SELECT_FILE "assets/character_select"
 #define EDITOR_FILE "assets/editor/editor_assets"
 
 #endif  // TP_FINAL_ASSETS_H

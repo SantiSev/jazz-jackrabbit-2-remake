@@ -19,6 +19,8 @@
 #include "../protocol/client_message_handler.h"
 #include "../shared/background.h"
 
+#include "character_select_scene.h"
+
 
 class MenuScene {
 private:
@@ -31,8 +33,11 @@ private:
     std::atomic<bool>& game_running;
     std::atomic<bool>& menu_running;
     std::atomic<bool>& editor_running;
+    std::atomic<bool> character_select_running;
 
-    void create_buttons(ClientMessageHandler& message_handler);
+    ClientMessageHandler& message_handler;
+
+    void create_buttons();
 
 public:
     MenuScene(engine::Window& window, EventLoop* event_loop,

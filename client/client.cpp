@@ -53,6 +53,7 @@ void Client::pre_load_resources() {
     resource_pool->load_texture(ITEMS_FILE);
     resource_pool->load_texture(ENEMIES_FILE);
     resource_pool->load_texture(EDITOR_FILE);
+    resource_pool->load_texture(CHARACTER_SELECT_FILE);
 
     // Fonts
     resource_pool->load_font(FONT, FONT_SIZE);
@@ -68,6 +69,7 @@ void Client::pre_load_resources() {
     resource_pool->load_yaml(ITEMS_FILE);
     resource_pool->load_yaml(EDITOR_FILE);
     resource_pool->load_yaml(MAPS_FILE);
+    resource_pool->load_yaml(CHARACTER_SELECT_FILE);
 
     // Sounds
     resource_pool->load_music(sound_to_string.at(BACKGROUND));

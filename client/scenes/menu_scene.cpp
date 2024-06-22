@@ -16,12 +16,16 @@ MenuScene::MenuScene(engine::Window& window, EventLoop* event_loop,
         background(std::make_unique<MainScreenBackground>(*resource_pool)),
         game_running(game_running),
         menu_running(menu_running),
-        editor_running(editor_running) {
+        editor_running(editor_running),
+        character_select_running(false),
+        message_handler(message_handler) {
 
-    create_buttons(message_handler);
+    create_buttons();
 }
 
 void MenuScene::start() {
+    CharacterSelectScene character_select_scene(window, event_loop, resource_pool, game_running,
+                                                character_select_running, message_handler);
     // Add buttons to mouse signal of event loop
     for (auto button: buttons) {
         event_loop->mouse.add_on_click_signal_obj(button);
@@ -37,6 +41,9 @@ void MenuScene::start() {
 
     // Drop & Rest
     while (menu_running) {
+        if (character_select_running) {
+            character_select_scene.start();
+        }
         // Draw
         window.clear();
         background->draw(renderer, it);
@@ -67,7 +74,7 @@ void MenuScene::start() {
     }
 }
 
-void MenuScene::create_buttons(ClientMessageHandler& message_handler) {
+void MenuScene::create_buttons() {
 
     int y_start = Y_BUTTON_START;
     int w = BUTTON_WIDTH;
@@ -76,7 +83,7 @@ void MenuScene::create_buttons(ClientMessageHandler& message_handler) {
     // Create buttons
     SDL_Rect create_match_button_d_rect = {0, y_start, w, h};
     CreateMatchButton* create_match_button = new CreateMatchButton(
-            renderer, resource_pool, create_match_button_d_rect, message_handler);
+            renderer, resource_pool, create_match_button_d_rect, character_select_running);
     y_start += h + BUTTON_MARGIN;
 
     SDL_Rect join_match_button_d_rect = {0, y_start, w, h};
