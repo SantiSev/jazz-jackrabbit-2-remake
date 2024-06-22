@@ -408,9 +408,11 @@ void Match::load_environment() {
             }
         }
     }
+    collision_manager->prepare_map();
 
 #ifdef LOG
     std::cout << "Map loaded!" << std::endl;
+    GIT
 #endif
 }
 

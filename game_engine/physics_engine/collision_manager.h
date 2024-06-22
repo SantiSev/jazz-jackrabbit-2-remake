@@ -20,6 +20,9 @@ private:
     std::vector<std::vector<std::shared_ptr<CollisionObject>>>
             grid;  // grid: [x][y] stores a vector of shared pointers to CollisionObjects
 
+    std::vector<std::tuple<std::shared_ptr<DynamicBody>, Vector2D>> dynamic_bodies;
+    std::vector<std::shared_ptr<StaticBody>> static_bodies;
+
     void handle_out_of_bounds(std::shared_ptr<DynamicBody> obj);
     void place_object_in_grid(std::shared_ptr<CollisionObject> obj);
     void remove_object_from_grid(std::shared_ptr<CollisionObject> obj, Vector2D position);
@@ -29,8 +32,6 @@ private:
     void clear();
 
 public:
-    std::vector<std::tuple<std::shared_ptr<DynamicBody>, Vector2D>> dynamic_bodies;
-
     CollisionManager(int levelWidth, int levelHeight);
     void iterateDynamicBodies(std::function<void(std::shared_ptr<DynamicBody>&)> func);
     std::shared_ptr<CollisionObject> get_collision_object_at(int x, int y) const;
@@ -43,6 +44,7 @@ public:
     void remove_inactive_bodies();
     int get_grid_width() const;
     int get_grid_height() const;
+    void prepare_map();
 
 
     ~CollisionManager();
