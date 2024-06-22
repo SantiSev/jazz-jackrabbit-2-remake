@@ -1,0 +1,2383 @@
+map_width: 1280
+map_height: 640
+background:
+  s_rect:
+    x: 0
+    y: 1154
+    w: 255
+    h: 255
+  d_rect:
+    x: 0
+    y: 0
+    w: 800
+    h: 600
+objects:
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1248
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1248
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1216
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1216
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 128
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 544
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 96
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 512
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 96
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 480
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 96
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 448
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 96
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 416
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 96
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 384
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 96
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 352
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 128
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 320
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 96
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 288
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 96
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 256
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 96
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 224
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 96
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 192
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 96
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 160
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 96
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 128
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 96
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 96
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 96
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 64
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 96
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 32
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 128
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1184
+          y: 0
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1152
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1152
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 479
+      y: 64
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1152
+          y: 256
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 96
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1152
+          y: 224
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 543
+      y: 96
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1152
+          y: 192
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1120
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1120
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 64
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1120
+          y: 256
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1088
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1088
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 479
+      y: 64
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1088
+          y: 256
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1056
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1056
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 64
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1056
+          y: 256
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1024
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1024
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 64
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 1024
+          y: 256
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 992
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 992
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 960
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 960
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 928
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 928
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 896
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 896
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 864
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 864
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 352
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 352
+          y: 352
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 320
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 320
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 320
+          y: 352
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 288
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 288
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 288
+          y: 352
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 256
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 256
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 256
+          y: 352
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 224
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 224
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 224
+          y: 352
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 192
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 192
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 192
+          y: 352
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 64
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 64
+          y: 544
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 544
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 512
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 480
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 448
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 416
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 384
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 352
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 320
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 288
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 384
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 128
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 352
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 96
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 320
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 64
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 736
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 288
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 32
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 64
+          y: 160
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 736
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 256
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 0
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 704
+          y: 416
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 96
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 224
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 192
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 672
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 160
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 672
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 128
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 736
+          y: 416
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 128
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 96
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 64
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 32
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 352
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 0
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 672
+          y: 416
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 64
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 416
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 160
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 704
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 448
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 192
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 704
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 480
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 224
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 512
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 32
+          y: 256
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 64
+          y: 480
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 64
+          y: 512
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 768
+          y: 416
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 160
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 96
+          y: 160
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 768
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 768
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 96
+          y: 512
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 96
+          y: 544
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 96
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 800
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 800
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 128
+          y: 544
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 128
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 832
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 832
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 192
+      y: 608
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 160
+          y: 544
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 160
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 544
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 0
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 384
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 384
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 416
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 416
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 448
+          y: 192
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 448
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 448
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 480
+          y: 192
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 480
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 480
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 512
+          y: 192
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 512
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 512
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 544
+          y: 192
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 544
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 544
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 576
+          y: 192
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 576
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 576
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 608
+          y: 192
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 608
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 608
+          y: 608
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 640
+          y: 192
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 225
+      y: 0
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 640
+          y: 416
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 640
+          y: 576
+          w: 32
+          h: 32
+  - collision: true
+    s_rect:
+      x: 511
+      y: 97
+      w: 32
+      h: 32
+    d_rect_list:
+      - d_rect:
+          repeat_h: 1
+          repeat_v: 1
+          x: 640
+          y: 608
+          w: 32
+          h: 32
+player_spawnpoints:
+  - x: 1056
+    y: 160
+  - x: 480
+    y: 96
+enemy_spawnpoints:
+  - x: 960
+    y: 480
+  - x: 704
+    y: 320
+item_spawnpoints:
+  - x: 672
+    y: 480
+  - x: 416
+    y: 480
+  - x: 544
+    y: 480
