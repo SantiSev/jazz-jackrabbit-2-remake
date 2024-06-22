@@ -81,7 +81,7 @@ private:
 
     //-------------------- Initialization Methods -----------------
 
-    void load_enviorment(map_list_t map);
+    void load_environment();
 
     void initiate_enemies(std::vector<character_t> enemy_types);
 

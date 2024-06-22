@@ -24,7 +24,7 @@ Match::Match(const uint16_t& map_selected, size_t required_players_setting,
         collision_manager(nullptr),
         resource_pool(resource_pool),
         match_queue(Queue<std::shared_ptr<Message>>()) {
-    load_enviorment(map_selected);
+    load_environment();
     load_spawn_points();
     load_items();
     initiate_enemies({character_t::MAD_HATTER, character_t::LIZARD_GOON});
@@ -361,9 +361,9 @@ GameStateDTO Match::create_actual_snapshot() {
 //-------------------- Initialization Methods -----------------
 
 
-void Match::load_enviorment(uint16_t selected_map) {
+void Match::load_environment() {
     auto yaml_maps = *resource_pool->get_yaml(MAPS_FILE);
-    auto yaml_path = yaml_maps["maps"][selected_map]["yaml"].as<std::string>();
+    auto yaml_path = yaml_maps["maps"][map]["yaml"].as<std::string>();
     auto yaml = *resource_pool->load_yaml(yaml_path);
 
     if (yaml.IsNull()) {
