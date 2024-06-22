@@ -10,6 +10,10 @@ CharacterSelectScene::CharacterSelectScene(engine::Window& window, EventLoop* ev
         event_loop(event_loop),
         resource_pool(resource_pool),
         background(nullptr),
+        title(resource_pool->get_font(FONT), SDL_Rect{100, 100, 600, 75},
+              SDL_Color{255, 255, 255, 255}, SDL_Color{255, 255, 255, 255}, "Select Your Character",
+              renderer),
+        title_background(SDL_Color{0, 122, 16, 255}, SDL_Rect{0, 90, 800, 85}),
         game_running(game_running),
         character_select_running(character_select_running),
         message_handler(message_handler),
@@ -24,6 +28,7 @@ CharacterSelectScene::CharacterSelectScene(engine::Window& window, EventLoop* ev
 
     background = std::make_unique<engine::Sprite>(
             texture, back_s_rect, SDL_Rect{0, 0, window.get_width(), window.get_height()});
+
     create_buttons();
 
     for (auto& selector: selectors) {
@@ -54,6 +59,8 @@ void CharacterSelectScene::start() {
         // Draw
         window.clear();
         background->draw(renderer, it);
+        title_background.draw(renderer, it);
+        title.draw(renderer, it);
         for (auto& selector: selectors) {
             selector.draw(renderer, it);
         }

@@ -10,6 +10,8 @@
 #include "../../common/character_enum.h"
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/gui/basic/window.h"
+#include "../../game_engine/gui/widgets/color_rect.h"
+#include "../../game_engine/gui/widgets/label.h"
 #include "../../game_engine/gui/widgets/sprite.h"
 #include "../event_loop.h"
 #include "../menu_objects/character_selector.h"
@@ -24,6 +26,8 @@ private:
     EventLoop* event_loop;
     std::shared_ptr<engine::ResourcePool> resource_pool;
     std::unique_ptr<engine::CanvasObject> background;
+    engine::Label title;
+    engine::ColorRect title_background;
     std::list<CharacterSelector> selectors;
 
     std::atomic<bool>& game_running;

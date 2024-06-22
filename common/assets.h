@@ -5,7 +5,7 @@
 
 // Fonts
 #define FONT "assets/fonts/atus"
-#define FONT_SIZE 20
+#define FONT_SIZE 255
 
 #define CHARACTER_SELECT_FILE "assets/character_select"
 #define EDITOR_FILE "assets/editor/editor_assets"
