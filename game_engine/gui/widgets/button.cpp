@@ -2,7 +2,7 @@
 
 using engine::Button;
 
-Button::Button(std::unique_ptr<Label> label, SDL_Rect& rect, const SDL_Color& color,
+Button::Button(std::unique_ptr<Label> label, SDL_Rect rect, const SDL_Color& color,
                const SDL_Color& hover_color):
         label(std::move(label)),
         rect(rect),

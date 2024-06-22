@@ -30,10 +30,6 @@ CharacterSelectScene::CharacterSelectScene(engine::Window& window, EventLoop* ev
             texture, back_s_rect, SDL_Rect{0, 0, window.get_width(), window.get_height()});
 
     create_buttons();
-
-    for (auto& selector: selectors) {
-        event_loop->mouse.add_on_click_signal_obj(&selector);
-    }
 }
 
 void CharacterSelectScene::create_buttons() {
@@ -45,7 +41,11 @@ void CharacterSelectScene::create_buttons() {
                            character_select_running);
 }
 
-void CharacterSelectScene::start() {
+void CharacterSelectScene::start(uint16_t selected_map_id) {
+    for (auto& selector: selectors) {
+        event_loop->mouse.add_on_click_signal_obj(&selector);
+    }
+
     const Uint32 rate = 1000 / 60;
 
     Uint32 frame_start = SDL_GetTicks();
@@ -81,7 +81,9 @@ void CharacterSelectScene::start() {
         frame_start += rate;
         it++;
     }
-    message_handler.create_match(selected_character, (uint16_t)1, MAX_PLAYERS);
+    if (game_running) {
+        message_handler.create_match(selected_character, selected_map_id, MAX_PLAYERS);
+    }
 }
 
 CharacterSelectScene::~CharacterSelectScene() {

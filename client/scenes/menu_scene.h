@@ -20,6 +20,7 @@
 #include "../shared/background.h"
 
 #include "character_select_scene.h"
+#include "map_select_scene.h"
 
 
 class MenuScene {
@@ -33,6 +34,7 @@ private:
     std::atomic<bool>& game_running;
     std::atomic<bool>& menu_running;
     std::atomic<bool>& editor_running;
+    std::atomic<bool> map_select_running;
     std::atomic<bool> character_select_running;
 
     ClientMessageHandler& message_handler;

@@ -50,7 +50,7 @@ public:
     CharacterSelectScene(const CharacterSelectScene&) = delete;
     CharacterSelectScene& operator=(const CharacterSelectScene&) = delete;
 
-    void start();
+    void start(uint16_t selected_map_id);
 
     ~CharacterSelectScene();
 };

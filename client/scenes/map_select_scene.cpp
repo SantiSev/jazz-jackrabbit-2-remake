@@ -1,10 +1,14 @@
 #include "map_select_scene.h"
 
+#define X_START 300
+#define Y_START 200
+
 MapSelectScene::MapSelectScene(engine::Window& window, EventLoop* event_loop,
-                                           std::shared_ptr<engine::ResourcePool> resource_pool,
-                                           std::atomic<bool>& game_running,
-                                           std::atomic<bool>& map_select_running,
-                                           ClientMessageHandler& message_handler):
+                               std::shared_ptr<engine::ResourcePool> resource_pool,
+                               std::atomic<bool>& game_running,
+                               std::atomic<bool>& map_select_running,
+                               std::atomic<bool>& character_select_running,
+                               ClientMessageHandler& message_handler):
         window(window),
         renderer(window.get_renderer()),
         event_loop(event_loop),
@@ -16,32 +20,45 @@ MapSelectScene::MapSelectScene(engine::Window& window, EventLoop* event_loop,
         title_background(SDL_Color{0, 122, 16, 255}, SDL_Rect{0, 90, 800, 85}),
         game_running(game_running),
         map_select_running(map_select_running),
+        character_select_running(character_select_running),
         message_handler(message_handler),
         selected_map_id(1) {
     auto texture = resource_pool->get_texture(CHARACTER_SELECT_FILE);
     auto yaml = *resource_pool->get_yaml(CHARACTER_SELECT_FILE);
 
-    SDL_Rect back_s_rect = {yaml[CHARACTER_SELECT_BACKGROUND]["x"].as<int>(),
-                            yaml[CHARACTER_SELECT_BACKGROUND]["y"].as<int>(),
-                            yaml[CHARACTER_SELECT_BACKGROUND]["w"].as<int>(),
-                            yaml[CHARACTER_SELECT_BACKGROUND]["h"].as<int>()};
+    SDL_Rect back_s_rect = {yaml["character_select_background"]["x"].as<int>(),
+                            yaml["character_select_background"]["y"].as<int>(),
+                            yaml["character_select_background"]["w"].as<int>(),
+                            yaml["character_select_background"]["h"].as<int>()};
 
     background = std::make_unique<engine::Sprite>(
             texture, back_s_rect, SDL_Rect{0, 0, window.get_width(), window.get_height()});
 
     create_buttons();
-
-    for (auto& selector: selectors) {
-        event_loop->mouse.add_on_click_signal_obj(&selector);
-    }
 }
 
 void MapSelectScene::create_buttons() {
-    selectors.emplace_back(resource_pool, SOME_MAP, X, Y, selected_map_id,
-                           map_select_running);
+    auto yaml = *resource_pool->get_yaml(MAPS_FILE);
+    auto map_list = yaml["map_list"];
+
+    int x_start = X_START;
+    int y_start = Y_START;
+
+    for (auto map: map_list) {
+        std::string map_name = map["name"].as<std::string>();
+        uint16_t map_id = map["id"].as<uint16_t>();
+        selectors.emplace_back(renderer, resource_pool, map_name, map_id, x_start, y_start,
+                               selected_map_id, map_select_running, character_select_running);
+        selectors.back().center_x(0, 800);
+        y_start += 50;
+    }
 }
 
 void MapSelectScene::start() {
+    for (auto& selector: selectors) {
+        event_loop->mouse.add_on_click_signal_obj(&selector);
+    }
+
     const Uint32 rate = 1000 / 60;
 
     Uint32 frame_start = SDL_GetTicks();

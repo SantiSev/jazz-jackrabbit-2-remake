@@ -1,8 +1,10 @@
 #ifndef TP_FINAL_MAP_SELECT_H
 #define TP_FINAL_MAP_SELECT_H
 
+#include <atomic>
 #include <list>
 #include <memory>
+#include <string>
 
 #include <SDL2/SDL.h>
 
@@ -31,6 +33,7 @@ private:
 
     std::atomic<bool>& game_running;
     std::atomic<bool>& map_select_running;
+    std::atomic<bool>& character_select_running;
 
     ClientMessageHandler& message_handler;
 
@@ -40,10 +43,10 @@ public:
     uint16_t selected_map_id;
 
     MapSelectScene(engine::Window& window, EventLoop* event_loop,
-                         std::shared_ptr<engine::ResourcePool> resource_pool,
-                         std::atomic<bool>& game_running,
-                         std::atomic<bool>& map_select_running,
-                         ClientMessageHandler& message_handler);
+                   std::shared_ptr<engine::ResourcePool> resource_pool,
+                   std::atomic<bool>& game_running, std::atomic<bool>& map_select_running,
+                   std::atomic<bool>& character_select_running,
+                   ClientMessageHandler& message_handler);
 
     // cant copy
     MapSelectScene(const MapSelectScene&) = delete;

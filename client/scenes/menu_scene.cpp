@@ -17,6 +17,7 @@ MenuScene::MenuScene(engine::Window& window, EventLoop* event_loop,
         game_running(game_running),
         menu_running(menu_running),
         editor_running(editor_running),
+        map_select_running(false),
         character_select_running(false),
         message_handler(message_handler) {
 
@@ -24,6 +25,8 @@ MenuScene::MenuScene(engine::Window& window, EventLoop* event_loop,
 }
 
 void MenuScene::start() {
+    MapSelectScene map_select_scene(window, event_loop, resource_pool, game_running,
+                                    map_select_running, character_select_running, message_handler);
     CharacterSelectScene character_select_scene(window, event_loop, resource_pool, game_running,
                                                 character_select_running, message_handler);
     // Add buttons to mouse signal of event loop
@@ -41,8 +44,15 @@ void MenuScene::start() {
 
     // Drop & Rest
     while (menu_running) {
+        if (map_select_running) {
+            // Disconnect from mouse signals
+            for (auto button: buttons) {
+                event_loop->mouse.remove_on_click_signal_obj(button);
+            }
+            map_select_scene.start();
+        }
         if (character_select_running) {
-            character_select_scene.start();
+            character_select_scene.start(map_select_scene.selected_map_id);
         }
         // Draw
         window.clear();
@@ -67,11 +77,6 @@ void MenuScene::start() {
         frame_start += rate;
         it++;
     }
-
-    // Disconnect from mouse signals
-    for (auto button: buttons) {
-        event_loop->mouse.remove_on_click_signal_obj(button);
-    }
 }
 
 void MenuScene::create_buttons() {
@@ -83,7 +88,7 @@ void MenuScene::create_buttons() {
     // Create buttons
     SDL_Rect create_match_button_d_rect = {0, y_start, w, h};
     CreateMatchButton* create_match_button = new CreateMatchButton(
-            renderer, resource_pool, create_match_button_d_rect, character_select_running);
+            renderer, resource_pool, create_match_button_d_rect, map_select_running);
     y_start += h + BUTTON_MARGIN;
 
     SDL_Rect join_match_button_d_rect = {0, y_start, w, h};
