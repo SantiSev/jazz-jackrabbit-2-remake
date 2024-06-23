@@ -37,3 +37,22 @@ void StaticBody::handle_colision(CollisionObject* other) {
             break;
     }
 }
+
+void StaticBody::disable_collision(CollisionFace face) {
+    switch (face) {
+        case CollisionFace::TOP:
+            top_collision = false;
+            break;
+        case CollisionFace::LEFT:
+            left_collision = false;
+            break;
+        case CollisionFace::RIGHT:
+            right_collision = false;
+            break;
+        case CollisionFace::BOTTOM:
+            bottom_collision = false;
+            break;
+        default:
+            break;
+    }
+}
