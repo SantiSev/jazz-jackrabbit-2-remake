@@ -18,6 +18,7 @@
 #include "../event_loop.h"
 #include "../protocol/client_message_handler.h"
 #include "../scoreboard_objects/return_menu_button.h"
+#include "../shared/background.h"
 
 class ScoreScene {
 private:

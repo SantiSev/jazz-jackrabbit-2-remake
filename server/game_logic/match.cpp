@@ -411,7 +411,6 @@ void Match::load_environment() {
 
 #ifdef LOG
     std::cout << "Map loaded!" << std::endl;
-    GIT
 #endif
 }
 

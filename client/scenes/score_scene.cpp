@@ -27,7 +27,7 @@ ScoreScene::ScoreScene(engine::Window& window, EventLoop* event_loop,
     // Create background
     SDL_Rect background_s_rect = {16, 1952, 640, 480};
     SDL_Rect background_d_rect = {0, 0, 800, 600};
-    background = new engine::Sprite(resource_pool->get_texture(BACKGROUNDS), background_s_rect,
+    background = new engine::Sprite(resource_pool->get_texture(BACKGROUNDS_FILE), background_s_rect,
                                     background_d_rect);
 
     // Create buttons
