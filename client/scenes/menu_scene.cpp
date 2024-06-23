@@ -7,21 +7,31 @@
 
 MenuScene::MenuScene(engine::Window& window, EventLoop* event_loop,
                      std::shared_ptr<engine::ResourcePool> resource_pool,
+                     std::shared_ptr<engine::SoundManager> sound_manager,
                      std::atomic<bool>& game_running, std::atomic<bool>& menu_running,
                      std::atomic<bool>& editor_running, ClientMessageHandler& message_handler):
         window(window),
         renderer(window.get_renderer()),
         event_loop(event_loop),
         resource_pool(resource_pool),
+        sound_manager(sound_manager),
         background(std::make_unique<MainScreenBackground>(*resource_pool)),
         game_running(game_running),
         menu_running(menu_running),
-        editor_running(editor_running) {
+        editor_running(editor_running),
+        map_select_running(false),
+        character_select_running(false),
+        message_handler(message_handler) {
 
-    create_buttons(message_handler);
+    create_buttons();
 }
 
 void MenuScene::start() {
+    MapSelectScene map_select_scene(window, event_loop, resource_pool, game_running,
+                                    map_select_running, character_select_running, message_handler);
+    CharacterSelectScene character_select_scene(window, event_loop, resource_pool, sound_manager,
+                                                game_running, character_select_running,
+                                                message_handler);
     // Add buttons to mouse signal of event loop
     for (auto button: buttons) {
         event_loop->mouse.add_on_click_signal_obj(button);
@@ -37,6 +47,16 @@ void MenuScene::start() {
 
     // Drop & Rest
     while (menu_running) {
+        if (map_select_running) {
+            // Disconnect from mouse signals
+            for (auto button: buttons) {
+                event_loop->mouse.remove_on_click_signal_obj(button);
+            }
+            map_select_scene.start();
+        }
+        if (character_select_running) {
+            character_select_scene.start(map_select_scene.selected_map_id);
+        }
         // Draw
         window.clear();
         background->draw(renderer, it);
@@ -60,14 +80,9 @@ void MenuScene::start() {
         frame_start += rate;
         it++;
     }
-
-    // Disconnect from mouse signals
-    for (auto button: buttons) {
-        event_loop->mouse.remove_on_click_signal_obj(button);
-    }
 }
 
-void MenuScene::create_buttons(ClientMessageHandler& message_handler) {
+void MenuScene::create_buttons() {
 
     int y_start = Y_BUTTON_START;
     int w = BUTTON_WIDTH;
@@ -76,7 +91,7 @@ void MenuScene::create_buttons(ClientMessageHandler& message_handler) {
     // Create buttons
     SDL_Rect create_match_button_d_rect = {0, y_start, w, h};
     CreateMatchButton* create_match_button = new CreateMatchButton(
-            renderer, resource_pool, create_match_button_d_rect, message_handler);
+            renderer, resource_pool, create_match_button_d_rect, map_select_running);
     y_start += h + BUTTON_MARGIN;
 
     SDL_Rect join_match_button_d_rect = {0, y_start, w, h};

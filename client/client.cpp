@@ -22,8 +22,8 @@ Client::Client(const std::string& host, const std::string& port):
 }
 
 void Client::start() {
-    MenuScene menu_scene(window, event_loop, resource_pool, game_running, menu_running,
-                         editor_running, message_handler);
+    MenuScene menu_scene(window, event_loop, resource_pool, sound_manager, game_running,
+                         menu_running, editor_running, message_handler);
     event_loop->start();
 
     sound_manager->play_sound(BACKGROUND, 0.5);
@@ -53,6 +53,7 @@ void Client::pre_load_resources() {
     resource_pool->load_texture(ITEMS_FILE);
     resource_pool->load_texture(ENEMIES_FILE);
     resource_pool->load_texture(EDITOR_FILE);
+    resource_pool->load_texture(CHARACTER_SELECT_FILE);
 
     // Fonts
     resource_pool->load_font(FONT, FONT_SIZE);
@@ -68,10 +69,12 @@ void Client::pre_load_resources() {
     resource_pool->load_yaml(ITEMS_FILE);
     resource_pool->load_yaml(EDITOR_FILE);
     resource_pool->load_yaml(MAPS_FILE);
+    resource_pool->load_yaml(CHARACTER_SELECT_FILE);
 
     // Sounds
     resource_pool->load_music(sound_to_string.at(BACKGROUND));
     resource_pool->load_sound_effect(sound_to_string.at(SHOOT_SOUND));
+    resource_pool->load_sound_effect(sound_to_string.at(CHARACTER_SELECT_SOUND));
 }
 
 Client::~Client() {

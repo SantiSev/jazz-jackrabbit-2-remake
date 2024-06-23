@@ -24,7 +24,7 @@ protected:
     bool is_hovered_m;
 
 public:
-    explicit Button(std::unique_ptr<Label> label, SDL_Rect& rect, const SDL_Color& color,
+    explicit Button(std::unique_ptr<Label> label, SDL_Rect rect, const SDL_Color& color,
                     const SDL_Color& hoverColor);
 
     // Cant copy

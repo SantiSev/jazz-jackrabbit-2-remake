@@ -1,0 +1,50 @@
+character_select_background:
+  x: 377
+  y: 11
+  w: 850
+  h: 530
+jazz-text:
+  x: 18
+  y: 4
+  w: 140
+  h: 49
+spaz-text:
+  x: 18
+  y: 60
+  w: 140
+  h: 49
+lori-text:
+  x: 18
+  y: 115
+  w: 140
+  h: 49
+jazz:
+  x: 15
+  y: 171
+  w: 179
+  h: 180
+spaz:
+  x: 15
+  y: 358
+  w: 179
+  h: 180
+lori:
+  x: 15
+  y: 545
+  w: 179
+  h: 180
+jazz-ripped:
+  x: 194
+  y: 171
+  w: 179
+  h: 180
+spaz-ripped:
+  x: 194
+  y: 358
+  w: 179
+  h: 180
+lori-ripped:
+  x: 194
+  y: 545
+  w: 179
+  h: 180

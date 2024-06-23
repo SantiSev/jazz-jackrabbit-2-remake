@@ -12,11 +12,11 @@
 class CreateMatchButton: public engine::Button {
 private:
     std::shared_ptr<engine::ResourcePool>& resource_pool;
-    ClientMessageHandler& message_handler;
+    std::atomic<bool>& map_select_running;
 
 public:
     CreateMatchButton(SDL_Renderer* renderer, std::shared_ptr<engine::ResourcePool> resource_pool,
-                      SDL_Rect& d_rect, ClientMessageHandler& message_handler);
+                      SDL_Rect& d_rect, std::atomic<bool>& map_select_running);
 
     void on_click() override;
 
