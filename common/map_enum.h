@@ -4,15 +4,17 @@
 #include <map>
 #include <string>
 
-typedef enum: uint8_t {
-    NO_MAP = 0x00,
-    MAP_1 = 0x01,
-    MAP_2 = 0x02,
-} map_list_t;
+#define MAPS_FILE "assets/maps/maps"
 
-const std::map<map_list_t, std::string> map_list_to_string = {
-        {MAP_1, "assets/maps/grass_map"},
-        {MAP_2, "assets/maps/electric_map"},
-};
+// typedef enum: uint8_t {
+//     NO_MAP = 0x00,
+//     MAP_1 = 0x01,
+//     MAP_2 = 0x02,
+// } map_list_t;
+
+// const std::map<map_list_t, std::string> map_list_to_string = {
+//         {MAP_1, "assets/maps/grass_map"},
+//         {MAP_2, "assets/maps/electric_map"},
+// };
 
 #endif

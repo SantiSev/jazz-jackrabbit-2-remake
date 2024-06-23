@@ -15,7 +15,7 @@ private:
     SDL_Rect rect;
 
 public:
-    ColorRect(const SDL_Color& color, SDL_Rect& rect);
+    ColorRect(const SDL_Color& color, SDL_Rect rect);
 
     void draw(SDL_Renderer* renderer, int it) override;
 

@@ -4,7 +4,7 @@ MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
                        std::shared_ptr<engine::ResourcePool> resource_pool,
                        std::shared_ptr<engine::SoundManager> sound_manager,
                        std::atomic<bool>& match_running, std::atomic<id_client_t>& id_client,
-                       ClientMessageHandler& message_handler, map_list_t map_enum):
+                       ClientMessageHandler& message_handler, uint16_t map_id):
         id_client(id_client),
         window(window),
         renderer(window.get_renderer()),
@@ -15,8 +15,8 @@ MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
         game_state_q(message_handler.game_state_q),
         last_game_state(nullptr),
         match_running(match_running),
-        map(std::make_shared<Map>(map_enum, resource_pool)),
-        camera(window.get_width(), window.get_height(), map->get_body().w, map->get_body().h),
+        map(std::make_shared<Map>(map_id, resource_pool)),
+        camera(window.get_width(), window.get_height(), 0, map->get_body().w, 0, map->get_body().h),
         player_controller(message_handler) {
     // Blocking call to get first game state
     std::shared_ptr<GameStateDTO> first_state = game_state_q.pop();
@@ -53,7 +53,7 @@ void MatchScene::start() {
             rest_time = rate - (behind % rate);
             lost = behind / rate;
             frame_start += lost;
-            it = std::round(lost / rate);
+            it += std::floor(lost / rate);
         }
 
         SDL_Delay(rest_time);
@@ -99,6 +99,7 @@ void MatchScene::update_objects() {
         enemies[enemy.id]->set_animation(map_states_to_animations.at(enemy.state));
     }
 
+
     for (uint8_t i = 0; i < game_state->num_bullets; i++) {
         auto bullet = game_state->bullets[i];
 
@@ -110,17 +111,16 @@ void MatchScene::update_objects() {
         bullets[bullet.id]->set_position(bullet.x_pos, bullet.y_pos);
         // sound_manager->play_sound(SHOOT_SOUND, 0.5); // IDK if this works
     }
-    // for (uint8_t i = 0; i < game_state->num_items; i++) {
-    //     auto item = game_state->items[i];
 
-    //     // If it's a new item create it
-    //     items.try_emplace(
-    //             item.id,
-    //             ItemFactory::create_item(
-    //                     resource_pool, static_cast<item_type_t>(item.item_type), item.x_pos,
-    //                     item.y_pos));
-    //     items[item.id]->set_position(item.x_pos, item.y_pos);
-    // }
+    for (uint8_t i = 0; i < game_state->num_items; i++) {
+        auto item = game_state->items[i];
+
+        // If it's a new item create it
+        items.try_emplace(item.id,
+                          ItemFactory::create_item(resource_pool, static_cast<item_t>(item.type),
+                                                   item.x_pos, item.y_pos));
+        items[item.id]->set_position(item.x_pos, item.y_pos);
+    }
 
     last_game_state = game_state;
 
@@ -182,22 +182,22 @@ void MatchScene::destroy_untracked_objects() {
     }
 
     // Destroy untracked items
-    // if (last_game_state->num_items < items.size()) {
-    //     std::unordered_set<uint16_t> tracked_items;
-    //     for (int i = 0; i < last_game_state->num_items; ++i) {
-    //         tracked_items.insert(
-    //                 last_game_state->items[i].id);  // Assuming Item class has an 'id' attribute
-    //     }
+    if (last_game_state->num_items < items.size()) {
+        std::unordered_set<uint16_t> tracked_items;
+        for (int i = 0; i < last_game_state->num_items; ++i) {
+            tracked_items.insert(
+                    last_game_state->items[i].id);  // Assuming Item class has an 'id' attribute
+        }
 
-    //     for (auto it = items.begin(); it != items.end();) {
-    //         // If the item is not in the tracked items set, erase them
-    //         if (tracked_items.find(it->first) == tracked_items.end()) {
-    //             it = items.erase(it);
-    //         } else {
-    //             ++it;
-    //         }
-    //     }
-    // }
+        for (auto it = items.begin(); it != items.end();) {
+            // If the item is not in the tracked items set, erase them
+            if (tracked_items.find(it->first) == tracked_items.end()) {
+                it = items.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
 }
 
 void MatchScene::draw_objects(int it) {

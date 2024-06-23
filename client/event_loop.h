@@ -18,6 +18,7 @@ private:
     std::atomic<bool>& game_running;
     std::atomic<bool>& menu_running;
     std::atomic<bool>& match_running;
+    std::atomic<bool>& editor_running;
     SDL_Event event;
     ClientMessageHandler& message_handler;
 
@@ -26,7 +27,8 @@ public:
     engine::Mouse mouse;
 
     explicit EventLoop(std::atomic<bool>& game_running, std::atomic<bool>& menu_running,
-                       std::atomic<bool>& match_running, ClientMessageHandler& message_handler);
+                       std::atomic<bool>& match_running, std::atomic<bool>& editor_running,
+                       ClientMessageHandler& message_handler);
 
     void run() override;
 

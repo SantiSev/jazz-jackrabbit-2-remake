@@ -75,11 +75,13 @@ public:
 
     //------- Intoxication Methods --------
 
-    void reset_intoxication();
-    bool is_player_intoxicated() const;
+    void start_intoxication();
+    void handle_intoxication();
 
-    void decrease_intoxication_cooldown();
-    size_t get_intoxication_cooldown() const;
+    //------- Invincibility Methods --------
+
+    void start_invincibility();
+    void handle_invincibility();
 
     //------- Special Attack Methods --------
 

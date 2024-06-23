@@ -26,7 +26,7 @@ private:
     bool is_hovered_m;
 
 public:
-    Label(std::shared_ptr<Font> font, SDL_Rect& rect, const SDL_Color& color,
+    Label(std::shared_ptr<Font> font, SDL_Rect rect, const SDL_Color& color,
           const SDL_Color& hover_color, const std::string& text, SDL_Renderer* renderer);
 
     // Cant copy
@@ -38,6 +38,10 @@ public:
     Label& operator=(Label&& other) noexcept;
 
     void draw(SDL_Renderer* renderer, int it) override;
+
+    void center_x(int x, int w);
+    void center_y(int y, int h);
+    void center(int x, int y, int w, int h);
 
     void is_hovered(bool) override;
 

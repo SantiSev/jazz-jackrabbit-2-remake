@@ -1,0 +1,23 @@
+map_list:
+  - name: "Grass Map"
+    id: 4
+  - name: "Electric Map"
+    id: 2
+  - name: "Atus Map"
+    id: 3
+  - name: "Custom 1"
+    id: 1
+
+maps:
+    4:
+      texture: "assets/maps/grass_map"
+      yaml: "assets/maps/grass_map"
+    2:
+      texture: "assets/maps/electric_map"
+      yaml: "assets/maps/electric_map"
+    3:
+      texture: "assets/maps/custom_map"
+      yaml: "assets/maps/atus_map"
+    1:
+      texture: "assets/maps/custom_map"
+      yaml: "assets/maps/custom_1"

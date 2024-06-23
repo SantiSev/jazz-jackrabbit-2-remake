@@ -2,7 +2,7 @@
 
 using engine::ColorRect;
 
-ColorRect::ColorRect(const SDL_Color& color, SDL_Rect& rect): color(color), rect(rect) {}
+ColorRect::ColorRect(const SDL_Color& color, SDL_Rect rect): color(color), rect(rect) {}
 
 void ColorRect::draw(SDL_Renderer* renderer, int it) {
     int err = SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);

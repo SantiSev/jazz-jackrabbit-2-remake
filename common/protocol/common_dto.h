@@ -93,7 +93,7 @@ struct LeaveMatchDTO {
 struct CreateGameDTO {
     id_client_t id_client;
     character_t character_selected;
-    map_list_t map_name;
+    uint16_t map_id;
     uint8_t max_players;
 } __attribute__((packed));
 
@@ -107,7 +107,7 @@ struct AddPlayerDTO {
     char name[50];
     id_client_t id_client;
     character_t player_character;
-    map_list_t map_name;
+    uint16_t map_id;
 } __attribute__((packed));
 
 struct RequestActiveGamesDTO {
@@ -130,6 +130,14 @@ struct BulletDTO {
     uint16_t x_pos;
     uint16_t y_pos;
 } __attribute__((packed));
+
+struct ItemDTO {
+    uint16_t id;
+    uint16_t x_pos;
+    uint16_t y_pos;
+    uint8_t type;
+} __attribute__((packed));
+
 
 struct EnemyDTO {
     uint16_t id;
@@ -155,18 +163,20 @@ struct GameStateDTO {
     uint8_t num_players;
     uint8_t num_enemies;
     uint8_t num_bullets;
+    uint8_t num_items;
     PlayerDTO players[MAX_PLAYERS];
     EnemyDTO enemies[MAX_ENEMIES];
-    BulletDTO bullets[25 * MAX_PLAYERS];
+    BulletDTO bullets[75 * MAX_PLAYERS];
+    ItemDTO items[MAX_ITEMS];
     uint16_t seconds;
 } __attribute__((packed));
 
 struct ClientHasConnectedToMatchDTO {
-    map_list_t map;
+    uint16_t map_id;
 } __attribute__((packed));
 
 struct ActiveGamesDTO {
-    map_list_t map;
+    uint16_t map_id;
     uint8_t players_ingame;
     uint8_t players_max;
 } __attribute__((packed));
