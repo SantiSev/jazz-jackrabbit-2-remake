@@ -33,10 +33,11 @@ private:
     int intoxication_cooldown = INTOXICATON_COOLDOWN;
     int invincibility_cooldown = INVINCIBILITY_COOLDOWN;
     bool is_invincible = false;
+    std::shared_ptr<Configuration> config;
 
 public:
     Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w, int h,
-           CollisionManager& collision_manager);
+           CollisionManager& collision_manager, const std::shared_ptr<Configuration>& config);
 
     //------- Overrided Methods --------
 

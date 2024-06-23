@@ -2,12 +2,14 @@
 
 
 Player::Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w,
-               int h, CollisionManager& collision_manager):
-        CharacterBody(id, character, x, y, w, h, Vector2D(NONE, MAX_FALL_SPEED), MAX_HEALTH,
-                      STATE_IDLE_RIGHT, REVIVE_COOLDOWN),
+               int h, CollisionManager& collision_manager,
+               const std::shared_ptr<Configuration>& config):
+        CharacterBody(id, character, x, y, w, h, Vector2D(NONE, MAX_FALL_SPEED),
+                      config->player_health, STATE_IDLE_RIGHT, config->player_spawn_cd),
         name(std::move(name)),
         weapons(NUM_OF_WEAPONS),
-        collision_manager(collision_manager) {
+        collision_manager(collision_manager),
+        config(config) {
     set_starting_weapon();
 }
 
@@ -26,10 +28,10 @@ void Player::set_name(std::string new_name) { this->name = std::move(new_name); 
 
 void Player::set_starting_weapon() {  // todo check if its needed to be in config
     // TODO fix this the id should not be passed as a parameter
-    weapons[0] = std::make_unique<DefaultGun>(COMMON_BULLET, *this, collision_manager);
-    weapons[1] = std::make_unique<GunOne>(BULLET_ONE, *this, collision_manager);
-    weapons[2] = std::make_unique<GunTwo>(BULLET_TWO, *this, collision_manager);
-    weapons[3] = std::make_unique<GunThree>(BULLET_THREE, *this, collision_manager);
+    weapons[0] = std::make_unique<DefaultGun>(COMMON_BULLET, *this, collision_manager, config);
+    weapons[1] = std::make_unique<GunOne>(BULLET_ONE, *this, collision_manager, config);
+    weapons[2] = std::make_unique<GunTwo>(BULLET_TWO, *this, collision_manager, config);
+    weapons[3] = std::make_unique<GunThree>(BULLET_THREE, *this, collision_manager, config);
 }
 
 // ------------ Point Methods --------------
@@ -79,7 +81,7 @@ void Player::move_left() {
     }
 
     direction = -1;
-    velocity.x = -DEFAULT_SPEED_X;
+    velocity.x = -config->player_speed_x;
     if (is_on_floor()) {
         if (is_player_intoxicated()) {
             state = STATE_INTOXICATED_MOV_LEFT;
@@ -96,7 +98,7 @@ void Player::move_right() {
     }
 
     direction = 1;
-    velocity.x = DEFAULT_SPEED_X;
+    velocity.x = config->player_speed_x;
     if (is_on_floor()) {
         if (is_player_intoxicated()) {
             state = STATE_INTOXICATED_MOV_RIGHT;
@@ -110,7 +112,7 @@ void Player::jump() {
 
     if (on_floor) {
         on_floor = false;
-        velocity.y = -JUMP_SPEED;
+        velocity.y = -config->player_jump_f;
     }
     if (is_facing_right()) {
         state = STATE_JUMPING_RIGHT;
@@ -144,7 +146,7 @@ void Player::update_body() {
 
     if (!on_floor) {
         if (velocity.y < MAX_FALL_SPEED) {
-            velocity.y += GRAVITY;
+            velocity.y += config->player_gravity;
         }
 
     } else {
@@ -195,7 +197,7 @@ void Player::knockback(int force) {
 }
 
 void Player::revive(Vector2D new_position) {
-    this->health = MAX_HEALTH;
+    this->health = config->player_health;
     this->state = STATE_IDLE_RIGHT;
     position = new_position;
 
@@ -295,7 +297,7 @@ void Player::update_status(Vector2D spawn_point) {  // todo check if its needed
     }
 
     if (is_player_intoxicated()) {
-        decrease_intoxication_cooldown();
+        intoxication_cooldown--;
         if (get_intoxication_cooldown() == NONE) {
             reset_intoxication();
         }
@@ -334,7 +336,7 @@ void Player::update_status(Vector2D spawn_point) {  // todo check if its needed
 
 void Player::change_invincibility_cheat() {
     if (is_invincible) {
-        invincibility_cooldown = INVINCIBILITY_COOLDOWN;
+        invincibility_cooldown = config->player_invincivility_cd;
     }
     if (!is_invincible) {
         invincibility_cooldown = INT32_MAX;

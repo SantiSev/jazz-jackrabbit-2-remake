@@ -96,7 +96,7 @@ struct CreateGameDTO {
     id_client_t id_client;
     character_t character_selected;
     map_list_t map_name;
-    uint8_t max_players;
+    uint8_t max_players;  // TODO esta var no se usa. se configura en c onfig.yaml.
 } __attribute__((packed));
 
 struct JoinMatchDTO {

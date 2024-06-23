@@ -52,12 +52,16 @@ void MatchesManager::run() {
 }
 
 void MatchesManager::create_new_match(const CreateGameDTO& dto) {
+    auto config = resource_pool->get_config();
+    if (!can_create_match(config->match_max_matches)) {
+        return;
+    }
     matches_number++;
 
     auto new_monitor = new ClientMonitor();
     client_monitors.insert({matches_number, new_monitor});
-    auto match = std::make_shared<Match>(dto.map_name, dto.max_players, manager_queue, *new_monitor,
-                                         resource_pool);
+    auto match = std::make_shared<Match>(dto.map_name, config->match_max_players, manager_queue,
+                                         *new_monitor, resource_pool);
 
     matches[matches_number] = match;
     match->start();
@@ -237,6 +241,7 @@ void MatchesManager::pre_load_resources() {
     resource_pool->load_yaml(map_character_enum_to_string.at(LIZARD_GOON));
     resource_pool->load_yaml(SFX_FILE);
     resource_pool->load_yaml(map_list_to_string.at(MAP_1));
+    resource_pool->load_config(CONFIG);
 }
 
 void MatchesManager::stop() { online = false; }
@@ -256,3 +261,5 @@ void MatchesManager::clean_client_monitors() {
     }
     client_monitors.clear();
 }
+
+bool MatchesManager::can_create_match(int max_matches) { return matches_number < max_matches; }

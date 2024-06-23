@@ -13,20 +13,24 @@
 // These enemys for NOW can only move left and right, attack the player and cannot jump (for now)
 
 Enemy::Enemy(uint16_t id, const character_t& character, int attack_damage, int health,
-             int revive_cooldown, int x, int y, int w, int h, int speed):
+             int revive_cooldown, int x, int y, int w, int h, int speed,
+             const std::shared_ptr<Configuration>& config):
         CharacterBody(id, character, x, y, w, h, Vector2D(speed, DEFAULT_SPEED_Y), health,
                       STATE_MOVING_RIGHT, revive_cooldown),
         attack_damage(attack_damage),
         attack_cooldown(ATTACK_COOLDOWN),
         x_speed(speed),
-        spawn_position(x, y) {}
+        config(config),
+        spawn_position(x, y) {
+    movement_range = config->enemy_move_rng;
+}
 
 //------------ Overrided Methods ------------
 
 void Enemy::update_body() {
 
     if (!is_dead()) {
-        velocity.y = DEFAULT_SPEED_Y;
+        velocity.y = config->enemy_gravity;
         patrol();
         position += velocity;
     } else {
@@ -82,7 +86,7 @@ void Enemy::take_damage(int damage) {  // TODO ADD MORE STATES TO ENEMY
 }
 
 void Enemy::revive(Vector2D new_position) {
-    health = MAX_HEALTH;
+    health = config->enemy_health;
     position = new_position;
     spawn_position = new_position;
     set_active_status(true);

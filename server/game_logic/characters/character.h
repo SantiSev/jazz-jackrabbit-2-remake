@@ -9,6 +9,7 @@
 
 #include "../../../common/character_enum.h"
 #include "../../../common/common_constants.h"
+#include "../../../common/configuration.h"
 #include "../../../game_engine/physics_engine/collision_manager.h"
 #include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
 #include "../collectables/collectable.h"

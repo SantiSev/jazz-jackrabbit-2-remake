@@ -6,6 +6,7 @@
 #include <iostream>
 #include <memory>
 
+#include "../../../common/configuration.h"
 #include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
 
 
@@ -26,9 +27,11 @@ private:
     Player& player_owner;
     int bullet_damage = 1;
     int life_span = BULLET_LIFE_SPAN;
+    const std::shared_ptr<Configuration> config;
 
 public:
-    Bullet(const uint64_t& id, const uint8_t type, Player& player_owner, const int& bullet_damage);
+    Bullet(const uint64_t& id, const uint8_t type, Player& player_owner, const int& bullet_damage,
+           const int& bullet_speed, const std::shared_ptr<Configuration>& config);
 
     uint64_t get_id() const;
 

@@ -57,6 +57,17 @@ void ResourcePool::load_music(const std::string& name) {
     }
 }
 
+void engine::ResourcePool::load_config(const std::string& name) {
+    std::string file = name + YAML_EXTENSION;
+    if (yamls.find(name) == yamls.end()) {
+        auto config_node =
+                std::make_shared<YAML::Node>(YAML::LoadFile(asset_manager.get_full_path(file)));
+        yamls.insert({name, config_node});
+        config->load_yaml_info(get_yaml(name));
+        //        config->load_yaml_info(YAML::LoadFile(asset_manager.get_full_path(file)));
+    }
+}
+
 const std::shared_ptr<Texture>& ResourcePool::get_texture(const std::string& name) const {
     return textures.at(name);
 }
@@ -68,9 +79,9 @@ const std::shared_ptr<Font>& ResourcePool::get_font(const std::string& name) con
 const std::shared_ptr<YAML::Node>& ResourcePool::get_yaml(const std::string& name) const {
     return yamls.at(name);
 }
-
 const std::shared_ptr<Sound>& ResourcePool::get_sound(const std::string& name) const {
     return sounds.at(name);
 }
+const std::shared_ptr<Configuration>& engine::ResourcePool::get_config() const { return config; }
 
 ResourcePool::~ResourcePool() = default;

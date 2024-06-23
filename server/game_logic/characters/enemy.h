@@ -1,6 +1,8 @@
 #ifndef TP_FINAL_ENEMY_H
 #define TP_FINAL_ENEMY_H
 
+#include <memory>
+
 #include "character.h"
 
 // Enemy config
@@ -15,10 +17,12 @@ private:
     bool is_attacking = false;
     int x_speed;
     int movement_range = MOVEMENT_RANGE;
+    std::shared_ptr<Configuration> config;
 
 public:
     Enemy(uint16_t id, const character_t& character, int attack_damage, int health,
-          int revive_cooldown, int x, int y, int w, int h, int speed);
+          int revive_cooldown, int x, int y, int w, int h, int speed,
+          const std::shared_ptr<Configuration>& config);
 
     //------- Overrided Methods --------
 

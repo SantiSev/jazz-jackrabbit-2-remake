@@ -33,6 +33,11 @@ void Client::start() {
                                    id_client, message_handler, map_enum);
             match_scene.start();
         }
+        // TODO se puede agregar por ejemplo:
+        // editor_scene(resource_pool->get_config()->map_ed_max_height,
+        // resource_pool->get_config()->map_ed_max_width);
+        // o
+        // editor_scene(resource_pool->get_config());
         // TODO Level editor
         // if (editor_running) {
         //     editor_scene.start();
@@ -67,6 +72,9 @@ void Client::pre_load_resources() {
     // Sounds
     resource_pool->load_music(sound_to_string.at(BACKGROUND));
     resource_pool->load_sound_effect(sound_to_string.at(SHOOT_SOUND));
+
+    // Config
+    resource_pool->load_config(CONFIG_FILE);
 }
 
 Client::~Client() {

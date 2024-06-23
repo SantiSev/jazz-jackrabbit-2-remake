@@ -15,10 +15,12 @@
 
 #define LIZARD_GOON_SPEED 1
 
-MadHatter::MadHatter(uint16_t id, int x, int y, int w, int h):
-        Enemy(id, MAD_HATTER, MAD_HATTER_ATTACK_DAMAGE, MAD_HATTER_HEALTH,
-              MAD_HATTER_REVIVE_COOLDOWN, x, y, w, h - OFFSET(h), MAD_HATTER_SPEED) {}
+MadHatter::MadHatter(uint16_t id, int x, int y, int w, int h,
+                     const std::shared_ptr<Configuration>& config):
+        Enemy(id, MAD_HATTER, config->enemy_damage, config->enemy_health, config->enemy_spawn_cd, x,
+              y, w, h - OFFSET(h), config->enemy_speed, config) {}
 
-LizardGoon::LizardGoon(uint16_t id, int x, int y, int w, int h):
-        Enemy(id, LIZARD_GOON, LIZARD_GOON_ATTACK_DAMAGE, LIZARD_GOON_HEALTH,
-              LIZARD_GOON_REVIVE_COUNTDOWN, x, y, w, h - OFFSET(h), LIZARD_GOON_SPEED) {}
+LizardGoon::LizardGoon(uint16_t id, int x, int y, int w, int h,
+                       const std::shared_ptr<Configuration>& config):
+        Enemy(id, LIZARD_GOON, config->enemy_damage, config->enemy_health, config->enemy_spawn_cd,
+              x, y, w, h - OFFSET(h), config->enemy_speed, config) {}

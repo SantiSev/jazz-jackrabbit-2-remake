@@ -50,7 +50,7 @@ private:
     std::vector<std::shared_ptr<Collectable>> items;
 
     size_t players_connected = 0;
-    size_t required_players;
+    size_t max_players;
     ClientMonitor& client_monitor;
     map_list_t map;
     std::unique_ptr<CollisionManager> collision_manager;

@@ -5,12 +5,14 @@
 #include "../characters/player.h"
 
 Weapon::Weapon(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager,
-               int ammo, int max_ammo, int weapon_damage, int shoot_rate):
+               int ammo, int max_ammo, int weapon_damage, int shoot_rate, int bullet_speed,
+               const std::shared_ptr<Configuration>& config):
         weapon_id(weapon_id),
         weapon_damage(weapon_damage),
         ammo(ammo),
         max_ammo(max_ammo),
         shoot_rate(shoot_rate),
+        bullet_speed(bullet_speed),
         player_owner(player_owner),
         collision_manager(collision_manager) {}
 
@@ -47,7 +49,8 @@ void Weapon::shoot() {
     shoot_rate_counter = 0;
 
     uint64_t bullet_id = create_bullet_id();
-    auto bullet = std::make_shared<Bullet>(bullet_id, weapon_id, player_owner, weapon_damage);
+    auto bullet = std::make_shared<Bullet>(bullet_id, weapon_id, player_owner, weapon_damage,
+                                           bullet_speed, config);
     collision_manager.track_dynamic_body(bullet);
 }
 
