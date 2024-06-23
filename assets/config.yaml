@@ -1,9 +1,10 @@
 # Game configurations:
 
+# max_matches should be setted also in common_dto.h, in MatchInfoDTO struct
+# max players should be setted also in common_dto.h, in GameStateDTO struct
+
 match:
-  # max players should be setted also in common_dto.h, in GameStateDTO struct
   max_players: 12
-  # max_matches should be setted also in common_dto.h, in MatchInfoDTO struct
   max_matches_to_create: 16
   kill_points_enemy: 5
   kill_points_player: 15
