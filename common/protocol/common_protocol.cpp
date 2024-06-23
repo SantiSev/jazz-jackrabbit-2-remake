@@ -115,6 +115,7 @@ void CommonProtocol::send_game_created(const uint16_t header,
     send_header(header);
     game_created.map_id = htons(game_created.map_id);
     skt.sendall(&game_created, sizeof(game_created), &was_closed);
+    std::cout << "sended game created" << std::endl;
 }
 
 void CommonProtocol::send_add_player(const uint16_t header, AddPlayerDTO dto) {
@@ -124,12 +125,6 @@ void CommonProtocol::send_add_player(const uint16_t header, AddPlayerDTO dto) {
     skt.sendall(&dto, sizeof(dto), &was_closed);
 }
 
-void CommonProtocol::send_game_joined(const uint16_t header,
-                                      ClientHasConnectedToMatchDTO& game_joined) {
-    send_header(header);
-    game_joined.map_id = htons(game_joined.map_id);
-    skt.sendall(&game_joined, sizeof(game_joined), &was_closed);
-}
 
 void CommonProtocol::send_active_games(const uint16_t header, MatchInfoDTO& active_games) {
     send_header(header);

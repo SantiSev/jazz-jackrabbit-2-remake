@@ -34,8 +34,6 @@ public:
 
     ~ClientProtocol();
 
-    std::shared_ptr<Message> recv_game_joined();
-
     bool is_closed() const;
 };
 

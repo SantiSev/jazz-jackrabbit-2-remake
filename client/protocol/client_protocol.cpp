@@ -1,5 +1,7 @@
 #include "./client_protocol.h"
 
+#include <iostream>
+
 #include <arpa/inet.h>
 #include <endian.h>
 
@@ -60,16 +62,12 @@ std::shared_ptr<AcptConnection> ClientProtocol::recv_acpt_connection() {
     return std::make_shared<AcptConnection>(id_client);
 }
 
-std::shared_ptr<Message> ClientProtocol::recv_game_joined() {
-    ClientHasConnectedToMatchDTO game_joined = {};
-    skt.recvall(&game_joined, sizeof(game_joined), &was_closed);
-    game_joined.map_id = ntohs(game_joined.map_id);
-    return std::make_shared<SendConnectedToGameMessage>(game_joined);
-}
-
 std::shared_ptr<Message> ClientProtocol::recv_message() {
     try {
         const uint16_t header = recv_two_bytes();
+        if (header != 0x0100) {
+            std::cout << "header: " << header << std::endl;
+        }
 
         switch (header) {
             case CLOSE_CONNECTION:
@@ -80,17 +78,18 @@ std::shared_ptr<Message> ClientProtocol::recv_message() {
                 return recv_game_state();
             case RECV_ACTIVE_GAMES:
                 return recv_active_games();
-            case SEND_GAME_CREATED:
+            case SEND_CONNECTED_TO_MATCH:
                 return recv_game_created();
             case ACPT_CONNECTION:
                 return recv_acpt_connection();
-            case SEND_GAME_JOINED:
-                return recv_game_joined();
             default:
-                return std::make_shared<InvalidMessage>();
+                CloseConnectionDTO dto = {};
+                return std::make_shared<CloseConnectionMessage>(dto);
         }
     } catch (const LibError& e) {
         force_shutdown();
+        CloseConnectionDTO dto = {};
+        return std::make_shared<CloseConnectionMessage>(dto);
     }
     return std::make_shared<InvalidMessage>();
 }

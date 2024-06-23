@@ -26,13 +26,14 @@ void Client::start() {
                          menu_running, editor_running, message_handler);
     event_loop->start();
 
-    sound_manager->play_sound(BACKGROUND, 0.5);
+    sound_manager->play_sound(BACKGROUND, 0.2);
 
     while (game_running) {
         menu_scene.start();
         if (match_running && map_enum != 0) {
-            MatchScene match_scene(window, event_loop, resource_pool, sound_manager, match_running,
-                                   id_client, message_handler, map_enum);
+            MatchScene match_scene(window, event_loop, resource_pool, sound_manager,
+                                   message_handler, id_client, match_running, menu_running,
+                                   map_enum);
             match_scene.start();
         }
         if (editor_running) {

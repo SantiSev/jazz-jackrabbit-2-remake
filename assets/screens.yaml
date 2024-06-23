@@ -1,3 +1,13 @@
+background_1:
+  x: 16
+  y: 16
+  w: 640
+  h: 480
+scorboard:
+  x: 16
+  y: 1952
+  w: 640
+  h: 480
 main_menu:
     x: 660
     y: 1468
@@ -13,3 +23,4 @@ main_menu_3:
     y: 984
     w: 640
     h: 480
+
