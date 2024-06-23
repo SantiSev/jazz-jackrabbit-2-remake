@@ -33,6 +33,10 @@ private:
     int intoxication_cooldown = INTOXICATON_COOLDOWN;
     int invincibility_cooldown = INVINCIBILITY_COOLDOWN;
     bool is_invincible = false;
+    bool is_sprinting = false;
+
+    // Configs
+    bool is_sprint_allowed = true;
 
 public:
     Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w, int h,
@@ -92,6 +96,7 @@ public:
     void move_right() override;
     void jump() override;
     virtual void do_special_attack();
+    void sprint();
 
 
     //------- Match Methods --------
