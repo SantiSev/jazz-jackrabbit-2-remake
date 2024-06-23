@@ -2,6 +2,7 @@
 
 CharacterSelectScene::CharacterSelectScene(engine::Window& window, EventLoop* event_loop,
                                            std::shared_ptr<engine::ResourcePool> resource_pool,
+                                           std::shared_ptr<engine::SoundManager> sound_manager,
                                            std::atomic<bool>& game_running,
                                            std::atomic<bool>& character_select_running,
                                            ClientMessageHandler& message_handler):
@@ -9,6 +10,7 @@ CharacterSelectScene::CharacterSelectScene(engine::Window& window, EventLoop* ev
         renderer(window.get_renderer()),
         event_loop(event_loop),
         resource_pool(resource_pool),
+        sound_manager(sound_manager),
         background(nullptr),
         title(resource_pool->get_font(FONT), SDL_Rect{100, 100, 600, 75},
               SDL_Color{255, 255, 255, 255}, SDL_Color{255, 255, 255, 255}, "Select Your Character",
@@ -42,6 +44,7 @@ void CharacterSelectScene::create_buttons() {
 }
 
 void CharacterSelectScene::start(uint16_t selected_map_id) {
+    sound_manager->play_sound(CHARACTER_SELECT_SOUND, 0.5);
     for (auto& selector: selectors) {
         event_loop->mouse.add_on_click_signal_obj(&selector);
     }

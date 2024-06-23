@@ -7,12 +7,14 @@
 
 MenuScene::MenuScene(engine::Window& window, EventLoop* event_loop,
                      std::shared_ptr<engine::ResourcePool> resource_pool,
+                     std::shared_ptr<engine::SoundManager> sound_manager,
                      std::atomic<bool>& game_running, std::atomic<bool>& menu_running,
                      std::atomic<bool>& editor_running, ClientMessageHandler& message_handler):
         window(window),
         renderer(window.get_renderer()),
         event_loop(event_loop),
         resource_pool(resource_pool),
+        sound_manager(sound_manager),
         background(std::make_unique<MainScreenBackground>(*resource_pool)),
         game_running(game_running),
         menu_running(menu_running),
@@ -27,8 +29,9 @@ MenuScene::MenuScene(engine::Window& window, EventLoop* event_loop,
 void MenuScene::start() {
     MapSelectScene map_select_scene(window, event_loop, resource_pool, game_running,
                                     map_select_running, character_select_running, message_handler);
-    CharacterSelectScene character_select_scene(window, event_loop, resource_pool, game_running,
-                                                character_select_running, message_handler);
+    CharacterSelectScene character_select_scene(window, event_loop, resource_pool, sound_manager,
+                                                game_running, character_select_running,
+                                                message_handler);
     // Add buttons to mouse signal of event loop
     for (auto button: buttons) {
         event_loop->mouse.add_on_click_signal_obj(button);
