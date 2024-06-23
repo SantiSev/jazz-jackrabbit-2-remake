@@ -39,6 +39,10 @@ public:
 
     void draw(SDL_Renderer* renderer, int it) override;
 
+    void center_x(int x, int w);
+    void center_y(int y, int h);
+    void center(int x, int y, int w, int h);
+
     void is_hovered(bool) override;
 
     SDL_Rect& get_body() override;

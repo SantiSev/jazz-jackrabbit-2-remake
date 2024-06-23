@@ -42,7 +42,7 @@ public:
     void add_new_client_to_manager(Socket client_socket);
     void create_new_match(const CreateGameDTO& dto);
     void join_match(const JoinMatchDTO& dto);
-    void send_client_succesful_connect(const uint16_t& id_client, const map_list_t& map);
+    void send_client_succesful_connect(const uint16_t& id_client, const uint16_t& map);
     void send_match_lists(RequestActiveGamesDTO dto);
 
     MatchInfoDTO return_matches_lists();
@@ -55,7 +55,7 @@ public:
     std::shared_ptr<AddPlayerMessage> make_add_player_message(const std::string& player_name,
                                                               id_client_t client_id,
                                                               character_t character,
-                                                              map_list_t map) const;
+                                                              uint16_t map) const;
     Queue<std::shared_ptr<Message>>& get_match_queue_by_id(int match_id);
     void clean_client_monitors();
 };

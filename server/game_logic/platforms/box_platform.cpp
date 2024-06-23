@@ -20,23 +20,32 @@ void BoxPlatform::handle_colision(CollisionObject* other) {
 
             case CollisionFace::TOP:  // other object is on top of me
 
-                dynamic_body->position.y =
-                        get_top_hitbox_side() - dynamic_body->get_hitbox_height();
+                if (top_collision) {
+                    dynamic_body->position.y =
+                            get_top_hitbox_side() - dynamic_body->get_hitbox_height();
+                }
                 break;
 
             case CollisionFace::LEFT:  // other object is on my left side
 
-                dynamic_body->position.x =
-                        get_left_hitbox_side() - dynamic_body->get_hitbox_width() - box_offest;
+                if (left_collision) {
+                    dynamic_body->position.x =
+                            get_left_hitbox_side() - dynamic_body->get_hitbox_width() - box_offest;
+                }
                 break;
 
             case CollisionFace::RIGHT:  // other object is on the right of this object
 
-                dynamic_body->position.x = get_right_hitbox_side() + box_offest;
+                if (right_collision) {
+                    dynamic_body->position.x = get_right_hitbox_side() + box_offest;
+                }
                 break;
 
             case CollisionFace::BOTTOM:  // other object is below me
-                dynamic_body->position.y = get_bottom_hitbox_side();
+
+                if (bottom_collision) {
+                    dynamic_body->position.y = get_bottom_hitbox_side();
+                }
                 break;
             default:
                 break;

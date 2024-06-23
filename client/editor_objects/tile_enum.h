@@ -1,0 +1,6 @@
+#ifndef TILE_ENUM_H
+#define TILE_ENUM_H
+
+enum TileType { NULL_TILE, PLAYER_SPAWN, ENEMY_SPAWN, ITEM_SPAWN, BODY };
+
+#endif  // TILE_ENUM_H

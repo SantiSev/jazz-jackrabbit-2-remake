@@ -24,6 +24,21 @@ void Label::draw(SDL_Renderer* renderer, int it) {
     }
 }
 
+void Label::center_x(int x, int w) {
+    int new_center = x + w / 2;
+    rect.x = new_center - rect.w / 2;
+}
+
+void Label::center_y(int y, int h) {
+    int new_center = y + h / 2;
+    rect.y = new_center - rect.h / 2;
+}
+
+void Label::center(int x, int y, int w, int h) {
+    center_x(x, w);
+    center_y(y, h);
+}
+
 SDL_Rect& Label::get_body() { return rect; }
 
 void Label::set_position(int x, int y) {
