@@ -1,25 +1,25 @@
 #include "match_scene.h"
 
 MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
-                       std::shared_ptr<engine::ResourcePool> resource_pool,
+                       const std::shared_ptr<engine::ResourcePool>& resource_pool,
                        std::shared_ptr<engine::SoundManager> sound_manager,
+                       ClientMessageHandler& message_handler, std::atomic<id_client_t>& id_client,
                        std::atomic<bool>& match_running, std::atomic<bool>& menu_running,
-                       ClientMessageHandler& message_handler, map_list_t map_enum,
-                       std::atomic<id_client_t>& id_client):
-        id_client(id_client),
+                       map_list_t map_enum):
         window(window),
         renderer(window.get_renderer()),
+        player_controller(message_handler),
         resource_pool(resource_pool),
         sound_manager(sound_manager),
         event_loop(event_loop),
         message_handler(message_handler),
         game_state_q(message_handler.game_state_q),
         last_game_state(nullptr),
+        id_client(id_client),
         match_running(match_running),
         menu_running(menu_running),
         map(std::make_shared<Map>(map_enum, resource_pool)),
-        camera(window.get_width(), window.get_height(), map->get_body().w, map->get_body().h),
-        player_controller(message_handler) {
+        camera(window.get_width(), window.get_height(), map->get_body().w, map->get_body().h) {
     // Blocking call to get first game state
     std::shared_ptr<GameStateDTO> first_state = game_state_q.pop();
     last_game_state = first_state;
@@ -55,17 +55,19 @@ void MatchScene::start() {
             rest_time = rate - (behind % rate);
             lost = behind / rate;
             frame_start += lost;
-            it = std::round(lost / rate);
+            it += std::floor(lost / rate);
         }
 
         SDL_Delay(rest_time);
         frame_start += rate;
         it++;
     }
-    std::atomic<bool> scoreboard_running = true;
-    ScoreScene score_scene(window, event_loop, resource_pool, menu_running, scoreboard_running,
-                           message_handler, last_game_state);
-    score_scene.start();
+    if (menu_running) {
+        std::atomic<bool> scoreboard_running = true;
+        ScoreScene score_scene(window, event_loop, resource_pool, menu_running, scoreboard_running,
+                               message_handler, last_game_state, id_client);
+        score_scene.start();
+    }
 }
 
 void MatchScene::update_objects() {

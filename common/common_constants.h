@@ -27,7 +27,7 @@ const uint8_t PLAYER_EVENT = 0x01;
 
 // Gameloop
 const size_t MAX_EVENTS_PER_LOOP = 20;
-const size_t MATCH_DURATION = 300;
+const size_t MATCH_DURATION = 10;
 
 // Player states
 typedef enum: uint8_t {

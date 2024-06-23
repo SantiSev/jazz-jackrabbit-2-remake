@@ -33,9 +33,9 @@
 
 class MatchScene {
 private:
-    std::atomic<id_client_t>& id_client;
     engine::Window& window;
     SDL_Renderer* renderer;
+    PlayerController player_controller;
     std::shared_ptr<engine::ResourcePool> resource_pool;
     std::shared_ptr<engine::SoundManager> sound_manager;
 
@@ -44,17 +44,16 @@ private:
     Queue<std::shared_ptr<GameStateDTO>>& game_state_q;
     std::shared_ptr<GameStateDTO> last_game_state;
 
+    std::atomic<id_client_t>& id_client;
     std::atomic<bool>& match_running;
     std::atomic<bool>& menu_running;
 
     std::shared_ptr<Map> map;
+    engine::Camera camera;
     std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> players;
     std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> enemies;
     std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> bullets;
     std::map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> items;
-    engine::Camera camera;
-
-    PlayerController player_controller;
 
     void destroy_untracked_objects();
     void update_objects();
@@ -62,11 +61,11 @@ private:
 
 public:
     MatchScene(engine::Window& window, EventLoop* event_loop,
-               std::shared_ptr<engine::ResourcePool> resource_pool,
+               const std::shared_ptr<engine::ResourcePool>& resource_pool,
                std::shared_ptr<engine::SoundManager> sound_manager,
+               ClientMessageHandler& message_handler, std::atomic<id_client_t>& id_client,
                std::atomic<bool>& match_running, std::atomic<bool>& menu_running,
-               ClientMessageHandler& message_handler, map_list_t map_enum,
-               std::atomic<id_client_t>& id_client);
+               map_list_t map_enum);
 
     // cant copy
     MatchScene(const MatchScene&) = delete;

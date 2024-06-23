@@ -29,8 +29,9 @@ void Client::start() {
     while (game_running) {
         menu_scene.start();
         if (match_running && map_enum != NO_MAP) {
-            MatchScene match_scene(window, event_loop, resource_pool, sound_manager, match_running,
-                                   menu_running, message_handler, map_enum, id_client);
+            MatchScene match_scene(window, event_loop, resource_pool, sound_manager,
+                                   message_handler, id_client, match_running, menu_running,
+                                   map_enum);
             match_scene.start();
         }
         // TODO Level editor
