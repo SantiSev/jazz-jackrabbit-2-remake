@@ -13,6 +13,7 @@ Weapon::Weapon(uint8_t weapon_id, Player& player_owner, CollisionManager& collis
         max_ammo(max_ammo),
         shoot_rate(shoot_rate),
         bullet_speed(bullet_speed),
+        config(config),
         player_owner(player_owner),
         collision_manager(collision_manager) {}
 
@@ -50,7 +51,8 @@ void Weapon::shoot() {
 
     uint64_t bullet_id = create_bullet_id();
     auto bullet = std::make_shared<Bullet>(bullet_id, weapon_id, player_owner, weapon_damage,
-                                           bullet_speed, config);
+                                           bullet_speed, config->match_points_enemy,
+                                           config->match_points_player);
     collision_manager.track_dynamic_body(bullet);
 }
 

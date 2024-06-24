@@ -75,6 +75,7 @@ void DefaultGun::shoot() {
     shoot_rate_counter = 0;
     uint64_t bullet_id = create_bullet_id();
     auto bullet = std::make_shared<Bullet>(bullet_id, weapon_id, player_owner, weapon_damage,
-                                           bullet_speed, config);
+                                           bullet_speed, config->match_points_enemy,
+                                           config->match_points_player);
     collision_manager.track_dynamic_body(bullet);
 }

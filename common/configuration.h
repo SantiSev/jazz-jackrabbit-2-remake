@@ -33,13 +33,13 @@ public:
     // Player match config
     int player_health;
     int player_speed_x;
-    int player_speed_y;
     int player_sprint_spd;
     int player_jump_f;
     int player_gravity;
     int player_spawn_cd;
     int player_invincivility_cd;
     int player_intoxication_cd;
+    int player_can_sprint;
 
     // Bullet match config
     int bullet_base_dmg;

@@ -18,13 +18,13 @@ Configuration::Configuration():
         enemy_move_rng(0),
         player_health(0),
         player_speed_x(0),
-        player_speed_y(0),
         player_sprint_spd(0),
         player_jump_f(0),
         player_gravity(0),
         player_spawn_cd(0),
         player_invincivility_cd(0),
         player_intoxication_cd(0),
+        player_can_sprint(1),
         bullet_base_dmg(0),
         bullet_base_speed(0),
         bullet_base_ammo(0),
@@ -57,13 +57,13 @@ void Configuration::load_yaml_info(const std::shared_ptr<YAML::Node>& config) {
     auto player = c["player"];
     player_health = player["health"].as<int>();
     player_speed_x = player["speed_x"].as<int>();
-    player_speed_y = player["speed_y"].as<int>();
     player_sprint_spd = player["sprint_speed"].as<int>();
     player_jump_f = player["jump_speed"].as<int>();
     player_gravity = player["gravity"].as<int>();
     player_spawn_cd = player["respawn_time"].as<int>();
     player_invincivility_cd = player["invulnerability_time"].as<int>();
     player_intoxication_cd = player["intoxication_time"].as<int>();
+    player_can_sprint = player["is_sprint_allowed"].as<int>();
     auto bullet = c["bullet"];
     bullet_base_dmg = bullet["base_damage"].as<int>();
     bullet_base_speed = bullet["base_speed"].as<int>();

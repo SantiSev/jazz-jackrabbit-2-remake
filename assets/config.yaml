@@ -21,23 +21,23 @@ player:
   respawn_time: 600 # in loops
   invulnerability_time: 600 # in loops
   intoxication_time: 450 # in loops
-
+  is_sprint_allowed: 1
 
 enemy:
   health: 100
-  damage: 10
-  speed: 14
+  damage: 25
+  speed: 5
   jump_force: 10
-  gravity: 1
-  respawn_time: 400 # in loops
-  movement_range: 50
+  gravity: 5
+  respawn_time: 200 # in loops
+  movement_range: 60
 
 map_editor:
   map_width: 1280
   map_height: 640
 
 bullet:
-  base_damage: 100
+  base_damage: 20
   base_speed: 20
   base_ammo: 5
   base_max_ammo: 10

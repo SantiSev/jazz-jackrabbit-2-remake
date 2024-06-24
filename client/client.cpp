@@ -34,10 +34,7 @@ void Client::start() {
             match_scene.start();
         }
         // TODO se puede agregar por ejemplo:
-        // editor_scene(resource_pool->get_config()->map_ed_max_height,
-        // resource_pool->get_config()->map_ed_max_width);
-        // o
-        // editor_scene(resource_pool->get_config());
+        // editor_scene(resource_pool);
         // TODO Level editor
         // if (editor_running) {
         //     editor_scene.start();
@@ -68,6 +65,7 @@ void Client::pre_load_resources() {
     resource_pool->load_yaml(SFX_FILE);
     resource_pool->load_yaml(ITEMS_FILE);
     resource_pool->load_yaml(map_list_to_string.at(MAP_1));
+    resource_pool->load_yaml(CONFIG_FILE);
 
     // Sounds
     resource_pool->load_music(sound_to_string.at(BACKGROUND));

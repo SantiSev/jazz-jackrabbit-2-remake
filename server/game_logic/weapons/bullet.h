@@ -27,11 +27,13 @@ private:
     Player& player_owner;
     int bullet_damage = 1;
     int life_span = BULLET_LIFE_SPAN;
-    const std::shared_ptr<Configuration> config;
+    int enemy_points = 0;
+    int player_points = 0;
+
 
 public:
     Bullet(const uint64_t& id, const uint8_t type, Player& player_owner, const int& bullet_damage,
-           const int& bullet_speed, const std::shared_ptr<Configuration>& config);
+           const int& bullet_speed, const int& enemy_points, const int& player_points);
 
     uint64_t get_id() const;
 

@@ -1,5 +1,7 @@
 #include "resource_pool.h"
 
+#include <iostream>
+
 using engine::Font;
 using engine::Music;
 using engine::ResourcePool;
@@ -18,7 +20,8 @@ void ResourcePool::load_texture(const std::string& name) {
     }
     std::string file = name + PNG_EXTENSION;
     if (textures.find(name) == textures.end()) {
-        auto texture = std::make_shared<Texture>(asset_manager.get_full_path(file), renderer);
+        auto path = asset_manager.get_full_path(file);
+        auto texture = std::make_shared<Texture>(path, renderer);
         textures.insert({name, texture});
     }
 }

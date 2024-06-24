@@ -5,8 +5,8 @@
 
 
 Bullet::Bullet(const uint64_t& id, const uint8_t type, Player& player_owner,
-               const int& bullet_damage, const int& bullet_speed,
-               const std::shared_ptr<Configuration>& config):
+               const int& bullet_damage, const int& bullet_speed, const int& enemy_points,
+               const int& player_points):
         DynamicBody(player_owner.position.x, player_owner.position.y, BULLET_WIDTH, BULLET_HEIGHT,
                     Vector2D(bullet_speed * player_owner.get_direction(), 0)),
         id(id),
@@ -14,7 +14,8 @@ Bullet::Bullet(const uint64_t& id, const uint8_t type, Player& player_owner,
         player_owner(player_owner),
         bullet_damage(bullet_damage),
         life_span(BULLET_LIFE_SPAN),
-        config(config) {
+        enemy_points(enemy_points),
+        player_points(player_points) {
 
     position.y = player_owner.get_bottom_hitbox_side() - player_owner.get_hitbox_height() / 2;
 
@@ -66,9 +67,9 @@ void Bullet::handle_colision(CollisionObject* other) {
             //            player_owner.add_points(BULLET_POINTS);   //TODO dar punto por hit??
             if (character->is_dead()) {
                 if (character->get_id() < 100) {
-                    player_owner.add_points(config->match_points_enemy);
+                    player_owner.add_points(enemy_points);
                 } else {
-                    player_owner.add_points(config->match_points_player);
+                    player_owner.add_points(player_points);
                 }
             }
         }
