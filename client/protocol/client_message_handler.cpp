@@ -2,6 +2,7 @@
 
 #include "../client.h"
 
+
 ClientMessageHandler::ClientMessageHandler(Client& client): client(client) {}
 
 void ClientMessageHandler::send_command(command_t command) {
@@ -35,6 +36,11 @@ void ClientMessageHandler::join_match(id_match_t id_match, character_t character
 #ifdef LOG
     std::cout << "Joining match" << std::endl;
 #endif
+}
+
+void ClientMessageHandler::send_match_list_request() {
+    RequestActiveGamesDTO dto{client.id_client};
+    send_message.push(std::make_shared<SendRequestGamesMessage>(dto));
 }
 
 void ClientMessageHandler::quit() {
@@ -71,8 +77,7 @@ void ClientMessageHandler::handle_connected_to_match(const ClientHasConnectedToM
 }
 
 void ClientMessageHandler::handle_recv_active_games(const MatchInfoDTO& dto) {
-    // TODO set menu active games list
-    // send_message.push(std::make_shared<RecvActiveGames>(dto));
+    // handlear dónde recibir las partidas, si por cola, o almacenar en algun lado.
 #ifdef LOG
     std::cout << "Received active games" << std::endl;
 #endif

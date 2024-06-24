@@ -1,6 +1,7 @@
 #ifndef MAP_SELECTOR_H
 #define MAP_SELECTOR_H
 
+#include <atomic>
 #include <cstdlib>
 #include <ctime>
 #include <memory>
