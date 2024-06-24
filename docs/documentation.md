@@ -21,13 +21,13 @@ El trabajo práctico se divide en cuatro partes principales:
 
 Los mensajes del protocolo tiene dos partes:
 
-- Header: Permite distinguir los mensajes
-- DTOs: Contiene la informacion del mensaje
+* Header: Permite distinguir los mensajes
+* DTOs: Contiene la informacion del mensaje
 
 ### Headers
 
 Los headers son de 2 bytes. El primer byte determina la categoria del mensaje. Existen tres categorias de
-mensaje: 
+mensaje:
 
 1. Connection events (0x00)
 2. In game events (0x01)
@@ -35,21 +35,21 @@ mensaje:
 
 El segundo byte, determina que mensaje es en si. Todos lo mensaje que hay son:
 
-- NULL_MESSAGE (0x0000)
-- ACPT_CONNECTION (0x0001)
-- CLOSE_CONNECTION (0x0002)
-- SEND_GAME_STATE (0x0100)
-- RECV_COMMAND (0x0101)
-- RECV_CHEAT_COMMAND (0x0102)
-- RECV_LEAVE_MATCH (0x0103)
-- SEND_FINISH_MATCH (0x0104)
-- ADD_PLAYER (0x0105)
-- RECV_REQUEST_ACTIVE_GAMES (0x0200)
-- RECV_CREATE_GAME (0x0201)
-- SEND_GAME_CREATED (0x0202)
-- RECV_JOIN_MATCH (0x0203)
-- SEND_GAME_JOINED (0x0204)
-- RECV_ACTIVE_GAMES (0x0205)
+* NULL_MESSAGE (0x0000)
+* ACPT_CONNECTION (0x0001)
+* CLOSE_CONNECTION (0x0002)
+* SEND_GAME_STATE (0x0100)
+* RECV_COMMAND (0x0101)
+* RECV_CHEAT_COMMAND (0x0102)
+* RECV_LEAVE_MATCH (0x0103)
+* SEND_FINISH_MATCH (0x0104)
+* ADD_PLAYER (0x0105)
+* RECV_REQUEST_ACTIVE_GAMES (0x0200)
+* RECV_CREATE_GAME (0x0201)
+* SEND_GAME_CREATED (0x0202)
+* RECV_JOIN_MATCH (0x0203)
+* SEND_GAME_JOINED (0x0204)
+* RECV_ACTIVE_GAMES (0x0205)
 
 ### DTOs
 
@@ -64,7 +64,7 @@ Este mensaje le envia el servidor al cliente, para decirle que lo acepta y le de
 
 #### DTOs: CLOSE_CONNECTION (0x0002)
 
-Este mensaje se envia de forma bidireccional, para que el cliente le avise al servidor o 
+Este mensaje se envia de forma bidireccional, para que el cliente le avise al servidor o
 viceversa, que se van a cerrar.
 
 #### DTOs: SEND_GAME_STATE (0x0100)
@@ -126,18 +126,18 @@ struct CommandDTO {
 
 Los tipos de comandos son:
 
-- MOVE_LEFT (0x00)
-- MOVE_RIGHT (0x01)
-- MOVE_LEFT_FAST (0x02)
-- MOVE_RIGHT_FAST (0x03)
-- JUMP (0x04)
-- SPECIAL_ATTACK (0x05)
-- CHANGE_WEAPON (0x06)
-- LOOK_UP (0x07)
-- DUCK_DOWN (0x08)
-- SHOOT (0x09)
-- PAUSE_GAME (0x10)
-- TAUNT (0x11)
+* MOVE_LEFT (0x00)
+* MOVE_RIGHT (0x01)
+* MOVE_LEFT_FAST (0x02)
+* MOVE_RIGHT_FAST (0x03)
+* JUMP (0x04)
+* SPECIAL_ATTACK (0x05)
+* CHANGE_WEAPON (0x06)
+* LOOK_UP (0x07)
+* DUCK_DOWN (0x08)
+* SHOOT (0x09)
+* PAUSE_GAME (0x10)
+* TAUNT (0x11)
 
 #### DTOs: RECV_CHEAT_COMMAND (0x0102)
 
@@ -153,7 +153,7 @@ struct CheatCommandDTO {
 
 Los tipos de cheat commands:
 
-- INFINITY_AMMO 
+* INFINITY_AMMO
 
 #### DTOs: RECV_LEAVE_MATCH (0x0103)
 
@@ -172,8 +172,6 @@ Este mensaje envia el server al cliente, para avisar que termino la partida.
 
 #### DTOs: ADD_PLAYER (0x0105)
 
-
-
 #### DTOs: RECV_REQUEST_ACTIVE_GAMES (0x0200)
 
 Este mensaje envia el cliente al servidor, para pedirle al server las partidas actuales.
@@ -181,10 +179,11 @@ Este mensaje envia el cliente al servidor, para pedirle al server las partidas a
 #### DTOs: RECV_CREATE_GAME (0x0201)
 
 Este mensaje envia el cliente al servidor, para decirle al server que quiere crear un partida.
+La informacion que le envia es:
 
 ```cpp
 struct CreateGameDTO {
-    id_client_t id_client; // ID del player
+    id_client_t id_client; // ID del cliente
     character_t character_selected; // Que personaje eligio
     map_list_t map_name; // Que mapa elegio
     uint8_t max_players; // Cual es el maximo de players que puede haber
@@ -194,10 +193,52 @@ struct CreateGameDTO {
 #### DTOs: SEND_GAME_CREATED (0x0202)
 
 Este mensaje envia el server al cliente, para decirle que la partida se creo.
+La informacion que le envia es:
 
+```cpp
+struct ClientHasConnectedToMatchDTO {
+    map_list_t map; // Que mapa es
+} __attribute__((packed));
+```
 
 #### DTOs: RECV_JOIN_MATCH (0x0203)
+
+Este mensaje envia el cliente al server, para pedirle que al server que un determinado cliente, quiere conectarse.
+La informacion que le envia es:
+
+```cpp
+struct JoinMatchDTO {
+    id_client_t id_client; // ID del cliente
+    id_match_t id_match; // IDe de la partida que se quiere unir el cliente
+    character_t player_character; // Que personaje eligio
+} __attribute__((packed));
+```
+
 #### DTOs: SEND_GAME_JOINED (0x0204)
+
+Este mensaje eniva el server al cliente, para decirle a este ultimo que su conexion a una determinada partida fue
+exitosa. La informacion que le envia es:
+
+```cpp
+struct ClientHasConnectedToMatchDTO {
+    map_list_t map; // Que mapa es
+} __attribute__((packed));
+```
+
 #### DTOs: RECV_ACTIVE_GAMES (0x0205)
 
+Este mensaje envia el server al client, para decirle a este ultimo la cantidad de partidas activas que hay. La
+informacion que le envia es:
 
+```cpp
+struct ActiveGamesDTO {
+    map_list_t map; // Que mapa es
+    uint8_t players_ingame; // Numero de jugadores en partida
+    uint8_t players_max; // Numero maximo de jugadores
+} __attribute__((packed));
+
+struct MatchInfoDTO {
+    uint8_t num_games; // Numero de partidas
+    ActiveGamesDTO active_games[MAX_MATCHES_TO_CREATE]; // Lista de las partidas
+} __attribute__((packed));
+```
