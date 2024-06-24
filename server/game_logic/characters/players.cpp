@@ -11,4 +11,3 @@ Spaz::Spaz(uint16_t id, const std::string& name, int x, int y, int w, int h, int
 Lori::Lori(uint16_t id, const std::string& name, int x, int y, int w, int h, int shooting_h,
            CollisionManager& collision_manager, const std::shared_ptr<Configuration>& config):
         Player(id, name, LORI_CHARACTER, x, y, w, h, shooting_h, collision_manager, config) {}
-

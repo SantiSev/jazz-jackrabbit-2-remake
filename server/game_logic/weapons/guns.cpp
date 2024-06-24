@@ -39,7 +39,7 @@ GunTwo::GunTwo(uint8_t weapon_id, Player& player_owner, CollisionManager& collis
                const std::shared_ptr<Configuration>& config):
         Weapon(weapon_id, player_owner, collision_manager, config->bullet_base_ammo,
                (int)(config->bullet_base_max_ammo * 1.5), config->bullet_base_dmg * 4,
-               config->bullet_base_shoot_rate * 3, config->bullet_base_speed * 3, config) {}
+               config->bullet_base_shoot_rate * 3, config->bullet_base_speed * 2, config) {}
 
 /*
  * A lot of Damage
@@ -51,20 +51,21 @@ GunThree::GunThree(uint8_t weapon_id, Player& player_owner, CollisionManager& co
                    const std::shared_ptr<Configuration>& config):
         Weapon(weapon_id, player_owner, collision_manager, config->bullet_base_ammo * 2,
                config->bullet_base_max_ammo * 3, config->bullet_base_dmg * 3,
-               config->bullet_base_shoot_rate / 2, config->bullet_base_speed / 3, config) {}
+               config->bullet_base_shoot_rate / 2, config->bullet_base_speed / 2, config) {}
 
 /*
  * Default Gun
  * Little Damage
  * Infinite ammo
  * regular shoot rate
+ * Normal Bullet speed
  */
 
 DefaultGun::DefaultGun(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager,
                        const std::shared_ptr<Configuration>& config):
-        Weapon(weapon_id, player_owner, collision_manager, config->bullet_base_ammo,
-               config->bullet_base_max_ammo, config->bullet_base_dmg * 2,
-               config->bullet_base_shoot_rate, config->bullet_base_speed, config) {}
+        Weapon(weapon_id, player_owner, collision_manager, 99, config->bullet_base_max_ammo,
+               config->bullet_base_dmg * 2, config->bullet_base_shoot_rate,
+               config->bullet_base_speed, config) {}
 
 void DefaultGun::shoot() {
 

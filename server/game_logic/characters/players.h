@@ -18,7 +18,6 @@ class Spaz: public Player {
 public:
     Spaz(uint16_t id, const std::string& name, int x, int y, int w, int h, int shooting_h,
          CollisionManager& collision_manager, const std::shared_ptr<Configuration>& config);
-
 };
 
 class Lori: public Player {
