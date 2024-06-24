@@ -17,6 +17,9 @@ El trabajo práctico se divide en cuatro partes principales:
 
 ## Protocol
 
+El diseño del protocolo fue basado gracias a la clase y diapositiva de la clase de Protocolo de la materia Taller
+de Programacion (Veiga).
+
 ### Mensajes
 
 Los mensajes del protocolo tiene dos partes:
