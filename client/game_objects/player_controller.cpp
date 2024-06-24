@@ -22,7 +22,7 @@ void PlayerController::on_key_press(const SDL_Keycode& key) {
             message_handler.send_command(JUMP);
             break;
         case SDLK_LSHIFT:
-            // message_handler.send_command();
+            message_handler.send_command(SPRINT);
             break;
         case SDLK_e:
             message_handler.send_command(SPECIAL_ATTACK);

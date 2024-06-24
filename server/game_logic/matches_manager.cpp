@@ -10,6 +10,7 @@ MatchesManager::MatchesManager():
         message_handler(*this, manager_queue),
         client_monitors(),
         resource_pool(std::make_shared<engine::ResourcePool>()),
+        lobby_monitor(),
         manager_queue(Queue<std::shared_ptr<Message>>()) {
     pre_load_resources();
 }
@@ -52,40 +53,44 @@ void MatchesManager::run() {
 }
 
 void MatchesManager::create_new_match(const CreateGameDTO& dto) {
+    auto client = get_client_by_id(dto.id_client);
     auto config = resource_pool->get_config();
-    if (!can_create_match(config->match_max_matches)) {
+    if (!can_create_match(config->match_max_matches) || client->get_current_match_id() != 0) {
         return;
     }
     matches_number++;
 
     auto new_monitor = new ClientMonitor();
     client_monitors.insert({matches_number, new_monitor});
+
     auto match = std::make_shared<Match>(dto.map_name, config->match_max_players, manager_queue,
                                          *new_monitor, resource_pool);
 
     matches[matches_number] = match;
     match->start();
 
-    auto client = get_client_by_id(dto.id_client);
+    
     client->set_match_joined_id(matches_number);
     new_monitor->addClient(client->get_sender_queue());
 
     std::string namestr = "Player " + std::to_string(dto.id_client);
     auto message =
-            make_add_player_message(namestr, dto.id_client, dto.character_selected, dto.map_name);
+            make_add_player_message(namestr, dto.id_client, dto.character_selected, dto.map_id);
     match->match_queue.try_push(message);
 
-    send_client_succesful_connect(dto.id_client, dto.map_name);
+    send_client_succesful_connect(dto.id_client, dto.map_id);
 }
 
-void MatchesManager::send_client_succesful_connect(const uint16_t& id_client,
-                                                   const map_list_t& map) {
+void MatchesManager::send_client_succesful_connect(const uint16_t& id_client, const uint16_t& map) {
     ClientHasConnectedToMatchDTO game_connected = {map};
     auto send_game_created = std::make_shared<SendConnectedToGameMessage>(game_connected);
     get_client_by_id(id_client)->get_sender_queue().push(send_game_created);
 }
 
 void MatchesManager::join_match(const JoinMatchDTO& dto) {
+    if (get_client_by_id(dto.id_client)->get_current_match_id() != 0) {
+        return;
+    }
 #ifdef LOG_VERBOSE
     std::cout << "Joining match id " << dto.id_match << std::endl;
 #endif
@@ -110,12 +115,12 @@ void MatchesManager::join_match(const JoinMatchDTO& dto) {
 
 std::shared_ptr<AddPlayerMessage> MatchesManager::make_add_player_message(
         const std::string& player_name, id_client_t id_client, character_t character,
-        map_list_t map) const {
+        uint16_t map) const {
     AddPlayerDTO AddDTO = {};
     snprintf(AddDTO.name, sizeof(AddDTO.name), "%s", player_name.c_str());
     AddDTO.id_client = id_client;
     AddDTO.player_character = character;
-    AddDTO.map_name = map;
+    AddDTO.map_id = map;
     return std::make_shared<AddPlayerMessage>(AddDTO);
 }
 
@@ -134,6 +139,7 @@ void MatchesManager::add_new_client_to_manager(Socket client_socket) {
     client->get_sender_queue().push(message);
     client->set_client_id(client_id_counter);
     client->set_match_joined_id(0);
+    lobby_monitor.addClient(client->get_sender_queue());
     clients.push_back(client);
 #ifdef LOG_VERBOSE
     std::cout << "Client " << client_id_counter << " connected to server." << std::endl;
@@ -141,11 +147,12 @@ void MatchesManager::add_new_client_to_manager(Socket client_socket) {
 }
 
 MatchInfoDTO MatchesManager::return_matches_lists() {
+    std::unique_lock<std::mutex> lock(manager_mutex);
     MatchInfoDTO matches_lists{};
     matches_lists.num_games = matches.size();
     size_t i = 0;
     for (auto& match: matches) {
-        matches_lists.active_games[i].map = match.second->get_map();
+        matches_lists.active_games[i].map_id = match.second->get_map();
         matches_lists.active_games[i].players_ingame = match.second->get_num_players();
         matches_lists.active_games[i].players_max = match.second->get_max_players();
     }
@@ -173,6 +180,7 @@ void MatchesManager::delete_disconnected_client(const id_client_t& id_client) {
                 client_monitors.find((*client)->get_current_match_id())
                         ->second->removeQueue((*client)->get_sender_queue());
             }
+            lobby_monitor.removeQueue((*client)->get_sender_queue());
             (*client)->stop();
             delete *client;
             clients.erase(client);
@@ -195,8 +203,6 @@ void MatchesManager::check_matches_status() {
             auto ids = it->second->get_clients_ids();
             for (auto id: ids) {
                 get_client_by_id(id)->set_match_joined_id(0);
-                get_client_by_id(id)->get_sender_queue().push(
-                        std::make_shared<SendFinishMatchMessage>());
             }
             it->second->stop();
             it->second->join();
@@ -210,11 +216,9 @@ void MatchesManager::check_matches_status() {
 
 void MatchesManager::clear_all_clients() {
     std::unique_lock<std::mutex> lock(manager_mutex);
+    CloseConnectionDTO close_connection{};
+    lobby_monitor.broadcastClients(std::make_shared<CloseConnectionMessage>(close_connection));
     for (auto& client: clients) {
-        CloseConnectionDTO close_connection{};
-        auto game_ended_message = std::make_shared<CloseConnectionMessage>(close_connection);
-        client->get_sender_queue().try_push(game_ended_message);
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
         client->stop();
         delete client;
     }
@@ -240,8 +244,10 @@ void MatchesManager::pre_load_resources() {
     resource_pool->load_yaml(map_character_enum_to_string.at(MAD_HATTER));
     resource_pool->load_yaml(map_character_enum_to_string.at(LIZARD_GOON));
     resource_pool->load_yaml(SFX_FILE);
-    resource_pool->load_yaml(map_list_to_string.at(MAP_1));
     resource_pool->load_yaml(CONFIG);
+    resource_pool->load_yaml(MAPS_FILE);
+    resource_pool->load_yaml(ITEMS_FILE);
+  
     resource_pool->load_config(CONFIG);
 }
 
@@ -263,4 +269,10 @@ void MatchesManager::clean_client_monitors() {
     client_monitors.clear();
 }
 
+
 bool MatchesManager::can_create_match(int max_matches) { return matches_number < max_matches; }
+
+MatchesManager::~MatchesManager() {
+    lobby_monitor.remove_all_queues();
+    matches.clear();
+}

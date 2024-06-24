@@ -36,7 +36,6 @@ public:
     void send_message(const std::shared_ptr<Message>& message);
     void force_shutdown();
     std::shared_ptr<Message> recv_closed_connection();
-    void send_game_joined(const uint16_t header, ClientHasConnectedToMatchDTO& game_joined);
     void send_active_games(const uint16_t header, MatchInfoDTO& active_games);
 
     ~CommonProtocol();

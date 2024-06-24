@@ -23,10 +23,12 @@
 #include "../game_engine/gui/canvas_object.h"
 #include "../game_engine/gui/widgets/animated_sprite.h"
 #include "../game_engine/gui/widgets/sound_manager.h"
+#include "./shared/background.h"
 #include "game_objects/player_controller.h"
 #include "protocol/client_protocol.h"
 #include "protocol/client_thread_manager.h"
 #include "protocol/message_runner.h"
+#include "scenes/editor_scene.h"
 #include "scenes/match_scene.h"
 #include "scenes/menu_scene.h"
 
@@ -42,8 +44,9 @@ private:
     std::atomic<bool> game_running;
     std::atomic<bool> menu_running;
     std::atomic<bool> match_running;
+    std::atomic<bool> editor_running;
 
-    std::atomic<map_list_t> map_enum;
+    std::atomic<uint16_t> map_enum;
     std::atomic<id_client_t> id_client;
 
     ClientMessageHandler message_handler;

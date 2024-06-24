@@ -2,8 +2,8 @@
 #define CHARACTER_ENUM_H
 
 #include <cstdint>
-#include <map>
 #include <string>
+#include <unordered_map>
 
 #define ENEMIES_FILE "assets/characters/enemies/enemies"
 
@@ -15,7 +15,7 @@ typedef enum: uint8_t {
     LIZARD_GOON = 0x04
 } character_t;
 
-const std::map<character_t, std::string> map_character_enum_to_string = {
+const std::unordered_map<character_t, std::string> map_character_enum_to_string = {
         {JAZZ_CHARACTER, "assets/characters/players/jazz"},
         {SPAZ_CHARACTER, "assets/characters/players/spaz"},
         {LORI_CHARACTER, "assets/characters/players/lori"},

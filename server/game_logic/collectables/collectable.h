@@ -1,18 +1,24 @@
 
 #ifndef AREA_OBJECT_H
 #define AREA_OBJECT_H
-
-#include "../../../game_engine/physics_engine/physics_object/static_body.h"
+#include "../../../common/item_enum.h"
+#include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
 
 class Collectable: public DynamicBody {
 private:
+    uint16_t id;
     bool collected = false;
+    item_t item_type;
     int respawn_cooldown = 1000;
     int respawn_counter = 0;
 
 public:
-    Collectable(int x, int y, int hitbox_width, int hitbox_height, int respawn_cooldown):
-            DynamicBody(x, y, hitbox_width, hitbox_height), respawn_cooldown(respawn_cooldown) {}
+    Collectable(uint16_t id, int x, int y, int hitbox_width, int hitbox_height, item_t item_type,
+                int respawn_cooldown):
+            DynamicBody(x, y, hitbox_width, hitbox_height),
+            id(id),
+            item_type(item_type),
+            respawn_cooldown(respawn_cooldown) {}
 
     bool is_collected() const { return collected; }
 
@@ -55,6 +61,12 @@ public:
         std::cout << "| Respawn Cooldown: " << respawn_cooldown << " |" << std::endl;
         std::cout << "| Respawn Counter: " << respawn_counter << " |" << std::endl;
     }
+
+    item_t get_item_type() const { return item_type; }
+
+    uint16_t get_id() const { return id; }
+
+    virtual ~Collectable() = default;
 };
 
 

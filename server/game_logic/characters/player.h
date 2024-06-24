@@ -34,6 +34,10 @@ private:
     int invincibility_cooldown = INVINCIBILITY_COOLDOWN;
     bool is_invincible = false;
     std::shared_ptr<Configuration> config;
+    bool is_sprinting = false;
+
+    // Configs
+    bool is_sprint_allowed = true;
 
 public:
     Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w, int h,
@@ -72,11 +76,13 @@ public:
 
     //------- Intoxication Methods --------
 
-    void reset_intoxication();
-    bool is_player_intoxicated() const;
+    void start_intoxication();
+    void handle_intoxication();
 
-    void decrease_intoxication_cooldown();
-    size_t get_intoxication_cooldown() const;
+    //------- Invincibility Methods --------
+
+    void start_invincibility();
+    void handle_invincibility();
 
     //------- Special Attack Methods --------
 
@@ -91,6 +97,7 @@ public:
     void move_right() override;
     void jump() override;
     virtual void do_special_attack();
+    void sprint();
 
 
     //------- Match Methods --------

@@ -5,6 +5,7 @@
 #include <string>
 
 #define ITEMS_FILE "assets/items/items"
+#define ITEM_AMOUNTS 6
 
 typedef enum: uint8_t {
     BULLET_ONE_ITEM = 0x00,

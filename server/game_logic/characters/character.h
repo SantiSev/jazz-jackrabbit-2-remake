@@ -18,7 +18,7 @@
 #define NONE 0
 #define MAX_HEALTH 100
 #define REVIVE_COOLDOWN 1000
-#define INTOXICATON_COOLDOWN 4
+#define INTOXICATON_COOLDOWN 600
 #define SPECIAL_COOLDOWN 3
 #define DEFAULT_SPEED_Y 10
 #define DEFAULT_SPEED_X 15
@@ -28,7 +28,7 @@
 #define LEFT_DIR -1
 #define RIGHT_DIR 1
 #define REVIVE_COOLDOWN 1000
-#define INVINCIBILITY_COOLDOWN 3000
+#define INVINCIBILITY_COOLDOWN 600
 
 class CharacterBody: public DynamicBody {
 
