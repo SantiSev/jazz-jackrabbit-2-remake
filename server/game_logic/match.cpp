@@ -221,16 +221,14 @@ void Match::add_player_to_game(const AddPlayerDTO& dto) {
 
     int player_width = (*player_resources_ptr)["body_width"].as<int>();
     int player_height = (*player_resources_ptr)["body_height"].as<int>();
-
-    std::cout << "Player width: " << player_width << " Player height: " << player_height
-              << std::endl;
+    int shooting_height = (*player_resources_ptr)["weapon_y"].as<int>();
 
     switch (dto.player_character) {
         case JAZZ_CHARACTER: {
 
             auto jazz_player =
                     std::make_shared<Jazz>(dto.id_client, dto.name, pos.x, pos.y, player_width,
-                                           player_height, *collision_manager);
+                                           player_height, shooting_height, *collision_manager);
             collision_manager->track_dynamic_body(jazz_player);
             players[dto.id_client] = jazz_player;
             break;
@@ -239,7 +237,7 @@ void Match::add_player_to_game(const AddPlayerDTO& dto) {
 
             auto spaz_player =
                     std::make_shared<Spaz>(dto.id_client, dto.name, pos.x, pos.y, player_width,
-                                           player_height, *collision_manager);
+                                           player_height, shooting_height, *collision_manager);
             collision_manager->track_dynamic_body(spaz_player);
             players[dto.id_client] = spaz_player;
             break;
@@ -248,7 +246,7 @@ void Match::add_player_to_game(const AddPlayerDTO& dto) {
 
             auto lori_player =
                     std::make_shared<Lori>(dto.id_client, dto.name, pos.x, pos.y, player_width,
-                                           player_height, *collision_manager);
+                                           player_height, shooting_height, *collision_manager);
             collision_manager->track_dynamic_body(lori_player);
             players[dto.id_client] = lori_player;
             break;

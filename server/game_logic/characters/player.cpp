@@ -2,17 +2,19 @@
 
 
 Player::Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w,
-               int h, CollisionManager& collision_manager):
+               int h, int shooting_h, CollisionManager& collision_manager):
         CharacterBody(id, character, x, y, w, h, Vector2D(NONE, MAX_FALL_SPEED), MAX_HEALTH,
                       STATE_IDLE_RIGHT, REVIVE_COOLDOWN),
         name(std::move(name)),
         weapons(NUM_OF_WEAPONS),
-        collision_manager(collision_manager) {
+        collision_manager(collision_manager),
+        shooting_height(shooting_h) {
     set_starting_weapon();
 }
 
 
 // -------- Getters ---------
+int Player::get_shooting_height() const { return shooting_height; }
 
 int Player::get_points() const { return points; }
 

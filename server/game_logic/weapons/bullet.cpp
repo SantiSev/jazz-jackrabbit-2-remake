@@ -14,7 +14,7 @@ Bullet::Bullet(const uint64_t& id, const uint8_t type, Player& player_owner,
         bullet_damage(bullet_damage),
         life_span(BULLET_LIFE_SPAN) {
 
-    position.y = player_owner.get_bottom_hitbox_side() - player_owner.get_hitbox_height() / 2;
+    position.y = player_owner.get_top_hitbox_side() + player_owner.get_shooting_height();
 
     if (player_owner.is_facing_right()) {
         position.x = player_owner.get_right_hitbox_side() + OFFSET_BULLET_X;

@@ -34,6 +34,7 @@ private:
     int invincibility_cooldown = INVINCIBILITY_COOLDOWN;
     bool is_invincible = false;
     bool is_sprinting = false;
+    int shooting_height;
 
     // Configs
     bool is_sprint_allowed = true;
@@ -43,7 +44,7 @@ private:
 
 public:
     Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w, int h,
-           CollisionManager& collision_manager);
+           int shooting_h, CollisionManager& collision_manager);
 
     //------- Overrided Methods --------
 
@@ -57,6 +58,7 @@ public:
     //------- Getters --------
 
     int get_points() const;
+    int get_shooting_height() const;
     std::string get_name() const;
     std::vector<std::unique_ptr<Weapon>>& get_weapons() const;
     Weapon* get_weapon(size_t weapon) const;
