@@ -124,6 +124,18 @@ Dentro del juego, los movimientos y sus correspondientes teclas son:
 - Disparar (click izquierdo)
 - Cambiar de arma (e)
 
+### Cheat commands
+
+La ejecucion de los `cheat commands` y su correspondecia, en el teclado, es la siguiente:
+
+- Max ammo: 01
+- Max health: 02
+- Invincible: 03
+- Revive (Player): 04
+- Infinite ammo: 05
+- Revive all (Players & Enemies): 06
+- Kill all: 07
+
 ### Editor de mapas
 
 Una vez elegida la opcion para crear un mapa, y se quiere poner un bloque, debera ser selecionado y colocado en
