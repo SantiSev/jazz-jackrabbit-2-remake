@@ -10,6 +10,7 @@ Player::Player(uint16_t id, std::string name, const character_t& character, int 
         weapons(NUM_OF_WEAPONS),
         collision_manager(collision_manager),
         config(config) {
+    revive_cooldown = config->player_spawn_cd;
     set_starting_weapon();
 }
 
@@ -26,8 +27,7 @@ std::string Player::get_name() const { return name; }
 
 void Player::set_name(std::string new_name) { this->name = std::move(new_name); }
 
-void Player::set_starting_weapon() {  // todo check if its needed to be in config
-    // TODO fix this the id should not be passed as a parameter
+void Player::set_starting_weapon() {
     weapons[0] = std::make_unique<DefaultGun>(COMMON_BULLET, *this, collision_manager, config);
     weapons[1] = std::make_unique<GunOne>(BULLET_ONE, *this, collision_manager, config);
     weapons[2] = std::make_unique<GunTwo>(BULLET_TWO, *this, collision_manager, config);
@@ -132,7 +132,6 @@ void Player::do_special_attack() {
 // ------------ Override Methods --------------
 
 void Player::update_body() {
-
     if (is_dead()) {  // if the player is dead, then it shouldnt move
         return;
     }

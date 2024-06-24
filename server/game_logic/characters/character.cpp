@@ -59,7 +59,7 @@ bool CharacterBody::try_revive() {
         return false;
     }
 
-    if (revive_counter == NONE && !is_active_object()) {
+    if (revive_counter <= NONE && !is_active_object()) {
         set_active_status(true);
         revive_counter = revive_cooldown;
         return true;
@@ -83,7 +83,7 @@ bool CharacterBody::is_facing_right() const { return direction == RIGHT_DIR; }
 
 int CharacterBody::get_direction() const { return direction; }
 
-// Avoid adding falling animation   || Agus es un bo
+// Avoid adding falling animation
 bool CharacterBody::is_doing_action_state() const {
     return (state == STATE_SHOOTING_LEFT || state == STATE_SHOOTING_RIGHT ||
             state == STATE_SPECIAL_RIGHT || state == STATE_SPECIAL_LEFT);
