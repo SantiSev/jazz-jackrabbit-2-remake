@@ -23,7 +23,8 @@ MatchSelectScene::MatchSelectScene(engine::Window& window, EventLoop* event_loop
         match_select_running(match_select_running),
         character_select_running(false),
         match_requested(false),
-        message_handler(message_handler) {
+        message_handler(message_handler),
+        selected_id(0) {
 
     create_buttons();
 }
@@ -121,11 +122,39 @@ void MatchSelectScene::create_buttons() {
     }
 }
 
-void MatchSelectScene::show_matches() {}
+void MatchSelectScene::show_matches() {
+    std::shared_ptr<MatchInfoDTO> match_info = nullptr;
+    message_handler.match_select_q.try_pop(match_info);
+    if (match_info) {
+        create_match_buttons(match_info);
+    }
+    match_requested = false;
+}
 
 MatchSelectScene::~MatchSelectScene() {
     // Free memory
     for (auto button: buttons) {
         delete button;
+    }
+}
+
+void MatchSelectScene::create_match_buttons(std::shared_ptr<MatchInfoDTO> dto) {
+    int y_start = Y_BUTTON_START;
+    int w = BUTTON_WIDTH;
+    int h = BUTTON_HEIGHT;
+
+    int num_matches = dto->num_games;
+
+    for (int i = 0; i < num_matches; i++) {
+        std::string label_info = "Match id :" + std::to_string(dto->active_games[i].map_id) + " " +
+                                 std::to_string(dto->active_games[i].players_ingame) + " / " +
+                                 std::to_string(dto->active_games[i].players_max);
+        uint16_t id = dto->active_games[i].match_id;
+        SDL_Rect match_button_d_rect = {0, y_start, w, h};
+        MatchSelectorButton* match_button = new MatchSelectorButton(
+                renderer, resource_pool, match_button_d_rect, match_select_running,
+                character_select_running, label_info, selected_id, id);
+        y_start += h + BUTTON_MARGIN;
+        buttons.push_back(match_button);
     }
 }

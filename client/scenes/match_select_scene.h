@@ -3,6 +3,7 @@
 
 #include <list>
 #include <memory>
+#include <string>
 
 #include <SDL2/SDL.h>
 
@@ -13,6 +14,7 @@
 #include "../../game_engine/gui/widgets/sound_manager.h"
 #include "../../game_engine/gui/widgets/sprite.h"
 #include "../event_loop.h"
+#include "../menu_objects/match_selector.h"
 #include "../menu_objects/receive_matches_button.h"
 #include "../protocol/client_message_handler.h"
 #include "../shared/background.h"
@@ -36,6 +38,8 @@ private:
     std::atomic<bool> match_requested;
 
     ClientMessageHandler& message_handler;
+    Queue<std::shared_ptr<MatchInfoDTO>> match_select_q;
+    uint16_t selected_id;
 
     void create_buttons();
 
@@ -56,6 +60,8 @@ public:
     ~MatchSelectScene();
 
     void show_matches();
+
+    void create_match_buttons(std::shared_ptr<MatchInfoDTO> sharedPtr);
 };
 
 

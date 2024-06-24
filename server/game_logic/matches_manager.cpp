@@ -152,6 +152,8 @@ MatchInfoDTO MatchesManager::return_matches_lists() {
         matches_lists.active_games[i].map_id = match.second->get_map();
         matches_lists.active_games[i].players_ingame = match.second->get_num_players();
         matches_lists.active_games[i].players_max = match.second->get_max_players();
+        matches_lists.active_games[i].match_id = match.first;
+        i++;
     }
     return matches_lists;
 }

@@ -130,6 +130,7 @@ void CommonProtocol::send_active_games(const uint16_t header, MatchInfoDTO& acti
     send_header(header);
     for (int i = 0; i < active_games.num_games; i++) {
         active_games.active_games[i].map_id = htons(active_games.active_games[i].map_id);
+        active_games.active_games[i].match_id = htons(active_games.active_games[i].match_id);
     }
     skt.sendall(&active_games, sizeof(active_games), &was_closed);
 }

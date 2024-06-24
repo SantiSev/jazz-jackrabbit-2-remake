@@ -21,12 +21,16 @@ MenuScene::MenuScene(engine::Window& window, EventLoop* event_loop,
         editor_running(editor_running),
         map_select_running(false),
         character_select_running(false),
+        match_select_running(false),
         message_handler(message_handler) {
 
     create_buttons();
 }
 
 void MenuScene::start() {
+    MatchSelectScene match_select_scene(window, event_loop, resource_pool, sound_manager,
+                                        game_running, menu_running, match_select_running,
+                                        message_handler);
     MapSelectScene map_select_scene(window, event_loop, resource_pool, game_running,
                                     map_select_running, character_select_running, message_handler);
     CharacterSelectScene character_select_scene(window, event_loop, resource_pool, sound_manager,
@@ -56,6 +60,9 @@ void MenuScene::start() {
         }
         if (character_select_running) {
             character_select_scene.start(map_select_scene.selected_map_id);
+        }
+        if (match_select_running) {
+            match_select_scene.start();
         }
         // Draw
         window.clear();
@@ -96,7 +103,8 @@ void MenuScene::create_buttons() {
 
     SDL_Rect join_match_button_d_rect = {0, y_start, w, h};
     JoinMatchButton* join_match_button =
-            new JoinMatchButton(renderer, resource_pool, join_match_button_d_rect, message_handler);
+            new JoinMatchButton(renderer, resource_pool, join_match_button_d_rect, message_handler,
+                                match_select_running);
     y_start += h + BUTTON_MARGIN;
 
     SDL_Rect map_editor_d_rect = {0, y_start, w, h};

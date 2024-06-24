@@ -21,6 +21,7 @@ private:
 public:
     Queue<std::shared_ptr<Message>> send_message;
     Queue<std::shared_ptr<GameStateDTO>> game_state_q;
+    Queue<std::shared_ptr<MatchInfoDTO>> match_select_q;
 
     explicit ClientMessageHandler(Client& client);
 
