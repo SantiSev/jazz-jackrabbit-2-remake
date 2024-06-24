@@ -23,8 +23,11 @@ Constructor for guns:
  * A lot of Shoot rate
  * Little Bullet speed
  */
-GunOne::GunOne(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager):
-        Weapon(weapon_id, player_owner, collision_manager, 5, 200, 60, 20) {}
+GunOne::GunOne(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager,
+               const std::shared_ptr<Configuration>& config):
+        Weapon(weapon_id, player_owner, collision_manager, config->bullet_base_ammo * 10,
+               config->bullet_base_max_ammo * 10, config->bullet_base_dmg,
+               config->bullet_base_shoot_rate / 2, config->bullet_base_speed / 2, config) {}
 
 /*
  * A lot of Damage
@@ -32,28 +35,37 @@ GunOne::GunOne(uint8_t weapon_id, Player& player_owner, CollisionManager& collis
  * Little Shoot rate
  * A lot of Bullet speed
  */
-GunTwo::GunTwo(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager):
-        Weapon(weapon_id, player_owner, collision_manager, 25, 25, 10, 20) {}
+GunTwo::GunTwo(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager,
+               const std::shared_ptr<Configuration>& config):
+        Weapon(weapon_id, player_owner, collision_manager, config->bullet_base_ammo,
+               (int)(config->bullet_base_max_ammo * 1.5), config->bullet_base_dmg * 4,
+               config->bullet_base_shoot_rate * 3, config->bullet_base_speed * 2, config) {}
 
 /*
  * A lot of Damage
- * Little ammo
+ * Medium ammo
  * A lot of Shoot rate
- * A lot of Bullet speed
+ * Slow Bullet speed
  */
-GunThree::GunThree(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager):
-        Weapon(weapon_id, player_owner, collision_manager, 50, 10, 60, 20) {}
+GunThree::GunThree(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager,
+                   const std::shared_ptr<Configuration>& config):
+        Weapon(weapon_id, player_owner, collision_manager, config->bullet_base_ammo * 2,
+               config->bullet_base_max_ammo * 3, config->bullet_base_dmg * 3,
+               config->bullet_base_shoot_rate / 2, config->bullet_base_speed / 2, config) {}
 
 /*
  * Default Gun
  * Little Damage
  * Infinite ammo
  * regular shoot rate
+ * Normal Bullet speed
  */
 
-DefaultGun::DefaultGun(uint8_t weapon_id, Player& player_owner,
-                       CollisionManager& collision_manager):
-        Weapon(weapon_id, player_owner, collision_manager, 10, 0, 60, 20) {}
+DefaultGun::DefaultGun(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager,
+                       const std::shared_ptr<Configuration>& config):
+        Weapon(weapon_id, player_owner, collision_manager, 99, config->bullet_base_max_ammo,
+               config->bullet_base_dmg * 2, config->bullet_base_shoot_rate,
+               config->bullet_base_speed, config) {}
 
 void DefaultGun::shoot() {
 
@@ -63,6 +75,8 @@ void DefaultGun::shoot() {
 
     shoot_rate_counter = 0;
     uint64_t bullet_id = create_bullet_id();
-    auto bullet = std::make_shared<Bullet>(bullet_id, weapon_id, player_owner, weapon_damage);
+    auto bullet = std::make_shared<Bullet>(bullet_id, weapon_id, player_owner, weapon_damage,
+                                           bullet_speed, config->match_points_enemy,
+                                           config->match_points_player);
     collision_manager.track_dynamic_body(bullet);
 }

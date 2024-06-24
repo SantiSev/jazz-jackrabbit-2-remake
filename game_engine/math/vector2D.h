@@ -30,6 +30,8 @@ public:
     Vector2D& operator-=(const Vector2D& other);
     // Incrementar vector
     Vector2D& operator+=(const Vector2D& other);
+    // Incrementar vector con un escalar
+    Vector2D& operator+=(int scalar);
 };
 
 #endif  // GAME_ENGINE_MATH_VECTOR2D_H_

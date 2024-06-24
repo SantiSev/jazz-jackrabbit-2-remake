@@ -8,6 +8,7 @@
 #include <SDL2/SDL.h>
 #include <yaml-cpp/yaml.h>
 
+#include "../../../common/configuration.h"
 #include "../../errors.h"
 
 #include "asset_manager.h"
@@ -38,6 +39,9 @@ public:
     // Load files that don't depend on the renderer only
     ResourcePool();
 
+    // It contains the general configuration of the game
+    std::shared_ptr<Configuration> config{};
+
     // Load files that depend on the renderer or not
     explicit ResourcePool(SDL_Renderer* renderer);
 
@@ -50,12 +54,15 @@ public:
     const std::shared_ptr<YAML::Node>& load_yaml(const std::string& name);
     void load_sound_effect(const std::string& name);
     void load_music(const std::string& name);
+    void load_config(const std::string& name);
 
     // Thread-safe, read only getters
     const std::shared_ptr<Texture>& get_texture(const std::string& name) const;
     const std::shared_ptr<Font>& get_font(const std::string& name) const;
     const std::shared_ptr<YAML::Node>& get_yaml(const std::string& name) const;
     const std::shared_ptr<Sound>& get_sound(const std::string& name) const;
+    const std::shared_ptr<Configuration>& get_config() const;
+
 
     ~ResourcePool();
 };
