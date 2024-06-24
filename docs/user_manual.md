@@ -123,3 +123,25 @@ Dentro del juego, los movimientos y sus correspondientes teclas son:
 - Saltar (space)
 - Disparar (click izquierdo)
 - Cambiar de arma (e)
+
+### Editor de mapas
+
+Una vez elegida la opcion para crear un mapa, y se quiere poner un bloque, debera ser selecionado y colocado en
+alguno de los _tiles_, con click izquierdo. En caso de querer borrar un bloque, uno de los bloques es el `vacio`,
+simplemente se selecciona y se coloca con click izquierdo. Los bloques pueden ser sobreescritos.
+
+En caso de querer poner, items, enemies o players. Existen unos bloques especiales de colores, que corresponden,
+respectivamente a lo que se quiere poner. Los colores y su correspondencia es la siguiente:
+
+- Celeste: Player
+- Naranja: Enemies
+- Gris: Items
+
+Una vez finalizada la edicion, se debe presionar el boton: `Save and Exit`. Para el mapa sea detectado por el servidor.
+Se debera arrastrar el archivo de salida: `tile.yaml` a la carpeta: `assets/maps`. Finalmente, se debera  agregar
+metadata del mapa al archivo `maps.yaml`. La informacion requerdia es:
+
+- Nombre: Nombre del mapa
+- ID: ID del mapa
+- Texture File: Nombre del archivo donde estan las texturas, en este caso es siempre: `assets/maps/custom_map`
+- Yaml File: Nombre del archivo del mapa
