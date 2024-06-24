@@ -110,7 +110,7 @@ void Player::move_left() {
     }
     direction = -1;
     if (is_sprinting && !is_intoxicated) {
-        velocity.x = -config->player_speed_x - (int)(config->sprint_speed);
+        velocity.x = -config->player_speed_x - (int)(config->player_sprint_spd);
     } else {
         velocity.x = -config->player_speed_x;
     }
@@ -132,7 +132,7 @@ void Player::move_right() {
     direction = 1;
 
     if (is_sprinting && !is_intoxicated) {
-        velocity.x = config->player_speed_x + (int)(config->sprint_speed);
+        velocity.x = config->player_speed_x + (int)(config->player_sprint_spd);
     } else {
         velocity.x = config->player_speed_x;
     }

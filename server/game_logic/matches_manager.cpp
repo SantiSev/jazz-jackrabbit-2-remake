@@ -63,13 +63,13 @@ void MatchesManager::create_new_match(const CreateGameDTO& dto) {
     auto new_monitor = new ClientMonitor();
     client_monitors.insert({matches_number, new_monitor});
 
-    auto match = std::make_shared<Match>(dto.map_name, config->match_max_players, manager_queue,
+    auto match = std::make_shared<Match>(dto.map_id, config->match_max_players, manager_queue,
                                          *new_monitor, resource_pool);
 
     matches[matches_number] = match;
     match->start();
 
-    
+
     client->set_match_joined_id(matches_number);
     new_monitor->addClient(client->get_sender_queue());
 
@@ -247,7 +247,7 @@ void MatchesManager::pre_load_resources() {
     resource_pool->load_yaml(CONFIG);
     resource_pool->load_yaml(MAPS_FILE);
     resource_pool->load_yaml(ITEMS_FILE);
-  
+
     resource_pool->load_config(CONFIG);
 }
 

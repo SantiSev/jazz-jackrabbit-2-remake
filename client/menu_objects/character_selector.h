@@ -1,6 +1,7 @@
 #ifndef CHARACTER_SELECTOR_H
 #define CHARACTER_SELECTOR_H
 
+#include <atomic>
 #include <memory>
 #include <string>
 #include <unordered_map>

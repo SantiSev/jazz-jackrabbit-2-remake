@@ -77,7 +77,7 @@ void Client::pre_load_resources() {
     resource_pool->load_music(sound_to_string.at(BACKGROUND));
     resource_pool->load_sound_effect(sound_to_string.at(SHOOT_SOUND));
     resource_pool->load_sound_effect(sound_to_string.at(CHARACTER_SELECT_SOUND));
-  
+
     // Config
     resource_pool->load_config(CONFIG_FILE);
 }
