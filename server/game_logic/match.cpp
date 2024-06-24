@@ -210,11 +210,11 @@ void Match::revive_all_cheat() {
             collision_manager->track_dynamic_body(enemy);
         }
     }
-    
+
     for (auto& pair: players) {
         auto& player = pair.second;
         if (player->is_dead()) {
-            player->revive(player.get()->position); // revive at the same position
+            player->revive(player.get()->position);  // revive at the same position
             collision_manager->track_dynamic_body(player);
         }
     }
