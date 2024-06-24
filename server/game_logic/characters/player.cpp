@@ -166,7 +166,7 @@ bool Player::is_shooting() {
 void Player::update_body() {
 
     if (is_dead()) {  // if the player is dead, then it shouldnt move
-
+        velocity = Vector2D(NONE, NONE);
         return;
     }
 
@@ -259,6 +259,7 @@ void Player::revive(Vector2D new_position) {
     this->health = MAX_HEALTH;
     this->state = STATE_IDLE_RIGHT;
     position = new_position;
+    velocity = Vector2D(NONE, DEFAULT_SPEED_Y);
 
     for (auto& weapon: weapons) {
         weapon->reset_ammo();
@@ -275,6 +276,7 @@ void Player::take_damage(int damage) {
         health = NONE;
         state = STATE_DEAD;
         set_active_status(false);
+        velocity = Vector2D(NONE, NONE);
     } else {
         state = STATE_DAMAGED;
     }

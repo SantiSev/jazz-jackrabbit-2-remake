@@ -86,6 +86,7 @@ void Enemy::revive(Vector2D new_position) {
     revive_counter = revive_cooldown;
     health = MAX_HEALTH;
     position = new_position;
+    velocity = Vector2D(x_speed, DEFAULT_SPEED_Y);
     spawn_position = new_position;
     set_active_status(true);
 }

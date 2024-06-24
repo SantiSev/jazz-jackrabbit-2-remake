@@ -127,7 +127,7 @@ void Match::run_command(const CommandDTO& dto) {
 void Match::respawn_players() {
     for (auto& pair: players) {
         auto& player = pair.second;
-        if (player->try_revive() || cheat_revive_enabled) {
+        if (player->try_revive()) {
 
             bool can_be_placed = false;
             Vector2D new_position = get_random_spawn_point(player_spawn_points);
@@ -147,7 +147,7 @@ void Match::respawn_players() {
 }
 void Match::respawn_enemies() {
     for (auto& enemy: enemies) {
-        if (enemy->try_revive() || cheat_revive_enabled) {
+        if (enemy->try_revive()) {
             std::cout << "| ENEMY respawned with ID:" << enemy->get_id() << " |" << std::endl;
             enemy->revive(enemy.get()->spawn_position);
             collision_manager->track_dynamic_body(enemy);
@@ -181,8 +181,9 @@ void Match::run_cheat_command(const CheatCommandDTO& dto) {
         revive_all_cheat();
     } else if (dto.command == CHEAT_REVIVE) {
         std::shared_ptr<Player> player = get_player(dto.id_player);
-        if (player) {
+        if (player && player->is_dead()) {
             player->revive(get_random_spawn_point(player_spawn_points));
+            collision_manager->track_dynamic_body(player);
         }
     } else {
         std::shared_ptr<Player> player = get_player(dto.id_player);
@@ -202,10 +203,21 @@ void Match::kill_all_cheat() {
 }
 
 void Match::revive_all_cheat() {
-    cheat_revive_enabled = true;
-    respawn_enemies();
-    respawn_players();
-    cheat_revive_enabled = false;
+
+    for (auto& enemy: enemies) {
+        if (enemy->is_dead()) {
+            enemy->revive(enemy.get()->spawn_position);
+            collision_manager->track_dynamic_body(enemy);
+        }
+    }
+    
+    for (auto& pair: players) {
+        auto& player = pair.second;
+        if (player->is_dead()) {
+            player->revive(player.get()->position); // revive at the same position
+            collision_manager->track_dynamic_body(player);
+        }
+    }
 }
 
 //-------------------- Conection Methods -----------------
