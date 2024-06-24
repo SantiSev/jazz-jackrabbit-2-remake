@@ -112,9 +112,11 @@ void SaveExitEditorButton::save_map() {
 void SaveExitEditorButton::add_spawns(YAML::Emitter& out, TileType type,
                                       std::list<SDL_Rect> d_rects) {
     std::string seq_name;
+    int min_spawnpoints = 1;
     switch (type) {
         case PLAYER_SPAWN:
             seq_name = "player_spawnpoints";
+            min_spawnpoints = MAX_PLAYERS;
             break;
         case ENEMY_SPAWN:
             seq_name = "enemy_spawnpoints";
@@ -127,12 +129,16 @@ void SaveExitEditorButton::add_spawns(YAML::Emitter& out, TileType type,
     }
 
     out << YAML::Key << seq_name << YAML::Value << YAML::BeginSeq;
-    if (d_rects.empty()) {
-        out << YAML::BeginMap;
-        out << YAML::Key << "x" << YAML::Value << std::rand() % (1200) + 100;
-        out << YAML::Key << "y" << YAML::Value << std::rand() % (640 / 2) + 100;
-        out << YAML::EndMap;
+    if ((int)d_rects.size() <= min_spawnpoints) {
+
+        for (int i = (int)d_rects.size(); i < min_spawnpoints; i++) {
+            out << YAML::BeginMap;
+            out << YAML::Key << "x" << YAML::Value << std::rand() % (1200) + 100;
+            out << YAML::Key << "y" << YAML::Value << std::rand() % (640 / 2) + 100;
+            out << YAML::EndMap;
+        }
     }
+
     for (const auto& d_rect: d_rects) {
         out << YAML::BeginMap;
         out << YAML::Key << "x" << YAML::Value << d_rect.x;

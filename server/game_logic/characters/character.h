@@ -23,6 +23,7 @@
 #define DEFAULT_SPEED_X 15
 #define JUMP_SPEED 25
 #define GRAVITY 1
+#define AIR_FRICCTION 0.5f
 #define FRICCTION 0.1f
 #define LEFT_DIR -1
 #define RIGHT_DIR 1
@@ -79,7 +80,6 @@ public:
     bool is_on_floor() const;
     bool is_facing_right() const;
     int get_direction() const;
-    bool is_doing_action_state() const;
 
     virtual void move_left();
     virtual void move_right();

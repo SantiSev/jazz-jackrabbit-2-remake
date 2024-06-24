@@ -1,5 +1,5 @@
 # width and height of the hitbox
-body_width: 24
+body_width: 30
 body_height: 40
 weapon_y: 14
 idle_right:
@@ -10,8 +10,8 @@ idle_right:
     y: 49
     w: 47
     h: 47
-    off_x: -12
-    off_y: -7
+    off_x: -9
+    off_y: -3
 idle_left:
     flipped: true
     frames: 6
@@ -20,8 +20,8 @@ idle_left:
     y: 49
     w: 48
     h: 47
-    off_x: -12
-    off_y: -7
+    off_x: -9
+    off_y: -3
 moving_right:
     flipped: false
     frames: 8
@@ -30,8 +30,8 @@ moving_right:
     y: 261
     w: 49
     h: 47
-    off_x: -12
-    off_y: -7
+    off_x: -9
+    off_y: -3
 moving_left:
     flipped: true
     frames: 8
@@ -40,8 +40,8 @@ moving_left:
     y: 261
     w: 49
     h: 47
-    off_x: -12
-    off_y: -7
+    off_x: -9
+    off_y: -3
 spriting_right:
     flipped: false
     frames: 4
@@ -50,7 +50,7 @@ spriting_right:
     y: 337
     w: 54
     h: 40
-    off_x: -14
+    off_x: -11
     off_y: 0
 spriting_left:
     flipped: true
@@ -60,7 +60,7 @@ spriting_left:
     y: 337
     w: 54
     h: 40
-    off_x: -14
+    off_x: -11
     off_y: 0
 jumping_right:
     flipped: false
@@ -70,8 +70,8 @@ jumping_right:
     y: 422
     w: 48
     h: 47
-    off_x: -12
-    off_y: -7
+    off_x: -9
+    off_y: -3
 jumping_left:
     flipped: true
     frames: 9
@@ -80,8 +80,8 @@ jumping_left:
     y: 422
     w: 48
     h: 47
-    off_x: -12
-    off_y: -7
+    off_x: -9
+    off_y: -3
 falling:
     flipped: false
     frames: 3
@@ -90,7 +90,7 @@ falling:
     y: 495
     w: 54
     h: 52
-    off_x: -14
+    off_x: -11
     off_y: -12
 shooting_right:
     flipped: false
@@ -100,8 +100,8 @@ shooting_right:
     y: 121
     w: 48
     h: 47
-    off_x: -12
-    off_y: -7
+    off_x: -9
+    off_y: -3
 shooting_left:
     flipped: true
     frames: 2
@@ -110,8 +110,8 @@ shooting_left:
     y: 121
     w: 48
     h: 47
-    off_x: -12
-    off_y: -7
+    off_x: -9
+    off_y: -3
 special_right:
     flipped: false
     frames: 1
@@ -130,7 +130,7 @@ special_left:
     y: 516
     w: 57
     h: 46
-    off_x: -12
+    off_x: -9
     off_y: -2
 damaged:
     flipped: false
@@ -140,7 +140,7 @@ damaged:
     y: 495
     w: 54
     h: 52
-    off_x: -14
+    off_x: -11
     off_y: -12
 dead:
     flipped: false
@@ -150,7 +150,7 @@ dead:
     y: 495
     w: 54
     h: 52
-    off_x: -14
+    off_x: -11
     off_y: -12
 intoxicated_idle:
     flipped: false
@@ -160,7 +160,7 @@ intoxicated_idle:
     y: 579
     w: 48
     h: 49
-    off_x: -12
+    off_x: -9
     off_y: -9
 intoxicated_moving_right:
     flipped: false
@@ -170,7 +170,7 @@ intoxicated_moving_right:
     y: 642
     w: 48
     h: 49
-    off_x: -12
+    off_x: -9
     off_y: -9
 intoxicated_moving_left:
     flipped: true
@@ -180,5 +180,5 @@ intoxicated_moving_left:
     y: 642
     w: 48
     h: 49
-    off_x: -12
+    off_x: -9
     off_y: -9
