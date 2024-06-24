@@ -18,10 +18,19 @@ MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
         match_running(match_running),
         menu_running(menu_running),
         map(std::make_shared<Map>(map_id, resource_pool)),
+        hud(nullptr),
         camera(window.get_width(), window.get_height(), 0, map->get_body().w, 0, map->get_body().h),
         player_controller(message_handler) {
     // Blocking call to get first game state
     std::shared_ptr<GameStateDTO> first_state = game_state_q.pop();
+    for (int player_index = 0; player_index < first_state->num_players; player_index++) {
+        if (first_state->players[player_index].id == id_client) {
+            hud = std::make_unique<IngameHud>(renderer, resource_pool,
+                                              first_state->players[player_index],
+                                              static_cast<uint16_t>(first_state->seconds));
+            break;
+        }
+    }
     last_game_state = first_state;
     update_objects();
 }
@@ -91,6 +100,7 @@ void MatchScene::update_objects() {
         players[player.id]->set_position(player.x_pos, player.y_pos);
         if (player.id == id_client) {
             camera.recenter(players[player.id]->get_body());
+            hud->update(player, game_state->seconds);
         }
         players[player.id]->set_animation(map_states_to_animations.at(player.state));
     }
@@ -235,6 +245,8 @@ void MatchScene::draw_objects(int it) {
             item.second->draw(renderer, it);
         }
     }
+
+    hud->draw(renderer, it);
 }
 
 

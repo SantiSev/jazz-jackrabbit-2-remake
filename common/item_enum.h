@@ -13,8 +13,7 @@ typedef enum: uint8_t {
     BULLET_THREE_ITEM = 0x02,
     CARROT = 0x03,
     MEAT = 0x04,
-    COIN = 0x05,
-    HEALTH_ICON = 0x06,
+    COIN = 0x05
 } item_t;
 
 const std::map<item_t, std::string> map_item_to_animation_name = {
@@ -23,8 +22,6 @@ const std::map<item_t, std::string> map_item_to_animation_name = {
         {BULLET_THREE_ITEM, "bullet_three"},
         {CARROT, "carrot"},
         {MEAT, "meat"},
-        {COIN, "coin"},
-        {HEALTH_ICON, "health_icon"},
-};
+        {COIN, "coin"}};
 
 #endif

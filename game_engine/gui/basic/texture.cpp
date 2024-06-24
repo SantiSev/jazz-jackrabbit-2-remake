@@ -27,12 +27,20 @@ Texture::Texture(const std::shared_ptr<Font>& font, const SDL_Color& color, cons
 
 SDL_Texture* Texture::get_texture() { return texture; }
 
-Texture::Texture(Texture&& other) noexcept: texture(other.texture) { other.texture = nullptr; }
+Texture::Texture(Texture&& other) noexcept {
+    if (texture != nullptr) {
+        SDL_DestroyTexture(texture);
+    }
+    texture = other.texture;
+    other.texture = nullptr;
+}
 
 Texture& Texture::operator=(Texture&& other) noexcept {
     if (this == &other)
         return *this;
-
+    if (texture != nullptr) {
+        SDL_DestroyTexture(texture);
+    }
     texture = other.texture;
     other.texture = nullptr;
 
