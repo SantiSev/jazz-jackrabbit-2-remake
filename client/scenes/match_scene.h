@@ -28,7 +28,7 @@
 #include "../game_objects/item_factory.h"
 #include "../game_objects/map.h"
 #include "../game_objects/player_controller.h"
-#include "../hud/ingame_hud.h"
+// #include "../hud/ingame_hud.h"
 
 #include "score_scene.h"
 
@@ -54,7 +54,7 @@ private:
     std::unordered_map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> enemies;
     std::unordered_map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> bullets;
     std::unordered_map<uint16_t, std::shared_ptr<engine::AnimatedSprite>> items;
-    std::unique_ptr<IngameHud> hud;
+    // std::unique_ptr<IngameHud> hud;
     engine::Camera camera;
 
     PlayerController player_controller;

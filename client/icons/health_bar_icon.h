@@ -13,10 +13,18 @@
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/gui/widgets/sprite.h"
 
+#define MAX_HEARTS 10
+
 class HealthBarIcon: public engine::CanvasObject {
 private:
+    int max_health;
+    int health_per_hearts;
+    int bright_hearts;
+
+    SDL_Rect src_bright_hearts;
+    SDL_Rect src_dark_hearts;
+
     std::vector<engine::Sprite> hearts;
-    int health;
 
 public:
     HealthBarIcon(std::shared_ptr<engine::ResourcePool> resource_pool, int x, int y, int health);

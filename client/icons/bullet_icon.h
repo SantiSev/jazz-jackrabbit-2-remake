@@ -19,6 +19,8 @@ private:
     std::unique_ptr<engine::Label> amount_label;
 
 public:
+    bullet_type_t type;
+
     BulletIcon(SDL_Renderer* renderer, std::shared_ptr<engine::ResourcePool> resource_pool, int x,
                int y, int amount, bullet_type_t bullet_type);
 

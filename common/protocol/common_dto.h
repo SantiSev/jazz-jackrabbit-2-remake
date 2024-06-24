@@ -156,6 +156,7 @@ struct PlayerDTO {
     uint16_t x_pos;
     uint16_t y_pos;
     WeaponDTO weapons[NUM_OF_WEAPONS];
+    uint8_t selected_weapon;
 } __attribute__((packed));
 
 struct GameStateDTO {

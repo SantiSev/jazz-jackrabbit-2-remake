@@ -2,7 +2,7 @@
 
 BulletIcon::BulletIcon(SDL_Renderer* renderer, std::shared_ptr<engine::ResourcePool> resource_pool,
                        int x, int y, int amount, bullet_type_t bullet_type):
-        icon(nullptr), amount_label(nullptr) {
+        icon(nullptr), amount_label(nullptr), type(bullet_type) {
     auto yaml = *resource_pool->get_yaml(ICONS_FILE);
     std::string sprite_name = map_bullet_to_animation_name.at(bullet_type);
     int s_x = yaml[sprite_name]["x"].as<int>();
@@ -15,8 +15,9 @@ BulletIcon::BulletIcon(SDL_Renderer* renderer, std::shared_ptr<engine::ResourceP
 
     icon = std::make_unique<engine::Sprite>(resource_pool->get_texture(ICONS_FILE), s_rect, d_rect);
     amount_label = std::make_unique<engine::Label>(
-            resource_pool->get_font(FONT), SDL_Rect{d_rect.x + d_rect.w + 5, d_rect.y, 0, 0},
-            SDL_Color{0, 0, 0, 255}, SDL_Color{0, 0, 0, 255}, "Score: " + std::to_string(amount),
+            resource_pool->get_font(FONT),
+            SDL_Rect{d_rect.x + d_rect.w + 5, (d_rect.y + d_rect.h / 2) - 5, 25, 10},
+            SDL_Color{0, 0, 0, 255}, SDL_Color{0, 0, 0, 255}, "x" + std::to_string(amount),
             renderer);
 }
 
@@ -26,7 +27,7 @@ void BulletIcon::draw(SDL_Renderer* renderer, int it) {
 }
 
 void BulletIcon::update_amount(int new_amount, SDL_Renderer* renderer) {
-    amount_label->set_text(std::to_string(new_amount), renderer);
+    amount_label->set_text("x" + std::to_string(new_amount), renderer);
 }
 
 SDL_Rect& BulletIcon::get_body() { return icon->get_body(); }

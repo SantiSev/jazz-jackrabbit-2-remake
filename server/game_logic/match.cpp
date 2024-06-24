@@ -289,7 +289,7 @@ void Match::stop() {
 GameStateDTO Match::create_actual_snapshot() {
     GameStateDTO game_state{};
     memset(&game_state, 0, sizeof(game_state));
-    game_state.seconds = (uint16_t)(match_time % 60);
+    game_state.seconds = (uint16_t)match_time;
     game_state.num_players = players.size();
     size_t i = 0;
     for (auto player = players.begin(); player != players.end(); ++player) {
@@ -310,6 +310,8 @@ GameStateDTO Match::create_actual_snapshot() {
             game_state.players[i].weapons[j].weapon_name =
                     (uint8_t)player->second->get_weapon(j)->get_weapon_id();
         }
+        game_state.players[i].selected_weapon =
+                (uint8_t)player->second->get_selected_weapon()->get_weapon_id();
         ++i;
     }
 

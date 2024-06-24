@@ -57,6 +57,7 @@ public:
     std::string get_name() const;
     std::vector<std::unique_ptr<Weapon>>& get_weapons() const;
     Weapon* get_weapon(size_t weapon) const;
+    Weapon* get_selected_weapon() const;
 
     //------- Setters --------
 

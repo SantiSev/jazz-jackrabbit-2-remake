@@ -40,8 +40,9 @@ void IngameHud::create_objects(const PlayerDTO& player_info, uint16_t seconds_le
     for (int i = 0; i < 4; i++) {
         bullets.emplace_back(renderer, resource_pool, x, y, player_info.weapons[i].ammo,
                              static_cast<bullet_type_t>(player_info.weapons[i].weapon_name));
-        x += 50;
     }
+
+    selected_weapon = static_cast<bullet_type_t>(player_info.selected_weapon);
 }
 
 void IngameHud::update(const PlayerDTO& player_info, uint16_t seconds_left) {
@@ -53,6 +54,7 @@ void IngameHud::update(const PlayerDTO& player_info, uint16_t seconds_left) {
         bullet.update_amount(player_info.weapons[i].ammo, renderer);
         i++;
     }
+    selected_weapon = static_cast<bullet_type_t>(player_info.selected_weapon);
 }
 
 void IngameHud::draw(SDL_Renderer* renderer, int it) {
@@ -61,7 +63,12 @@ void IngameHud::draw(SDL_Renderer* renderer, int it) {
     username->draw(renderer, it);
     score->draw(renderer, it);
     health->draw(renderer, it);
-    bullets.back().draw(renderer, it);
+    auto bullet = std::find_if(bullets.begin(), bullets.end(), [this](const BulletIcon& bullet) {
+        return bullet.type == selected_weapon;
+    });
+    if (bullet != bullets.end()) {
+        bullet->draw(renderer, it);
+    }
 }
 
 SDL_Rect& IngameHud::get_body() { return body; }

@@ -35,6 +35,7 @@ private:
     std::unique_ptr<CharacterIcon> character_icon;
     std::unique_ptr<HealthBarIcon> health;
     std::list<BulletIcon> bullets;
+    bullet_type_t selected_weapon;
 
     void create_objects(const PlayerDTO& player_info, uint16_t seconds_left);
 

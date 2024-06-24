@@ -3,6 +3,11 @@ heart:
     y: 254
     w: 23
     h: 23
+dark-heart:
+    x: 69
+    y: 278
+    w: 23
+    h: 23
 jazz:
     x: 43
     y: 122
@@ -25,16 +30,16 @@ common_bullet:
     h: 23
 bullet_one:
     x: 44
-    y: 27
+    y: 57
     w: 23
     h: 23
 bullet_two:
     x: 44
-    y: 57
+    y: 87
     w: 23
     h: 23
 bullet_three:
     x: 44
-    y: 87
+    y: 27
     w: 23
     h: 23
