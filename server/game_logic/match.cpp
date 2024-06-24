@@ -57,9 +57,9 @@ void Match::run() {
             respawn_items();
 
 #ifdef LOG_VERBOSE
-            for (auto& enemy: enemies) {
+            /* for (auto& enemy: enemies) {
                 enemy->print_info();
-            }
+            } */
 
             for (auto& player: players) {
                 player.second->print_info();

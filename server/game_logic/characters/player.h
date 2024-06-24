@@ -38,6 +38,9 @@ private:
     // Configs
     bool is_sprint_allowed = true;
 
+    void move_horizontal(int new_direction);
+    bool is_shooting();
+
 public:
     Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w, int h,
            CollisionManager& collision_manager);
@@ -101,7 +104,6 @@ public:
 
     //------- Match Methods --------
 
-    void update_status(Vector2D spawn_point);
     void execute_command(command_t command);
 
     //------- Deconstructor --------
