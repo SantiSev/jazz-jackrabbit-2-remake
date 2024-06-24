@@ -67,8 +67,6 @@ void Client::pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_
     // Sounds
     resource_pool->load_music(sound_to_string.at(BACKGROUND));
     resource_pool->load_sound_effect(sound_to_string.at(SHOOT_SOUND));
-    resource_pool->load_sound_effect(sound_to_string.at(DEAD_ENEMY_SOUND));
-    resource_pool->load_sound_effect(sound_to_string.at(DEAD_PLAYER_SOUND));
 }
 
 Client::~Client() {
