@@ -15,8 +15,8 @@ player:
   health: 100
   speed_x: 14
   sprint_speed: 20
-  jump_speed: 25
-  gravity: 1
+  jump_force: 25
+  falling_speed: 10
   respawn_time: 600 # in loops
   invulnerability_time: 600 # in loops
   intoxication_time: 450 # in loops
@@ -26,8 +26,7 @@ enemy:
   health: 100
   damage: 25
   speed: 5
-  jump_force: 10
-  gravity: 5
+  falling_speed: 10
   respawn_time: 200 # in loops
   movement_range: 60
 
