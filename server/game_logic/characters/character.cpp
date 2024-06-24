@@ -59,9 +59,7 @@ bool CharacterBody::try_revive() {
         return false;
     }
 
-    if (revive_counter == NONE && !is_active_object()) {
-        set_active_status(true);
-        revive_counter = revive_cooldown;
+    if (revive_counter <= NONE && !is_active_object()) {
         return true;
     } else {
         this->revive_counter--;

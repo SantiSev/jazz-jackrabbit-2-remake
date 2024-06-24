@@ -36,6 +36,10 @@ private:
     bool is_sprinting = false;
     int shooting_height;
 
+    // Cheats
+    bool invincibility_cheat_active = false;
+
+
     // Configs
     bool is_sprint_allowed = true;
 

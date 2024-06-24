@@ -132,12 +132,13 @@ void Match::respawn_players() {
             bool can_be_placed = false;
             Vector2D new_position = get_random_spawn_point(player_spawn_points);
             while (!can_be_placed) {
-                can_be_placed = collision_manager->can_be_placed(
-                        player, new_position);  // chequeo si la posicion es valida
+                can_be_placed = collision_manager->can_be_placed(player, new_position);
                 if (!can_be_placed) {
                     new_position = get_random_spawn_point(player_spawn_points);
                 }
             }
+            std::cout << "| PLAYER respawned with ID:" << player->get_id() << " | at position: ("
+                      << player->position.x << "," << player->position.y << ") | " << std::endl;
 
             player->revive(get_random_spawn_point(player_spawn_points));
             collision_manager->track_dynamic_body(player);
@@ -148,7 +149,7 @@ void Match::respawn_enemies() {
     for (auto& enemy: enemies) {
         if (enemy->try_revive() || cheat_revive_enabled) {
             std::cout << "| ENEMY respawned with ID:" << enemy->get_id() << " |" << std::endl;
-            enemy->revive(enemy.get()->spawn_position);  // TODO set to random spawn position
+            enemy->revive(enemy.get()->spawn_position);
             collision_manager->track_dynamic_body(enemy);
         }
     }
@@ -173,6 +174,7 @@ Vector2D Match::get_random_spawn_point(std::vector<Vector2D> const& spawnpoints)
 }
 
 void Match::run_cheat_command(const CheatCommandDTO& dto) {
+
     if (dto.command == CHEAT_KILL_ALL) {
         kill_all_cheat();
     } else if (dto.command == CHEAT_REVIVE_ALL) {

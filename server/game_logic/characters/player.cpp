@@ -84,7 +84,7 @@ void Player::start_invincibility() {
 }
 
 void Player::handle_invincibility() {
-    if (is_invincible) {
+    if (is_invincible && !invincibility_cheat_active) {
         invincibility_cooldown--;
         if (invincibility_cooldown == NONE) {
             is_invincible = false;
@@ -254,6 +254,8 @@ void Player::knockback(int force) {
 }
 
 void Player::revive(Vector2D new_position) {
+    set_active_status(true);
+    revive_counter = revive_cooldown;  // this is for unexpected respawn calls without try_respawn
     this->health = MAX_HEALTH;
     this->state = STATE_IDLE_RIGHT;
     position = new_position;
@@ -360,11 +362,8 @@ void Player::activate_cheat_command(cheat_command_t command) {
 
 
 void Player::change_invincibility_cheat() {
-    if (is_invincible) {
-        invincibility_cooldown = INVINCIBILITY_COOLDOWN;
-    }
-    if (!is_invincible) {
-        invincibility_cooldown = INT32_MAX;
-    }
-    is_invincible = !is_invincible;
+
+    invincibility_cheat_active = !invincibility_cheat_active;
+
+    is_invincible = invincibility_cheat_active;
 }
