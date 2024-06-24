@@ -86,8 +86,11 @@ void Enemy::take_damage(int damage) {  // TODO ADD MORE STATES TO ENEMY
 }
 
 void Enemy::revive(Vector2D new_position) {
-    health = config->enemy_health;
+    set_active_status(true);
+    revive_counter = revive_cooldown;
+    health =  config->enemy_health;
     position = new_position;
+    velocity = Vector2D(x_speed, DEFAULT_SPEED_Y);
     spawn_position = new_position;
     set_active_status(true);
 }

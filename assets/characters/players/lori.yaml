@@ -11,7 +11,7 @@ idle_right:
     w: 48
     h: 53
     off_x: -9
-    off_y: -8
+    off_y: -3
 idle_left:
     flipped: true
     frames: 8
@@ -21,7 +21,7 @@ idle_left:
     w: 48
     h: 53
     off_x: -9
-    off_y: -8
+    off_y: -3
 moving_right:
     flipped: false
     frames: 8
@@ -51,7 +51,7 @@ spriting_right:
     w: 65
     h: 45
     off_x: -17
-    off_y: 0
+    off_y: -3
 spriting_left:
     flipped: true
     frames: 8
@@ -61,7 +61,7 @@ spriting_left:
     w: 65
     h: 45
     off_x: -17
-    off_y: 0
+    off_y: -3
 jumping_right:
     flipped: false
     frames: 9
@@ -91,7 +91,7 @@ falling:
     w: 39
     h: 53
     off_x: -5
-    off_y: -8
+    off_y: -3
 shooting_right:
     flipped: false
     frames: 2
@@ -101,7 +101,7 @@ shooting_right:
     w: 48
     h: 53
     off_x: -9
-    off_y: -8
+    off_y: -3
 shooting_left:
     flipped: true
     frames: 2
@@ -111,7 +111,7 @@ shooting_left:
     w: 48
     h: 53
     off_x: -9
-    off_y: -8
+    off_y: -3
 special_right:
     flipped: false
     frames: 1
@@ -121,7 +121,7 @@ special_right:
     w: 0
     h: 0
     off_x: 0
-    off_y: 0
+    off_y: -3
 special_left:
     flipped: false
     frames: 3
@@ -131,7 +131,7 @@ special_left:
     w: 57
     h: 46
     off_x: -12
-    off_y: -2
+    off_y: -3
 damaged:
     flipped: false
     frames: 3
@@ -141,7 +141,7 @@ damaged:
     w: 39
     h: 53
     off_x: -5
-    off_y: -8
+    off_y: -3
 dead:
     flipped: false
     frames: 3
@@ -151,7 +151,7 @@ dead:
     w: 39
     h: 53
     off_x: -5
-    off_y: -8
+    off_y: -3
 intoxicated_idle:
     flipped: false
     frames: 12

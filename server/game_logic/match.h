@@ -60,8 +60,6 @@ private:
     std::vector<Vector2D> item_spawn_points;
     std::mutex match_mutex;
 
-    std::atomic<bool> cheat_revive_enabled = false;
-
     const std::shared_ptr<engine::ResourcePool>& resource_pool;
 
     //-------------------- Gameloop Methods ----------------------
