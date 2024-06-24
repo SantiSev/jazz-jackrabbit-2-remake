@@ -10,8 +10,8 @@ idle_right:
     y: 55
     w: 48
     h: 48
-    off_x: -6
-    off_y: -3
+    off_x: -9
+    off_y: -2
 idle_left:
     flipped: true
     frames: 26
@@ -20,8 +20,8 @@ idle_left:
     y: 55
     w: 48
     h: 48
-    off_x: -6
-    off_y: -3
+    off_x: -9
+    off_y: -2
 moving_right:
     flipped: false
     frames: 8
@@ -31,7 +31,7 @@ moving_right:
     w: 54
     h: 43
     off_x: -11
-    off_y: 1
+    off_y: -2
 moving_left:
     flipped: true
     frames: 8
@@ -41,7 +41,7 @@ moving_left:
     w: 54
     h: 43
     off_x: -11
-    off_y: 1
+    off_y: -2
 spriting_right:
     flipped: false
     frames: 4
@@ -91,7 +91,7 @@ falling:
     w: 57
     h: 46
     off_x: -12
-    off_y: -2
+    off_y: 0
 shooting_right:
     flipped: false
     frames: 2
@@ -101,7 +101,7 @@ shooting_right:
     w: 48
     h: 44
     off_x: -7
-    off_y: -3
+    off_y: 1
 shooting_left:
     flipped: true
     frames: 2
@@ -111,7 +111,7 @@ shooting_left:
     w: 48
     h: 44
     off_x: -7
-    off_y: -3
+    off_y: 1
 special_right:
     flipped: false
     frames: 1
@@ -121,7 +121,7 @@ special_right:
     w: 0
     h: 0
     off_x: 0
-    off_y: 0
+    off_y: -2
 special_left:
     flipped: false
     frames: 3

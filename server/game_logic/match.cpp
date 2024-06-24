@@ -222,6 +222,9 @@ void Match::add_player_to_game(const AddPlayerDTO& dto) {
     int player_width = (*player_resources_ptr)["body_width"].as<int>();
     int player_height = (*player_resources_ptr)["body_height"].as<int>();
 
+    std::cout << "Player width: " << player_width << " Player height: " << player_height
+              << std::endl;
+
     switch (dto.player_character) {
         case JAZZ_CHARACTER: {
 

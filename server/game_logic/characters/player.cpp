@@ -141,6 +141,7 @@ void Player::jump() {
     if (on_floor) {
         on_floor = false;
         velocity.y = -JUMP_SPEED;
+        state = is_facing_right() ? STATE_JUMPING_RIGHT : STATE_JUMPING_LEFT;
     }
 }
 
@@ -278,6 +279,9 @@ void Player::take_damage(int damage) {
 void Player::print_info() {
     std::cout << "--------------------------------" << std::endl;
     std::cout << "| Id: " << id << " |" << std::endl;
+    std::cout << "| Character: " << (int)character_reference << " |" << std::endl;
+    std::cout << "| size: (" << get_hitbox_width() << "," << get_hitbox_height() << ") |"
+              << std::endl;
     std::cout << "| Position: " << position.x << " , " << position.y << " |" << std::endl;
     std::cout << "| Velocity: " << velocity.x << " , " << velocity.y << " |" << std::endl;
     std::cout << "| Direction: " << direction << " |" << std::endl;
