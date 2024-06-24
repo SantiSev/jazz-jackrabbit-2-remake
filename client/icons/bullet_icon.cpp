@@ -16,7 +16,7 @@ BulletIcon::BulletIcon(SDL_Renderer* renderer, std::shared_ptr<engine::ResourceP
     icon = std::make_unique<engine::Sprite>(resource_pool->get_texture(ICONS_FILE), s_rect, d_rect);
     amount_label = std::make_unique<engine::Label>(
             resource_pool->get_font(FONT),
-            SDL_Rect{d_rect.x + d_rect.w + 5, (d_rect.y + d_rect.h / 2) - 5, 25, 10},
+            SDL_Rect{d_rect.x + d_rect.w + 5, (d_rect.y + d_rect.h / 2) - 10, 25, 20},
             SDL_Color{0, 0, 0, 255}, SDL_Color{0, 0, 0, 255}, "x" + std::to_string(amount),
             renderer);
 }

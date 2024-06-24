@@ -50,8 +50,10 @@ std::string Label::get_text() { return text; }
 
 void Label::set_text(const std::string& new_text, SDL_Renderer* renderer) {
     text = new_text;
-    texture = Texture(font, color, text, renderer);
-    hover_texture = Texture(font, hover_color, text, renderer);
+    auto new_texture = Texture(font, color, text, renderer);
+    auto new_hover_texture = Texture(font, hover_color, text, renderer);
+    texture = std::move(new_texture);
+    hover_texture = std::move(new_hover_texture);
 }
 
 bool Label::is_intersecting(SDL_Point& point) const {

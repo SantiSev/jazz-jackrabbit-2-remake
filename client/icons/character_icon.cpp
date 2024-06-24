@@ -7,7 +7,7 @@ CharacterIcon::CharacterIcon(std::shared_ptr<engine::ResourcePool> resource_pool
                        yaml[map_character_enum_to_icon_name.at(character_type)]["y"].as<int>(),
                        yaml[map_character_enum_to_icon_name.at(character_type)]["w"].as<int>(),
                        yaml[map_character_enum_to_icon_name.at(character_type)]["h"].as<int>()};
-    SDL_Rect d_rect = {x, y, s_rect.w, s_rect.h};
+    SDL_Rect d_rect = {x, y, int(s_rect.w * 1.5), int(s_rect.h * 1.5)};
     icon = std::make_unique<engine::Sprite>(resource_pool->get_texture(ICONS_FILE), s_rect, d_rect);
 }
 
