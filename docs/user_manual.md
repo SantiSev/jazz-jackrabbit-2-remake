@@ -35,7 +35,7 @@ sudo apt install -y \
   libsdl2-image-dev \
   libsdl2-ttf-dev \
   libsdl2-mixer-dev \
-  libyaml-cpp-dev \
+  libyaml-cpp-dev
 ```
 
 Para la instalacion de las librerias relacionadas con el testing, se debe correr el siguiente comando:
