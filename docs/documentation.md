@@ -181,6 +181,18 @@ Este mensaje envia el server al cliente, para avisar que termino la partida.
 
 #### DTOs: ADD_PLAYER (0x0105)
 
+Este mensaje, es un mensaje interno entre el `MatchManager` y una `Match`. Este permite, añadir un
+jugador a la partida. La informacion que requiere es:
+
+```cpp
+struct AddPlayerDTO {
+    char name[50]; // Nombre del jugador
+    id_client_t id_client; // ID del cliente
+    character_t player_character; // Que personaje eligio
+    map_list_t map_name; // Que mapa elegio
+} __attribute__((packed));
+```
+
 #### DTOs: RECV_REQUEST_ACTIVE_GAMES (0x0200)
 
 Este mensaje envia el cliente al servidor, para pedirle al server las partidas actuales.
