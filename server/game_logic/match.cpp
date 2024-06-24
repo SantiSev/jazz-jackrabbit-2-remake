@@ -137,9 +137,6 @@ void Match::respawn_players() {
                     new_position = get_random_spawn_point(player_spawn_points);
                 }
             }
-            std::cout << "| PLAYER respawned with ID:" << player->get_id() << " | at position: ("
-                      << player->position.x << "," << player->position.y << ") | " << std::endl;
-
             player->revive(get_random_spawn_point(player_spawn_points));
             collision_manager->track_dynamic_body(player);
         }
@@ -148,7 +145,6 @@ void Match::respawn_players() {
 void Match::respawn_enemies() {
     for (auto& enemy: enemies) {
         if (enemy->try_revive()) {
-            std::cout << "| ENEMY respawned with ID:" << enemy->get_id() << " |" << std::endl;
             enemy->revive(enemy.get()->spawn_position);
             collision_manager->track_dynamic_body(enemy);
         }
