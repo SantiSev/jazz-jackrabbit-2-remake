@@ -24,10 +24,9 @@ public:
     // Enemy match config
     int enemy_health;
     int enemy_damage;
-    int enemy_spawn_cd;
+    int enemy_respawn_cool_down;
     int enemy_speed;
-    int enemy_jump_f;
-    int enemy_gravity;
+    int enemy_falling_speed;
     int enemy_move_rng;
 
     // Player match config
@@ -35,10 +34,10 @@ public:
     int player_speed_x;
     int player_sprint_spd;
     int player_jump_f;
-    int player_gravity;
-    int player_spawn_cd;
-    int player_invincivility_cd;
-    int player_intoxication_cd;
+    int player_falling_speed;
+    int player_respawn_cool_down;
+    int player_invincivility_cool_down;
+    int player_intoxication_cool_down;
     int player_can_sprint;
 
     // Bullet match config

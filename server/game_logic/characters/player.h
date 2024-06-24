@@ -15,8 +15,7 @@
 
 #include "character.h"
 
-// player config
-#define MAX_FALL_SPEED 10
+#define GRAVITY 1
 
 class Weapon;
 
@@ -33,9 +32,9 @@ private:
     int intoxication_cooldown = INTOXICATON_COOLDOWN;
     int invincibility_cooldown = INVINCIBILITY_COOLDOWN;
     bool is_invincible = false;
-    std::shared_ptr<Configuration> config;
     bool is_sprinting = false;
     int shooting_height;
+    std::shared_ptr<Configuration> config;
 
     // Cheats
     bool invincibility_cheat_active = false;
@@ -48,8 +47,9 @@ private:
     bool is_shooting();
 
 public:
-    Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w, int h, int shooting_h,
-           CollisionManager& collision_manager, const std::shared_ptr<Configuration>& config);
+    Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w, int h,
+           int shooting_h, CollisionManager& collision_manager,
+           const std::shared_ptr<Configuration>& config);
 
     //------- Overrided Methods --------
 

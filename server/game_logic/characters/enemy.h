@@ -9,19 +9,21 @@
 #define ENEMY_WIDTH 35
 #define ENEMY_HEIGHT 45
 #define MOVEMENT_RANGE 50
+#define ATTACK_COOLDOWN 60
 
 class Enemy: public CharacterBody {
 private:
     int attack_damage;
-    int attack_cooldown;
+    int attack_cooldown = 0;
     bool is_attacking = false;
     int x_speed;
-    int movement_range = MOVEMENT_RANGE;
+    int movement_range;
     std::shared_ptr<Configuration> config;
 
+    void move_horizontal(int new_direction);
+
 public:
-    Enemy(uint16_t id, const character_t& character, int attack_damage, int health,
-          int revive_cooldown, int x, int y, int w, int h, int speed,
+    Enemy(uint16_t id, const character_t& character, int x, int y, int w, int h,
           const std::shared_ptr<Configuration>& config);
 
     //------- Overrided Methods --------

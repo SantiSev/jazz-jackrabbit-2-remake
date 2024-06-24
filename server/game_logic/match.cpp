@@ -57,9 +57,9 @@ void Match::run() {
             respawn_items();
 
 #ifdef LOG_VERBOSE
-            /* for (auto& enemy: enemies) {
+            for (auto& enemy: enemies) {
                 enemy->print_info();
-            } */
+            }
 
             for (auto& player: players) {
                 player.second->print_info();
@@ -241,8 +241,8 @@ void Match::add_player_to_game(const AddPlayerDTO& dto) {
         case JAZZ_CHARACTER: {
 
             auto jazz_player = std::make_shared<Jazz>(
-                    dto.id_client, dto.name, pos.x, pos.y, player_width, player_height, shooting_height,
-                    *collision_manager, resource_pool->get_config());
+                    dto.id_client, dto.name, pos.x, pos.y, player_width, player_height,
+                    shooting_height, *collision_manager, resource_pool->get_config());
             collision_manager->track_dynamic_body(jazz_player);
             players[dto.id_client] = jazz_player;
             break;
@@ -250,8 +250,8 @@ void Match::add_player_to_game(const AddPlayerDTO& dto) {
         case SPAZ_CHARACTER: {
 
             auto spaz_player = std::make_shared<Spaz>(
-                    dto.id_client, dto.name, pos.x, pos.y, player_width, player_height, shooting_height,
-                    *collision_manager, resource_pool->get_config());
+                    dto.id_client, dto.name, pos.x, pos.y, player_width, player_height,
+                    shooting_height, *collision_manager, resource_pool->get_config());
             collision_manager->track_dynamic_body(spaz_player);
             players[dto.id_client] = spaz_player;
             break;
@@ -259,8 +259,8 @@ void Match::add_player_to_game(const AddPlayerDTO& dto) {
         case LORI_CHARACTER: {
 
             auto lori_player = std::make_shared<Lori>(
-                    dto.id_client, dto.name, pos.x, pos.y, player_width, player_height, shooting_height,
-                    *collision_manager, resource_pool->get_config());
+                    dto.id_client, dto.name, pos.x, pos.y, player_width, player_height,
+                    shooting_height, *collision_manager, resource_pool->get_config());
             collision_manager->track_dynamic_body(lori_player);
             players[dto.id_client] = lori_player;
             break;

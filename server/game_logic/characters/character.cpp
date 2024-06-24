@@ -101,7 +101,7 @@ void CharacterBody::jump() {
     }
 }
 
-void CharacterBody::knockback(int force) { velocity.x += -direction * force; }
+void CharacterBody::knockback(int force) { velocity += direction * force; }
 
 void CharacterBody::update_body() {
     if (!on_floor) {
