@@ -124,12 +124,14 @@ void MatchScene::update_objects() {
         auto bullet = game_state->bullets[i];
 
         // If it's a new bullet create it
-        bullets.try_emplace(bullet.id,
-                            BulletFactory::create_bullet(
-                                    resource_pool, static_cast<bullet_type_t>(bullet.bullet_type),
-                                    bullet.direction, bullet.x_pos, bullet.y_pos));
+        auto [it, inserted] = bullets.try_emplace(
+                bullet.id, BulletFactory::create_bullet(
+                                   resource_pool, static_cast<bullet_type_t>(bullet.bullet_type),
+                                   bullet.direction, bullet.x_pos, bullet.y_pos));
+        if (inserted) {
+            sound_manager->play_sound(SHOOT_SOUND, 0.25);
+        }
         bullets[bullet.id]->set_position(bullet.x_pos, bullet.y_pos);
-        // sound_manager->play_sound(SHOOT_SOUND, 0.5); // IDK if this works
     }
 
     for (uint8_t i = 0; i < game_state->num_items; i++) {

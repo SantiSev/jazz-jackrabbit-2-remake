@@ -15,7 +15,6 @@ namespace engine {
 class Music: public Sound {
 private:
     Mix_Music* sound;
-    bool is_playing;
 
 public:
     explicit Music(const std::string& file);
