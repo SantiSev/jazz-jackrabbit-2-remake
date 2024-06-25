@@ -93,7 +93,7 @@ struct CreateGameDTO {
     id_client_t id_client;
     character_t character_selected;
     uint16_t map_id;
-    uint8_t max_players;
+    uint8_t max_players;  // TODO esta var no se usa. se configura en config.yaml.
 } __attribute__((packed));
 
 struct JoinMatchDTO {
@@ -156,6 +156,7 @@ struct PlayerDTO {
     uint16_t x_pos;
     uint16_t y_pos;
     WeaponDTO weapons[NUM_OF_WEAPONS];
+    uint8_t selected_weapon;
 } __attribute__((packed));
 
 struct GameStateDTO {

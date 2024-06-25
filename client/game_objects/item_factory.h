@@ -12,7 +12,6 @@
 #include "./items/bullet_two.h"
 #include "./items/carrot.h"
 #include "./items/coin.h"
-#include "./items/health_icon.h"
 #include "./items/meat.h"
 
 class ItemFactory {
@@ -38,9 +37,6 @@ public:
                 break;
             case COIN:
                 return std::make_shared<Coin>(resource_pool, x, y);
-                break;
-            case HEALTH_ICON:
-                return std::make_shared<HealthIcon>(resource_pool, x, y);
                 break;
             default:
                 throw std::invalid_argument("in item factory:Invalid character enum");

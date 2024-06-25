@@ -15,6 +15,9 @@ MapSelector::MapSelector(SDL_Renderer* renderer,
         character_select_running(character_select_running) {}
 
 void MapSelector::on_click() {
+#ifdef LOG
+    std::cout << "Map selected: " << (int)map_id << std::endl;
+#endif
     selected_map_id = map_id;
     map_select_running.store(false);
     character_select_running.store(true);

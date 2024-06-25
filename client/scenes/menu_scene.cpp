@@ -30,10 +30,15 @@ MenuScene::MenuScene(engine::Window& window, EventLoop* event_loop,
 }
 
 void MenuScene::start() {
+#ifdef LOG
+    std::cout << "Starting menu scene..." << std::endl;
+#endif
+  
     MatchSelectScene match_select_scene(window, event_loop, resource_pool, sound_manager,
                                         game_running, menu_running, match_select_running,
                                         is_joinning, character_select_running, message_handler,
                                         joined_id_match);
+
     MapSelectScene map_select_scene(window, event_loop, resource_pool, game_running,
                                     map_select_running, character_select_running, message_handler);
     CharacterSelectScene character_select_scene(window, event_loop, resource_pool, sound_manager,

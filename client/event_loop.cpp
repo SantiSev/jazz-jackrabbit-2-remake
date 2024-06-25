@@ -11,6 +11,9 @@ EventLoop::EventLoop(std::atomic<bool>& game_running, std::atomic<bool>& menu_ru
         mouse(0, 0) {}
 
 void EventLoop::run() {
+#ifdef LOG
+    std::cout << "Event loop started..." << std::endl;
+#endif
     const Uint32 rate = 1000 / 60;
 
     Uint32 frame_start = SDL_GetTicks();
@@ -45,6 +48,10 @@ void EventLoop::run() {
         SDL_Delay(rest_time);
         frame_start += rate;
     }
+
+#ifdef LOG
+    std::cout << "Event loop stopped..." << std::endl;
+#endif
 }
 
 EventLoop::~EventLoop() = default;

@@ -59,9 +59,7 @@ bool CharacterBody::try_revive() {
         return false;
     }
 
-    if (revive_counter == NONE && !is_active_object()) {
-        set_active_status(true);
-        revive_counter = revive_cooldown;
+    if (revive_counter <= NONE && !is_active_object()) {
         return true;
     } else {
         this->revive_counter--;
@@ -77,17 +75,9 @@ void CharacterBody::revive(Vector2D new_position) {
 
 // ------- Movement Methods --------
 
-bool CharacterBody::is_on_floor() const { return on_floor; }
-
 bool CharacterBody::is_facing_right() const { return direction == RIGHT_DIR; }
 
 int CharacterBody::get_direction() const { return direction; }
-
-// Avoid adding falling animation   || Agus es un bo
-bool CharacterBody::is_doing_action_state() const {
-    return (state == STATE_SHOOTING_LEFT || state == STATE_SHOOTING_RIGHT ||
-            state == STATE_SPECIAL_RIGHT || state == STATE_SPECIAL_LEFT);
-}
 
 void CharacterBody::move_left() {
     direction = -1;
@@ -111,17 +101,11 @@ void CharacterBody::jump() {
     }
 }
 
-void CharacterBody::knockback(int force) { velocity.x += -direction * force; }
+void CharacterBody::knockback(int force) { velocity += direction * force; }
 
 void CharacterBody::update_body() {
     if (!on_floor) {
         velocity.y += GRAVITY;
-
-        if (velocity.y > 0 && !is_doing_action_state()) {
-            state = STATE_FALLING;
-        } else {
-            state = is_facing_right() ? STATE_JUMPING_RIGHT : STATE_JUMPING_LEFT;
-        }
 
     } else {
         velocity.x -= FRICCTION * direction;

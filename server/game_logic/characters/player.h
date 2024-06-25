@@ -15,8 +15,7 @@
 
 #include "character.h"
 
-// player config
-#define MAX_FALL_SPEED 10
+#define GRAVITY 1
 
 class Weapon;
 
@@ -34,13 +33,23 @@ private:
     int invincibility_cooldown = INVINCIBILITY_COOLDOWN;
     bool is_invincible = false;
     bool is_sprinting = false;
+    int shooting_height;
+    std::shared_ptr<Configuration> config;
+
+    // Cheats
+    bool invincibility_cheat_active = false;
+
 
     // Configs
     bool is_sprint_allowed = true;
 
+    void move_horizontal(int new_direction);
+    bool is_shooting();
+
 public:
     Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w, int h,
-           CollisionManager& collision_manager);
+           int shooting_h, CollisionManager& collision_manager,
+           const std::shared_ptr<Configuration>& config);
 
     //------- Overrided Methods --------
 
@@ -54,9 +63,11 @@ public:
     //------- Getters --------
 
     int get_points() const;
+    int get_shooting_height() const;
     std::string get_name() const;
     std::vector<std::unique_ptr<Weapon>>& get_weapons() const;
     Weapon* get_weapon(size_t weapon) const;
+    Weapon* get_selected_weapon() const;
 
     //------- Setters --------
 
@@ -101,7 +112,6 @@ public:
 
     //------- Match Methods --------
 
-    void update_status(Vector2D spawn_point);
     void execute_command(command_t command);
 
     //------- Deconstructor --------

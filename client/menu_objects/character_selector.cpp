@@ -48,6 +48,9 @@ void CharacterSelector::draw(SDL_Renderer* renderer, int it) {
 }
 
 void CharacterSelector::on_click() {
+#ifdef LOG
+    std::cout << "Character selected: " << (int)character << std::endl;
+#endif
     selected_character = character;
     character_select_running.store(false);
 }

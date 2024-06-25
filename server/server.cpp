@@ -13,6 +13,7 @@ void Server::run() {
                 break;
             }
         }
+
         accepter->stop();
         accepter->join();
         delete accepter;

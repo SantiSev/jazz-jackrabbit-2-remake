@@ -66,9 +66,12 @@ std::shared_ptr<AcptConnection> ClientProtocol::recv_acpt_connection() {
 std::shared_ptr<Message> ClientProtocol::recv_message() {
     try {
         const uint16_t header = recv_two_bytes();
+
+#ifdef LOG_VERBOSE
         if (header != 0x0100) {
             std::cout << "header: " << header << std::endl;
         }
+#endif
 
         switch (header) {
             case CLOSE_CONNECTION:

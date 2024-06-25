@@ -9,5 +9,6 @@
 
 #define CHARACTER_SELECT_FILE "assets/character_select"
 #define EDITOR_FILE "assets/editor/editor_assets"
+#define ICONS_FILE "assets/icons"
 
 #endif  // TP_FINAL_ASSETS_H

@@ -22,7 +22,7 @@ public:
     Sound(Sound&& other) noexcept;
     Sound& operator=(Sound&& other) noexcept;
 
-    ~Sound() {}
+    virtual ~Sound() {}
 };
 }  // namespace engine
 
