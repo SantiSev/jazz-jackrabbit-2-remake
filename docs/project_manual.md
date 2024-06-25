@@ -14,7 +14,7 @@ Los integrantes del proyecto son:
 - [Maximo Damian Utrera](https://github.com/maxogod) (Maxo) - 109651 - <mutrera@fi.uba.ar>
 - [Agustín Barbalase](https://github.com/agustinbarbalase) (Agus) - 109071 - <abarbalase@fi.uba.ar>
 - [Santiago Sevitz](https://github.com/SantiSev) (Santi) - 107520 - <ssevitz@fi.uba.ar>
-- [Nicolas Ramiro Sanchez](https://github.com/nrsanchezfiuba) (Niko) - 99872 - <nrsanchez@fi.uba.ar>
+- [Nicolas Ramiro Sanchez](https://github.com/nrsanchezfiuba) (Niko) - 98792 - <nrsanchez@fi.uba.ar>
 
 El corrector de este trabajo práctico es:
 
@@ -27,10 +27,10 @@ Aqui se prensenta la distribucion de cada parte, para mas informacion acerca de 
 
 | Integrante | Parte principal |
 |------------|-----------------|
-| Maxo       | Client          |
-| Agus       | Protocol        |
-| Santi      | Physical engine |
-| Niko       | Server          |
+| Maxo       | Graphics engine, Client & Map Editor          |
+| Agus       | Protocol & Sound        |
+| Santi      | Physics engine & Game logic |
+| Niko       | Server, Commands & States logic          |
 
 ## Organizacion
 
@@ -44,28 +44,28 @@ Aqui se prensenta la distribucion de cada parte, para mas informacion acerca de 
 
 ### Semana 3
 
-- Implementacion del Client
+- Implementacion del Graphics engine
 - Implementacion del Protocol
-- Implementacion del Physical engine
+- Implementacion del Physics engine
 - Implementacion del Server
 
 ### Semana 4
 
-- Implementacion del Client
+- Implementacion del Client & retoques de Graphics engine
 - Implementacion del Protocol
-- Implementacion del Physical engine
-- Implementacion del Server
+- Implementacion del Game logic & retoques de Physics engine
+- Implementacion del Server & states
 
 ### Semana 5
 
 - Integracion y testeo
 - Arreglando bugs
+- Implementacion de editor de mapas
 
 ### Semana 6
 
 - Integracion y testeo
 - Arreglando bugs
-- Implementacion del editor
 - Documentacion
 
 ## Librerias externas
@@ -96,7 +96,7 @@ Este trabajo practico utiliza librerias externas provistas por la Catedra de Tal
 Para el testeo se usaron las siguientes librerias y programas:
 
 - valgrind: Testeo de memoria
-- catch2: Testeo del Physical engine
+- catch2: Testeo del Physics engine
 - tiburoncin: Testeo del Protocol
 
 ### Tiburoncin
