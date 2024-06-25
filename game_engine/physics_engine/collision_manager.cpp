@@ -56,7 +56,10 @@ bool CollisionManager::can_be_placed(std::shared_ptr<CollisionObject> obj,
     return true;
 }
 
-void CollisionManager::add_object(std::shared_ptr<StaticBody> obj) { place_object_in_grid(obj); }
+void CollisionManager::add_object(std::shared_ptr<StaticBody> obj) {
+    static_bodies.emplace_back(obj);
+    place_object_in_grid(obj);
+}
 
 void CollisionManager::track_dynamic_body(std::shared_ptr<DynamicBody> obj) {
     dynamic_bodies.emplace_back(obj, obj->position);
@@ -96,21 +99,26 @@ void CollisionManager::detect_colisions(std::shared_ptr<DynamicBody> obj) {
     }
 }
 
-void CollisionManager::handle_out_of_bounds(std::shared_ptr<DynamicBody> obj) {
+void CollisionManager::handle_out_of_bounds(
+        std::shared_ptr<DynamicBody> obj) {  // TODO refactor this :D
     if (obj->position.x < 0) {
         obj->position.x = 32;
         obj->velocity.x = 0;
+        obj->handle_out_of_bounds();
     } else if (obj->position.x + obj->get_hitbox_width() > grid_width) {
         obj->position.x = (grid_width - obj->get_hitbox_width() - 32);
         obj->velocity.x = 0;
+        obj->handle_out_of_bounds();
     }
 
     if (obj->position.y < 0) {
         obj->position.y = 32;
+        obj->handle_out_of_bounds();
 
     } else if (obj->position.y + obj->get_hitbox_height() > grid_height) {
         // set the position to the middle of the map
         obj->position.y = (grid_height - obj->get_hitbox_height() - 32);
+        obj->handle_out_of_bounds();
     }
 }
 
@@ -198,4 +206,70 @@ CollisionManager::~CollisionManager() {
 
     dynamic_bodies.clear();
     dynamic_bodies.shrink_to_fit();
+
+    static_bodies.clear();
+    static_bodies.shrink_to_fit();
+}
+
+void CollisionManager::prepare_map() {
+    for (auto& static_body: static_bodies) {
+        int startX = static_body->position.x;
+        int startY = static_body->position.y;
+        int endX = startX + static_body->get_hitbox_width();
+        int endY = startY + static_body->get_hitbox_height();
+
+        // Check each side of the static body
+        for (int i = startX; i < endX; ++i) {
+            for (int j = startY; j < endY; ++j) {
+
+                // Check left adjacent cell
+                if (is_valid_cell(i - 1, j)) {
+                    auto coll_obj = get_collision_object_at(i - 1, j);
+                    // cast to static body
+                    StaticBody* adj_obj =
+                            dynamic_cast<StaticBody*>(get_collision_object_at(i - 1, j).get());
+
+                    if (adj_obj && adj_obj->position.x + adj_obj->get_hitbox_width() ==
+                                           static_body->position.x) {
+                        static_body->disable_collision(CollisionFace::LEFT);
+                        adj_obj->disable_collision(CollisionFace::RIGHT);
+                    }
+                }
+
+                // Check right adjacent cell
+                if (is_valid_cell(i + 1, j)) {
+                    auto coll_obj = get_collision_object_at(i + 1, j);
+                    StaticBody* adj_obj = dynamic_cast<StaticBody*>(coll_obj.get());
+                    if (adj_obj && adj_obj->position.x == static_body->position.x +
+                                                                  static_body->get_hitbox_width()) {
+                        static_body->disable_collision(CollisionFace::RIGHT);
+                        adj_obj->disable_collision(CollisionFace::LEFT);
+                    }
+                }
+
+                // Check top adjacent cell
+                if (is_valid_cell(i, j - 1)) {
+                    auto coll_obj = get_collision_object_at(i, j - 1);
+                    StaticBody* adj_obj = dynamic_cast<StaticBody*>(coll_obj.get());
+                    if (adj_obj && adj_obj->position.y + adj_obj->get_hitbox_height() ==
+                                           static_body->position.y) {
+                        static_body->disable_collision(CollisionFace::TOP);
+                        adj_obj->disable_collision(CollisionFace::BOTTOM);
+                    }
+                }
+
+                // Check bottom adjacent cell
+                if (is_valid_cell(i, j + 1)) {
+                    auto coll_obj = get_collision_object_at(i, j + 1);
+                    StaticBody* adj_obj = dynamic_cast<StaticBody*>(coll_obj.get());
+                    if (adj_obj &&
+                        adj_obj->position.y ==
+                                static_body->position.y + static_body->get_hitbox_height()) {
+                        static_body->disable_collision(CollisionFace::BOTTOM);
+                        adj_obj->disable_collision(CollisionFace::TOP);
+                    }
+                }
+            }
+        }
+    }
 }

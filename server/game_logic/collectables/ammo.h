@@ -1,6 +1,3 @@
-//
-// Created by santi on 08/06/24.
-//
 
 #ifndef AMMO_H
 #define AMMO_H
@@ -15,9 +12,9 @@ private:
     int amount = 10;
 
 public:
-    Ammo(int weapon_id, int amount, int x, int y, int hitbox_width, int hitbox_height,
-         int appearance_time):
-            Collectable(x, y, hitbox_width, hitbox_height, appearance_time),
+    Ammo(uint16_t id, int weapon_id, int amount, int x, int y, int hitbox_width, int hitbox_height,
+         item_t item_type, int appearance_time):
+            Collectable(id, x, y, hitbox_width, hitbox_height, item_type, appearance_time),
             weapon_id(weapon_id),
             amount(amount) {}
 

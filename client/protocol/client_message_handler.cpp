@@ -7,9 +7,6 @@ ClientMessageHandler::ClientMessageHandler(Client& client): client(client) {}
 void ClientMessageHandler::send_command(command_t command) {
     CommandDTO dto{client.id_client, command};
     send_message.push(std::make_shared<RecvCommandMessage>(dto));
-#ifdef LOG_VERBOSE
-    std::cout << "Sending command: " << int(command) << std::endl;
-#endif
 }
 
 void ClientMessageHandler::send_cheat_command(cheat_command_t cheat_command) {
@@ -20,9 +17,9 @@ void ClientMessageHandler::send_cheat_command(cheat_command_t cheat_command) {
 #endif
 }
 
-void ClientMessageHandler::create_match(character_t character, map_list_t map_name,
+void ClientMessageHandler::create_match(character_t character, uint16_t map_id,
                                         uint8_t max_players) {
-    CreateGameDTO dto = {client.id_client, character, map_name, max_players};
+    CreateGameDTO dto = {client.id_client, character, map_id, max_players};
     send_message.push(std::make_shared<RecvCreateGameMessage>(dto));
 #ifdef LOG
     std::cout << "Creating match" << std::endl;
@@ -62,7 +59,7 @@ void ClientMessageHandler::handle_recv_close_connection(const CloseConnectionDTO
 }
 
 void ClientMessageHandler::handle_connected_to_match(const ClientHasConnectedToMatchDTO& dto) {
-    client.map_enum.store(dto.map);
+    client.map_enum.store(dto.map_id);
     client.menu_running.store(false);
     client.match_running.store(true);
 #ifdef LOG
@@ -79,8 +76,8 @@ void ClientMessageHandler::handle_recv_active_games(const MatchInfoDTO& dto) {
 }
 
 void ClientMessageHandler::handle_recv_finish_match() {
-    client.match_running.store(false);
     client.menu_running.store(true);
+    client.match_running.store(false);
 #ifdef LOG
     std::cout << "Match Finished" << std::endl;
 #endif

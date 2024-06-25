@@ -38,7 +38,7 @@ public:
                 return std::make_shared<MadHatter>(resource_pool, animation_name, x, y);
                 break;
             default:
-                throw std::invalid_argument("Invalid character enum");
+                throw std::invalid_argument("in character factory:Invalid character enum");
         }
     }
 };

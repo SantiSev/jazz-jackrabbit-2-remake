@@ -1,10 +1,11 @@
 #include "match_scene.h"
 
 MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
-                       std::shared_ptr<engine::ResourcePool> resource_pool,
+                       const std::shared_ptr<engine::ResourcePool>& resource_pool,
                        std::shared_ptr<engine::SoundManager> sound_manager,
-                       std::atomic<bool>& match_running, std::atomic<id_client_t>& id_client,
-                       ClientMessageHandler& message_handler, map_list_t map_enum):
+                       ClientMessageHandler& message_handler, std::atomic<id_client_t>& id_client,
+                       std::atomic<bool>& match_running, std::atomic<bool>& menu_running,
+                       uint16_t map_id):
         id_client(id_client),
         window(window),
         renderer(window.get_renderer()),
@@ -15,9 +16,14 @@ MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
         game_state_q(message_handler.game_state_q),
         last_game_state(nullptr),
         match_running(match_running),
-        map(std::make_shared<Map>(map_enum, resource_pool)),
-        camera(window.get_width(), window.get_height(), map->get_body().w, map->get_body().h),
+        menu_running(menu_running),
+        map(std::make_shared<Map>(map_id, resource_pool)),
+        hud(nullptr),
+        camera(window.get_width(), window.get_height(), 0, map->get_body().w, 0, map->get_body().h),
         player_controller(message_handler) {
+#ifdef LOG
+    std::cout << "Constructing match scene..." << std::endl;
+#endif
     // Blocking call to get first game state
     std::shared_ptr<GameStateDTO> first_state = game_state_q.pop();
     last_game_state = first_state;
@@ -25,6 +31,9 @@ MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
 }
 
 void MatchScene::start() {
+#ifdef LOG
+    std::cout << "Starting match scene..." << std::endl;
+#endif
     // Connect player controler to keyboard and mouse signals
     event_loop->keyboard.add_on_key_down_signal_obj(&player_controller);
     event_loop->mouse.add_on_click_signal_obj(&player_controller);
@@ -53,12 +62,18 @@ void MatchScene::start() {
             rest_time = rate - (behind % rate);
             lost = behind / rate;
             frame_start += lost;
-            it = std::round(lost / rate);
+            it += std::floor(lost / rate);
         }
 
         SDL_Delay(rest_time);
         frame_start += rate;
         it++;
+    }
+    if (menu_running) {
+        std::atomic<bool> scoreboard_running = true;
+        ScoreScene score_scene(window, event_loop, resource_pool, menu_running, scoreboard_running,
+                               message_handler, last_game_state, id_client);
+        score_scene.start();
     }
 }
 
@@ -83,6 +98,11 @@ void MatchScene::update_objects() {
         players[player.id]->set_position(player.x_pos, player.y_pos);
         if (player.id == id_client) {
             camera.recenter(players[player.id]->get_body());
+            if (!hud) {
+                hud = std::make_unique<IngameHud>(renderer, resource_pool, player,
+                                                  static_cast<uint16_t>(game_state->seconds));
+            }
+            hud->update(player, game_state->seconds);
         }
         players[player.id]->set_animation(map_states_to_animations.at(player.state));
     }
@@ -99,6 +119,7 @@ void MatchScene::update_objects() {
         enemies[enemy.id]->set_animation(map_states_to_animations.at(enemy.state));
     }
 
+
     for (uint8_t i = 0; i < game_state->num_bullets; i++) {
         auto bullet = game_state->bullets[i];
 
@@ -112,18 +133,16 @@ void MatchScene::update_objects() {
             sound_manager->play_sound(SHOOT_SOUND, 0.25);
         }
         bullets[bullet.id]->set_position(bullet.x_pos, bullet.y_pos);
-    }
-    // for (uint8_t i = 0; i < game_state->num_items; i++) {
-    //     auto item = game_state->items[i];
 
-    //     // If it's a new item create it
-    //     items.try_emplace(
-    //             item.id,
-    //             ItemFactory::create_item(
-    //                     resource_pool, static_cast<item_type_t>(item.item_type), item.x_pos,
-    //                     item.y_pos));
-    //     items[item.id]->set_position(item.x_pos, item.y_pos);
-    // }
+    for (uint8_t i = 0; i < game_state->num_items; i++) {
+        auto item = game_state->items[i];
+
+        // If it's a new item create it
+        items.try_emplace(item.id,
+                          ItemFactory::create_item(resource_pool, static_cast<item_t>(item.type),
+                                                   item.x_pos, item.y_pos));
+        items[item.id]->set_position(item.x_pos, item.y_pos);
+    }
 
     last_game_state = game_state;
 
@@ -185,22 +204,22 @@ void MatchScene::destroy_untracked_objects() {
     }
 
     // Destroy untracked items
-    // if (last_game_state->num_items < items.size()) {
-    //     std::unordered_set<uint16_t> tracked_items;
-    //     for (int i = 0; i < last_game_state->num_items; ++i) {
-    //         tracked_items.insert(
-    //                 last_game_state->items[i].id);  // Assuming Item class has an 'id' attribute
-    //     }
+    if (last_game_state->num_items < items.size()) {
+        std::unordered_set<uint16_t> tracked_items;
+        for (int i = 0; i < last_game_state->num_items; ++i) {
+            tracked_items.insert(
+                    last_game_state->items[i].id);  // Assuming Item class has an 'id' attribute
+        }
 
-    //     for (auto it = items.begin(); it != items.end();) {
-    //         // If the item is not in the tracked items set, erase them
-    //         if (tracked_items.find(it->first) == tracked_items.end()) {
-    //             it = items.erase(it);
-    //         } else {
-    //             ++it;
-    //         }
-    //     }
-    // }
+        for (auto it = items.begin(); it != items.end();) {
+            // If the item is not in the tracked items set, erase them
+            if (tracked_items.find(it->first) == tracked_items.end()) {
+                it = items.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
 }
 
 void MatchScene::draw_objects(int it) {
@@ -230,6 +249,8 @@ void MatchScene::draw_objects(int it) {
             item.second->draw(renderer, it);
         }
     }
+
+    hud->draw(renderer, it);
 }
 
 

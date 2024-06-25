@@ -3,12 +3,7 @@
 PlayerController::PlayerController(ClientMessageHandler& message_handler):
         message_handler(message_handler), body({0, 0, 0, 0}) {}
 
-void PlayerController::on_click() {
-    message_handler.send_command(SHOOT);
-#ifdef LOG
-    std::cout << "PlayerController clicked" << std::endl;
-#endif
-}
+void PlayerController::on_click() { message_handler.send_command(SHOOT); }
 
 void PlayerController::on_key_press(const SDL_Keycode& key) {
     switch (key) {
@@ -22,7 +17,7 @@ void PlayerController::on_key_press(const SDL_Keycode& key) {
             message_handler.send_command(JUMP);
             break;
         case SDLK_LSHIFT:
-            // message_handler.send_command();
+            message_handler.send_command(SPRINT);
             break;
         case SDLK_e:
             message_handler.send_command(SPECIAL_ATTACK);
@@ -54,10 +49,6 @@ void PlayerController::on_key_press(const SDL_Keycode& key) {
         default:
             break;
     }
-
-#ifdef LOG
-    std::cout << "PlayerController key pressed " << (char)key << std::endl;
-#endif
 }
 
 void PlayerController::draw(SDL_Renderer* renderer, int it) {}

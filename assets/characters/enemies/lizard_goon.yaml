@@ -10,7 +10,7 @@ moving_right:
     w: 68
     h: 62
     off_x: -17
-    off_y: -19
+    off_y: -9
 moving_left:
     flipped: true
     frames: 12
@@ -20,4 +20,4 @@ moving_left:
     w: 68
     h: 62
     off_x: -17
-    off_y: -19
+    off_y: -9

@@ -8,8 +8,9 @@ MatchesManager::MatchesManager():
         online(true),
         matches_number(0),
         message_handler(*this, manager_queue),
-        client_monitor(),
+        client_monitors(),
         resource_pool(std::make_shared<engine::ResourcePool>()),
+        lobby_monitor(),
         manager_queue(Queue<std::shared_ptr<Message>>()) {
     pre_load_resources();
 }
@@ -19,11 +20,14 @@ void MatchesManager::run() {
     try {
         while (online) {
             std::shared_ptr<Message> client_message = nullptr;
-            manager_queue.try_pop(client_message);
-            if (client_message) {
-                client_message->run(message_handler);
+            size_t events = 0;
+            while (manager_queue.try_pop(client_message) && events < MAX_EVENTS_PER_LOOP) {
+                events++;
+                if (client_message) {
+                    client_message->run(message_handler);
+                }
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
 #ifdef LOG_VERBOSE
         std::cout << "stopping matches" << std::endl;
@@ -33,6 +37,10 @@ void MatchesManager::run() {
         std::cout << "clearing all clients" << std::endl;
 #endif
         clear_all_clients();
+#ifdef LOG_VERBOSE
+        std::cout << "cleaning monitors" << std::endl;
+#endif
+        clean_client_monitors();
 #ifdef LOG_VERBOSE
         std::cout << "Server Closed" << std::endl;
 #endif
@@ -45,35 +53,44 @@ void MatchesManager::run() {
 }
 
 void MatchesManager::create_new_match(const CreateGameDTO& dto) {
+    auto client = get_client_by_id(dto.id_client);
+    auto config = resource_pool->get_config();
+    if (!can_create_match(config->match_max_matches) || client->get_current_match_id() != 0) {
+        return;
+    }
     matches_number++;
 
-    auto match = std::make_shared<Match>(dto.map_name, dto.max_players, manager_queue,
-                                         client_monitor, resource_pool);
+    auto new_monitor = new ClientMonitor();
+    client_monitors.insert({matches_number, new_monitor});
+
+    auto match = std::make_shared<Match>(dto.map_id, config->match_max_players, manager_queue,
+                                         *new_monitor, resource_pool);
 
     matches[matches_number] = match;
     match->start();
 
-    auto client = get_client_by_id(dto.id_client);
-    client->set_match_joined_id(matches_number);
-    client_monitor.addClient(client->get_sender_queue());
 
+    client->set_match_joined_id(matches_number);
+    new_monitor->addClient(client->get_sender_queue());
 
     std::string namestr = "Player " + std::to_string(dto.id_client);
     auto message =
-            make_add_player_message(namestr, dto.id_client, dto.character_selected, dto.map_name);
+            make_add_player_message(namestr, dto.id_client, dto.character_selected, dto.map_id);
     match->match_queue.try_push(message);
 
-    send_client_succesful_connect(dto.id_client, dto.map_name);
+    send_client_succesful_connect(dto.id_client, dto.map_id);
 }
 
-void MatchesManager::send_client_succesful_connect(const uint16_t& id_client,
-                                                   const map_list_t& map) {
+void MatchesManager::send_client_succesful_connect(const uint16_t& id_client, const uint16_t& map) {
     ClientHasConnectedToMatchDTO game_connected = {map};
     auto send_game_created = std::make_shared<SendConnectedToGameMessage>(game_connected);
-    get_client_by_id(id_client)->get_sender_queue()->push(send_game_created);
+    get_client_by_id(id_client)->get_sender_queue().push(send_game_created);
 }
 
 void MatchesManager::join_match(const JoinMatchDTO& dto) {
+    if (get_client_by_id(dto.id_client)->get_current_match_id() != 0) {
+        return;
+    }
 #ifdef LOG_VERBOSE
     std::cout << "Joining match id " << dto.id_match << std::endl;
 #endif
@@ -85,22 +102,25 @@ void MatchesManager::join_match(const JoinMatchDTO& dto) {
         auto client = get_client_by_id(dto.id_client);
         client->set_match_joined_id(dto.id_match);
         auto map = it->second->get_map();
-        client_monitor.addClient(client->get_sender_queue());
+        auto monitor = client_monitors.find(dto.id_match)->second;
+        monitor->addClient(client->get_sender_queue());
+
         std::string namestr = "Player " + std::to_string(dto.id_client);
         auto message = make_add_player_message(namestr, dto.id_client, dto.player_character, map);
         it->second->match_queue.try_push(message);
+
         send_client_succesful_connect(dto.id_client, map);
     }
 }
 
 std::shared_ptr<AddPlayerMessage> MatchesManager::make_add_player_message(
         const std::string& player_name, id_client_t id_client, character_t character,
-        map_list_t map) const {
+        uint16_t map) const {
     AddPlayerDTO AddDTO = {};
     snprintf(AddDTO.name, sizeof(AddDTO.name), "%s", player_name.c_str());
     AddDTO.id_client = id_client;
     AddDTO.player_character = character;
-    AddDTO.map_name = map;
+    AddDTO.map_id = map;
     return std::make_shared<AddPlayerMessage>(AddDTO);
 }
 
@@ -112,11 +132,14 @@ ServerThreadManager* MatchesManager::get_client_by_id(const uint16_t& id) {
 }
 
 void MatchesManager::add_new_client_to_manager(Socket client_socket) {
+    std::unique_lock<std::mutex> lock(manager_mutex);
     client_id_counter++;
     auto client = new ServerThreadManager(std::move(client_socket), manager_queue);
     auto message = std::make_shared<AcptConnection>(client_id_counter);  // le mando su id
-    client->get_sender_queue()->push(message);
+    client->get_sender_queue().push(message);
     client->set_client_id(client_id_counter);
+    client->set_match_joined_id(0);
+    lobby_monitor.addClient(client->get_sender_queue());
     clients.push_back(client);
 #ifdef LOG_VERBOSE
     std::cout << "Client " << client_id_counter << " connected to server." << std::endl;
@@ -124,11 +147,12 @@ void MatchesManager::add_new_client_to_manager(Socket client_socket) {
 }
 
 MatchInfoDTO MatchesManager::return_matches_lists() {
+    std::unique_lock<std::mutex> lock(manager_mutex);
     MatchInfoDTO matches_lists{};
     matches_lists.num_games = matches.size();
     size_t i = 0;
     for (auto& match: matches) {
-        matches_lists.active_games[i].map = match.second->get_map();
+        matches_lists.active_games[i].map_id = match.second->get_map();
         matches_lists.active_games[i].players_ingame = match.second->get_num_players();
         matches_lists.active_games[i].players_max = match.second->get_max_players();
     }
@@ -136,18 +160,27 @@ MatchInfoDTO MatchesManager::return_matches_lists() {
 }
 
 void MatchesManager::send_match_lists(RequestActiveGamesDTO dto) {
+    std::unique_lock<std::mutex> lock(manager_mutex);
     auto matches_lists = return_matches_lists();
     auto matches_message = std::make_shared<RecvActiveGames>(matches_lists);
-    get_client_by_id(dto.id_client)->get_sender_queue()->push(matches_message);
+    get_client_by_id(dto.id_client)->get_sender_queue().push(matches_message);
 }
 
 void MatchesManager::delete_disconnected_client(const id_client_t& id_client) {
+    std::unique_lock<std::mutex> lock(manager_mutex);
     for (auto client = clients.begin(); client != clients.end(); ++client) {
         if (id_client == (*client)->get_client_id()) {
 #ifdef LOG_VERBOSE
             std::cout << "Stopping client " << id_client << " in lobby." << std::endl;
 #endif
-            client_monitor.removeQueue(get_client_by_id(id_client)->get_sender_queue());
+            CloseConnectionDTO dto = {id_client};
+            if ((*client)->get_current_match_id() != 0) {
+                matches.at((*client)->get_current_match_id())
+                        ->match_queue.push(std::make_shared<CloseConnectionMessage>(dto));
+                client_monitors.find((*client)->get_current_match_id())
+                        ->second->removeQueue((*client)->get_sender_queue());
+            }
+            lobby_monitor.removeQueue((*client)->get_sender_queue());
             (*client)->stop();
             delete *client;
             clients.erase(client);
@@ -160,12 +193,19 @@ void MatchesManager::delete_disconnected_client(const id_client_t& id_client) {
 }
 
 void MatchesManager::check_matches_status() {
+    std::unique_lock<std::mutex> lock(manager_mutex);
     for (auto it = matches.begin(); it != matches.end();) {
         if (it->second->has_match_ended()) {
 #ifdef LOG_VERBOSE
-            std::cout << "Match " << it->first << " " << it->second->get_map() << " has ended.\n";
+            std::cout << "Match " << it->first << " map " << it->second->get_map()
+                      << " has ended.\n";
 #endif
-            stop_finished_match(it->second.get());
+            auto ids = it->second->get_clients_ids();
+            for (auto id: ids) {
+                get_client_by_id(id)->set_match_joined_id(0);
+            }
+            it->second->stop();
+            it->second->join();
             matches.erase(it);
             break;
         } else {
@@ -174,30 +214,11 @@ void MatchesManager::check_matches_status() {
     }
 }
 
-void MatchesManager::stop_finished_match(Match* match) {
-    std::vector<size_t> ids = match->get_clients_ids();
-    match->stop();
-    match->join();
-    for (auto id: ids) {
-        auto it = clients.begin();
-        while (it != clients.end()) {
-            if ((*it)->get_client_id() == id) {
-                //                (*it)->set_receiver_queue(nullptr);
-                //                (*it)->set_receiver_queue(manager_queue);
-                break;
-            } else {
-                ++it;
-            }
-        }
-    }
-}
-
 void MatchesManager::clear_all_clients() {
+    std::unique_lock<std::mutex> lock(manager_mutex);
+    CloseConnectionDTO close_connection{};
+    lobby_monitor.broadcastClients(std::make_shared<CloseConnectionMessage>(close_connection));
     for (auto& client: clients) {
-        //        CloseConnectionDTO close_connection{client->get_client_id()};
-        //        auto game_ended_message =
-        //        std::make_shared<CloseConnectionMessage>(close_connection);
-        //        client->get_sender_queue()->try_push(game_ended_message);
         client->stop();
         delete client;
     }
@@ -205,13 +226,13 @@ void MatchesManager::clear_all_clients() {
 }
 
 void MatchesManager::stop_all_matches() {
+    std::unique_lock<std::mutex> lock(manager_mutex);
     for (auto& match: matches) {
 #ifdef LOG_VERBOSE
         std::cout << "Stopping match " << match.first << std::endl;
 #endif
-        stop_finished_match(match.second.get());
-        //        match.second->stop();
-        //        match.second->join();
+        match.second->stop();
+        match.second->join();
     }
     matches.clear();
 }
@@ -223,16 +244,35 @@ void MatchesManager::pre_load_resources() {
     resource_pool->load_yaml(map_character_enum_to_string.at(MAD_HATTER));
     resource_pool->load_yaml(map_character_enum_to_string.at(LIZARD_GOON));
     resource_pool->load_yaml(SFX_FILE);
-    resource_pool->load_yaml(map_list_to_string.at(MAP_1));
+    resource_pool->load_yaml(CONFIG);
+    resource_pool->load_yaml(MAPS_FILE);
+    resource_pool->load_yaml(ITEMS_FILE);
+
+    resource_pool->load_config(CONFIG);
 }
 
 void MatchesManager::stop() { online = false; }
 
-Queue<std::shared_ptr<Message>>& MatchesManager::get_match_queue_by_id(size_t i) {
-    auto it = matches.find(i);
+Queue<std::shared_ptr<Message>>& MatchesManager::get_match_queue_by_id(int match_id) {
+    auto it = matches.find(match_id);
     if (it != matches.end()) {
         return it->second->get_match_queue();
     } else {
         throw std::runtime_error("Match with the given ID not found.");
     }
+}
+
+void MatchesManager::clean_client_monitors() {
+    for (auto monitor: client_monitors) {
+        delete (monitor.second);
+    }
+    client_monitors.clear();
+}
+
+
+bool MatchesManager::can_create_match(int max_matches) { return matches_number < max_matches; }
+
+MatchesManager::~MatchesManager() {
+    lobby_monitor.remove_all_queues();
+    matches.clear();
 }

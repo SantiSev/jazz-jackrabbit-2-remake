@@ -1,14 +1,19 @@
 #include "event_loop.h"
 
 EventLoop::EventLoop(std::atomic<bool>& game_running, std::atomic<bool>& menu_running,
-                     std::atomic<bool>& match_running, ClientMessageHandler& message_handler):
+                     std::atomic<bool>& match_running, std::atomic<bool>& editor_running,
+                     ClientMessageHandler& message_handler):
         game_running(game_running),
         menu_running(menu_running),
         match_running(match_running),
+        editor_running(editor_running),
         message_handler(message_handler),
         mouse(0, 0) {}
 
 void EventLoop::run() {
+#ifdef LOG
+    std::cout << "Event loop started..." << std::endl;
+#endif
     const Uint32 rate = 1000 / 60;
 
     Uint32 frame_start = SDL_GetTicks();
@@ -23,6 +28,7 @@ void EventLoop::run() {
                 menu_running.store(false);
                 game_running.store(false);
                 match_running.store(false);
+                editor_running.store(false);
                 break;
             }
             keyboard.update(event);
@@ -42,6 +48,10 @@ void EventLoop::run() {
         SDL_Delay(rest_time);
         frame_start += rate;
     }
+
+#ifdef LOG
+    std::cout << "Event loop stopped..." << std::endl;
+#endif
 }
 
 EventLoop::~EventLoop() = default;

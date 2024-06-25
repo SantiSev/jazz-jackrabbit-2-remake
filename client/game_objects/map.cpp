@@ -1,9 +1,8 @@
 #include "map.h"
 
-Map::Map(const map_list_t& map_enum, std::shared_ptr<engine::ResourcePool> resource_pool):
+Map::Map(const uint16_t& map_id, std::shared_ptr<engine::ResourcePool> resource_pool):
         background(nullptr), resource_pool(resource_pool), area({0, 0, 0, 0}) {
-    std::string map_name = map_list_to_string.at(map_enum);
-    load_map(map_name);
+    load_map(map_id);
 }
 
 void Map::draw(SDL_Renderer* renderer, int it) {
@@ -22,9 +21,12 @@ void Map::draw_in_camera(SDL_Renderer* renderer, engine::Camera& camera, int it)
     }
 }
 
-void Map::load_map(const std::string& map_name) {
-    auto texture = resource_pool->get_texture(map_name);
-    auto yaml = *resource_pool->get_yaml(map_name);
+void Map::load_map(const uint16_t& map_id) {
+    auto maps_yaml = *resource_pool->get_yaml(MAPS_FILE);
+    auto texture_path = maps_yaml["maps"][map_id]["texture"].as<std::string>();
+    auto yaml_path = maps_yaml["maps"][map_id]["yaml"].as<std::string>();
+    auto texture = resource_pool->load_texture(texture_path);
+    auto yaml = *resource_pool->load_yaml(yaml_path);
 
     area.w = yaml["map_width"].as<int>();
     area.h = yaml["map_height"].as<int>();

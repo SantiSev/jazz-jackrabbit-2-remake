@@ -2,8 +2,8 @@
 
 using engine::Sprite;
 
-Sprite::Sprite(std::shared_ptr<Texture> texture, SDL_Rect& s_rect, SDL_Rect& d_rect):
-        texture(texture), s_rect(s_rect), d_rect(d_rect), body(d_rect) {}
+Sprite::Sprite(std::shared_ptr<Texture> texture, SDL_Rect s_rect, SDL_Rect d_rect_p):
+        texture(texture), s_rect(s_rect), d_rect(d_rect_p), body(d_rect_p) {}
 
 void Sprite::draw(SDL_Renderer* renderer, int it) {
     int err = SDL_RenderCopy(renderer, texture->get_texture(), &s_rect, &d_rect);
@@ -18,6 +18,8 @@ void Sprite::set_position(int x, int y) {
     d_rect.x = x;
     d_rect.y = y;
 }
+
+void Sprite::change_source(SDL_Rect s_rect) { this->s_rect = s_rect; }
 
 bool Sprite::is_intersecting(SDL_Point& point) const { return SDL_PointInRect(&point, &d_rect); }
 

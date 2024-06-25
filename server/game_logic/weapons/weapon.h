@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <memory>
 
+#include "../../../common/configuration.h"
 #include "../../../game_engine/physics_engine/collision_manager.h"
 
 #include "bullet.h"
@@ -24,6 +25,8 @@ protected:
     int ammo = 0;
     int max_ammo = 10;
     int shoot_rate = 10;
+    int bullet_speed = 20;
+    const std::shared_ptr<Configuration> config;
     Player& player_owner;
     CollisionManager& collision_manager;  // the weapon creates bullets and sends them to the
                                           // collision manager
@@ -36,7 +39,8 @@ protected:
 
 public:
     Weapon(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager, int ammo,
-           int max_ammo, int weapon_damage, int shoot_rate);
+           int max_ammo, int weapon_damage, int shoot_rate, int bullet_speed,
+           const std::shared_ptr<Configuration>& config);
 
     // ------- Getters --------
 
@@ -54,7 +58,7 @@ public:
     void reset_ammo();
     void change_infinite_ammo();
 
-    ~Weapon();
+    virtual ~Weapon();
 };
 
 #endif

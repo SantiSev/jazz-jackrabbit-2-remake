@@ -1,9 +1,11 @@
 #include "label.h"
 
+#include <iostream>
+
 using engine::Label;
 
-Label::Label(std::shared_ptr<Font> font, SDL_Rect& rect, const SDL_Color& color,
-             const SDL_Color& hover_color, const std::string& text, SDL_Renderer* renderer):
+Label::Label(std::shared_ptr<Font> font, SDL_Rect rect, SDL_Color color, SDL_Color hover_color,
+             const std::string& text, SDL_Renderer* renderer):
         font(font),
         rect(rect),
         color(color),
@@ -24,6 +26,21 @@ void Label::draw(SDL_Renderer* renderer, int it) {
     }
 }
 
+void Label::center_x(int x, int w) {
+    int new_center = x + w / 2;
+    rect.x = new_center - rect.w / 2;
+}
+
+void Label::center_y(int y, int h) {
+    int new_center = y + h / 2;
+    rect.y = new_center - rect.h / 2;
+}
+
+void Label::center(int x, int y, int w, int h) {
+    center_x(x, w);
+    center_y(y, h);
+}
+
 SDL_Rect& Label::get_body() { return rect; }
 
 void Label::set_position(int x, int y) {
@@ -34,9 +51,25 @@ void Label::set_position(int x, int y) {
 std::string Label::get_text() { return text; }
 
 void Label::set_text(const std::string& new_text, SDL_Renderer* renderer) {
+#ifdef LOG
+    std::cout << "Setting text to: " << new_text << std::endl;
+#endif
     text = new_text;
-    texture = Texture(font, color, text, renderer);
-    hover_texture = Texture(font, hover_color, text, renderer);
+#ifdef LOG
+    std::cout << "Text set to: " << text << std::endl;
+#endif
+
+#ifdef LOG
+    std::cout << "Creating new textures" << std::endl;
+#endif
+    auto new_texture = Texture(font, color, text, renderer);
+    auto new_hover_texture = Texture(font, hover_color, text, renderer);
+
+#ifdef LOG
+    std::cout << "Moving textures" << std::endl;
+#endif
+    texture = std::move(new_texture);
+    hover_texture = std::move(new_hover_texture);
 }
 
 bool Label::is_intersecting(SDL_Point& point) const {

@@ -1,0 +1,45 @@
+heart:
+    x: 69
+    y: 254
+    w: 23
+    h: 23
+dark-heart:
+    x: 69
+    y: 278
+    w: 23
+    h: 23
+jazz:
+    x: 43
+    y: 122
+    w: 41
+    h: 45
+spaz:
+    x: 110
+    y: 122
+    w: 41
+    h: 45
+lori:
+    x: 181
+    y: 122
+    w: 41
+    h: 45
+common_bullet:
+    x: 44
+    y: 2
+    w: 23
+    h: 23
+bullet_one:
+    x: 44
+    y: 57
+    w: 23
+    h: 23
+bullet_two:
+    x: 44
+    y: 87
+    w: 23
+    h: 23
+bullet_three:
+    x: 44
+    y: 27
+    w: 23
+    h: 23

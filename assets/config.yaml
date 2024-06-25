@@ -1,0 +1,42 @@
+# Game configurations:
+
+# max_matches should be setted also in common_dto.h, in MatchInfoDTO struct
+# max players should be setted also in common_dto.h, in GameStateDTO struct
+
+match:
+  max_players: 12
+  max_matches_to_create: 16
+  kill_points_enemy: 5
+  kill_points_player: 15
+  coin_points: 10
+  match_duration: 300
+
+player:
+  health: 100
+  speed_x: 14
+  sprint_speed: 20
+  jump_force: 25
+  falling_speed: 10
+  respawn_time: 600 # in loops
+  invulnerability_time: 600 # in loops
+  intoxication_time: 450 # in loops
+  is_sprint_allowed: 1
+
+enemy:
+  health: 100
+  damage: 25
+  speed: 5
+  falling_speed: 10
+  respawn_time: 200 # in loops
+  movement_range: 60
+
+map_editor:
+  map_width: 1280
+  map_height: 640
+
+bullet:
+  base_damage: 20
+  base_speed: 20
+  base_ammo: 5
+  base_max_ammo: 10
+  base_shoot_rate: 20

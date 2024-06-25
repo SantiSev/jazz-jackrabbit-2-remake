@@ -2,7 +2,7 @@
 
 SendConnectedToGameMessage::SendConnectedToGameMessage(
         const ClientHasConnectedToMatchDTO& game_created):
-        Message(SEND_GAME_CREATED), game_created(game_created) {}
+        Message(SEND_CONNECTED_TO_MATCH), game_created(game_created) {}
 
 
 void SendConnectedToGameMessage::run(MessageHandler& handler) {

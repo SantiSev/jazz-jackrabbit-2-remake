@@ -23,14 +23,18 @@
 #include "../game_engine/gui/canvas_object.h"
 #include "../game_engine/gui/widgets/animated_sprite.h"
 #include "../game_engine/gui/widgets/sound_manager.h"
+#include "./shared/background.h"
 #include "game_objects/player_controller.h"
 #include "protocol/client_protocol.h"
 #include "protocol/client_thread_manager.h"
 #include "protocol/message_runner.h"
+#include "scenes/editor_scene.h"
 #include "scenes/match_scene.h"
 #include "scenes/menu_scene.h"
 
 #include "event_loop.h"
+
+#define CONFIG_FILE "assets/config"
 
 class Client {
 private:
@@ -40,18 +44,18 @@ private:
     std::atomic<bool> game_running;
     std::atomic<bool> menu_running;
     std::atomic<bool> match_running;
+    std::atomic<bool> editor_running;
 
-    std::atomic<map_list_t> map_enum;
+    std::atomic<uint16_t> map_enum;
     std::atomic<id_client_t> id_client;
 
     ClientMessageHandler message_handler;
     EventLoop* event_loop;
     MessageRunner* message_runner;
     ClientThreadManager* thread_manager;
-
     std::shared_ptr<engine::SoundManager> sound_manager;
 
-    void pre_load_resources(std::shared_ptr<engine::ResourcePool>& resource_pool);
+    void pre_load_resources();
 
     friend class ClientMessageHandler;
 

@@ -5,16 +5,19 @@
 
 
 Bullet::Bullet(const uint64_t& id, const uint8_t type, Player& player_owner,
-               const int& bullet_damage):
+               const int& bullet_damage, const int& bullet_speed, const int& enemy_points,
+               const int& player_points):
         DynamicBody(player_owner.position.x, player_owner.position.y, BULLET_WIDTH, BULLET_HEIGHT,
-                    Vector2D(BULLET_SPEED * player_owner.get_direction(), 0)),
+                    Vector2D(bullet_speed * player_owner.get_direction(), 0)),
         id(id),
         type(type),
         player_owner(player_owner),
         bullet_damage(bullet_damage),
-        life_span(BULLET_LIFE_SPAN) {
+        life_span(BULLET_LIFE_SPAN),
+        enemy_points(enemy_points),
+        player_points(player_points) {
 
-    position.y = player_owner.get_bottom_hitbox_side() - player_owner.get_hitbox_height() / 2;
+    position.y = player_owner.get_top_hitbox_side() + player_owner.get_shooting_height();
 
     if (player_owner.is_facing_right()) {
         position.x = player_owner.get_right_hitbox_side() + OFFSET_BULLET_X;
@@ -61,9 +64,13 @@ void Bullet::handle_colision(CollisionObject* other) {
 
 
             character->take_damage(bullet_damage);
-            player_owner.add_points(BULLET_POINTS);
+            //            player_owner.add_points(BULLET_POINTS);   //TODO dar punto por hit??
             if (character->is_dead()) {
-                player_owner.add_points(BULLET_BONUS_POINTS);
+                if (character->get_id() < 100) {
+                    player_owner.add_points(enemy_points);
+                } else {
+                    player_owner.add_points(player_points);
+                }
             }
         }
     }
@@ -75,4 +82,10 @@ void Bullet::print_info() {
     std::cout << "bullet direction: " << (int)direction << std::endl;
     std::cout << "bullet pos: " << (int)position.x << "," << (int)position.y << std::endl;
     std::cout << "+++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+}
+
+void Bullet::handle_out_of_bounds() {
+    if (is_active_object()) {
+        set_active_status(false);
+    }
 }
