@@ -89,7 +89,7 @@ void Client::pre_load_resources() {
 
     // Config
     resource_pool->load_config(CONFIG_FILE);
-  
+
 #ifdef LOG
     std::cout << "Resources pre-loaded" << std::endl;
 #endif
