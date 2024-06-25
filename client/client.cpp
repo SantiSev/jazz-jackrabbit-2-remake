@@ -1,7 +1,7 @@
 #include "client.h"
 
 Client::Client(const std::string& host, const std::string& port):
-        window(800, 600, true, true),
+        window(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, true, true),
         resource_pool(std::make_shared<engine::ResourcePool>(window.get_renderer())),
         game_running(true),
         menu_running(true),

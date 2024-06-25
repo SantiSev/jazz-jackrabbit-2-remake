@@ -12,7 +12,9 @@ const uint8_t MAX_MATCHES_TO_CREATE = 16;
 const size_t MAX_PLAYERS =
         8;  // The match doesn't start without this many players connected to the match.
 const size_t MAX_ENEMIES = 12;
+const size_t MIN_ENEMIES = 2;
 const size_t MAX_ITEMS = 50;
+const size_t MIN_ITEMS = 1;
 #define PLAYER_KILL_POINTS 15
 #define ENEMY_KILL_POINTS 5
 
@@ -86,7 +88,9 @@ const std::map<uint8_t, std::string> map_states_to_animations = {
 #define BULLET_HEIGHT 10
 #define BULLET_SPEED 20
 
-//
-
+// Viewport
+#define VIEWPORT_WIDTH 800
+#define VIEWPORT_HEIGHT 600
+const uint32_t RATE = 1000 / 60;
 
 #endif

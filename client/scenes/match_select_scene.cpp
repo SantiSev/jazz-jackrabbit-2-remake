@@ -20,7 +20,7 @@ MatchSelectScene::MatchSelectScene(engine::Window& window, EventLoop* event_loop
         title(resource_pool->get_font(FONT), SDL_Rect{170, 100, 450, 75},
               SDL_Color{255, 255, 255, 255}, SDL_Color{255, 255, 255, 255}, "Select a Match",
               renderer),
-        title_background(SDL_Color{0, 122, 16, 255}, SDL_Rect{0, 90, 800, 85}),
+        title_background(SDL_Color{0, 122, 16, 255}, SDL_Rect{0, 90, VIEWPORT_WIDTH, 85}),
         sound_manager(sound_manager),
         game_running(game_running),
         menu_running(menu_running),
@@ -48,8 +48,6 @@ void MatchSelectScene::start() {
     for (auto& button: buttons) {
         event_loop->mouse.add_on_click_signal_obj(button);
     }
-
-    const Uint32 rate = 1000 / 60;
 
     Uint32 frame_start = SDL_GetTicks();
     Uint32 frame_end;
@@ -79,18 +77,18 @@ void MatchSelectScene::start() {
         window.render();
 
         frame_end = SDL_GetTicks();
-        int rest_time = rate - (frame_end - frame_start);
+        int rest_time = RATE - (frame_end - frame_start);
 
         if (rest_time < 0) {
             behind = -rest_time;
-            rest_time = rate - (behind % rate);
-            lost = behind / rate;
+            rest_time = RATE - (behind % RATE);
+            lost = behind / RATE;
             frame_start += lost;
-            it += std::floor(lost / rate);
+            it += std::floor(lost / RATE);
         }
 
         SDL_Delay(rest_time);
-        frame_start += rate;
+        frame_start += RATE;
         it++;
     }
     clear_list_buttons();
@@ -113,7 +111,7 @@ void MatchSelectScene::create_buttons() {
 
     // Add buttons to list
     buttons.push_back(receive_matches_button);
-    buttons.back()->center_x(0, 800);
+    buttons.back()->center_x(0, VIEWPORT_WIDTH);
     //    buttons.push_back(return_to_menu_button);
 }
 
@@ -145,7 +143,7 @@ void MatchSelectScene::create_match_buttons(const std::shared_ptr<MatchInfoDTO>&
         uint16_t id = dto->active_games[i].match_id;
         selectors.emplace_back(renderer, resource_pool, x_start, y_start, match_select_running,
                                character_select_running, is_joinning, label_info, id, selected_id);
-        selectors.back().center_x(0, 800);
+        selectors.back().center_x(0, VIEWPORT_WIDTH);
         event_loop->mouse.add_on_click_signal_obj(&selectors.back());
         y_start += 50;
     }

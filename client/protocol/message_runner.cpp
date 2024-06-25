@@ -8,8 +8,6 @@ void MessageRunner::run() {
     std::cout << "Message runner started..." << std::endl;
 #endif
 
-    const Uint32 rate = 1000 / 60;
-
     Uint32 frame_start = SDL_GetTicks();
     Uint32 frame_end;
     Uint32 behind;
@@ -24,17 +22,17 @@ void MessageRunner::run() {
         }
 
         frame_end = SDL_GetTicks();
-        int rest_time = rate - (frame_end - frame_start);
+        int rest_time = RATE - (frame_end - frame_start);
 
         if (rest_time < 0) {
             behind = -rest_time;
-            rest_time = rate - (behind % rate);
-            lost = behind / rate;
+            rest_time = RATE - (behind % RATE);
+            lost = behind / RATE;
             frame_start += lost;
         }
 
         SDL_Delay(rest_time);
-        frame_start += rate;
+        frame_start += RATE;
     }
 
 #ifdef LOG

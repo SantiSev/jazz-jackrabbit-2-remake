@@ -13,7 +13,9 @@ EditorScene::EditorScene(engine::Window& window, EventLoop* event_loop,
         background(nullptr),
         tile_manager(resource_pool, event_loop, tiles),
         hud(renderer, resource_pool, event_loop, tile_manager, menu_running, editor_running),
-        camera(window.get_width(), hud.get_body().y, 0, MAP_WIDTH, 0, MAP_HEIGHT),
+        camera(window.get_width(), hud.get_body().y, 0,
+               resource_pool->get_config()->map_ed_max_width, 0,
+               resource_pool->get_config()->map_ed_max_height),
         controller(camera, event_loop) {
 #ifdef LOG
     std::cout << "Constructing editor scene..." << std::endl;
@@ -25,8 +27,6 @@ void EditorScene::start() {
 #ifdef LOG
     std::cout << "Starting editor scene..." << std::endl;
 #endif
-
-    const Uint32 rate = 1000 / 60;
 
     Uint32 frame_start = SDL_GetTicks();
     Uint32 frame_end;
@@ -50,18 +50,18 @@ void EditorScene::start() {
         window.render();
 
         frame_end = SDL_GetTicks();
-        int rest_time = rate - (frame_end - frame_start);
+        int rest_time = RATE - (frame_end - frame_start);
 
         if (rest_time < 0) {
             behind = -rest_time;
-            rest_time = rate - (behind % rate);
-            lost = behind / rate;
+            rest_time = RATE - (behind % RATE);
+            lost = behind / RATE;
             frame_start += lost;
-            it += std::floor(lost / rate);
+            it += std::floor(lost / RATE);
         }
 
         SDL_Delay(rest_time);
-        frame_start += rate;
+        frame_start += RATE;
         it++;
     }
 }
@@ -73,7 +73,7 @@ void EditorScene::load_background() {
     auto background_yaml = yaml["background"];
     SDL_Rect back_s_rect = {background_yaml["x"].as<int>(), background_yaml["y"].as<int>(),
                             background_yaml["w"].as<int>(), background_yaml["h"].as<int>()};
-    SDL_Rect back_d_rect = {0, 0, 800, 600};
+    SDL_Rect back_d_rect = {0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT};
     background = std::make_unique<engine::Sprite>(texture, back_s_rect, back_d_rect);
 }
 

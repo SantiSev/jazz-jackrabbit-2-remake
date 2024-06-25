@@ -376,7 +376,8 @@ GameStateDTO Match::create_actual_snapshot() {
 void Match::load_environment() {
     auto yaml_maps = *resource_pool->get_yaml(MAPS_FILE);
     auto yaml_path = yaml_maps["maps"][map]["yaml"].as<std::string>();
-    auto yaml = *resource_pool->load_yaml(yaml_path);
+    resource_pool->load_yaml(yaml_path);
+    auto yaml = *resource_pool->get_yaml(yaml_path);
 
     if (yaml.IsNull()) {
         throw std::runtime_error("Error loading yaml file");

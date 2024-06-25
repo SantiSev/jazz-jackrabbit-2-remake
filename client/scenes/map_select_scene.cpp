@@ -17,7 +17,7 @@ MapSelectScene::MapSelectScene(engine::Window& window, EventLoop* event_loop,
         title(resource_pool->get_font(FONT), SDL_Rect{170, 100, 450, 75},
               SDL_Color{255, 255, 255, 255}, SDL_Color{255, 255, 255, 255}, "Select a Map",
               renderer),
-        title_background(SDL_Color{0, 122, 16, 255}, SDL_Rect{0, 90, 800, 85}),
+        title_background(SDL_Color{0, 122, 16, 255}, SDL_Rect{0, 90, VIEWPORT_WIDTH, 85}),
         game_running(game_running),
         map_select_running(map_select_running),
         character_select_running(character_select_running),
@@ -49,7 +49,7 @@ void MapSelectScene::create_buttons() {
         uint16_t map_id = map["id"].as<uint16_t>();
         selectors.emplace_back(renderer, resource_pool, map_name, map_id, x_start, y_start,
                                selected_map_id, map_select_running, character_select_running);
-        selectors.back().center_x(0, 800);
+        selectors.back().center_x(0, VIEWPORT_WIDTH);
         y_start += 50;
     }
 }
@@ -62,8 +62,6 @@ void MapSelectScene::start() {
     for (auto& selector: selectors) {
         event_loop->mouse.add_on_click_signal_obj(&selector);
     }
-
-    const Uint32 rate = 1000 / 60;
 
     Uint32 frame_start = SDL_GetTicks();
     Uint32 frame_end;
@@ -84,18 +82,18 @@ void MapSelectScene::start() {
         window.render();
 
         frame_end = SDL_GetTicks();
-        int rest_time = rate - (frame_end - frame_start);
+        int rest_time = RATE - (frame_end - frame_start);
 
         if (rest_time < 0) {
             behind = -rest_time;
-            rest_time = rate - (behind % rate);
-            lost = behind / rate;
+            rest_time = RATE - (behind % RATE);
+            lost = behind / RATE;
             frame_start += lost;
-            it += std::floor(lost / rate);
+            it += std::floor(lost / RATE);
         }
 
         SDL_Delay(rest_time);
-        frame_start += rate;
+        frame_start += RATE;
         it++;
     }
 }

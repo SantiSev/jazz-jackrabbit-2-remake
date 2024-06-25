@@ -26,7 +26,7 @@ ScoreScene::ScoreScene(engine::Window& window, EventLoop* event_loop,
         my_id_client(my_id_client) {
     // Create background
     SDL_Rect background_s_rect = {16, 1952, 640, 480};
-    SDL_Rect background_d_rect = {0, 0, 800, 600};
+    SDL_Rect background_d_rect = {0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT};
     background = new engine::Sprite(resource_pool->get_texture(BACKGROUNDS_FILE), background_s_rect,
                                     background_d_rect);
 
@@ -36,7 +36,7 @@ ScoreScene::ScoreScene(engine::Window& window, EventLoop* event_loop,
             new ReturnMenuButton(renderer, resource_pool, create_match_button_d_rect, menu_running,
                                  scoreboard_running, message_handler);
     buttons.push_back(create_return_button);
-    buttons.back()->center_x(0, 800);
+    buttons.back()->center_x(0, VIEWPORT_WIDTH);
 
     // Create labels
     create_score_labels();
@@ -47,8 +47,6 @@ void ScoreScene::start() {
     for (auto button: buttons) {
         event_loop->mouse.add_on_click_signal_obj(button);
     }
-
-    const Uint32 rate = 1000 / 60;
 
     Uint32 frame_start = SDL_GetTicks();
     Uint32 frame_end;
@@ -70,18 +68,18 @@ void ScoreScene::start() {
         window.render();
 
         frame_end = SDL_GetTicks();
-        int rest_time = rate - (frame_end - frame_start);
+        int rest_time = RATE - (frame_end - frame_start);
 
         if (rest_time < 0) {
             behind = -rest_time;
-            rest_time = rate - (behind % rate);
-            lost = behind / rate;
+            rest_time = RATE - (behind % RATE);
+            lost = behind / RATE;
             frame_start += lost;
-            it += std::floor(lost / rate);
+            it += std::floor(lost / RATE);
         }
 
         SDL_Delay(rest_time);
-        frame_start += rate;
+        frame_start += RATE;
         it++;
     }
 

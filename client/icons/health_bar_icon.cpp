@@ -4,7 +4,7 @@
 
 HealthBarIcon::HealthBarIcon(std::shared_ptr<engine::ResourcePool> resource_pool, int x, int y,
                              int health):
-        max_health(100),
+        max_health(resource_pool->get_config()->player_health),
         health_per_hearts(max_health / MAX_HEARTS),
         bright_hearts(health / health_per_hearts) {
     auto yaml = *resource_pool->get_yaml(ICONS_FILE);
