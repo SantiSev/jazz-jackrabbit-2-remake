@@ -29,7 +29,7 @@ void Client::start() {
                          menu_running, editor_running, message_handler);
     event_loop->start();
 
-    sound_manager->play_sound(BACKGROUND, 0.2);
+    sound_manager->play_sound(BACKGROUND, 0.15);
 
     while (game_running) {
         menu_scene.start();

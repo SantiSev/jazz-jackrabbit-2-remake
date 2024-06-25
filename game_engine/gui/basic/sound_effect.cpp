@@ -2,7 +2,7 @@
 
 using engine::SoundEffect;
 
-SoundEffect::SoundEffect(const std::string& file): sound(nullptr), channel(-1), is_playing(false) {
+SoundEffect::SoundEffect(const std::string& file): sound(nullptr), channel(-1) {
     sound = Mix_LoadWAV(file.c_str());
     if (sound == nullptr) {
         throw SDLError("Error loading sound from file: " + std::string(Mix_GetError()));
@@ -10,25 +10,17 @@ SoundEffect::SoundEffect(const std::string& file): sound(nullptr), channel(-1), 
 }
 
 void SoundEffect::play_sound(int loops) {
-    if (sound == nullptr || is_playing) {
+    if (sound == nullptr) {
         return;
     }
 
     this->channel = Mix_PlayChannel(-1, sound, loops);
     if (this->channel < 0) {
-        throw SDLError("Error playing channel: " + std::string(Mix_GetError()));
-    }
-
-    is_playing = true;
-}
-
-void SoundEffect::pause_sound() {
-    if (!is_playing) {
         return;
     }
-    Mix_Pause(this->channel);
-    is_playing = false;
 }
+
+void SoundEffect::pause_sound() { Mix_Pause(this->channel); }
 
 void SoundEffect::set_volume(float volume) {
     if (sound != nullptr) {
@@ -36,8 +28,7 @@ void SoundEffect::set_volume(float volume) {
     }
 }
 
-SoundEffect::SoundEffect(SoundEffect&& other) noexcept:
-        sound(other.sound), channel(other.channel), is_playing(other.is_playing) {
+SoundEffect::SoundEffect(SoundEffect&& other) noexcept: sound(other.sound), channel(other.channel) {
     other.sound = nullptr;
 }
 
