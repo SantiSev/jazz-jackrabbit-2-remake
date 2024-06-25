@@ -9,7 +9,7 @@
 ## Entorno
 
 Para la compilacion y uso del projecto dentro de un entorno Linux, necesitamos un kit de herramientas basicas. A contiunacion,
-proveemos un comando, para aquel que quiera usar este projecto dentro de un entorno Linux:
+proveemos un comando, para aquel que quiera usar este projecto dentro de un entorno Linux (TESTEADO EN Ubuntu 22.04 LTS jammy jelly):
 
 ```bash
 $ sudo apt-get update
