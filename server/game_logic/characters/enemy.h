@@ -1,6 +1,8 @@
 #ifndef TP_FINAL_ENEMY_H
 #define TP_FINAL_ENEMY_H
 
+#include <cstdlib>
+#include <ctime>
 #include <memory>
 
 #include "character.h"
@@ -10,6 +12,7 @@
 #define ENEMY_HEIGHT 45
 #define MOVEMENT_RANGE 50
 #define ATTACK_COOLDOWN 60
+#define BASE_SPEED 3
 
 class Enemy: public CharacterBody {
 private:
@@ -21,6 +24,7 @@ private:
     std::shared_ptr<Configuration> config;
 
     void move_horizontal(int new_direction);
+    void set_random_speed(int set_speed);
 
 public:
     Enemy(uint16_t id, const character_t& character, int x, int y, int w, int h,

@@ -171,7 +171,7 @@ intoxicated_idle:
     w: 48
     h: 49
     off_x: -9
-    off_y: -9
+    off_y: -2
 intoxicated_moving_right:
     flipped: false
     frames: 12
@@ -181,7 +181,7 @@ intoxicated_moving_right:
     w: 48
     h: 49
     off_x: -9
-    off_y: -9
+    off_y: -3
 intoxicated_moving_left:
     flipped: true
     frames: 12
@@ -191,4 +191,4 @@ intoxicated_moving_left:
     w: 48
     h: 49
     off_x: -9
-    off_y: -9
+    off_y: -3

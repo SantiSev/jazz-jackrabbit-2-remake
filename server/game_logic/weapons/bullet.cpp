@@ -54,14 +54,16 @@ void Bullet::handle_colision(CollisionObject* other) {
         set_active_status(false);
 
         CharacterBody* character = dynamic_cast<CharacterBody*>(other);
+        Collectable* collectable = dynamic_cast<Collectable*>(other);
 
-        if (character) {
+        if (character || collectable) {
 
-            if (character->get_id() == player_owner.get_id()) {  // avoid shooting myself
+            if (collectable ||
+                character->get_id() ==
+                        player_owner.get_id()) {  // avoid shooting myself or collectables
                 set_active_status(true);
                 return;
             }
-
 
             character->take_damage(bullet_damage);
             int knockback_dir = direction == GOING_RIGHT ? 1 : -1;

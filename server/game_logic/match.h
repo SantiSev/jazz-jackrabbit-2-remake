@@ -113,8 +113,6 @@ public:
 
     void kill_all_cheat();
 
-    void revive_all_cheat();
-
     //-------------------- Getter Methods -----------------
 
     std::shared_ptr<Player> get_player(size_t id);

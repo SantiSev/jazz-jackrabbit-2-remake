@@ -166,29 +166,29 @@ intoxicated_idle:
     flipped: false
     frames: 8
     fps: 8
-    x: 2
+    x: 1
     y: 585
     w: 48
     h: 47
-    off_x: -7
-    off_y: -2
+    off_x: -5
+    off_y: -1
 intoxicated_moving_right:
     flipped: false
     frames: 12
     fps: 8
-    x: 3
-    y: 657
+    x: 1
+    y: 646
     w: 66
     h: 49
-    off_x: -17
-    off_y: -5
+    off_x: 0
+    off_y: -1
 intoxicated_moving_left:
     flipped: true
     frames: 12
     fps: 8
-    x: 3
-    y: 657
+    x: 1
+    y: 646
     w: 66
     h: 49
-    off_x: -17
-    off_y: -5
+    off_x: 0
+    off_y: -1
