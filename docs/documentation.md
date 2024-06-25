@@ -15,24 +15,41 @@ El trabajo práctico se divide en cuatro partes principales:
 
 ## Server
 
-El hilo principal main lanza la clase Server, luego Server lanza el hilo accepter, el aceptador de conexiones con los clientes por socket, y luego Server queda a la espera del input 'q' para cerrar todo gracefully.
-El accepter lanza el hilo MatchesManager, y queda a la espera constante de clientes para ser aceptados. Al aceptar el socket del cliente se lo pasa al MatchesManager y a partir de él crea un nuevo "cliente". 
-Se crea un ServerThreadManager por cada cliente aceptado, el cual tiene su ServerProtocol (utiliza también metodos de su clase padre CommonProtocol), y sus respectivos hilos de Sender y receiver para enviar y recibir mensajes.
-La lógica principal de MatchesManager es de intermediar entre las request del cliente, tanto en estado de "lobby" esperando para crear o unirse a una partida. Va a tener una lista de partidas y una lista de ClientMonitors, cada uno para cada partida, para hacer broadcast de los estados del juego o su finalizacion.
-La comunicación entre MatchesManager y sus Match es mayormente entre colas internas, manejadas por dos manejadores de mensajes: ManagerMessageHandler quien recibe todo del cliente y realiza las operaciones y respuestas necesarias al cliente, y las acciones y cheats del jugador las comunica internamente buscando la queue de su respectiva Match y pusheando el mensaje necesario; y el MatchMessageHandler se encarga de igual manera que a cada jugador realizar las acciones o operaciones indicadas por el mensaje del cliente.
+El hilo principal main lanza la clase `Server`, luego Server lanza el hilo accepter, el aceptador de conexiones con los clientes por socket, y luego `Server` queda a la espera del input 'q' para cerrar todo gracefully.
+
+El accepter lanza el hilo `MatchesManager`, y queda a la espera constante de clientes para ser aceptados. Al aceptar el socket del cliente se lo pasa al `MatchesManager` y a partir de él crea un nuevo "cliente". 
+
+Se crea un `ServerThreadManager` por cada cliente aceptado, el cual tiene su ServerProtocol (utiliza también metodos de su clase padre `CommonProtocol`), y sus respectivos hilos de Sender y receiver para enviar y recibir mensajes.
+
+La lógica principal de `MatchesManager` es de intermediar entre las request del cliente, tanto en estado de "lobby" esperando para crear o unirse a una partida. Va a tener una lista de partidas y una lista de `ClientMonitors`, cada uno para cada partida, para hacer broadcast de los estados del juego o su finalizacion.
+
+La comunicación entre `MatchesManager` y sus `Match` es mayormente entre colas internas, manejadas por dos manejadores de mensajes: `ManagerMessageHandler` quien recibe todo del cliente y realiza las operaciones y respuestas necesarias al cliente, y las acciones y cheats del jugador las comunica internamente buscando la queue de su respectiva `Match` y pusheando el mensaje necesario; y el `MatchMessageHandler` se encarga de igual manera que a cada jugador realizar las acciones o operaciones indicadas por el mensaje del cliente.
+
 La forma de saber qué cliente corresponde a cada player y su partida es que se le asigna un id de cliente cuando se conecta y se lo envía a su cliente para que lo almacene y en cada mensaje especifique su id junto con el mensaje. Y dentro de la partida va a tener su id asociado al cliente.
-La desconexión del cliente resulta tanto en el "lobby", que primero le avisa a su partida en la que se encontraba y lo elimina de la partida al "player", y luego elimina la conexión con el protocolo del cliente del servidor y borra su referencia de ServerThreadManager.
+
+La desconexión del cliente resulta tanto en el "lobby", que primero le avisa a su partida en la que se encontraba y lo elimina de la partida al "player", y luego elimina la conexión con el protocolo del cliente del servidor y borra su referencia de `ServerThreadManager`.
+
+Ejemplo de creación de partida una vez enviado el mensaje desde cliente:
+
+![DataFlowImage](img/CreateGameServer.png)
 
 ### GameLoop
 
-El MatchesManager al recibir un mensaje del cliente de crear partida, lanza el hilo Match que es el game loop en sí, y añade al jugador a la partida. La Match puede continuar incluso si se van todos los jugadores, y pueden conectarse en cualquier momento cualquier jugador hasta que termine. La partida solo finaliza al llegar a cero el contador de partida, y tiene como límite una cantidad de jugadores que pueden unirse determinado por la configuracion del juego asignada en config.yaml.
+El `MatchesManager` al recibir un mensaje del cliente de crear partida, lanza el hilo Match que es el game loop en sí, y añade al jugador a la partida. La `Match` puede continuar incluso si se van todos los jugadores, y pueden conectarse en cualquier momento cualquier jugador hasta que termine. La partida solo finaliza al llegar a cero el contador de partida, y tiene como límite una cantidad de jugadores que pueden unirse determinado por la configuracion del juego asignada en config.yaml.
+
 Está configurada la partida para correr el juego a 60 fps, y se manda un estado de la partida por loop al cliente para poder renderizarla.
+
 La partida además de los jugadores que pueden realizarse daño entre sí, contiene enemigos que patrullan de un lado a otro y realizan daño si haces contacto con ellos, aplicando también un knockback. Si los matas consigues puntos al igual que matar otro jugador (tambien puede configurarse estos valores en el confi.yaml).
 
 ## Protocol
 
 El diseño del protocolo fue basado gracias a la clase y diapositiva de la clase de Protocolo de la materia Taller
 de Programacion (Veiga).
+
+Data Flow:
+
+![DataFlowImage](img/DataFlow.png)
+
 
 ### Mensajes
 
