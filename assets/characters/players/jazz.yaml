@@ -42,7 +42,7 @@ moving_left:
     h: 43
     off_x: -11
     off_y: -2
-spriting_right:
+sprinting_right:
     flipped: false
     frames: 4
     fps: 8
@@ -52,7 +52,7 @@ spriting_right:
     h: 38
     off_x: -17
     off_y: 6
-spriting_left:
+sprinting_left:
     flipped: true
     frames: 4
     fps: 8

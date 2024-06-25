@@ -77,6 +77,11 @@ void Player::handle_intoxication() {
     }
 }
 
+void Player::reset_intoxication() {
+    is_intoxicated = false;
+    intoxication_cooldown = config->player_intoxication_cool_down;
+}
+
 // ------------ Invinvibility Methods --------------
 
 void Player::start_invincibility() {
@@ -92,6 +97,11 @@ void Player::handle_invincibility() {
             is_invincible = false;
         }
     }
+}
+
+void Player::reset_invincibility() {
+    is_invincible = false;
+    invincibility_cooldown = config->player_invincivility_cool_down;
 }
 
 // ------------ Special Attack Methods --------------
@@ -110,8 +120,8 @@ void Player::move_horizontal(int new_direction) {
     }
     direction = new_direction;
 
-    if (is_sprinting && !is_intoxicated) {
-        velocity.x = direction * config->player_speed_x - (int)(config->player_sprint_spd);
+    if (is_sprinting && !is_intoxicated && on_floor) {
+        velocity.x = direction * config->player_sprint_spd;
     } else {
         velocity.x = direction * config->player_speed_x;
     }
@@ -122,9 +132,7 @@ void Player::move_horizontal(int new_direction) {
             state = is_facing_right() ? STATE_INTOXICATED_MOV_RIGHT : STATE_INTOXICATED_MOV_LEFT;
 
         } else if (is_sprinting) {
-            state = is_facing_right() ? STATE_MOVING_RIGHT :
-                                        STATE_INTOXICATED_MOV_LEFT;  // TODO CAMBIAR CUANDO ESTÉ EL
-                                                                     // SPRITE DE SPRINT
+            state = is_facing_right() ? STATE_SPRINTING_RIGHT : STATE_SPRINTING_LEFT;
         } else {
             state = is_facing_right() ? STATE_MOVING_RIGHT : STATE_MOVING_LEFT;
         }
@@ -248,8 +256,8 @@ void Player::handle_colision(CollisionObject* other) {
 }
 
 void Player::knockback(int force) {
-    velocity.x = -direction * force;
     velocity.y = -force;
+    velocity.x = -direction * (on_floor ? force : force * 25);
     on_floor = false;
     is_knocked_back = true;
 }
@@ -260,6 +268,9 @@ void Player::revive(Vector2D new_position) {
     this->health = config->player_health;
     this->state = STATE_IDLE_RIGHT;
     position = new_position;
+    is_sprinting = false;
+    reset_intoxication();
+    reset_invincibility();
     velocity = Vector2D(NONE, config->player_falling_speed);
 
     for (auto& weapon: weapons) {
