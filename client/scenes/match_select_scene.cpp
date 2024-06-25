@@ -134,6 +134,9 @@ void MatchSelectScene::create_match_buttons(const std::shared_ptr<MatchInfoDTO>&
     int num_matches = dto->num_games;
 
     for (int i = 0; i < num_matches; i++) {
+        if (dto->active_games[i].players_ingame == dto->active_games[i].players_max) {
+            continue;
+        }
         std::string map_str = get_map_name(dto->active_games[i].map_id);
 
         std::string label_info =

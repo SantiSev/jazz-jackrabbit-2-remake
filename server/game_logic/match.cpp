@@ -595,7 +595,7 @@ void Match::delete_disconnected_player(id_client_t id_client) {
 
 Queue<std::shared_ptr<Message>>& Match::get_match_queue() { return match_queue; }
 
-size_t Match::get_num_players() { return players.size(); }
+size_t Match::get_num_players() const { return players.size(); }
 
 uint16_t Match::get_map() const { return map; }
 
