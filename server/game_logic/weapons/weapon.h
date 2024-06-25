@@ -55,7 +55,7 @@ public:
     void update_shoot_rate();
     virtual void shoot();
     void add_ammo(int added_ammo);
-    void reset_ammo();
+    virtual void reset_ammo();
     void change_infinite_ammo();
 
     virtual ~Weapon();
