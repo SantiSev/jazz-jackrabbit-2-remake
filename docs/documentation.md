@@ -11,7 +11,47 @@ El trabajo práctico se divide en cuatro partes principales:
 
 ## Game engine
 
+### Graphics Engine
+
+La graphics engine se encuentra casi completamente en `/game_engine/gui` pero tambien incluye `/game_engine/controllers` aunque estos ultimos no son graficos en si, sino que son controladores de input de usuario.
+
+#### Controllers
+
+* Keyboard: Este controlador detecta la entrada del teclado abstrayendo los SDL_Events acordes. Cuando detecta input avisa a sus signal objects que ocurrio, estos signal objecs es una lista de CanvasObjects que son los tipos de objetos visibles en la pantalla, para llenar la lista tiene un metodo para agregar y otro para sacar objetos. Adicionalmente es thread safe.
+* Mouse: Similarmente al teclado cumple el mismo proposito con la diferecia que este avisa cuando hay un click y/o un hover.
+
+#### GUI
+
+Se crearon varias clases basicas necesarias en `gui/basic`:
+
+* AssetsManager: para obtener paths absolutos de archivos.
+* ResourcePool: para cargar archivos una vez y luego reutilizar una referencia constante a un shared pointer a el archivo en cuestion.
+* Font: para abstraer SDL_Font en una clase RAII.
+* Texture: para abstraer SDL_Texture en una clase RAII.
+* Window: para abstraer SDL_Window en una clase RAII. tambien crea el renderer e inicializa SDL.
+* Music
+* Sound
+* SoundEffect
+
+Se crearon clases de utilidad graficas como:
+
+* AnimatedSprite
+* Sprite
+* Button
+* ColorRect
+* Label
+
+A su vez se creo un objecto no grafico ni controlador especial"
+
+* Camara (utilizada por el editor y el match scene)
+
 ## Client
+
+Se dividio el cliente en Esceneas (scenes)
+
+* MenuScene
+* MatchScene
+* EditorScene
 
 ## Server
 
