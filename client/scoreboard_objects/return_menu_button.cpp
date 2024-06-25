@@ -6,9 +6,10 @@ ReturnMenuButton::ReturnMenuButton(SDL_Renderer* renderer,
                                    std::atomic<bool>& scoreboard_running,
                                    ClientMessageHandler& message_handler):
         engine::Button(std::make_unique<engine::Label>(engine::Label(
-                               resource_pool->get_font(FONT), d_rect, {255, 255, 255, 255},
+                               resource_pool->get_font(FONT), d_rect, {0, 150, 0, 255},
                                {0, 0, 0, 255}, "Return To Menu", renderer)),
-                       d_rect, {0, 0, 0, 255}, {255, 255, 255, 255}),
+                       {d_rect.x, d_rect.y, d_rect.w + 15, d_rect.h}, {84, 57, 90, 255},
+                       {255, 255, 255, 255}),
         menu_running(menu_running),
         scoreboard_running(scoreboard_running),
         message_handler(message_handler) {}

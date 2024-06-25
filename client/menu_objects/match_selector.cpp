@@ -1,28 +1,39 @@
 #include "match_selector.h"
 
-MatchSelectorButton::MatchSelectorButton(SDL_Renderer* renderer,
-                                         std::shared_ptr<engine::ResourcePool> resource_pool,
-                                         SDL_Rect& d_rect, std::atomic<bool>& match_select_running,
-                                         std::atomic<bool>& caracter_select_running,
-                                         const std::string& label_info, uint16_t& selected_id,
-                                         uint16_t& id_match):
-        engine::Button(std::make_unique<engine::Label>(engine::Label(
-                               resource_pool->get_font(FONT), d_rect, {255, 255, 255, 255},
-                               {0, 0, 0, 255}, label_info, renderer)),
-                       d_rect, {0, 0, 0, 255}, {255, 255, 255, 255}),
+MatchSelector::MatchSelector(SDL_Renderer* renderer,
+                             std::shared_ptr<engine::ResourcePool> resource_pool, int x, int y,
+                             std::atomic<bool>& match_select_running,
+                             std::atomic<bool>& caracter_select_running,
+                             std::atomic<bool>& is_joinning, const std::string& label_info,
+                             uint16_t id_match, uint16_t& selected_id):
+        engine::Button(std::make_unique<engine::Label>(
+                               engine::Label(resource_pool->get_font(FONT), {x, y + 5, 280, 30},
+                                             {0, 0, 0, 255}, {0, 0, 0, 255}, label_info, renderer)),
+                       {x, y, 330, 40}, get_random_color(), get_random_color()),
         match_select_running(match_select_running),
         caracter_select_running(caracter_select_running),
+        is_joinning(is_joinning),
         selected_id(selected_id),
         id_match(id_match) {}
 
-
-void MatchSelectorButton::on_click() {
+void MatchSelector::on_click() {
 #ifdef LOG
     std::cout << "Clicked Join match." << std::endl;
 #endif
+    std::cout << "match button id: " << id_match << std::endl;
     selected_id = id_match;
+    std::cout << "selected id: " << selected_id << std::endl;
+    is_joinning.store(true);
     caracter_select_running.store(true);
     match_select_running.store(false);
 }
 
-MatchSelectorButton::~MatchSelectorButton() = default;
+SDL_Color MatchSelector::get_random_color() {
+    const Uint8 minBrightValue = 128;
+    Uint8 r = minBrightValue + rand() % (256 - minBrightValue);
+    Uint8 g = minBrightValue + rand() % (256 - minBrightValue);
+    Uint8 b = minBrightValue + rand() % (256 - minBrightValue);
+    return SDL_Color{r, g, b, 255};
+}
+
+MatchSelector::~MatchSelector() = default;

@@ -12,15 +12,14 @@
 
 class ReceiveMatchesButton: public engine::Button {
 private:
-    std::atomic<bool>& game_running;
-    std::atomic<bool>& match_select_running;
+    std::atomic<bool>& match_requested;
     ClientMessageHandler& message_handler;
 
 public:
     ReceiveMatchesButton(SDL_Renderer* renderer,
                          std::shared_ptr<engine::ResourcePool> resource_pool,
-                         ClientMessageHandler& message_handler, std::atomic<bool>& game_running,
-                         std::atomic<bool>& match_select_running, SDL_Rect& d_rect);
+                         ClientMessageHandler& message_handler, SDL_Rect& d_rect,
+                         std::atomic<bool>& match_requested);
 
     void on_click() override;
 

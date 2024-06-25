@@ -77,6 +77,7 @@ void ClientMessageHandler::handle_connected_to_match(const ClientHasConnectedToM
 }
 
 void ClientMessageHandler::handle_recv_active_games(const MatchInfoDTO& dto) {
+    std::cout << "Received active games" << std::endl;
     match_select_q.push(std::make_shared<MatchInfoDTO>(dto));
 #ifdef LOG
     std::cout << "Received active games" << std::endl;

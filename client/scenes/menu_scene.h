@@ -40,6 +40,8 @@ private:
     std::atomic<bool> map_select_running;
     std::atomic<bool> character_select_running;
     std::atomic<bool> match_select_running;
+    std::atomic<bool> is_joinning;
+    uint16_t joined_id_match;
 
     ClientMessageHandler& message_handler;
 

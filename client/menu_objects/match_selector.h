@@ -10,22 +10,25 @@
 #include "../../game_engine/gui/widgets/label.h"
 #include "../protocol/client_message_handler.h"
 
-class MatchSelectorButton: public engine::Button {
+class MatchSelector: public engine::Button {
 private:
     std::atomic<bool>& match_select_running;
     std::atomic<bool>& caracter_select_running;
+    std::atomic<bool>& is_joinning;
     uint16_t& selected_id;
-    uint16_t& id_match;
+    uint16_t id_match;
 
 public:
-    MatchSelectorButton(SDL_Renderer* renderer, std::shared_ptr<engine::ResourcePool> resource_pool,
-                        SDL_Rect& d_rect, std::atomic<bool>& match_select_running,
-                        std::atomic<bool>& caracter_select_running, const std::string& label_info,
-                        uint16_t& selected_id, uint16_t& id_match);
+    MatchSelector(SDL_Renderer* renderer, std::shared_ptr<engine::ResourcePool> resource_pool,
+                  int x, int y, std::atomic<bool>& match_select_running,
+                  std::atomic<bool>& caracter_select_running, std::atomic<bool>& is_joinning,
+                  const std::string& label_info, uint16_t id_match, uint16_t& selected_id);
 
     void on_click() override;
 
-    ~MatchSelectorButton() override;
+    SDL_Color get_random_color();
+
+    ~MatchSelector() override;
 };
 
 

@@ -5,6 +5,8 @@ CharacterSelectScene::CharacterSelectScene(engine::Window& window, EventLoop* ev
                                            std::shared_ptr<engine::SoundManager> sound_manager,
                                            std::atomic<bool>& game_running,
                                            std::atomic<bool>& character_select_running,
+                                           std::atomic<bool>& is_joinning,
+                                           uint16_t& match_selected_id,
                                            ClientMessageHandler& message_handler):
         window(window),
         renderer(window.get_renderer()),
@@ -18,6 +20,8 @@ CharacterSelectScene::CharacterSelectScene(engine::Window& window, EventLoop* ev
         title_background(SDL_Color{0, 122, 16, 255}, SDL_Rect{0, 90, 800, 85}),
         game_running(game_running),
         character_select_running(character_select_running),
+        match_selected_id(match_selected_id),
+        is_joinning(is_joinning),
         message_handler(message_handler),
         selected_character(JAZZ_CHARACTER) {
     auto texture = resource_pool->get_texture(CHARACTER_SELECT_FILE);
@@ -84,8 +88,14 @@ void CharacterSelectScene::start(uint16_t selected_map_id) {
         frame_start += rate;
         it++;
     }
-    if (game_running) {
+
+    std::cout << "is joinning: " << (int)is_joinning << std::endl;
+    std::cout << "with id: " << match_selected_id << std::endl;
+    if (game_running && !is_joinning) {
         message_handler.create_match(selected_character, selected_map_id, MAX_PLAYERS);
+    } else {
+        message_handler.join_match(match_selected_id, selected_character);
+        is_joinning = false;
     }
 }
 

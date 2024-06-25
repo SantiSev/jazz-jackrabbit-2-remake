@@ -144,7 +144,6 @@ void MatchesManager::add_new_client_to_manager(Socket client_socket) {
 }
 
 MatchInfoDTO MatchesManager::return_matches_lists() {
-    std::unique_lock<std::mutex> lock(manager_mutex);
     MatchInfoDTO matches_lists{};
     matches_lists.num_games = matches.size();
     size_t i = 0;
