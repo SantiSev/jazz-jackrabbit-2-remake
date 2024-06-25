@@ -5,14 +5,19 @@ map_list:
       id: 2
     - name: "Old Reliable"
       id: 3
+    - name: "Cathedral"
+      id: 4
 
 maps:
-    1:
-        texture: "assets/editor/editor_assets"
-        yaml: "assets/maps/hidden_castle_map"
-    2:
-        texture: "assets/editor/editor_assets"
-        yaml: "assets/maps/electric_map"
-    3:
-        texture: "assets/editor/editor_assets"
-        yaml: "assets/maps/old_reliable_map"
+  1:
+    texture: "assets/editor/editor_assets"
+    yaml: "assets/maps/hidden_castle_map"
+  2:
+    texture: "assets/editor/editor_assets"
+    yaml: "assets/maps/electric_map"
+  3:
+    texture: "assets/editor/editor_assets"
+    yaml: "assets/maps/old_reliable_map"
+  4:
+    texture: "assets/editor/editor_assets"
+    yaml: "assets/maps/cathedral"
