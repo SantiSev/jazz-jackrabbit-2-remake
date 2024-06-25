@@ -4,12 +4,12 @@
 
 El trabajo práctico se divide en cuatro partes principales:
 
-* Physical engine
+* Game engine
 * Client
 * Server
 * Protocol
 
-## Physical engine
+## Game engine
 
 ## Client
 
