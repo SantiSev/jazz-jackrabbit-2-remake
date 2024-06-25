@@ -27,10 +27,10 @@ Aqui se prensenta la distribucion de cada parte, para mas informacion acerca de 
 
 | Integrante | Parte principal |
 |------------|-----------------|
-| Maxo       | Client          |
+| Maxo       | Graphics engine & Client          |
 | Agus       | Protocol        |
-| Santi      | Physical engine |
-| Niko       | Server          |
+| Santi      | Physics engine & Game logic |
+| Niko       | Server, Commands & States logic          |
 
 ## Organizacion
 
