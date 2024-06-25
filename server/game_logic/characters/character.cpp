@@ -103,7 +103,7 @@ void CharacterBody::jump() {
 
 void CharacterBody::knockback(int force) {
     velocity.y = -abs(force);
-    velocity.x = force * 5;
+    velocity.x = force;
     on_floor = false;
 }
 

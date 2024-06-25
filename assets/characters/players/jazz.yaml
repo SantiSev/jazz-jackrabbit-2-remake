@@ -134,14 +134,14 @@ special_left:
     off_y: -2
 damaged:
     flipped: false
-    frames: 3
-    fps: 8
-    x: 8
-    y: 516
-    w: 57
-    h: 46
+    frames: 9
+    fps: 4
+    x: 40
+    y: 707
+    w: 65
+    h: 63
     off_x: -12
-    off_y: -2
+    off_y: -10
 dead:
     flipped: false
     frames: 3

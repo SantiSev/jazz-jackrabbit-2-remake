@@ -270,7 +270,7 @@ void Player::handle_colision(CollisionObject* other) {
 void Player::knockback(int force) {
 
     velocity.y = -abs(force);
-    velocity.x = force * 25;
+    velocity.x = force;
     direction = force > 0 ? RIGHT_DIR : LEFT_DIR;
     on_floor = false;
     is_knocked_back = true;
