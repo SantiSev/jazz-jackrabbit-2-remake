@@ -31,6 +31,7 @@ public:
     DefaultGun(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager,
                const std::shared_ptr<Configuration>& config);
     void shoot() override;
+    void reset_ammo() override;
 };
 
 #endif  // GUNS_H

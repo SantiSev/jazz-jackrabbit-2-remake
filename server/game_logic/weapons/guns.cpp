@@ -67,6 +67,8 @@ DefaultGun::DefaultGun(uint8_t weapon_id, Player& player_owner, CollisionManager
                config->bullet_base_dmg * 2, config->bullet_base_shoot_rate,
                config->bullet_base_speed, config) {}
 
+void DefaultGun::reset_ammo() { ammo = 99; }
+
 void DefaultGun::shoot() {
 
     if (!can_shoot) {

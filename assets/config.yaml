@@ -31,7 +31,7 @@ enemy:
     damage: 25
     speed: 5
     falling_speed: 10
-    respawn_time: 200 # unit is in game loops
+    respawn_time: 500 # unit is in game loops
     movement_range: 60
 
 map_editor: # Values should be multiples of 32
