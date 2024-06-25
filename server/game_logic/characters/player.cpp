@@ -337,7 +337,7 @@ void Player::print_info() {
 //------- Match Methods --------
 
 void Player::execute_command(command_t command) {
-    if (is_dead()) {
+    if (is_dead() || health == DYING) {
         return;
     }
 

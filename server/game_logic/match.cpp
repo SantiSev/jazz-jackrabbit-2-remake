@@ -57,13 +57,13 @@ void Match::run() {
             respawn_items();
 
 #ifdef LOG_VERBOSE
-            /* for (auto& enemy: enemies) {
+            for (auto& enemy: enemies) {
                 enemy->print_info();
             }
 
             for (auto& player: players) {
                 player.second->print_info();
-            } */
+            }
 #endif
 
             countdown_match(runTime, frameStart);
@@ -132,11 +132,15 @@ void Match::respawn_players() {
             bool can_be_placed = false;
             Vector2D new_position = get_random_spawn_point(player_spawn_points);
             while (!can_be_placed) {
+                std::cout << "Trying to respawn player at " << new_position.x << " "
+                          << new_position.y << std::endl;
                 can_be_placed = collision_manager->can_be_placed(player, new_position);
                 if (!can_be_placed) {
                     new_position = get_random_spawn_point(player_spawn_points);
                 }
             }
+            std::cout << "Player respawned at " << new_position.x << " " << new_position.y
+                      << std::endl;
             player->revive(get_random_spawn_point(player_spawn_points));
             collision_manager->track_dynamic_body(player);
         }

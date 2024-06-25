@@ -24,13 +24,13 @@ void IngameHud::create_objects(const PlayerDTO& player_info, uint16_t seconds_le
                                             std::to_string(seconds_left), renderer);
 
     SDL_Rect username_rect = {75, 30, 60, 15};
-    username = std::make_unique<engine::Label>(font, username_rect, SDL_Color{0, 0, 0, 255},
-                                               SDL_Color{0, 0, 0, 255},
+    username = std::make_unique<engine::Label>(font, username_rect, SDL_Color{0, 255, 0, 255},
+                                               SDL_Color{0, 255, 0, 255},
                                                std::string(player_info.name), renderer);
 
     SDL_Rect score_rect = {75, 50, 50, 15};
     score = std::make_unique<engine::Label>(
-            font, score_rect, SDL_Color{0, 0, 0, 255}, SDL_Color{0, 0, 0, 255},
+            font, score_rect, SDL_Color{0, 255, 0, 255}, SDL_Color{0, 255, 0, 255},
             "Score: " + std::to_string(player_info.points), renderer);
 
     character_icon = std::make_unique<CharacterIcon>(
