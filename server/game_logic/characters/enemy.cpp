@@ -114,7 +114,7 @@ void Enemy::print_info() {
 
 void Enemy::attack(CharacterBody* player) {
     if (attack_cooldown <= 0) {
-        player->knockback(20);
+        player->knockback(direction * 20);
         player->take_damage(this->attack_damage);
         attack_cooldown = ATTACK_COOLDOWN;
     }

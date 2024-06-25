@@ -16,6 +16,8 @@
 #include "character.h"
 
 #define GRAVITY 1
+#define DYING 1
+#define DYING_TIME 160
 
 class Weapon;
 
@@ -36,9 +38,10 @@ private:
     int shooting_height;
     std::shared_ptr<Configuration> config;
 
+    int dying_duration = DYING_TIME;
+
     // Cheats
     bool invincibility_cheat_active = false;
-
 
     // Configs
     bool is_sprint_allowed = true;

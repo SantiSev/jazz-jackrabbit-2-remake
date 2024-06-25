@@ -51,7 +51,7 @@ sprinting_right:
     w: 67
     h: 38
     off_x: -17
-    off_y: 6
+    off_y: 3
 sprinting_left:
     flipped: true
     frames: 4
@@ -61,7 +61,7 @@ sprinting_left:
     w: 67
     h: 38
     off_x: -17
-    off_y: 6
+    off_y: 3
 jumping_right:
     flipped: false
     frames: 9
@@ -146,10 +146,20 @@ dead:
     flipped: false
     frames: 3
     fps: 8
-    x: 8
-    y: 516
-    w: 57
-    h: 46
+    x: 1260
+    y: 740
+    w: 72
+    h: 54
+    off_x: -12
+    off_y: -2
+dying:
+    flipped: false
+    frames: 20
+    fps: 8
+    x: 36
+    y: 811
+    w: 72
+    h: 54
     off_x: -12
     off_y: -2
 intoxicated_idle:

@@ -57,11 +57,13 @@ bool CollisionManager::can_be_placed(std::shared_ptr<CollisionObject> obj,
 }
 
 void CollisionManager::add_object(std::shared_ptr<StaticBody> obj) {
+
     static_bodies.emplace_back(obj);
     place_object_in_grid(obj);
 }
 
 void CollisionManager::track_dynamic_body(std::shared_ptr<DynamicBody> obj) {
+
     dynamic_bodies.emplace_back(obj, obj->position);
     place_object_in_grid(obj);
 }

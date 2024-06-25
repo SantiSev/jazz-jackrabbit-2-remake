@@ -64,6 +64,8 @@ void Bullet::handle_colision(CollisionObject* other) {
 
 
             character->take_damage(bullet_damage);
+            int knockback_dir = direction == GOING_RIGHT ? 1 : -1;
+            character->knockback(knockback_dir * 10);
             //            player_owner.add_points(BULLET_POINTS);   //TODO dar punto por hit??
             if (character->is_dead()) {
                 if (character->get_id() < 100) {
