@@ -14,10 +14,10 @@ CharacterSelectScene::CharacterSelectScene(engine::Window& window, EventLoop* ev
         resource_pool(resource_pool),
         sound_manager(sound_manager),
         background(nullptr),
-        title(resource_pool->get_font(FONT), SDL_Rect{100, 100, 600, 75},
+        title(resource_pool->get_font(FONT), SDL_Rect{100, 100, VIEWPORT_HEIGHT, 75},
               SDL_Color{255, 255, 255, 255}, SDL_Color{255, 255, 255, 255}, "Select Your Character",
               renderer),
-        title_background(SDL_Color{0, 122, 16, 255}, SDL_Rect{0, 90, 800, 85}),
+        title_background(SDL_Color{0, 122, 16, 255}, SDL_Rect{0, 90, VIEWPORT_WIDTH, 85}),
         game_running(game_running),
         character_select_running(character_select_running),
         match_selected_id(match_selected_id),
@@ -57,8 +57,6 @@ void CharacterSelectScene::start(uint16_t selected_map_id) {
         event_loop->mouse.add_on_click_signal_obj(&selector);
     }
 
-    const Uint32 rate = 1000 / 60;
-
     Uint32 frame_start = SDL_GetTicks();
     Uint32 frame_end;
     Uint32 behind;
@@ -78,18 +76,18 @@ void CharacterSelectScene::start(uint16_t selected_map_id) {
         window.render();
 
         frame_end = SDL_GetTicks();
-        int rest_time = rate - (frame_end - frame_start);
+        int rest_time = RATE - (frame_end - frame_start);
 
         if (rest_time < 0) {
             behind = -rest_time;
-            rest_time = rate - (behind % rate);
-            lost = behind / rate;
+            rest_time = RATE - (behind % RATE);
+            lost = behind / RATE;
             frame_start += lost;
-            it += std::floor(lost / rate);
+            it += std::floor(lost / RATE);
         }
 
         SDL_Delay(rest_time);
-        frame_start += rate;
+        frame_start += RATE;
         it++;
     }
 

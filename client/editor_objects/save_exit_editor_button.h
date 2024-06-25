@@ -24,6 +24,7 @@
 
 class SaveExitEditorButton: public engine::Button {
 private:
+    std::shared_ptr<engine::ResourcePool> resource_pool;
     std::atomic<bool>& menu_running;
     std::atomic<bool>& editor_running;
     TileManager& tile_manager;

@@ -17,6 +17,8 @@
 #include "editor_tile.h"
 #include "tile_selector.h"
 
+#define TILE_SIZE 32
+
 class TileManager {
 private:
     EventLoop* event_loop;

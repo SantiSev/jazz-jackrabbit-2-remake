@@ -9,7 +9,7 @@ MainScreenBackground::MainScreenBackground(const engine::ResourcePool& resource_
     background_s_rect.y = background["y"].as<int>();
     background_s_rect.w = background["w"].as<int>();
     background_s_rect.h = background["h"].as<int>();
-    background_d_rect = {0, 0, 800, 600};
+    background_d_rect = {0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT};
 
     sprite = std::make_unique<engine::Sprite>(resource_pool.get_texture(BACKGROUNDS_FILE),
                                               background_s_rect, background_d_rect);

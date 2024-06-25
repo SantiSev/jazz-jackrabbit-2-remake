@@ -25,8 +25,10 @@ void Map::load_map(const uint16_t& map_id) {
     auto maps_yaml = *resource_pool->get_yaml(MAPS_FILE);
     auto texture_path = maps_yaml["maps"][map_id]["texture"].as<std::string>();
     auto yaml_path = maps_yaml["maps"][map_id]["yaml"].as<std::string>();
-    auto texture = resource_pool->load_texture(texture_path);
-    auto yaml = *resource_pool->load_yaml(yaml_path);
+    resource_pool->load_texture(texture_path);
+    auto texture = resource_pool->get_texture(texture_path);
+    resource_pool->load_yaml(yaml_path);
+    auto yaml = *resource_pool->get_yaml(yaml_path);
 
     area.w = yaml["map_width"].as<int>();
     area.h = yaml["map_height"].as<int>();

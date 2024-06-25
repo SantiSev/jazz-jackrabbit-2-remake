@@ -9,6 +9,7 @@ SaveExitEditorButton::SaveExitEditorButton(SDL_Renderer* renderer,
                                resource_pool->get_font(FONT), d_rect, {255, 255, 255, 255},
                                {0, 0, 0, 255}, "Save and Exit", renderer)),
                        d_rect, {0, 0, 0, 255}, {255, 255, 255, 255}),
+        resource_pool(resource_pool),
         menu_running(menu_running),
         editor_running(editor_running),
         tile_manager(tile_manager) {}
@@ -102,7 +103,7 @@ void SaveExitEditorButton::save_map() {
     out << YAML::EndMap;
 
     // Write YAML to file
-    std::ofstream fout("tiles.yaml");
+    std::ofstream fout("new_map.yaml");
     fout << out.c_str();
     fout.close();
 
@@ -112,7 +113,7 @@ void SaveExitEditorButton::save_map() {
 void SaveExitEditorButton::add_spawns(YAML::Emitter& out, TileType type,
                                       std::list<SDL_Rect> d_rects) {
     std::string seq_name;
-    int min_spawnpoints = 1;
+    int min_spawnpoints;
     switch (type) {
         case PLAYER_SPAWN:
             seq_name = "player_spawnpoints";
@@ -120,21 +121,28 @@ void SaveExitEditorButton::add_spawns(YAML::Emitter& out, TileType type,
             break;
         case ENEMY_SPAWN:
             seq_name = "enemy_spawnpoints";
+            min_spawnpoints = MIN_ENEMIES;
             break;
         case ITEM_SPAWN:
             seq_name = "item_spawnpoints";
+            min_spawnpoints = MIN_ITEMS;
             break;
         default:
             break;
     }
 
     out << YAML::Key << seq_name << YAML::Value << YAML::BeginSeq;
+
+    // In case there are not enough spawnpoints, add some random ones
     if ((int)d_rects.size() <= min_spawnpoints) {
 
         for (int i = (int)d_rects.size(); i < min_spawnpoints; i++) {
             out << YAML::BeginMap;
-            out << YAML::Key << "x" << YAML::Value << std::rand() % (1200) + 100;
-            out << YAML::Key << "y" << YAML::Value << std::rand() % (640 / 2) + 100;
+            out << YAML::Key << "x" << YAML::Value
+                << std::rand() % (resource_pool->get_config()->map_ed_max_width - TILE_SIZE) +
+                            TILE_SIZE;
+            out << YAML::Key << "y" << YAML::Value
+                << std::rand() % (resource_pool->get_config()->map_ed_max_height / 2) + TILE_SIZE;
             out << YAML::EndMap;
         }
     }
@@ -142,7 +150,7 @@ void SaveExitEditorButton::add_spawns(YAML::Emitter& out, TileType type,
     for (const auto& d_rect: d_rects) {
         out << YAML::BeginMap;
         out << YAML::Key << "x" << YAML::Value << d_rect.x;
-        out << YAML::Key << "y" << YAML::Value << d_rect.y - 64;
+        out << YAML::Key << "y" << YAML::Value << d_rect.y;
         out << YAML::EndMap;
     }
     out << YAML::EndSeq;
@@ -150,29 +158,30 @@ void SaveExitEditorButton::add_spawns(YAML::Emitter& out, TileType type,
 
 void SaveExitEditorButton::add_metadata(YAML::Emitter& out) {
     // Emit YAML for the map
-    SDL_Rect s_rect = {0, 1154, 255, 255};
-    SDL_Rect d_rect = {0, 0, 800, 600};
+    SDL_Rect background_s_rect = {0, 1154, 255, 255};  // Default values for background
+    SDL_Rect background_d_rect = {0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT};
 
-    out << YAML::Key << "map_width" << YAML::Value << 1280;
-    out << YAML::Key << "map_height" << YAML::Value << 640;
+    out << YAML::Key << "map_width" << YAML::Value << resource_pool->get_config()->map_ed_max_width;
+    out << YAML::Key << "map_height" << YAML::Value
+        << resource_pool->get_config()->map_ed_max_height;
     out << YAML::Key << "background";
     out << YAML::Value;
     out << YAML::BeginMap;
     out << YAML::Key << "s_rect";
     out << YAML::Value;
     out << YAML::BeginMap;
-    out << YAML::Key << "x" << YAML::Value << s_rect.x;
-    out << YAML::Key << "y" << YAML::Value << s_rect.y;
-    out << YAML::Key << "w" << YAML::Value << s_rect.w;
-    out << YAML::Key << "h" << YAML::Value << s_rect.h;
+    out << YAML::Key << "x" << YAML::Value << background_s_rect.x;
+    out << YAML::Key << "y" << YAML::Value << background_s_rect.y;
+    out << YAML::Key << "w" << YAML::Value << background_s_rect.w;
+    out << YAML::Key << "h" << YAML::Value << background_s_rect.h;
     out << YAML::EndMap;  // End s_rect map
     out << YAML::Key << "d_rect";
     out << YAML::Value;
     out << YAML::BeginMap;
-    out << YAML::Key << "x" << YAML::Value << d_rect.x;
-    out << YAML::Key << "y" << YAML::Value << d_rect.y;
-    out << YAML::Key << "w" << YAML::Value << d_rect.w;
-    out << YAML::Key << "h" << YAML::Value << d_rect.h;
+    out << YAML::Key << "x" << YAML::Value << background_d_rect.x;
+    out << YAML::Key << "y" << YAML::Value << background_d_rect.y;
+    out << YAML::Key << "w" << YAML::Value << background_d_rect.w;
+    out << YAML::Key << "h" << YAML::Value << background_d_rect.h;
     out << YAML::EndMap;  // End d_rect map
     out << YAML::EndMap;  // End background map
 }

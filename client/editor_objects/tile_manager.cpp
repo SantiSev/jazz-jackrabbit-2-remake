@@ -4,13 +4,13 @@ TileManager::TileManager(std::shared_ptr<engine::ResourcePool> resource_pool, Ev
                          std::unordered_map<uint16_t, std::shared_ptr<EditorTile>>& tiles_map):
         event_loop(event_loop),
         resource_pool(resource_pool),
-        selected_tile({0, 0, 0, 0}),
+        selected_tile({0, 0, TILE_SIZE, TILE_SIZE}),  // null tile by default
         selected_tile_type(TileType::NULL_TILE),
         tiles(tiles_map) {
-    int map_width = 1280;
-    int map_height = 640;
-    int tile_width = 32;
-    int tile_height = 32;
+    int map_width = resource_pool->get_config()->map_ed_max_width;
+    int map_height = resource_pool->get_config()->map_ed_max_height;
+    int tile_width = TILE_SIZE;
+    int tile_height = TILE_SIZE;
     int num_tiles_per_row = map_width / tile_width;
     int num_tiles_per_col = map_height / tile_height;
 

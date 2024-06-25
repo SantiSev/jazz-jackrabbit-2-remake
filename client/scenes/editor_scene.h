@@ -20,9 +20,6 @@
 #include "../event_loop.h"
 #include "../hud/editor_hud.h"
 
-#define MAP_WIDTH 1280
-#define MAP_HEIGHT 640
-
 class EditorScene {
 private:
     engine::Window& window;

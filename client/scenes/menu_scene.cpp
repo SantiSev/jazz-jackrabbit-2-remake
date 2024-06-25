@@ -49,8 +49,6 @@ void MenuScene::start() {
         event_loop->mouse.add_on_click_signal_obj(button);
     }
 
-    const Uint32 rate = 1000 / 60;
-
     Uint32 frame_start = SDL_GetTicks();
     Uint32 frame_end;
     Uint32 behind;
@@ -88,18 +86,18 @@ void MenuScene::start() {
         window.render();
 
         frame_end = SDL_GetTicks();
-        int rest_time = rate - (frame_end - frame_start);
+        int rest_time = RATE - (frame_end - frame_start);
 
         if (rest_time < 0) {
             behind = -rest_time;
-            rest_time = rate - (behind % rate);
-            lost = behind / rate;
+            rest_time = RATE - (behind % RATE);
+            lost = behind / RATE;
             frame_start += lost;
-            it += std::floor(lost / rate);
+            it += std::floor(lost / RATE);
         }
 
         SDL_Delay(rest_time);
-        frame_start += rate;
+        frame_start += RATE;
         it++;
     }
     // Disconnect from mouse signals

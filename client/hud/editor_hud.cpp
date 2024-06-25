@@ -7,7 +7,7 @@
 EditorHud::EditorHud(SDL_Renderer* renderer, std::shared_ptr<engine::ResourcePool> resource_pool,
                      EventLoop* event_loop, TileManager& tile_manager,
                      std::atomic<bool>& menu_running, std::atomic<bool>& editor_running):
-        body({0, 544, 800, 56}),
+        body({0, 544, VIEWPORT_WIDTH, 56}),
         renderer(renderer),
         event_loop(event_loop),
         resource_pool(resource_pool),
@@ -38,7 +38,7 @@ void EditorHud::create_buttons(std::atomic<bool>& menu_running, std::atomic<bool
     int w = BUTTON_WIDTH;
     int h = BUTTON_HEIGHT;
 
-    SDL_Rect create_match_button_d_rect = {800 - (w + 10), y_start, w, h};
+    SDL_Rect create_match_button_d_rect = {VIEWPORT_WIDTH - (w + 10), y_start, w, h};
     save_and_exit_button = std::make_unique<SaveExitEditorButton>(
             renderer, resource_pool, create_match_button_d_rect, menu_running, editor_running,
             tile_manager);
