@@ -14,7 +14,7 @@ El trabajo práctico se divide en cuatro partes principales:
 ### Physics Engine
 Para el diseño de la _"physics engine"_, decidi basarme en la implementacion de fisicas del motor de juegos **Godot** donde llegue al siguiente planteo
 
-#### Collision Objects
+##### Collision Objects
 Todos los objects del juego son `CollisionObject`'s que consiste en objects con 
 ```cpp
 int hitbox_width;   // el ancho del hitbox del object0 
@@ -41,7 +41,7 @@ Para detectar dichas collisiones se utiliza los metodos protegidos `is_touching(
 `CollisionFace `es un enum que indica de que lado fue tocado mi objecto con respecto al otro. Esto es util para diferenciar collisiones entre paredes, suelos, etc
 Hay objectos (como en balas e items) donde no es importante saber donde fue tocado sino que solo importa que haya ocurrido una colision.
 
-### Abstraccion de Collision Object
+#### Abstraccion de Collision Object
 
  ```cpp
 virtual void handle_colision(CollisionObject* other) = 0;
@@ -50,10 +50,10 @@ Este metodo es virtual puro porque CollisionObject no se debe poder instanciar e
 - `Dyanmic_body`
 - `Static_body`
 
-### Collision Objects - Static Body
+#### Collision Objects - Static Body
 Static Body consiste en objetos que no se registra su movimiento y tampoco son movidos ó desaparecen.
 
-### Collision Objects - Dyanmic Body
+#### Collision Objects - Dyanmic Body
 Dynamic Body consiste en objects que tienen movimiento (tanto horizontal como vertical), por lo tanto tienen el atributo:
 ```cpp 
 Vector2D velocity;
@@ -74,7 +74,7 @@ El CollisionManager tiene como funcion recibir CollisionObjects, colocarlo en un
 
 Principalmente detecta las colisiones de todos los objectos dinamicos. Si fuese a detectar cada colision de cada objeto, esto haria que el engine funcione muy pobre, por lo tanto decidí solo _trackear_ las colisiones de dynamicBodies y los StaticBodies solo estarán ahi para ser detectados.
 
-### Collision Manager - Grid & Deteccion de Collisiones
+#### Collision Manager - Grid & Deteccion de Collisiones
 La grilla del collisionManager es de la siguiente manera:
 ```cpp
 std::vector<std::vector<std::shared_ptr<CollisionObject>>> grid;
@@ -85,7 +85,7 @@ un pixel del juego. Al colocar un objecto en la grilla, en realidad estamos colo
 
 Luego el CollisionManager realiza detecciones de los objetos Dyanmicos iterando alrededor de sus celdas y viendo si da nullpointer (no se detecto un objecto) o un shared pointer de otro CollisionObject (tanto statico o dyanmico). Al detectar una collision realiza un **double dispatch** donde se llama los metodos de handeleo de collisiones de ambos objectos detectas.
 
-### Collision Manager - Detectar muchisimos bodies
+#### Collision Manager - Detectar muchisimos bodies
 
 Para nuestro juego, vamos a tener personajes (dyanmic bodies) que disparan desde sus armas distintas bullets (tambien dyanmic bodies), pero ... ¿El collision Manager no se va a realentizar al traquear tantos objetos? NO
 
@@ -95,7 +95,7 @@ con el metodo:
 ```
 el collisionManager se ocupara de deshacerse de todos los bodies marcados como inactivos y serán quitadas del collisionManager.
 
-### Collision Manager - Usos
+#### Collision Manager - Usos
 
 Se utiliza como atributo en la clase `Match` que lo utiliza para:
 - Cargar las colisiones de plataformas del mapa de una partida
@@ -121,7 +121,7 @@ void track_dynamic_body(std::shared_ptr<DynamicBody> obj);
 ### Game Logic
 Consiste en toda la logica realcionado con el juego en si, personajes, items, cheats, logica de las partidas, etc ...
 
-### Game Logic - Componentes
+#### Game Logic - Componentes
 
 Para nuestra logica de juego, con el uso de lo creado en Physics_Engine logramos crear varios tipos de componentes de juego, a continuacion explicaremos brevemente cada uno y como funciona
 
