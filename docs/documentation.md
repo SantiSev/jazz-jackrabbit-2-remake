@@ -95,6 +95,24 @@ con el metodo:
 ```
 el collisionManager se ocupara de deshacerse de todos los bodies marcados como inactivos y serán quitadas del collisionManager.
 
+### Collision Manager - Usos
+
+Se utiliza como atributo en la clase `Match` que lo utiliza para:
+- Cargar las colisiones de plataformas del mapa de una partida
+- Traquear los movimientos de players, enemigos, items & balas en la partida 
+
+Al cargar un mapa, se debe utilizar las funciones 
+```cpp
+void add_object(std::shared_ptr<StaticBody> obj);
+
+void prepare_map();
+```
+`add_object` permite agregar objectos estaticos al collisionManager y luego, la funcion `prepare_map` realiza una limpeza de las collisiones desactivando collisiones inecesarias entre objectos para evitar problemas de paredes invisibles y problemas raras debido a como se creo el custom map.
+
+Al insertar un player/enemy/item a la partida ó respawnearlo, se debe avisar al collisionManager con la funcion: 
+```cpp
+void track_dynamic_body(std::shared_ptr<DynamicBody> obj);
+```
 
 ## Client
 
@@ -103,6 +121,12 @@ el collisionManager se ocupara de deshacerse de todos los bodies marcados como i
 ### Game Logic
 
 
+
+### GameLoop
+
+El MatchesManager al recibir un mensaje del cliente de crear partida, lanza el hilo Match que es el game loop en sí, y añade al jugador a la partida. La Match puede continuar incluso si se van todos los jugadores, y pueden conectarse en cualquier momento cualquier jugador hasta que termine. La partida solo finaliza al llegar a cero el contador de partida, y tiene como límite una cantidad de jugadores que pueden unirse determinado por la configuracion del juego asignada en config.yaml.
+Está configurada la partida para correr el juego a 60 fps, y se manda un estado de la partida por loop al cliente para poder renderizarla.
+La partida además de los jugadores que pueden realizarse daño entre sí, contiene enemigos que patrullan de un lado a otro y realizan daño si haces contacto con ellos, aplicando también un knockback. Si los matas consigues puntos al igual que matar otro jugador (tambien puede configurarse estos valores en el confi.yaml).
 
 
 ## Protocol
