@@ -20,6 +20,33 @@ El trabajo práctico se divide en cuatro partes principales:
 El diseño del protocolo fue basado gracias a la clase y diapositiva de la clase de Protocolo de la materia Taller
 de Programacion (Veiga).
 
+### Diseño basico del envio y recepcion de mensajes
+
+![esquma](./img/Esquema%20del%20protocolo.jpeg)
+
+### Envio de mensajes
+
+La secuencia de pasos para enviar un mensajes, ya se de cliente a servidor o viceversa. Es la siguiente:
+
+1. Se pusheea el mensaje que se quiere enviar a la cola, el constructor de mensaje recibe la informacion que va a mandar
+2. El Sender popea el mensaje, y llama a la funcion `send_message` del protocolo y le pasa por parametro el mensaje que
+recibe
+3. La funcion `send_message` recibe el mensaje y este llama a una funcion `send_message` que le pasa el protocolo
+4. La funcion `send_message` del mensaje llama a la funcion que envia el mensaje y le pasa la informacion del mensaje
+5. Dentro de la funcion que envia el mensaje, se prepara el mensaje (Endianness) y lo envia
+
+### Recepcion de mensajes
+
+La secuencia de pasos para recibir un mensajes, ya se de cliente a servidor o viceversa. Es la siguiente:
+
+1. El reciver llama a la funcion `recv_message` del protocolo
+2. Dentro de esa funcion, se hace un `recv_two_bytes` (Funcion interna del protocolo). Esto corresponde al
+_header_ del mensaje
+3. Con ese _header_, se determina que mensaje llego. Una vez determinado el mensaje, se llama a una funcion
+del protocolo para recibir ese mensaje.
+4. Una vez recibido el mensaje, se devuelve
+5. Al devolver el mensaje, el reciver pushea el mensaje a la cola
+
 ### Mensajes
 
 Los mensajes del protocolo tiene dos partes:
