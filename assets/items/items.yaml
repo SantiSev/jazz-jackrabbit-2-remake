@@ -52,20 +52,10 @@ meat:
     off_y: 0
 coin:
     flipped: false
-    frames: 1
+    frames: 20
     fps: 8
     x: 35
     y: 306
-    w: 23
-    h: 23
-    off_x: 0
-    off_y: 0
-health_icon:
-    flipped: false
-    frames: 20
-    fps: 10
-    x: 69
-    y: 254
     w: 23
     h: 23
     off_x: 0

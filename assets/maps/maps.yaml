@@ -1,4 +1,6 @@
 map_list:
+  - name: "Hidden Castle"
+    id: 5
   - name: "Grass Map"
     id: 4
   - name: "Electric Map"
@@ -9,6 +11,9 @@ map_list:
     id: 1
 
 maps:
+    5:
+      texture: "assets/maps/custom_map"
+      yaml: "assets/maps/hidden_castle_map"
     4:
       texture: "assets/maps/grass_map"
       yaml: "assets/maps/grass_map"
