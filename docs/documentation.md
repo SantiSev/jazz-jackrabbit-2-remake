@@ -147,6 +147,8 @@ la clases Player & Enemy son clases padre para luego poder crear los distintos t
 
 Todos los Jugadores tienen 4 tipos de armas, donde cada uno tiene distitnos tipos de daño, velocidad, frecuencia de disparo y cantidad de ammunicion maxima (con excepcion de una arma que tiene ammo infinita)
 
+Al disparar distitnos player o enemigos, el player recibirá puntos y si logra matar a un enemigo o player recibe puntos bonus.
+
 **Collectables**
 
 Los collecatables son los items del juego, constan de estos tipos:
