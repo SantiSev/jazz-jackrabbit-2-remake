@@ -7,10 +7,7 @@ ServerReceiver::ServerReceiver(ServerProtocol& protocol, Queue<std::shared_ptr<M
 
 bool ServerReceiver::is_dead() { return _keep_running; }
 
-void ServerReceiver::stop() {
-    _keep_running = false;
-    //    queue->close();
-}
+void ServerReceiver::stop() { _keep_running = false; }
 
 void ServerReceiver::run() {
     try {
@@ -31,14 +28,5 @@ void ServerReceiver::run() {
 }
 
 ServerReceiver::~ServerReceiver() {}
-
-// std::shared_ptr<Queue<std::shared_ptr<Message>>>& ServerReceiver::get_receiver_queue() {
-//     return queue;
-// }
-//
-// void ServerReceiver::change_receiver_queue(
-//         const std::shared_ptr<Queue<std::shared_ptr<Message>>>& sharedPtr) {
-//     queue = sharedPtr;
-// }
 
 bool ServerReceiver::isAlive() { return _keep_running; }

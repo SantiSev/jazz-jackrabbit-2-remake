@@ -20,9 +20,7 @@ void MatchSelector::on_click() {
 #ifdef LOG
     std::cout << "Clicked Join match." << std::endl;
 #endif
-    std::cout << "match button id: " << id_match << std::endl;
     selected_id = id_match;
-    std::cout << "selected id: " << selected_id << std::endl;
     is_joinning.store(true);
     caracter_select_running.store(true);
     match_select_running.store(false);

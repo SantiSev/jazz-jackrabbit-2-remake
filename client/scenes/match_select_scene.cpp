@@ -142,7 +142,6 @@ void MatchSelectScene::create_match_buttons(const std::shared_ptr<MatchInfoDTO>&
                 map_str + " - Players: " + std::to_string(dto->active_games[i].players_ingame) +
                 "/" + std::to_string(dto->active_games[i].players_max);
         uint16_t id = dto->active_games[i].match_id;
-        std::cout << "id: " << id << std::endl;
         selectors.emplace_back(renderer, resource_pool, x_start, y_start, match_select_running,
                                character_select_running, is_joinning, label_info, id, selected_id);
         selectors.back().center_x(0, 800);
