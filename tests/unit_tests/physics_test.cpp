@@ -1,6 +1,3 @@
-//
-// Created by santi on 25/05/24.
-//
 // THIS IS OUTDATED, PLEASE REFER TO THE LATEST IMPLEMENTATION
 /*
 #define CATCH_CONFIG_MAIN

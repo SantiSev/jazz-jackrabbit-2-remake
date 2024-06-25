@@ -15,10 +15,18 @@ Enemy::Enemy(uint16_t id, const character_t& character, int x, int y, int w, int
                       Vector2D(config->enemy_speed, config->enemy_falling_speed),
                       config->enemy_health, STATE_MOVING_RIGHT, config->enemy_respawn_cool_down),
         attack_damage(config->enemy_damage),
-        x_speed(config->enemy_speed),
         movement_range(config->enemy_move_rng),
         config(config),
-        spawn_position(x, y) {}
+        spawn_position(x, y) {
+    set_random_speed(config->enemy_speed);
+}
+
+
+void Enemy::set_random_speed(int set_speed) {
+    x_speed = set_speed > BASE_SPEED ?
+                      std::rand() % (config->enemy_speed - BASE_SPEED + 1) + BASE_SPEED :
+                      BASE_SPEED;
+}
 
 //------------ Overrided Methods ------------
 
