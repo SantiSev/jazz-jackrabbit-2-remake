@@ -67,6 +67,7 @@ void Player::select_next_weapon() { selected_weapon = (selected_weapon + 1) % we
 void Player::start_intoxication() {
     is_intoxicated = true;
     is_invincible = false;
+
     intoxication_cooldown = config->player_intoxication_cool_down;
 }
 
@@ -125,7 +126,8 @@ void Player::move_horizontal(int new_direction) {
     if (is_sprinting && !is_intoxicated && on_floor) {
         velocity.x = direction * config->player_sprint_spd;
     } else {
-        velocity.x = direction * config->player_speed_x;
+        velocity.x = is_intoxicated ? direction * config->player_speed_x * INTOXICATION_SLOWDOWN :
+                                      direction * config->player_speed_x;
     }
 
     if (on_floor) {
@@ -218,7 +220,7 @@ void Player::update_body() {
         }
 
         if (velocity.x != 0) {
-            velocity.x = direction * DEFAULT_SPEED_X * AIR_FRICCTION;
+            velocity.x = direction * config->player_speed_x * AIR_FRICCTION;
         }
 
         if (!is_shooting()) {

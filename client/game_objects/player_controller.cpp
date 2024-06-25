@@ -41,9 +41,6 @@ void PlayerController::on_key_press(const SDL_Keycode& key) {
             message_handler.send_cheat_command(CHEAT_INFINITE_AMMO);
             break;
         case SDLK_6:
-            message_handler.send_cheat_command(CHEAT_REVIVE_ALL);
-            break;
-        case SDLK_7:
             message_handler.send_cheat_command(CHEAT_KILL_ALL);
             break;
         default:

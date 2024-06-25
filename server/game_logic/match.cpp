@@ -173,8 +173,6 @@ void Match::run_cheat_command(const CheatCommandDTO& dto) {
 
     if (dto.command == CHEAT_KILL_ALL) {
         kill_all_cheat();
-    } else if (dto.command == CHEAT_REVIVE_ALL) {
-        revive_all_cheat();
     } else if (dto.command == CHEAT_REVIVE) {
         std::shared_ptr<Player> player = get_player(dto.id_player);
         if (player && player->is_dead()) {
@@ -195,24 +193,6 @@ void Match::kill_all_cheat() {
     }
     for (auto& player: players) {
         player.second->take_damage(9999);
-    }
-}
-
-void Match::revive_all_cheat() {
-
-    for (auto& enemy: enemies) {
-        if (enemy->is_dead()) {
-            enemy->revive(enemy.get()->spawn_position);
-            collision_manager->track_dynamic_body(enemy);
-        }
-    }
-
-    for (auto& pair: players) {
-        auto& player = pair.second;
-        if (player->is_dead()) {
-            player->revive(player.get()->position);  // revive at the same position
-            collision_manager->track_dynamic_body(player);
-        }
     }
 }
 

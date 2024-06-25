@@ -18,6 +18,7 @@
 #define GRAVITY 1
 #define DYING 1
 #define DYING_TIME 160
+#define INTOXICATION_SLOWDOWN 0.5
 
 class Weapon;
 
