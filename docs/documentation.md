@@ -50,10 +50,10 @@ Este metodo es virtual puro porque CollisionObject no se debe poder instanciar e
 - `Dyanmic_body`
 - `Static_body`
 
-### Static Body
+### Collision Objects - Static Body
 Static Body consiste en objetos que no se registra su movimiento y tampoco son movidos ó desaparecen.
 
-### Dyanmic Body
+### Collision Objects - Dyanmic Body
 Dynamic Body consiste en objects que tienen movimiento (tanto horizontal como vertical), por lo tanto tienen el atributo:
 ```cpp 
 Vector2D velocity;
@@ -119,7 +119,67 @@ void track_dynamic_body(std::shared_ptr<DynamicBody> obj);
 ## Server
 
 ### Game Logic
+Consiste en toda la logica realcionado con el juego en si, personajes, items, cheats, logica de las partidas, etc ...
 
+### Game Logic - Componentes
+
+Para nuestra logica de juego, con el uso de lo creado en Physics_Engine logramos crear varios tipos de componentes de juego, a continuacion explicaremos brevemente cada uno y como funciona
+
+**Characters**
+Para el juego, decidimos crear 2 tipos de characteres, `Players` & `Enemies`
+
+Los Players son los jugadores de las partidas y los clientes pueden ejecutar distitnos tipos de acciones como mover izquierda/derecha, saltar ó disparar
+
+Luego, tenemos los Enemies, que consta de characteres que van a tratar de atacar players que detecten, su movimiento es limitado (solo pudiendo mover izquiera o derecha) y caminan por determinado rango de de espacio
+
+la clases Player & Enemy son clases padre para luego poder crear los distintos tipos de players y enemies.
+
+**Tipos de Players:**
+- Jazz
+- Spaz
+- Lori
+
+**Tipos de Enemies:**
+- Mad Hatter 
+- Lizard Goon 
+
+**Weapons**
+
+Todos los Jugadores tienen 4 tipos de armas, donde cada uno tiene distitnos tipos de daño, velocidad, frecuencia de disparo y cantidad de ammunicion maxima (con excepcion de una arma que tiene ammo infinita)
+
+**Collectables**
+
+Los collecatables son los items del juego, constan de estos tipos:
+
+**Ammo:**
+
+Items que recargan la ammunicion de las armas, de esta clase, hay 3 clases hijos que representan distitnos tipos de Ammo de Armas
+- AmmoGunOne
+- AmmoGunTwo
+- AmmoGunThree
+
+**Health_items:**
+
+Items que recuperan vida de los players, hasta el momento solo tenemos el item:
+-  Meat
+
+**Treasure:**
+
+Items que da puntos al jugador que lo collecciona
+item:
+- Coin
+
+**LA ZANAHORIA**
+
+La zanahoria es un item _raro_ que no cae bajo una categoria en particular que hace lo siguiente.
+Cuando un player lo colecciona, tiene 1/2 chance de ser intoxicado o tener invincibilidad por cierta cantidad de tiempo
+
+- Al ser intoxicado, el jugador se moverá mas lento, no podrá saltar ni tampoco va a poder disparar.
+- AL ser invincible al ser atacado por algun enemigo, player, etc no recibirá daño
+
+
+**Platform**
+El unico Platform hasta el momento, es el `Box_Platform` que consiste en bloques con Collision.
 
 
 ### GameLoop
