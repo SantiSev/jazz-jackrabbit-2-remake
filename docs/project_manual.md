@@ -28,7 +28,7 @@ Aqui se prensenta la distribucion de cada parte, para mas informacion acerca de 
 | Integrante | Parte principal |
 |------------|-----------------|
 | Maxo       | Graphics engine, Client & Map Editor          |
-| Agus       | Protocol        |
+| Agus       | Protocol & Sound        |
 | Santi      | Physics engine & Game logic |
 | Niko       | Server, Commands & States logic          |
 
