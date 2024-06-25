@@ -15,17 +15,48 @@ El trabajo práctico se divide en cuatro partes principales:
 
 ## Server
 
+El hilo principal main lanza la clase `Server`, luego Server lanza el hilo accepter, el aceptador de conexiones con los clientes por socket, y luego `Server` queda a la espera del input 'q' para cerrar todo gracefully.
+
+El accepter lanza el hilo `MatchesManager`, y queda a la espera constante de clientes para ser aceptados. Al aceptar el socket del cliente se lo pasa al `MatchesManager` y a partir de él crea un nuevo "cliente". 
+
+Se crea un `ServerThreadManager` por cada cliente aceptado, el cual tiene su ServerProtocol (utiliza también metodos de su clase padre `CommonProtocol`), y sus respectivos hilos de Sender y receiver para enviar y recibir mensajes.
+
+La lógica principal de `MatchesManager` es de intermediar entre las request del cliente, tanto en estado de "lobby" esperando para crear o unirse a una partida. Va a tener una lista de partidas y una lista de `ClientMonitors`, cada uno para cada partida, para hacer broadcast de los estados del juego o su finalizacion.
+
+La comunicación entre `MatchesManager` y sus `Match` es mayormente entre colas internas, manejadas por dos manejadores de mensajes: `ManagerMessageHandler` quien recibe todo del cliente y realiza las operaciones y respuestas necesarias al cliente, y las acciones y cheats del jugador las comunica internamente buscando la queue de su respectiva `Match` y pusheando el mensaje necesario; y el `MatchMessageHandler` se encarga de igual manera que a cada jugador realizar las acciones o operaciones indicadas por el mensaje del cliente.
+
+La forma de saber qué cliente corresponde a cada player y su partida es que se le asigna un id de cliente cuando se conecta y se lo envía a su cliente para que lo almacene y en cada mensaje especifique su id junto con el mensaje. Y dentro de la partida va a tener su id asociado al cliente.
+
+La desconexión del cliente resulta tanto en el "lobby", que primero le avisa a su partida en la que se encontraba y lo elimina de la partida al "player", y luego elimina la conexión con el protocolo del cliente del servidor y borra su referencia de `ServerThreadManager`.
+
+Ejemplo de creación de partida una vez enviado el mensaje desde cliente:
+
+![DataFlowImage](img/CreateGameServer.png)
+
+### GameLoop
+
+El `MatchesManager` al recibir un mensaje del cliente de crear partida, lanza el hilo Match que es el game loop en sí, y añade al jugador a la partida. La `Match` puede continuar incluso si se van todos los jugadores, y pueden conectarse en cualquier momento cualquier jugador hasta que termine. La partida solo finaliza al llegar a cero el contador de partida, y tiene como límite una cantidad de jugadores que pueden unirse determinado por la configuracion del juego asignada en config.yaml.
+
+Está configurada la partida para correr el juego a 60 fps, y se manda un estado de la partida por loop al cliente para poder renderizarla.
+
+La partida además de los jugadores que pueden realizarse daño entre sí, contiene enemigos que patrullan de un lado a otro y realizan daño si haces contacto con ellos, aplicando también un knockback. Si los matas consigues puntos al igual que matar otro jugador (tambien puede configurarse estos valores en el confi.yaml).
+
 ## Protocol
 
 El diseño del protocolo fue basado gracias a la clase y diapositiva de la clase de Protocolo de la materia Taller
 de Programacion (Veiga).
+
+Data Flow:
+
+![DataFlowImage](img/DataFlow.png)
+
 
 ### Mensajes
 
 Los mensajes del protocolo tiene dos partes:
 
 * Header: Permite distinguir los mensajes
-* DTOs: Contiene la informacion del mensaje
+* DTOs: Contiene la información del mensaje
 
 ### Headers
 
@@ -36,7 +67,7 @@ mensaje:
 2. In game events (0x01)
 3. Menu events (0x02)
 
-El segundo byte, determina que mensaje es en si. Todos lo mensaje que hay son:
+El segundo byte, determina que mensaje es en si. Todos los mensajes que hay son:
 
 * NULL_MESSAGE (0x0000)
 * ACPT_CONNECTION (0x0001)
@@ -58,22 +89,22 @@ El segundo byte, determina que mensaje es en si. Todos lo mensaje que hay son:
 
 #### DTOs: NULL_MESSAGE (0x0000)
 
-Este mensaje existe por si llega un header invalido, no hacer nada.
+Este mensaje existe por si llega un header inválido, no hacer nada.
 
 #### DTOs: ACPT_CONNECTION (0x0001)
 
-Este mensaje le envia el servidor al cliente, para decirle que lo acepta y le devuelve da un
+Este mensaje le envía el servidor al cliente, para decirle que lo acepta y le devuelve da un
 `id_client` de 2 bytes.
 
 #### DTOs: CLOSE_CONNECTION (0x0002)
 
-Este mensaje se envia de forma bidireccional, para que el cliente le avise al servidor o
+Este mensaje se envía de forma bidireccional, para que el cliente le avise al servidor o
 viceversa, que se van a cerrar.
 
 #### DTOs: SEND_GAME_STATE (0x0100)
 
-Este mensaje le envia el servidor al cliente, para darle la informacion al cliente de lo que
-tiene que renderizar. Los Game states estan compuestos la siguiente forma:
+Este mensaje le envía el servidor al cliente, para darle la información al cliente de lo que
+tiene que renderizar. Los Game states están compuestos la siguiente forma:
 
 ```cpp
 struct BulletDTO {
@@ -156,17 +187,16 @@ struct CheatCommandDTO {
 
 Los tipos de cheat commands:
 
-* CHEAT_MAX_AMMO (0x00)
-* CHEAT_MAX_HEALTH (0x01)
-* CHEAT_INVINCIBLE (0x02)
-* CHEAT_REVIVE (0x03)
-* CHEAT_INFINITE_AMMO (0x04)
-* CHEAT_REVIVE_ALL (0x05)
+* CHEAT_MAX_AMMO (0x01)
+* CHEAT_MAX_HEALTH (0x02)
+* CHEAT_INVINCIBLE (0x03)
+* CHEAT_REVIVE (0x04)
+* CHEAT_INFINITE_AMMO (0x05)
 * CHEAT_KILL_ALL (0x06)
 
 #### DTOs: RECV_LEAVE_MATCH (0x0103)
 
-Este mensaje envia el cliente al server para que este ultimo sepa quien abandono la partida.
+Este mensaje envia el cliente al server para que este último sepa quien abandono la partida.
 La informacion es:
 
 ```cpp
