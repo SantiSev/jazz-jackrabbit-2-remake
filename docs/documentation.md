@@ -187,17 +187,16 @@ struct CheatCommandDTO {
 
 Los tipos de cheat commands:
 
-* CHEAT_MAX_AMMO (0x00)
-* CHEAT_MAX_HEALTH (0x01)
-* CHEAT_INVINCIBLE (0x02)
-* CHEAT_REVIVE (0x03)
-* CHEAT_INFINITE_AMMO (0x04)
-* CHEAT_REVIVE_ALL (0x05)
+* CHEAT_MAX_AMMO (0x01)
+* CHEAT_MAX_HEALTH (0x02)
+* CHEAT_INVINCIBLE (0x03)
+* CHEAT_REVIVE (0x04)
+* CHEAT_INFINITE_AMMO (0x05)
 * CHEAT_KILL_ALL (0x06)
 
 #### DTOs: RECV_LEAVE_MATCH (0x0103)
 
-Este mensaje envia el cliente al server para que este ultimo sepa quien abandono la partida.
+Este mensaje envia el cliente al server para que este último sepa quien abandono la partida.
 La informacion es:
 
 ```cpp
