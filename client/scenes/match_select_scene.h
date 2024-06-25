@@ -1,6 +1,7 @@
 #ifndef TP_FINAL_MATCH_SELECT_SCENE_H
 #define TP_FINAL_MATCH_SELECT_SCENE_H
 
+#include <functional>
 #include <list>
 #include <memory>
 #include <string>

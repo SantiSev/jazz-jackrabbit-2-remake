@@ -1,7 +1,5 @@
 #include "match_select_scene.h"
 
-#include <functional>
-
 #define X_START 300
 #define Y_START 200
 
