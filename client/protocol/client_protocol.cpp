@@ -46,6 +46,7 @@ std::shared_ptr<RecvActiveGames> ClientProtocol::recv_active_games() {
     skt.recvall(&active_games, sizeof(active_games), &was_closed);
     for (int i = 0; i < active_games.num_games; i++) {
         active_games.active_games[i].map_id = ntohs(active_games.active_games[i].map_id);
+        active_games.active_games[i].match_id = ntohs(active_games.active_games[i].match_id);
     }
     return std::make_shared<RecvActiveGames>(active_games);
 }

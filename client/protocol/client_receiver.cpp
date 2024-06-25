@@ -22,9 +22,6 @@ void ClientReceiver::run() {
                 queue.push(message);
             }
             _keep_running = !client_protocol.is_closed();
-            if (!_keep_running) {
-                std::cout << "KEEP RUNNING CLOSE" << std::endl;
-            }
             if (_keep_running) {
                 queue.push(message);
             }

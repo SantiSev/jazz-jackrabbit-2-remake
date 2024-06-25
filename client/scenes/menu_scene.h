@@ -22,6 +22,7 @@
 
 #include "character_select_scene.h"
 #include "map_select_scene.h"
+#include "match_select_scene.h"
 
 
 class MenuScene {
@@ -38,6 +39,9 @@ private:
     std::atomic<bool>& editor_running;
     std::atomic<bool> map_select_running;
     std::atomic<bool> character_select_running;
+    std::atomic<bool> match_select_running;
+    std::atomic<bool> is_joinning;
+    uint16_t joined_id_match;
 
     ClientMessageHandler& message_handler;
 

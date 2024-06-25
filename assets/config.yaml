@@ -4,8 +4,8 @@
 # max players should be setted also in common_dto.h, in GameStateDTO struct
 
 match:
-  max_players: 12
-  max_matches_to_create: 16
+  max_players: 8
+  max_matches_to_create: 30000
   kill_points_enemy: 5
   kill_points_player: 15
   coin_points: 10

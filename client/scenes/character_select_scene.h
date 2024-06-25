@@ -35,6 +35,8 @@ private:
 
     std::atomic<bool>& game_running;
     std::atomic<bool>& character_select_running;
+    uint16_t& match_selected_id;
+    std::atomic<bool>& is_joinning;
 
     ClientMessageHandler& message_handler;
 
@@ -48,6 +50,7 @@ public:
                          std::shared_ptr<engine::SoundManager> sound_manager,
                          std::atomic<bool>& game_running,
                          std::atomic<bool>& character_select_running,
+                         std::atomic<bool>& is_joinning, uint16_t& match_selected_id,
                          ClientMessageHandler& message_handler);
 
     // cant copy

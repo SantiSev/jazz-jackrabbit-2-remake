@@ -121,7 +121,7 @@ public:
 
     bool has_match_ended() const;
 
-    size_t get_num_players();
+    size_t get_num_players() const;
 
     size_t get_max_players() const;
 

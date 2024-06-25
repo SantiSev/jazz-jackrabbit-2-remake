@@ -2,6 +2,7 @@
 #define INGAME_HUD_H
 
 #include <atomic>
+#include <functional>
 #include <list>
 #include <memory>
 #include <string>

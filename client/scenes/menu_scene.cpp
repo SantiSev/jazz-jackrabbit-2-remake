@@ -21,6 +21,9 @@ MenuScene::MenuScene(engine::Window& window, EventLoop* event_loop,
         editor_running(editor_running),
         map_select_running(false),
         character_select_running(false),
+        match_select_running(false),
+        is_joinning(false),
+        joined_id_match(0),
         message_handler(message_handler) {
 
     create_buttons();
@@ -30,11 +33,17 @@ void MenuScene::start() {
 #ifdef LOG
     std::cout << "Starting menu scene..." << std::endl;
 #endif
+
+    MatchSelectScene match_select_scene(window, event_loop, resource_pool, sound_manager,
+                                        game_running, menu_running, match_select_running,
+                                        is_joinning, character_select_running, message_handler,
+                                        joined_id_match);
+
     MapSelectScene map_select_scene(window, event_loop, resource_pool, game_running,
                                     map_select_running, character_select_running, message_handler);
     CharacterSelectScene character_select_scene(window, event_loop, resource_pool, sound_manager,
-                                                game_running, character_select_running,
-                                                message_handler);
+                                                game_running, character_select_running, is_joinning,
+                                                joined_id_match, message_handler);
     // Add buttons to mouse signal of event loop
     for (auto button: buttons) {
         event_loop->mouse.add_on_click_signal_obj(button);
@@ -57,8 +66,18 @@ void MenuScene::start() {
             }
             map_select_scene.start();
         }
+        if (match_select_running) {
+            for (auto button: buttons) {
+                event_loop->mouse.remove_on_click_signal_obj(button);
+            }
+            map_select_running = false;
+            match_select_scene.start();
+        }
         if (character_select_running) {
             character_select_scene.start(map_select_scene.selected_map_id);
+            for (auto button: buttons) {
+                event_loop->mouse.add_on_click_signal_obj(button);
+            }
         }
         // Draw
         window.clear();
@@ -83,6 +102,10 @@ void MenuScene::start() {
         frame_start += rate;
         it++;
     }
+    // Disconnect from mouse signals
+    for (auto button: buttons) {
+        event_loop->mouse.remove_on_click_signal_obj(button);
+    }
 }
 
 void MenuScene::create_buttons() {
@@ -99,7 +122,8 @@ void MenuScene::create_buttons() {
 
     SDL_Rect join_match_button_d_rect = {0, y_start, w, h};
     JoinMatchButton* join_match_button =
-            new JoinMatchButton(renderer, resource_pool, join_match_button_d_rect, message_handler);
+            new JoinMatchButton(renderer, resource_pool, join_match_button_d_rect, message_handler,
+                                match_select_running);
     y_start += h + BUTTON_MARGIN;
 
     SDL_Rect map_editor_d_rect = {0, y_start, w, h};

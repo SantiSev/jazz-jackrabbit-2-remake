@@ -179,6 +179,7 @@ struct ActiveGamesDTO {
     uint16_t map_id;
     uint8_t players_ingame;
     uint8_t players_max;
+    uint16_t match_id;
 } __attribute__((packed));
 
 struct MatchInfoDTO {

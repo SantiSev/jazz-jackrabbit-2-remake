@@ -88,6 +88,7 @@ void MatchesManager::send_client_succesful_connect(const uint16_t& id_client, co
 }
 
 void MatchesManager::join_match(const JoinMatchDTO& dto) {
+    auto config = resource_pool->get_config();
     if (get_client_by_id(dto.id_client)->get_current_match_id() != 0) {
         return;
     }
@@ -96,6 +97,9 @@ void MatchesManager::join_match(const JoinMatchDTO& dto) {
 #endif
     auto it = matches.find(dto.id_match);
     if (it != matches.end()) {
+        if (it->second->get_num_players() >= (size_t)config->match_max_players) {
+            return;
+        }
 #ifdef LOG_VERBOSE
         std::cout << "match found to join " << std::endl;
 #endif
@@ -147,7 +151,6 @@ void MatchesManager::add_new_client_to_manager(Socket client_socket) {
 }
 
 MatchInfoDTO MatchesManager::return_matches_lists() {
-    std::unique_lock<std::mutex> lock(manager_mutex);
     MatchInfoDTO matches_lists{};
     matches_lists.num_games = matches.size();
     size_t i = 0;
@@ -155,6 +158,8 @@ MatchInfoDTO MatchesManager::return_matches_lists() {
         matches_lists.active_games[i].map_id = match.second->get_map();
         matches_lists.active_games[i].players_ingame = match.second->get_num_players();
         matches_lists.active_games[i].players_max = match.second->get_max_players();
+        matches_lists.active_games[i].match_id = match.first;
+        i++;
     }
     return matches_lists;
 }

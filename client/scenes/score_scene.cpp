@@ -36,6 +36,7 @@ ScoreScene::ScoreScene(engine::Window& window, EventLoop* event_loop,
             new ReturnMenuButton(renderer, resource_pool, create_match_button_d_rect, menu_running,
                                  scoreboard_running, message_handler);
     buttons.push_back(create_return_button);
+    buttons.back()->center_x(0, 800);
 
     // Create labels
     create_score_labels();

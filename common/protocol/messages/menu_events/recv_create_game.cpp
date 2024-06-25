@@ -3,7 +3,6 @@
 RecvCreateGameMessage::RecvCreateGameMessage(const CreateGameDTO& create_game):
         Message(RECV_CREATE_GAME), create_game(create_game) {}
 
-
 void RecvCreateGameMessage::run(MessageHandler& handler) {
     handler.handle_recv_create_game(create_game);
 }
