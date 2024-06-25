@@ -49,7 +49,8 @@ typedef enum: uint8_t {
     STATE_INTOXICATED_MOV_LEFT = 0X14,
     STATE_SPECIAL_RIGHT = 0X15,
     STATE_SPECIAL_LEFT = 0X16,
-    STATE_DEAD = 0X17
+    STATE_DYING = 0X17,
+    STATE_DEAD = 0X18
 } state_t;
 
 const std::map<uint8_t, std::string> map_states_to_animations = {
@@ -70,6 +71,7 @@ const std::map<uint8_t, std::string> map_states_to_animations = {
         {STATE_INTOXICATED_MOV_LEFT, "intoxicated_moving_left"},
         {STATE_SPECIAL_RIGHT, "special_right"},
         {STATE_SPECIAL_LEFT, "special_left"},
+        {STATE_DYING, "dying"},
         {STATE_DEAD, "dead"}};
 
 // Weapons

@@ -79,6 +79,11 @@ void Player::handle_intoxication() {
     }
 }
 
+void Player::reset_intoxication() {
+    is_intoxicated = false;
+    intoxication_cooldown = config->player_intoxication_cool_down;
+}
+
 // ------------ Invinvibility Methods --------------
 
 void Player::start_invincibility() {
@@ -94,6 +99,11 @@ void Player::handle_invincibility() {
             is_invincible = false;
         }
     }
+}
+
+void Player::reset_invincibility() {
+    is_invincible = false;
+    invincibility_cooldown = config->player_invincivility_cool_down;
 }
 
 // ------------ Special Attack Methods --------------
@@ -112,8 +122,8 @@ void Player::move_horizontal(int new_direction) {
     }
     direction = new_direction;
 
-    if (is_sprinting && !is_intoxicated) {
-        velocity.x = direction * config->player_speed_x - (int)(config->player_sprint_spd);
+    if (is_sprinting && !is_intoxicated && on_floor) {
+        velocity.x = direction * config->player_sprint_spd;
     } else {
         velocity.x = direction * config->player_speed_x;
     }
@@ -124,9 +134,7 @@ void Player::move_horizontal(int new_direction) {
             state = is_facing_right() ? STATE_INTOXICATED_MOV_RIGHT : STATE_INTOXICATED_MOV_LEFT;
 
         } else if (is_sprinting) {
-            state = is_facing_right() ? STATE_MOVING_RIGHT :
-                                        STATE_INTOXICATED_MOV_LEFT;  // TODO CAMBIAR CUANDO ESTÉ EL
-                                                                     // SPRITE DE SPRINT
+            state = is_facing_right() ? STATE_SPRINTING_RIGHT : STATE_SPRINTING_LEFT;
         } else {
             state = is_facing_right() ? STATE_MOVING_RIGHT : STATE_MOVING_LEFT;
         }
@@ -168,8 +176,20 @@ bool Player::is_shooting() {
 // ------------ Override Methods --------------
 
 void Player::update_body() {
-    if (is_dead()) {  // if the player is dead, then it shouldnt move
-        velocity = Vector2D(NONE, NONE);
+
+    if (health == DYING) {  // if the player is dead, then it shouldnt move
+
+        state = dying_duration > 0 ? STATE_DYING : STATE_DEAD;
+
+        if (dying_duration > 0) {  // the character is dying!
+            dying_duration--;
+        } else {  // the character is dead!
+            health = NONE;
+            set_active_status(false);
+        }
+
+        velocity = Vector2D(NONE, config->player_falling_speed);
+
         return;
     }
 
@@ -250,8 +270,10 @@ void Player::handle_colision(CollisionObject* other) {
 }
 
 void Player::knockback(int force) {
-    velocity.x = -direction * force;
-    velocity.y = -force;
+
+    velocity.y = -abs(force);
+    velocity.x = force;
+    direction = force > 0 ? RIGHT_DIR : LEFT_DIR;
     on_floor = false;
     is_knocked_back = true;
 }
@@ -262,6 +284,10 @@ void Player::revive(Vector2D new_position) {
     this->health = config->player_health;
     this->state = STATE_IDLE_RIGHT;
     position = new_position;
+    is_sprinting = false;
+    dying_duration = DYING_TIME;
+    reset_intoxication();
+    reset_invincibility();
     velocity = Vector2D(NONE, config->player_falling_speed);
 
     for (auto& weapon: weapons) {
@@ -275,10 +301,9 @@ void Player::take_damage(int damage) {
         health -= damage;
     }
 
-    if (health < NONE) {
-        health = NONE;
-        state = STATE_DEAD;
-        set_active_status(false);
+    if (health <= DYING) {
+        health = DYING;
+        state = STATE_DYING;
         velocity = Vector2D(NONE, NONE);
     } else {
         state = STATE_DAMAGED;
@@ -289,6 +314,8 @@ void Player::print_info() {
     std::cout << "--------------------------------" << std::endl;
     std::cout << "| Player Id: " << id << " |" << std::endl;
     std::cout << "| Character: " << (int)character_reference << " |" << std::endl;
+    std::cout << "| Active Status: " << is_active_object() << " |" << std::endl;
+    std::cout << "| State: " << (int)get_state() << " |" << std::endl;
     std::cout << "| Position: (" << position.x << " , " << position.y << ") |" << std::endl;
     std::cout << "| Velocity: (" << velocity.x << " , " << velocity.y << ") |" << std::endl;
     std::cout << "| Direction: " << direction << " |" << std::endl;
@@ -300,9 +327,9 @@ void Player::print_info() {
     std::cout << "| Shoot status: " << weapons[selected_weapon]->shoot_rate_status() << " |"
               << std::endl;
     std::cout << "| Points: " << points << " |" << std::endl;
-    std::cout << "| State: " << (int)get_state() << " |" << std::endl;
     std::cout << "| Respawn Cooldown: " << revive_cooldown << " |" << std::endl;
     std::cout << "| Respawn Counter: " << revive_counter << " |" << std::endl;
+    std::cout << "| Dying Counter: " << dying_duration << " |" << std::endl;
     std::cout << "| Intoxication Cooldown: " << intoxication_cooldown << " |" << std::endl;
     std::cout << "| Invincibility Cooldown: " << invincibility_cooldown << " |" << std::endl;
 }

@@ -59,7 +59,7 @@ bool CharacterBody::try_revive() {
         return false;
     }
 
-    if (revive_counter <= NONE && !is_active_object()) {
+    if (revive_counter <= NONE) {
         return true;
     } else {
         this->revive_counter--;
@@ -101,7 +101,11 @@ void CharacterBody::jump() {
     }
 }
 
-void CharacterBody::knockback(int force) { velocity += direction * force; }
+void CharacterBody::knockback(int force) {
+    velocity.y = -abs(force);
+    velocity.x = force;
+    on_floor = false;
+}
 
 void CharacterBody::update_body() {
     if (!on_floor) {

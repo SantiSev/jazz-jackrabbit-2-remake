@@ -16,6 +16,8 @@
 #include "character.h"
 
 #define GRAVITY 1
+#define DYING 1
+#define DYING_TIME 160
 
 class Weapon;
 
@@ -36,14 +38,16 @@ private:
     int shooting_height;
     std::shared_ptr<Configuration> config;
 
+    int dying_duration = DYING_TIME;
+
     // Cheats
     bool invincibility_cheat_active = false;
-
 
     // Configs
     bool is_sprint_allowed = true;
 
     void move_horizontal(int new_direction);
+    void sprint();
     bool is_shooting();
 
 public:
@@ -88,11 +92,13 @@ public:
 
     void start_intoxication();
     void handle_intoxication();
+    void reset_intoxication();
 
     //------- Invincibility Methods --------
 
     void start_invincibility();
     void handle_invincibility();
+    void reset_invincibility();
 
     //------- Special Attack Methods --------
 
@@ -107,7 +113,6 @@ public:
     void move_right() override;
     void jump() override;
     virtual void do_special_attack();
-    void sprint();
 
 
     //------- Match Methods --------
