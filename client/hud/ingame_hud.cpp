@@ -10,6 +10,9 @@ IngameHud::IngameHud(SDL_Renderer* renderer, std::shared_ptr<engine::ResourcePoo
         score(nullptr),
         character_icon(nullptr),
         health(nullptr) {
+#ifdef LOG
+    std::cout << "Constructing IngameHud..." << std::endl;
+#endif
     create_objects(player_info, seconds_left);
 }
 

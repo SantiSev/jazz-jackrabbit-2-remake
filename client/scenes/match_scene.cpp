@@ -21,21 +21,19 @@ MatchScene::MatchScene(engine::Window& window, EventLoop* event_loop,
         hud(nullptr),
         camera(window.get_width(), window.get_height(), 0, map->get_body().w, 0, map->get_body().h),
         player_controller(message_handler) {
+#ifdef LOG
+    std::cout << "Constructing match scene..." << std::endl;
+#endif
     // Blocking call to get first game state
     std::shared_ptr<GameStateDTO> first_state = game_state_q.pop();
-    for (int player_index = 0; player_index < first_state->num_players; player_index++) {
-        if (first_state->players[player_index].id == id_client) {
-            hud = std::make_unique<IngameHud>(renderer, resource_pool,
-                                              first_state->players[player_index],
-                                              static_cast<uint16_t>(first_state->seconds));
-            break;
-        }
-    }
     last_game_state = first_state;
     update_objects();
 }
 
 void MatchScene::start() {
+#ifdef LOG
+    std::cout << "Starting match scene..." << std::endl;
+#endif
     // Connect player controler to keyboard and mouse signals
     event_loop->keyboard.add_on_key_down_signal_obj(&player_controller);
     event_loop->mouse.add_on_click_signal_obj(&player_controller);
@@ -100,6 +98,10 @@ void MatchScene::update_objects() {
         players[player.id]->set_position(player.x_pos, player.y_pos);
         if (player.id == id_client) {
             camera.recenter(players[player.id]->get_body());
+            if (!hud) {
+                hud = std::make_unique<IngameHud>(renderer, resource_pool, player,
+                                                  static_cast<uint16_t>(game_state->seconds));
+            }
             hud->update(player, game_state->seconds);
         }
         players[player.id]->set_animation(map_states_to_animations.at(player.state));

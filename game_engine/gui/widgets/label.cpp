@@ -1,5 +1,7 @@
 #include "label.h"
 
+#include <iostream>
+
 using engine::Label;
 
 Label::Label(std::shared_ptr<Font> font, SDL_Rect rect, SDL_Color color, SDL_Color hover_color,
@@ -49,9 +51,23 @@ void Label::set_position(int x, int y) {
 std::string Label::get_text() { return text; }
 
 void Label::set_text(const std::string& new_text, SDL_Renderer* renderer) {
+#ifdef LOG
+    std::cout << "Setting text to: " << new_text << std::endl;
+#endif
     text = new_text;
+#ifdef LOG
+    std::cout << "Text set to: " << text << std::endl;
+#endif
+
+#ifdef LOG
+    std::cout << "Creating new textures" << std::endl;
+#endif
     auto new_texture = Texture(font, color, text, renderer);
     auto new_hover_texture = Texture(font, hover_color, text, renderer);
+
+#ifdef LOG
+    std::cout << "Moving textures" << std::endl;
+#endif
     texture = std::move(new_texture);
     hover_texture = std::move(new_hover_texture);
 }
