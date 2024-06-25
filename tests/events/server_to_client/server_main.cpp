@@ -35,7 +35,7 @@ int main(int argc, const char* argv[]) {
                 auto message = std::make_shared<SendGameStateMessage>(game_state_dto);
                 protocol.send_message(message);
             } else if (command.compare(ACTIVE_GAMES) == 0) {
-                RequestActiveGamesDTO active_game_dto = {};
+                RequestActiveGamesDTO active_game_dto = {1};
                 auto message = std::make_shared<SendRequestGamesMessage>(active_game_dto);
                 protocol.send_message(message);
             }

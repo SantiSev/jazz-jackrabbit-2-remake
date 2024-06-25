@@ -25,7 +25,7 @@ run_event_tests() {
   RUN_TESTS_EVENTS="./tests/events/$folder_case/run_tests.sh $run_tests_flags"
   COMPARE_TESTS_EVENTS="./tests/events/$folder_case/compare_outputs.sh $compare_tests_flags"
 
-  $RUN_TESTS_EVENTS > /dev/null
+  $RUN_TESTS_EVENTS
   $COMPARE_TESTS_EVENTS
 }
 
