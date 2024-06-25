@@ -34,6 +34,8 @@
 
 #include "event_loop.h"
 
+#define CONFIG_FILE "assets/config"
+
 class Client {
 private:
     engine::Window window;

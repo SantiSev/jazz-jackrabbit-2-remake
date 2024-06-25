@@ -51,7 +51,7 @@ private:
     std::vector<std::shared_ptr<Collectable>> items;
 
     size_t players_connected = 0;
-    size_t required_players;
+    size_t max_players;
     ClientMonitor& client_monitor;
     uint16_t map;
     std::unique_ptr<CollisionManager> collision_manager;
@@ -59,8 +59,6 @@ private:
     std::vector<Vector2D> enemy_spawn_points;
     std::vector<Vector2D> item_spawn_points;
     std::mutex match_mutex;
-
-    std::atomic<bool> cheat_revive_enabled = false;
 
     const std::shared_ptr<engine::ResourcePool>& resource_pool;
 

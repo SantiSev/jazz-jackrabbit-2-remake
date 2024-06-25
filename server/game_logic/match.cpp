@@ -18,7 +18,7 @@ Match::Match(const uint16_t& map_selected, size_t required_players_setting,
         enemies({}),
         bullets({}),
         items({}),
-        required_players(required_players_setting),
+        max_players(required_players_setting),
         client_monitor(monitor),
         map(map_selected),
         collision_manager(nullptr),
@@ -127,18 +127,16 @@ void Match::run_command(const CommandDTO& dto) {
 void Match::respawn_players() {
     for (auto& pair: players) {
         auto& player = pair.second;
-        if (player->try_revive() || cheat_revive_enabled) {
+        if (player->try_revive()) {
 
             bool can_be_placed = false;
             Vector2D new_position = get_random_spawn_point(player_spawn_points);
             while (!can_be_placed) {
-                can_be_placed = collision_manager->can_be_placed(
-                        player, new_position);  // chequeo si la posicion es valida
+                can_be_placed = collision_manager->can_be_placed(player, new_position);
                 if (!can_be_placed) {
                     new_position = get_random_spawn_point(player_spawn_points);
                 }
             }
-
             player->revive(get_random_spawn_point(player_spawn_points));
             collision_manager->track_dynamic_body(player);
         }
@@ -146,9 +144,8 @@ void Match::respawn_players() {
 }
 void Match::respawn_enemies() {
     for (auto& enemy: enemies) {
-        if (enemy->try_revive() || cheat_revive_enabled) {
-            std::cout << "| ENEMY respawned with ID:" << enemy->get_id() << " |" << std::endl;
-            enemy->revive(enemy.get()->spawn_position);  // TODO set to random spawn position
+        if (enemy->try_revive()) {
+            enemy->revive(enemy.get()->spawn_position);
             collision_manager->track_dynamic_body(enemy);
         }
     }
@@ -173,14 +170,16 @@ Vector2D Match::get_random_spawn_point(std::vector<Vector2D> const& spawnpoints)
 }
 
 void Match::run_cheat_command(const CheatCommandDTO& dto) {
+
     if (dto.command == CHEAT_KILL_ALL) {
         kill_all_cheat();
     } else if (dto.command == CHEAT_REVIVE_ALL) {
         revive_all_cheat();
     } else if (dto.command == CHEAT_REVIVE) {
         std::shared_ptr<Player> player = get_player(dto.id_player);
-        if (player) {
+        if (player && player->is_dead()) {
             player->revive(get_random_spawn_point(player_spawn_points));
+            collision_manager->track_dynamic_body(player);
         }
     } else {
         std::shared_ptr<Player> player = get_player(dto.id_player);
@@ -200,10 +199,21 @@ void Match::kill_all_cheat() {
 }
 
 void Match::revive_all_cheat() {
-    cheat_revive_enabled = true;
-    respawn_enemies();
-    respawn_players();
-    cheat_revive_enabled = false;
+
+    for (auto& enemy: enemies) {
+        if (enemy->is_dead()) {
+            enemy->revive(enemy.get()->spawn_position);
+            collision_manager->track_dynamic_body(enemy);
+        }
+    }
+
+    for (auto& pair: players) {
+        auto& player = pair.second;
+        if (player->is_dead()) {
+            player->revive(player.get()->position);  // revive at the same position
+            collision_manager->track_dynamic_body(player);
+        }
+    }
 }
 
 //-------------------- Conection Methods -----------------
@@ -221,31 +231,32 @@ void Match::add_player_to_game(const AddPlayerDTO& dto) {
 
     int player_width = (*player_resources_ptr)["body_width"].as<int>();
     int player_height = (*player_resources_ptr)["body_height"].as<int>();
+    int shooting_height = (*player_resources_ptr)["weapon_y"].as<int>();
 
     switch (dto.player_character) {
         case JAZZ_CHARACTER: {
 
-            auto jazz_player =
-                    std::make_shared<Jazz>(dto.id_client, dto.name, pos.x, pos.y, player_width,
-                                           player_height, *collision_manager);
+            auto jazz_player = std::make_shared<Jazz>(
+                    dto.id_client, dto.name, pos.x, pos.y, player_width, player_height,
+                    shooting_height, *collision_manager, resource_pool->get_config());
             collision_manager->track_dynamic_body(jazz_player);
             players[dto.id_client] = jazz_player;
             break;
         }
         case SPAZ_CHARACTER: {
 
-            auto spaz_player =
-                    std::make_shared<Spaz>(dto.id_client, dto.name, pos.x, pos.y, player_width,
-                                           player_height, *collision_manager);
+            auto spaz_player = std::make_shared<Spaz>(
+                    dto.id_client, dto.name, pos.x, pos.y, player_width, player_height,
+                    shooting_height, *collision_manager, resource_pool->get_config());
             collision_manager->track_dynamic_body(spaz_player);
             players[dto.id_client] = spaz_player;
             break;
         }
         case LORI_CHARACTER: {
 
-            auto lori_player =
-                    std::make_shared<Lori>(dto.id_client, dto.name, pos.x, pos.y, player_width,
-                                           player_height, *collision_manager);
+            auto lori_player = std::make_shared<Lori>(
+                    dto.id_client, dto.name, pos.x, pos.y, player_width, player_height,
+                    shooting_height, *collision_manager, resource_pool->get_config());
             collision_manager->track_dynamic_body(lori_player);
             players[dto.id_client] = lori_player;
             break;
@@ -545,14 +556,15 @@ void Match::initiate_enemies(std::vector<character_t> enemy_types) {
 
 
         if (current_enemy_type == LIZARD_GOON) {
-            auto lizard_goon =
-                    std::make_shared<LizardGoon>(i, spawn_point.x, spawn_point.y,
-                                                 get_wh[LIZARD_GOON][0], get_wh[LIZARD_GOON][1]);
+            auto lizard_goon = std::make_shared<LizardGoon>(
+                    i, spawn_point.x, spawn_point.y, get_wh[LIZARD_GOON][0], get_wh[LIZARD_GOON][1],
+                    resource_pool->get_config());
             collision_manager->track_dynamic_body(lizard_goon);
             enemies.emplace_back(lizard_goon);
         } else if (current_enemy_type == MAD_HATTER) {
             auto mad_hatter = std::make_shared<MadHatter>(
-                    i, spawn_point.x, spawn_point.y, get_wh[MAD_HATTER][0], get_wh[MAD_HATTER][1]);
+                    i, spawn_point.x, spawn_point.y, get_wh[MAD_HATTER][0], get_wh[MAD_HATTER][1],
+                    resource_pool->get_config());
             collision_manager->track_dynamic_body(mad_hatter);
             enemies.emplace_back(mad_hatter);
 
@@ -587,7 +599,7 @@ size_t Match::get_num_players() { return players.size(); }
 
 uint16_t Match::get_map() const { return map; }
 
-size_t Match::get_max_players() const { return required_players; }
+size_t Match::get_max_players() const { return max_players; }
 
 std::shared_ptr<Player> Match::get_player(size_t id) {
 

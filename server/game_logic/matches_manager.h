@@ -8,10 +8,13 @@
 #include <unordered_map>
 #include <vector>
 
+#include "../../common/configuration.h"
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../protocol/manager_message_handler.h"
 #include "../protocol/server_thread_manager.h"
 #include "./match.h"
+
+#define CONFIG "assets/config"
 
 class Message;
 
@@ -58,6 +61,7 @@ public:
                                                               uint16_t map) const;
     Queue<std::shared_ptr<Message>>& get_match_queue_by_id(int match_id);
     void clean_client_monitors();
+    bool can_create_match(int max_matches);
 };
 
 #endif
