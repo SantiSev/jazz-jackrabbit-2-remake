@@ -11,9 +11,99 @@ El trabajo práctico se divide en cuatro partes principales:
 
 ## Game engine
 
+### Physics Engine
+Para el diseño de la _"physics engine"_, decidi basarme en la implementacion de fisicas del motor de juegos **Godot** donde llegue al siguiente planteo
+
+#### Collision Objects
+Todos los objects del juego son `CollisionObject`'s que consiste en objects con 
+```cpp
+int hitbox_width;   // el ancho del hitbox del object0 
+int hitbox_height;  // el alto del hitbox del objecto 
+bool is_active = true; //el status para indicar si debe seguir detectando collisiones o no
+```
+[ un hitbox es utilizado para detectar colisiones entre los objetos de un juego ]
+
+Para detectar dichas collisiones se utiliza los metodos protegidos `is_touching()` que tiene 2 variantes:
+```cpp
+    /*
+     * This code determines which face of the calling
+     * CollisionObject instance (i.e., *this or self)
+     * is being touched by the other collision object.
+     */
+    CollisionFace is_touching(const CollisionObject* other) const;
+
+    /*
+     * This code is identical to the is_touching method,
+     * but it returns a boolean value instead of a CollisionFace.
+     */
+    bool is_touching_bool(const CollisionObject* other) const;
+```
+`CollisionFace `es un enum que indica de que lado fue tocado mi objecto con respecto al otro. Esto es util para diferenciar collisiones entre paredes, suelos, etc
+Hay objectos (como en balas e items) donde no es importante saber donde fue tocado sino que solo importa que haya ocurrido una colision.
+
+### Abstraccion de Collision Object
+
+ ```cpp
+virtual void handle_colision(CollisionObject* other) = 0;
+```
+Este metodo es virtual puro porque CollisionObject no se debe poder instanciar en cualquier momento, el CollisionObject es la clase padre de todos los componentes del juego en donde todos sus clases hijos deben _handelear_ sus colisiones (dar la logica e indicar que ocurre cuando son colisionados). Hasta el momento hay solo 2 tipos:
+- `Dyanmic_body`
+- `Static_body`
+
+### Static Body
+Static Body consiste en objetos que no se registra su movimiento y tampoco son movidos ó desaparecen.
+
+### Dyanmic Body
+Dynamic Body consiste en objects que tienen movimiento (tanto horizontal como vertical), por lo tanto tienen el atributo:
+```cpp 
+Vector2D velocity;
+```
+Como los dyanmic bodies se mueven, se debe poder actualizar sus valores de posicion y/o velocidad, por lo tanto, tambien tienen una funcion virtual llamada:
+```cpp
+virtual void update_body();
+```
+Cuando se desee crear un objecto que se puede mover se debe implementar esta funcion sino nunca se actualizará sus valores de posicion / movimiento
+
+
+### Collision Manager
+Como vimos hasta el momento, todo es un CollisionObject, todo debe tener collisiones, etc. Pero aca viene la parte interesante ...
+
+**¿Como se _detectan_ las colisiones?** --> A traves del `CollisionManager` !
+
+El CollisionManager tiene como funcion recibir CollisionObjects, colocarlo en una grilla (luego explico como es la grilla) y activar los metodos de handle_collision cuando detecta una collision entre 2 objectos.
+
+Principalmente detecta las colisiones de todos los objectos dinamicos. Si fuese a detectar cada colision de cada objeto, esto haria que el engine funcione muy pobre, por lo tanto decidí solo _trackear_ las colisiones de dynamicBodies y los StaticBodies solo estarán ahi para ser detectados.
+
+### Collision Manager - Grid & Deteccion de Collisiones
+La grilla del collisionManager es de la siguiente manera:
+```cpp
+std::vector<std::vector<std::shared_ptr<CollisionObject>>> grid;
+```
+
+Es una matriz de shared pointers de CollisionObjects, en donde cada celda de la grilla indica 
+un pixel del juego. Al colocar un objecto en la grilla, en realidad estamos colocando en las posiciones desde (x ,y ) hasta (x+w , x+h ) shared pointers al mismo collision Object
+
+Luego el CollisionManager realiza detecciones de los objetos Dyanmicos iterando alrededor de sus celdas y viendo si da nullpointer (no se detecto un objecto) o un shared pointer de otro CollisionObject (tanto statico o dyanmico). Al detectar una collision realiza un **double dispatch** donde se llama los metodos de handeleo de collisiones de ambos objectos detectas.
+
+### Collision Manager - Detectar muchisimos bodies
+
+Para nuestro juego, vamos a tener personajes (dyanmic bodies) que disparan desde sus armas distintas bullets (tambien dyanmic bodies), pero ... ¿El collision Manager no se va a realentizar al traquear tantos objetos? NO
+
+con el metodo: 
+```cpp
+ void remove_inactive_bodies();
+```
+el collisionManager se ocupara de deshacerse de todos los bodies marcados como inactivos y serán quitadas del collisionManager.
+
+
 ## Client
 
 ## Server
+
+### Game Logic
+
+
+
 
 ## Protocol
 
