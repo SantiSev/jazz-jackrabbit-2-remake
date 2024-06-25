@@ -44,6 +44,10 @@ void CharacterSelectScene::create_buttons() {
 }
 
 void CharacterSelectScene::start(uint16_t selected_map_id) {
+#ifdef LOG
+    std::cout << "Starting character select scene..." << std::endl;
+#endif
+
     sound_manager->play_sound(CHARACTER_SELECT_SOUND, 0.5);
     for (auto& selector: selectors) {
         event_loop->mouse.add_on_click_signal_obj(&selector);

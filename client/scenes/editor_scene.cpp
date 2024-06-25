@@ -15,10 +15,16 @@ EditorScene::EditorScene(engine::Window& window, EventLoop* event_loop,
         hud(renderer, resource_pool, event_loop, tile_manager, menu_running, editor_running),
         camera(window.get_width(), hud.get_body().y, 0, MAP_WIDTH, 0, MAP_HEIGHT),
         controller(camera, event_loop) {
+#ifdef LOG
+    std::cout << "Constructing editor scene..." << std::endl;
+#endif
     load_background();
 }
 
 void EditorScene::start() {
+#ifdef LOG
+    std::cout << "Starting editor scene..." << std::endl;
+#endif
 
     const Uint32 rate = 1000 / 60;
 

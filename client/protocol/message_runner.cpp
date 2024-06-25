@@ -4,6 +4,10 @@ MessageRunner::MessageRunner(ClientMessageHandler& message_handler):
         message_handler(message_handler) {}
 
 void MessageRunner::run() {
+#ifdef LOG
+    std::cout << "Message runner started..." << std::endl;
+#endif
+
     const Uint32 rate = 1000 / 60;
 
     Uint32 frame_start = SDL_GetTicks();
@@ -32,6 +36,10 @@ void MessageRunner::run() {
         SDL_Delay(rest_time);
         frame_start += rate;
     }
+
+#ifdef LOG
+    std::cout << "Message runner stopped..." << std::endl;
+#endif
 }
 
 MessageRunner::~MessageRunner() = default;

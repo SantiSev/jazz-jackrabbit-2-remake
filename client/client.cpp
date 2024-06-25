@@ -22,6 +22,9 @@ Client::Client(const std::string& host, const std::string& port):
 }
 
 void Client::start() {
+#ifdef LOG
+    std::cout << "Starting client..." << std::endl;
+#endif
     MenuScene menu_scene(window, event_loop, resource_pool, sound_manager, game_running,
                          menu_running, editor_running, message_handler);
     event_loop->start();
@@ -45,6 +48,10 @@ void Client::start() {
 }
 
 void Client::pre_load_resources() {
+#ifdef LOG
+    std::cout << "Pre-loading resources..." << std::endl;
+#endif
+
     // Textures
     resource_pool->load_texture(BACKGROUNDS_FILE);
     resource_pool->load_texture(map_character_enum_to_string.at(JAZZ_CHARACTER));
@@ -55,6 +62,7 @@ void Client::pre_load_resources() {
     resource_pool->load_texture(ENEMIES_FILE);
     resource_pool->load_texture(EDITOR_FILE);
     resource_pool->load_texture(CHARACTER_SELECT_FILE);
+    resource_pool->load_texture(ICONS_FILE);
 
     // Fonts
     resource_pool->load_font(FONT, FONT_SIZE);
@@ -72,6 +80,7 @@ void Client::pre_load_resources() {
     resource_pool->load_yaml(EDITOR_FILE);
     resource_pool->load_yaml(MAPS_FILE);
     resource_pool->load_yaml(CHARACTER_SELECT_FILE);
+    resource_pool->load_yaml(ICONS_FILE);
 
     // Sounds
     resource_pool->load_music(sound_to_string.at(BACKGROUND));
@@ -80,6 +89,10 @@ void Client::pre_load_resources() {
 
     // Config
     resource_pool->load_config(CONFIG_FILE);
+
+#ifdef LOG
+    std::cout << "Resources pre-loaded" << std::endl;
+#endif
 }
 
 Client::~Client() {

@@ -23,6 +23,8 @@ int Player::get_points() const { return points; }
 
 Weapon* Player::get_weapon(size_t weapon) const { return weapons[weapon].get(); }
 
+Weapon* Player::get_selected_weapon() const { return get_weapon(selected_weapon); }
+
 std::string Player::get_name() const { return name; }
 
 //------------ Setters ----------

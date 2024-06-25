@@ -55,6 +55,10 @@ void MapSelectScene::create_buttons() {
 }
 
 void MapSelectScene::start() {
+#ifdef LOG
+    std::cout << "Starting map select scene..." << std::endl;
+#endif
+
     for (auto& selector: selectors) {
         event_loop->mouse.add_on_click_signal_obj(&selector);
     }
