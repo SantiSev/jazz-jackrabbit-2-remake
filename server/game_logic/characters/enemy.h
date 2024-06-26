@@ -8,8 +8,6 @@
 #include "character.h"
 
 // Enemy config
-#define ENEMY_WIDTH 35
-#define ENEMY_HEIGHT 45
 #define MOVEMENT_RANGE 50
 #define ATTACK_COOLDOWN 60
 #define BASE_SPEED 3

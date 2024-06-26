@@ -103,10 +103,6 @@ void Match::countdown_match(std::chrono::time_point<std::chrono::steady_clock>& 
         if (std::chrono::duration_cast<std::chrono::seconds>(endTime - runTime).count() >= 1) {
             match_time--;
             runTime = endTime;
-            // size_t minutes = match_time / 60;
-            // size_t seconds = match_time % 60;
-            // std::cout << "Time Remaining: " << std::setw(2) << std::setfill('0') << minutes <<
-            // ":" << std::setw(2) << std::setfill('0') << seconds << std::endl;
         }
     } else {
         if (!match_has_ended) {
@@ -260,17 +256,12 @@ void Match::add_player_to_game(const AddPlayerDTO& dto) {
 void Match::send_end_message_to_players() {
     auto game_ended_message = std::make_shared<SendFinishMatchMessage>();
     client_monitor.broadcastClients(game_ended_message);
-
-    //        auto close_connection_message =
-    //        std::make_shared<CloseConnectionMessage>(CloseConnectionDTO());
-    //        client_monitor.broadcastClients(close_connection_message);
 }
 
 bool Match::has_match_ended() const { return match_has_ended; }
 
 void Match::stop() {
     online = false;
-//    send_end_message_to_players();
 #ifdef LOG_VERBOSE
     std::cout << "stopping match " << std::endl;
 #endif
@@ -394,12 +385,9 @@ void Match::load_environment() {
                 auto w = d_rect_yaml["w"].as<int>();
                 auto h = d_rect_yaml["h"].as<int>();
 
-                // create horizontal boxplatofrm shared pointer
                 auto new_h_box = std::make_shared<BoxPlatform>(x, y, w * repeat_h, h);
                 collision_manager->add_object(new_h_box);
 
-                // create vertical boxplatofrm shared pointer (y + h to avoid overlapping with
-                // horizontal box)
                 auto new_v_box = std::make_shared<BoxPlatform>(x, y + h, w, h * repeat_v);
                 collision_manager->add_object(new_v_box);
             }
@@ -511,7 +499,6 @@ void Match::load_spawn_points() {
 
 void Match::initiate_enemies(std::vector<character_t> enemy_types) {
 
-    // create a hashmap that stores vector of size 4
     std::map<character_t, std::vector<int>> get_wh;
 
     std::transform(enemy_types.begin(), enemy_types.end(), std::inserter(get_wh, get_wh.end()),
@@ -528,8 +515,8 @@ void Match::initiate_enemies(std::vector<character_t> enemy_types) {
                                 enemy_resources["body_height"].as<int>()}};
                    });
 
-    // this is to avoid having the same id as a player, i doubt we will have 100 players, in the
-    // future we can change this to a more robust solution
+    // this is to avoid having the same id as a player, i doubt we will have more than 100 enemies
+    // in a match
     int i = 1;
     if (enemy_spawn_points.empty()) {
         throw std::runtime_error("No enemy spawn points found in map.");
@@ -564,9 +551,6 @@ void Match::delete_disconnected_player(id_client_t id_client) {
     std::unique_lock<std::mutex> lock(match_mutex);
     for (auto player = players.begin(); player != players.end(); ++player) {
         if (id_client == (*player).second->get_id()) {
-            //            collision_manager->remove_object(
-            //                    reinterpret_cast<const
-            //                    std::shared_ptr<CollisionObject>&>(*player));
             players.erase(player);
 #ifdef LOG_VERBOSE
             std::cout << "Player " << id_client << " disconnected from match " << std::endl;

@@ -129,8 +129,6 @@ void CharacterBody::handle_colision(CollisionObject* other) {
 
         if (face == CollisionFace::LEFT ||
             face == CollisionFace::RIGHT) {  // if im touching something on my side, then i cant
-            // move
-            // into it
             velocity.x = 0;
         } else if (face ==
                    CollisionFace::TOP) {  // if i touch something on top, then i cant move into

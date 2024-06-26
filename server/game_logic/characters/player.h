@@ -39,6 +39,7 @@ private:
     int shooting_height;
     std::shared_ptr<Configuration> config;
 
+    // Dying handling
     int dying_duration = DYING_TIME;
 
     // Cheats

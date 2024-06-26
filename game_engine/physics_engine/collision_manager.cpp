@@ -78,7 +78,7 @@ void CollisionManager::update_object(std::shared_ptr<CollisionObject> obj) {
 }
 
 void CollisionManager::detect_colisions(std::shared_ptr<DynamicBody> obj) {
-    // Get the position and hitbox dimensions of the obj
+
     int obj_x = obj->position.x;
     int obj_y = obj->position.y;
     int obj_width = obj->get_hitbox_width();
@@ -124,8 +124,7 @@ void CollisionManager::handle_out_of_bounds(
     }
 }
 
-void CollisionManager::update() {  // create to update specific object
-    // Use an iterator to iterate over the dynamic_bodies tuple
+void CollisionManager::update() {
 
     if (dynamic_bodies.empty()) {
         return;
@@ -155,10 +154,6 @@ void CollisionManager::update() {  // create to update specific object
     }
 }
 
-// create a method that removes all inactive objects from the grid
-// and from the dynamic_bodies vector
-// and then call this method from the update method
-
 void CollisionManager::remove_inactive_bodies() {
 
     if (dynamic_bodies.empty()) {
@@ -172,7 +167,7 @@ void CollisionManager::remove_inactive_bodies() {
             remove_object_from_grid(obj, obj->position);
             it = dynamic_bodies.erase(it);
         } else {
-            ++it;  // Move to the next element only if it wasn't erased
+            ++it;
         }
     }
 }
@@ -227,7 +222,6 @@ void CollisionManager::prepare_map() {
                 // Check left adjacent cell
                 if (is_valid_cell(i - 1, j)) {
                     auto coll_obj = get_collision_object_at(i - 1, j);
-                    // cast to static body
                     StaticBody* adj_obj =
                             dynamic_cast<StaticBody*>(get_collision_object_at(i - 1, j).get());
 

@@ -168,8 +168,6 @@ void Player::do_special_attack() {
     }
 }
 
-
-// Avoid adding falling animation
 bool Player::is_shooting() {
     return (state == STATE_SHOOTING_LEFT || state == STATE_SHOOTING_RIGHT ||
             state == STATE_SPECIAL_RIGHT || state == STATE_SPECIAL_LEFT);
@@ -179,7 +177,7 @@ bool Player::is_shooting() {
 
 void Player::update_body() {
 
-    if (health == DYING) {  // if the player is dead, then it shouldnt move
+    if (health == DYING) {
 
         state = dying_duration > 0 ? STATE_DYING : STATE_DEAD;
 
