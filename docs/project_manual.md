@@ -58,13 +58,14 @@ Aqui se prensenta la distribucion de cada parte, para mas informacion acerca de 
 
 ### Semana 5
 
+- Mejoras del Client & Server
 - Integracion y testeo
 - Arreglando bugs
 - Implementacion de editor de mapas
 
 ### Semana 6
 
-- Integracion y testeo
+- Integracion, testeo & mejoras
 - Arreglando bugs
 - Documentacion
 

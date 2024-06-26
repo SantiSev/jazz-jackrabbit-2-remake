@@ -68,18 +68,22 @@ $ cmake .. -DPRODUCTION=ON
 $ make
 ```
 
-Sin embargo, se provee un script para compilar el juego con el script `build.sh`, con el comando `./build.sh -debug log`
+Sin embargo, se provee un script para compilar el juego con el script `build.sh`, con el comando `./build.sh -debug log` (que creara archivos de log, client.log y server.log. si no se quiere esto no use esas opciones)
 
 Esta secuencia compilara dos archivos: `server` y `client`. Para ejecutar `server` es
 
 ```bash
 ./server <port>
+# o usando el script run (usa por default 8080)
+./run.sh server
 ```
 
 Mientras que, para ejecutar uno o varios `client` es
 
 ```bash
 ./client <servname> <port>
+# o usando el script run (usa por default localhost:8080)
+./run.sh client
 ```
 
 ### Valgrind notes
@@ -96,9 +100,11 @@ $ python3 valgrind_to_suppressions.py valgrind.log suppressions.supp
 $ valgrind --leak-check=full --suppressions=suppressions.supp --your-other-flags ./program
 ```
 
+A su vez dependiendo del sistema en el que se corra el juego puede **o no** detectar una perdida de tipo `definite` de 56 bytes ocasionada por el uso de SDL_Rect, esto se puede ver en una prueba aislada en `tests/graphics/valgrind_false_positives/rects_main.cpp`.
+
 ## Usabilidad del juego
 
-Dentro del menu del juego, existen cuatro opciones:
+Dentro del menu del juego, existen cuatro opciones clickeables:
 
 1. Crear un partida
 2. Unirse a un partida
@@ -107,7 +113,7 @@ Dentro del menu del juego, existen cuatro opciones:
 
 ### Crear un partida y unirse a una partida
 
-Tanto crear, como unirse a un partida, permite elegir uno de tres personajes que son:
+Tanto crear, como unirse a un partida, permite elegir clickeando uno de tres personajes que son:
 
 - Jazz
 - Spaz
@@ -120,9 +126,10 @@ Dentro del juego, los movimientos y sus correspondientes teclas son:
 
 - Mover a izquierda (a)
 - Mover a derecha (d)
+- Sprint (mantener _shift_ y mover izquierda o derecha)
 - Saltar (space)
 - Disparar (click izquierdo)
-- Cambiar de arma (e)
+- Cambiar de arma (r)
 
 ### Cheat commands
 
@@ -136,24 +143,32 @@ La ejecucion de los `cheat commands` y su correspondecia, en el teclado, es la s
 - Revive all (Players & Enemies): 06
 - Kill all: 07
 
+A su vez contamos con un mapa plano (`Old Reliable`) con los dos enemigos y todos items, dicho mapa fue creado con la intencion de probar features y debugear el juego.
+
 ### Editor de mapas
 
 Una vez elegida la opcion para crear un mapa, y se quiere poner un bloque, debera ser selecionado y colocado en
 alguno de los _tiles_, con click izquierdo. En caso de querer borrar un bloque, uno de los bloques es el `vacio`,
-simplemente se selecciona y se coloca con click izquierdo. Los bloques pueden ser sobreescritos.
+simplemente se selecciona y se coloca con click izquierdo. Los bloques pueden ser sobreescritos. Se puede mover la camara a lo largo del mapa con `wasd`
 
-En caso de querer poner, items, enemies o players. Existen unos bloques especiales de colores, que corresponden,
+En caso de querer poner, items, enemies o players. Existen unos bloques especiales de colores (con estrellita), que corresponden,
 respectivamente a lo que se quiere poner. Los colores y su correspondencia es la siguiente:
 
 - Celeste: Player
 - Naranja: Enemies
 - Gris: Items
 
-Una vez finalizada la edicion, se debe presionar el boton: `Save and Exit`. Para el mapa sea detectado por el servidor.
-Se debera arrastrar el archivo de salida: `tile.yaml` a la carpeta: `assets/maps`. Finalmente, se debera  agregar
+Una vez finalizada la edicion, se debe presionar el boton: `Save and Exit` y el mapa se guardara en `./new_map.yaml`. Para que el mapa sea detectado por el servidor.
+Se debera arrastrar el archivo de salida: `new_map.yaml` a la carpeta: `assets/maps`. Finalmente, se debera agregar
 metadata del mapa al archivo `maps.yaml`. La informacion requerdia es:
 
 - Nombre: Nombre del mapa
 - ID: ID del mapa
-- Texture File: Nombre del archivo donde estan las texturas, en este caso es siempre: `assets/maps/custom_map`
-- Yaml File: Nombre del archivo del mapa
+- Texture File: Nombre del archivo donde estan las texturas, en este caso es siempre: `assets/editor/editor_assets`
+- Yaml File: Path del archivo del mapa `assets/maps/my_map`
+
+A su vez si se quiere editar usando otras texturas se puede cambiar el archivo `assets/editor/editor_assets.yaml` y poner los x, y, w, h correspondientes al bloque que se quiere relativo al archivo `assets/editor/editor_assets.png`.
+
+En este release se provee una textura adicional `assets/editor/electric_texture.yaml` para usarla debera cambiarle el nombre del archivo a `editor_assets` reemplazando asi la textura anterior.
+
+Nota: tener en cuenta de no agregar mas bloques de los que hay en estas texturas del release y no sacar los bloques de spawnpoints y null block.
