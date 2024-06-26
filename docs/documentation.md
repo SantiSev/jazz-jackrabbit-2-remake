@@ -17,7 +17,7 @@ La graphics engine se encuentra casi completamente en `/game_engine/gui` pero ta
 
 #### Controllers
 
-* Keyboard: Este controlador detecta la entrada del teclado abstrayendo los SDL_Events acordes. Cuando detecta input avisa a sus signal objects que ocurrio, estos signal objecs es una lista de CanvasObjects que son los tipos de objetos visibles en la pantalla, para llenar la lista tiene un metodo para agregar y otro para sacar objetos. Adicionalmente es thread safe.
+* Keyboard: Este controlador detecta la entrada del teclado abstrayendo los SDL_Events acordes. Cuando detecta input avisa a sus signal objects que ocurrio, estos signal objecs es una lista de CanvasObjects que son los tipos de objetos visibles en la pantalla. Para llenar la lista tiene un metodo para agregar y otro para sacar objetos. Adicionalmente es thread safe.
 * Mouse: Similarmente al teclado cumple el mismo proposito con la diferecia que este avisa cuando hay un click y/o un hover.
 
 #### GUI
@@ -29,29 +29,91 @@ Se crearon varias clases basicas necesarias en `gui/basic`:
 * Font: para abstraer SDL_Font en una clase RAII.
 * Texture: para abstraer SDL_Texture en una clase RAII.
 * Window: para abstraer SDL_Window en una clase RAII. tambien crea el renderer e inicializa SDL.
-* Music
-* Sound
-* SoundEffect
+
+La clase padre de los widgets graficos es **CanvasObject**, que tiene metodos basicos virtuales como:
+
+* draw
+* on_click
+* on_hover
+* is_intersecting para puntos o rectangulos
+* etc
 
 Se crearon clases de utilidad graficas como:
 
-* AnimatedSprite
-* Sprite
-* Button
-* ColorRect
-* Label
+* AnimatedSprite: Contiene la logica para animar una imagen, y le da uso a la iteracion dada por parametro del draw, la cual viene de el rendering loop y determina cuando se dropean frames y cuando no. (se utiliza tecnica Drop&Rest).
+* Sprite: Para imagenes estaticas
+* Button: Una clase base para los botones, contienen un rectangulo de color y un label, ambos pueden cambiar color on hover.
+* ColorRect: Rectangulo de un color liso.
+* Label: Una etiqueta para dibujar texto.
 
-A su vez se creo un objecto no grafico ni controlador especial"
+A su vez se creo un objecto especial que no grafico ni controlador:
 
-* Camara (utilizada por el editor y el match scene)
+* Camara: Contiene logica para solo renderizar los objetos que estan en la pantalla de 800x600 (utilizada por el editor y el match scene).
 
 ## Client
 
-Se dividio el cliente en Esceneas (scenes)
+### Escenas
+
+Se dividio el cliente en 3 Scenes fundamentales:
 
 * MenuScene
 * MatchScene
 * EditorScene
+
+La escena de menu scene tambien incluye 3 escenas mas, para sus diferentes funcionalidades, estas son:
+
+* Map select scene: usada para seleccionar un mapa al crear una partida.
+* Match select scene: usada para seleccionar una partida al querer unirse a alguna.
+* Character select scene: usada en Create Match y en Join Match. Permite seleccionar uno de los 3 personajes para jugar.
+
+La escena de match scene al terminar deriva a otra escena de **ScoreBoard** la cual muesta el top 3 jugadores con mas puntos al finalizar.
+
+### Componentes
+
+A lo largo de las escenas se usan muchas componentes distintas, entre ellas:
+
+#### Menu objects
+
+* CreateMatchButton
+* JoinMatchButton
+* EditorButton
+* QuitButton
+* CharacterSelector
+* MapSelector
+* MatchSelector
+* ReceiveMatchesButton
+
+#### Editor objects
+
+* EditorController
+* EditorTile
+* TileSelector
+* TileManager
+* SaveExitEditorButton
+
+#### GameObjects
+
+* PlayerController
+* Map
+* Players (todas las animaciones de los 3 conejos)
+* Enemies (las animaciones de los 2 conejos)
+* Items (las animaciones de los items coleccionables)
+* Bullets (los sprites de las balas que son disparadas)
+
+#### Hud
+
+* EditorHud: hud de donde se seleccionan los tiles pincel para editar
+* IngameHud: hud para mostrar informacion del personaje en la partida (vida, arma seleccionada y municion, score, nombre y personaje)
+
+#### Iconos
+
+Hay una variedad de iconos que son sprites estaticos como, la imagen del personaje, la imagen estatica de las balas para mostrar en el HUD y la barra de vida con sus corazones.
+
+### EventLoop
+
+* El manejo de user input es responsabilidad de un thread aparte que updatea al keyboard y mouse para que estos avisen a sus signal objects.
+
+* El manejo de los mensajes que llegan del servidor no se hace en el mismo thread y este se llama **MessageRunner**
 
 ## Server
 

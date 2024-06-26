@@ -126,6 +126,7 @@ Dentro del juego, los movimientos y sus correspondientes teclas son:
 
 - Mover a izquierda (a)
 - Mover a derecha (d)
+- Sprint (mantener _shift_ y mover izquierda o derecha)
 - Saltar (space)
 - Disparar (click izquierdo)
 - Cambiar de arma (r)
@@ -142,11 +143,13 @@ La ejecucion de los `cheat commands` y su correspondecia, en el teclado, es la s
 - Revive all (Players & Enemies): 06
 - Kill all: 07
 
+A su vez contamos con un mapa plano (`Old Reliable`) con los dos enemigos y todos items, dicho mapa fue creado con la intencion de probar features y debugear el juego.
+
 ### Editor de mapas
 
 Una vez elegida la opcion para crear un mapa, y se quiere poner un bloque, debera ser selecionado y colocado en
 alguno de los _tiles_, con click izquierdo. En caso de querer borrar un bloque, uno de los bloques es el `vacio`,
-simplemente se selecciona y se coloca con click izquierdo. Los bloques pueden ser sobreescritos. Se puede mover a lo largo del mapa con `wasd`
+simplemente se selecciona y se coloca con click izquierdo. Los bloques pueden ser sobreescritos. Se puede mover la camara a lo largo del mapa con `wasd`
 
 En caso de querer poner, items, enemies o players. Existen unos bloques especiales de colores (con estrellita), que corresponden,
 respectivamente a lo que se quiere poner. Los colores y su correspondencia es la siguiente:
@@ -166,6 +169,6 @@ metadata del mapa al archivo `maps.yaml`. La informacion requerdia es:
 
 A su vez si se quiere editar usando otras texturas se puede cambiar el archivo `assets/editor/editor_assets.yaml` y poner los x, y, w, h correspondientes al bloque que se quiere relativo al archivo `assets/editor/editor_assets.png`.
 
-En este release se provee una textura adicional `assets/editor/electric_texture.yaml` para usarla debera cambiarle el nombre sel archivo a `editor_assets` reemplazando asi la textura anterior.
+En este release se provee una textura adicional `assets/editor/electric_texture.yaml` para usarla debera cambiarle el nombre del archivo a `editor_assets` reemplazando asi la textura anterior.
 
 Nota: tener en cuenta de no agregar mas bloques de los que hay en estas texturas del release y no sacar los bloques de spawnpoints y null block.
