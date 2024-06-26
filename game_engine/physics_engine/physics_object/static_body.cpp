@@ -6,7 +6,8 @@ using engine::StaticBody;
 
 StaticBody::StaticBody(int width, int height): engine::CollisionObject(width, height) {}
 
-StaticBody::StaticBody(int x, int y, int width, int height): engine::CollisionObject(x, y, width, height) {}
+StaticBody::StaticBody(int x, int y, int width, int height):
+        engine::CollisionObject(x, y, width, height) {}
 
 
 void StaticBody::handle_colision(engine::CollisionObject* other) {

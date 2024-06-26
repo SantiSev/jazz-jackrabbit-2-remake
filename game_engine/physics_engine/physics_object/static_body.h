@@ -5,7 +5,7 @@
 #include "../collision_object.h"
 
 namespace engine {
- 
+
 class StaticBody: public engine::CollisionObject {
 
 protected:
@@ -21,7 +21,7 @@ public:
     void disable_collision(CollisionFace face);
 };
 
-}
+}  // namespace engine
 
 
 #endif  // STATIC_BODY_H

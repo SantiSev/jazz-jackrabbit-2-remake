@@ -7,8 +7,9 @@
 Bullet::Bullet(const uint64_t& id, const uint8_t type, Player& player_owner,
                const int& bullet_damage, const int& bullet_speed, const int& enemy_points,
                const int& player_points):
-        engine::DynamicBody(player_owner.position.x, player_owner.position.y, BULLET_WIDTH, BULLET_HEIGHT,
-                    Vector2D(bullet_speed * player_owner.get_direction(), 0)),
+        engine::DynamicBody(player_owner.position.x, player_owner.position.y, BULLET_WIDTH,
+                            BULLET_HEIGHT,
+                            Vector2D(bullet_speed * player_owner.get_direction(), 0)),
         id(id),
         type(type),
         player_owner(player_owner),

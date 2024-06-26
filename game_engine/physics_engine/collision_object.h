@@ -12,6 +12,7 @@ namespace engine {
 class CollisionObject {
 public:
     Vector2D position;
+
 private:
     int hitbox_width;
     int hitbox_height;
@@ -61,7 +62,7 @@ public:
 
     virtual ~CollisionObject() = default;
 };
-}
+}  // namespace engine
 
 
 #endif  // GAME_ENGINE_COLISION_OBJECT_H_

@@ -7,7 +7,8 @@
 
 #define box_offest 0
 
-BoxPlatform::BoxPlatform(int x, int y, int width, int height): engine::StaticBody(x, y, width, height) {}
+BoxPlatform::BoxPlatform(int x, int y, int width, int height):
+        engine::StaticBody(x, y, width, height) {}
 
 void BoxPlatform::handle_colision(engine::CollisionObject* other) {
 

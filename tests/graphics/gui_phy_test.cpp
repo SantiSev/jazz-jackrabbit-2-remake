@@ -268,7 +268,8 @@
 //         }
 //         window.clear();
 
-//         collision_manager.iterateDynamicBodies([renderer](std::shared_ptr<engine::DynamicBody>& body) {
+//         collision_manager.iterateDynamicBodies([renderer](std::shared_ptr<engine::DynamicBody>&
+//         body) {
 //             auto canvasBody = std::dynamic_pointer_cast<engine::CanvasObject>(body);
 //             if (canvasBody && body->is_active_object()) {
 

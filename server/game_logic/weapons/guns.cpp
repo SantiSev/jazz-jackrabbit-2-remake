@@ -47,7 +47,8 @@ GunTwo::GunTwo(uint8_t weapon_id, Player& player_owner, engine::CollisionManager
  * A lot of Shoot rate
  * Slow Bullet speed
  */
-GunThree::GunThree(uint8_t weapon_id, Player& player_owner, engine::CollisionManager& collision_manager,
+GunThree::GunThree(uint8_t weapon_id, Player& player_owner,
+                   engine::CollisionManager& collision_manager,
                    const std::shared_ptr<Configuration>& config):
         Weapon(weapon_id, player_owner, collision_manager, config->bullet_base_ammo * 2,
                config->bullet_base_max_ammo * 3, config->bullet_base_dmg * 3,
@@ -61,7 +62,8 @@ GunThree::GunThree(uint8_t weapon_id, Player& player_owner, engine::CollisionMan
  * Normal Bullet speed
  */
 
-DefaultGun::DefaultGun(uint8_t weapon_id, Player& player_owner, engine::CollisionManager& collision_manager,
+DefaultGun::DefaultGun(uint8_t weapon_id, Player& player_owner,
+                       engine::CollisionManager& collision_manager,
                        const std::shared_ptr<Configuration>& config):
         Weapon(weapon_id, player_owner, collision_manager, 99, config->bullet_base_max_ammo,
                config->bullet_base_dmg * 2, config->bullet_base_shoot_rate,

@@ -26,7 +26,7 @@ public:
 
     virtual void handle_out_of_bounds() {}
 };
-}
+}  // namespace engine
 
 
 #endif  // CHARACTER_BODY_H

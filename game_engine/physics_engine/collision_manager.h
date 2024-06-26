@@ -52,6 +52,6 @@ public:
     ~CollisionManager();
 };
 
-}
+}  // namespace engine
 
 #endif  // COLLISION_MANAGER_H

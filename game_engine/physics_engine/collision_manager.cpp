@@ -9,9 +9,11 @@ using engine::CollisionManager;
 CollisionManager::CollisionManager(int level_width, int level_height):
         grid_width(level_width),
         grid_height(level_height),
-        grid(level_width, std::vector<std::shared_ptr<engine::CollisionObject>>(level_height, nullptr)) {}
+        grid(level_width,
+             std::vector<std::shared_ptr<engine::CollisionObject>>(level_height, nullptr)) {}
 
-std::shared_ptr<engine::CollisionObject> CollisionManager::get_collision_object_at(int x, int y) const {
+std::shared_ptr<engine::CollisionObject> CollisionManager::get_collision_object_at(int x,
+                                                                                   int y) const {
     return grid[x][y];
 }
 
@@ -224,8 +226,8 @@ void CollisionManager::prepare_map() {
                 // Check left adjacent cell
                 if (is_valid_cell(i - 1, j)) {
                     auto coll_obj = get_collision_object_at(i - 1, j);
-                    engine::StaticBody* adj_obj =
-                            dynamic_cast<engine::StaticBody*>(get_collision_object_at(i - 1, j).get());
+                    engine::StaticBody* adj_obj = dynamic_cast<engine::StaticBody*>(
+                            get_collision_object_at(i - 1, j).get());
 
                     if (adj_obj && adj_obj->position.x + adj_obj->get_hitbox_width() ==
                                            static_body->position.x) {
