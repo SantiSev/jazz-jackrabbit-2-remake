@@ -140,8 +140,7 @@ La ejecucion de los `cheat commands` y su correspondecia, en el teclado, es la s
 - Invincible: 03
 - Revive (Player): 04
 - Infinite ammo: 05
-- Revive all (Players & Enemies): 06
-- Kill all: 07
+- Kill all: 06
 
 A su vez contamos con un mapa plano (`Old Reliable`) con los dos enemigos y todos items, dicho mapa fue creado con la intencion de probar features y debugear el juego.
 
