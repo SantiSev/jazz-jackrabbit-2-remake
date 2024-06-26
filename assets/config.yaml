@@ -17,7 +17,7 @@ match:
 
 player:
     health: 100 # >= 10
-    speed_x: 11
+    speed_x: 14
     sprint_speed: 20
     jump_force: 25
     falling_speed: 9
