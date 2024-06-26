@@ -6,11 +6,11 @@
 #include "../../../game_engine/physics_engine/physics_object/static_body.h"
 
 
-class BoxPlatform: public StaticBody {
+class BoxPlatform: public engine::StaticBody {
 
 public:
     BoxPlatform(int x, int y, int width, int height);
-    void handle_colision(CollisionObject* other) override;
+    void handle_colision(engine::CollisionObject* other) override;
 };
 
 

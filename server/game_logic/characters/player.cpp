@@ -2,10 +2,11 @@
 
 
 Player::Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w,
-               int h, int shooting_h, CollisionManager& collision_manager,
+               int h, int shooting_h, engine::CollisionManager& collision_manager,
                const std::shared_ptr<Configuration>& config):
-        CharacterBody(id, character, x, y, w, h, Vector2D(NONE, config->player_falling_speed),
-                      config->player_health, STATE_IDLE_RIGHT, config->player_respawn_cool_down),
+        CharacterBody(id, character, x, y, w, h,
+                      engine::Vector2D(NONE, config->player_falling_speed), config->player_health,
+                      STATE_IDLE_RIGHT, config->player_respawn_cool_down),
         name(std::move(name)),
         weapons(NUM_OF_WEAPONS),
         collision_manager(collision_manager),
@@ -190,7 +191,7 @@ void Player::update_body() {
             set_active_status(false);
         }
 
-        velocity = Vector2D(NONE, config->player_falling_speed);
+        velocity = engine::Vector2D(NONE, config->player_falling_speed);
 
         return;
     }
@@ -250,7 +251,7 @@ void Player::update_body() {
     position += velocity;
 }
 
-void Player::handle_colision(CollisionObject* other) {
+void Player::handle_colision(engine::CollisionObject* other) {
 
     CollisionFace face = is_touching(other);
 
@@ -280,7 +281,7 @@ void Player::knockback(int force) {
     is_knocked_back = true;
 }
 
-void Player::revive(Vector2D new_position) {
+void Player::revive(engine::Vector2D new_position) {
     set_active_status(true);
     revive_counter = revive_cooldown;
     this->health = config->player_health;
@@ -290,7 +291,7 @@ void Player::revive(Vector2D new_position) {
     dying_duration = DYING_TIME;
     reset_intoxication();
     reset_invincibility();
-    velocity = Vector2D(NONE, config->player_falling_speed);
+    velocity = engine::Vector2D(NONE, config->player_falling_speed);
 
     for (auto& weapon: weapons) {
         weapon->reset_ammo();
@@ -306,7 +307,7 @@ void Player::take_damage(int damage) {
     if (health <= DYING) {
         health = DYING;
         state = STATE_DYING;
-        velocity = Vector2D(NONE, NONE);
+        velocity = engine::Vector2D(NONE, NONE);
     } else {
         state = STATE_DAMAGED;
     }

@@ -1,15 +1,18 @@
 #ifndef GAME_ENGINE_COLISION_OBJECT_H_
 #define GAME_ENGINE_COLISION_OBJECT_H_
 
+#include <iostream>
 #include <string>
 
-#include "../game_object.h"
+#include "../math/vector2D.h"
 
 #include "collision_face.h"
-#include "collision_object.h"
 
+namespace engine {
+class CollisionObject {
+public:
+    engine::Vector2D position;
 
-class CollisionObject: public GameObject {
 private:
     int hitbox_width;
     int hitbox_height;
@@ -59,6 +62,7 @@ public:
 
     virtual ~CollisionObject() = default;
 };
+}  // namespace engine
 
 
 #endif  // GAME_ENGINE_COLISION_OBJECT_H_

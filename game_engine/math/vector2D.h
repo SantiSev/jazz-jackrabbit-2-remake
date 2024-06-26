@@ -2,6 +2,8 @@
 #ifndef GAME_ENGINE_MATH_VECTOR2D_H_
 #define GAME_ENGINE_MATH_VECTOR2D_H_
 
+
+namespace engine {
 // Vector2D class for basic vector operations
 class Vector2D {
 
@@ -33,5 +35,6 @@ public:
     // Incrementar vector con un escalar
     Vector2D& operator+=(int scalar);
 };
+}  // namespace engine
 
 #endif  // GAME_ENGINE_MATH_VECTOR2D_H_

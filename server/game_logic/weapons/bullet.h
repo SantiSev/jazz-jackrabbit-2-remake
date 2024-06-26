@@ -19,7 +19,7 @@
 
 class Player;
 
-class Bullet: public DynamicBody {
+class Bullet: public engine::DynamicBody {
 private:
     uint64_t id;
     uint8_t direction;
@@ -43,7 +43,7 @@ public:
 
     void update_body() override;
 
-    void handle_colision(CollisionObject* other) override;
+    void handle_colision(engine::CollisionObject* other) override;
 
     void print_info() override;
 

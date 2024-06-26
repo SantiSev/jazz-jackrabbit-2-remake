@@ -4,7 +4,7 @@
 
 #include "../characters/player.h"
 
-Weapon::Weapon(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager,
+Weapon::Weapon(uint8_t weapon_id, Player& player_owner, engine::CollisionManager& collision_manager,
                int ammo, int max_ammo, int weapon_damage, int shoot_rate, int bullet_speed,
                const std::shared_ptr<Configuration>& config):
         weapon_id(weapon_id),

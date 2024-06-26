@@ -31,7 +31,7 @@
 #define REVIVE_COOLDOWN 1000
 #define INVINCIBILITY_COOLDOWN 600
 
-class CharacterBody: public DynamicBody {
+class CharacterBody: public engine::DynamicBody {
 
 protected:
     // dto info
@@ -50,12 +50,12 @@ protected:
 
 public:
     CharacterBody(size_t id, const character_t& character, int x, int y, int w, int h,
-                  Vector2D velocity, int health, state_t state, int revive_cooldown);
+                  engine::Vector2D velocity, int health, state_t state, int revive_cooldown);
 
 
     //------- Overrided Methods --------
 
-    void handle_colision(CollisionObject* other) override;
+    void handle_colision(engine::CollisionObject* other) override;
     void update_body() override;
 
     //------- Getters --------
@@ -73,7 +73,7 @@ public:
 
     //------- Revive Methods --------
 
-    virtual void revive(Vector2D new_position);
+    virtual void revive(engine::Vector2D new_position);
     bool try_revive();
 
     //------- Movement Methods --------

@@ -18,7 +18,6 @@ void ClientReceiver::run() {
         while (_keep_running) {
             std::shared_ptr<Message> message = client_protocol.recv_message();
             if (message->get_header() == CLOSE_CONNECTION) {
-                std::cout << "about to push close connection" << std::endl;
                 queue.push(message);
             }
             _keep_running = !client_protocol.is_closed();

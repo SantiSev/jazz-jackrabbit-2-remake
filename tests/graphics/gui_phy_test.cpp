@@ -20,7 +20,7 @@
 
 // public:
 //     PlayerTest(size_t id, std::string name, const uint8_t& character, int x, int y,
-//                CollisionManager& collision_manager):
+//                engine::CollisionManager& collision_manager):
 //             Player(id, name, JAZZ_CHARACTER, x, y, collision_manager) {
 
 //         SDL_Rect player_cube = {x, y, PLAYER_WIDTH, PLAYER_HEIGHT};
@@ -172,7 +172,7 @@
 //     engine::Window window(1600, 800, true, true);
 //     auto renderer = window.get_renderer();
 
-//     CollisionManager collision_manager(1600, 800);
+//     engine::CollisionManager collision_manager(1600, 800);
 
 //     SDL_Color color_1 = {255, 0, 0, 255};
 //     auto floor = std::make_shared<PlatformTest>(0, 800 - 32, 1600, 32, color_1);
@@ -231,7 +231,7 @@
 
 //         // itereate the dynamic bodies and update the color rect
 
-//         collision_manager.iterateDynamicBodies([](std::shared_ptr<DynamicBody>& body) {
+//         collision_manager.iterateDynamicBodies([](std::shared_ptr<engine::DynamicBody>& body) {
 //             auto canvasBody = std::dynamic_pointer_cast<engine::CanvasObject>(body);
 //             if (canvasBody && body->is_active_object()) {
 
@@ -245,17 +245,17 @@
 //         }
 
 //         if (player->try_revive()) {
-//             player->revive(Vector2D(100, 450));
+//             player->revive(engine::Vector2D(100, 450));
 //             collision_manager.track_dynamic_body(player);
 //         }
 
 //         if (ammo->try_respawn()) {
-//             ammo->respawn(Vector2D(800, 800 - 32 - 80));
+//             ammo->respawn(engine::Vector2D(800, 800 - 32 - 80));
 //             collision_manager.track_dynamic_body(ammo);
 //         }
 
 //         if (treasure->try_respawn()) {
-//             treasure->respawn(Vector2D(700, 800 - 32 - 80));
+//             treasure->respawn(engine::Vector2D(700, 800 - 32 - 80));
 //             collision_manager.track_dynamic_body(treasure);
 //         }
 
@@ -268,7 +268,8 @@
 //         }
 //         window.clear();
 
-//         collision_manager.iterateDynamicBodies([renderer](std::shared_ptr<DynamicBody>& body) {
+//         collision_manager.iterateDynamicBodies([renderer](std::shared_ptr<engine::DynamicBody>&
+//         body) {
 //             auto canvasBody = std::dynamic_pointer_cast<engine::CanvasObject>(body);
 //             if (canvasBody && body->is_active_object()) {
 

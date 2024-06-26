@@ -115,7 +115,6 @@ void CommonProtocol::send_game_created(const uint16_t header,
     send_header(header);
     game_created.map_id = htons(game_created.map_id);
     skt.sendall(&game_created, sizeof(game_created), &was_closed);
-    std::cout << "sended game created" << std::endl;
 }
 
 void CommonProtocol::send_add_player(const uint16_t header, AddPlayerDTO dto) {

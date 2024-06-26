@@ -2,13 +2,15 @@
 
 #include <iostream>
 
-DynamicBody::DynamicBody(int width, int height): CollisionObject(width, height) {}
+using engine::DynamicBody;
+
+DynamicBody::DynamicBody(int width, int height): engine::CollisionObject(width, height) {}
 
 DynamicBody::DynamicBody(int x, int y, int width, int height):
-        CollisionObject(x, y, width, height) {}
+        engine::CollisionObject(x, y, width, height) {}
 
-DynamicBody::DynamicBody(int x, int y, int width, int height, Vector2D base_speed):
-        CollisionObject(x, y, width, height), velocity(base_speed) {}
+DynamicBody::DynamicBody(int x, int y, int width, int height, engine::Vector2D base_speed):
+        engine::CollisionObject(x, y, width, height), velocity(base_speed) {}
 
 void DynamicBody::update_body() {}
 
@@ -20,7 +22,7 @@ void DynamicBody::print_info() {
 }
 
 void DynamicBody::handle_colision(
-        CollisionObject* other) {  // other players cant overlap with other players
+        engine::CollisionObject* other) {  // other players cant overlap with other players
 
     CollisionFace face = is_touching(other);
     switch (face) {

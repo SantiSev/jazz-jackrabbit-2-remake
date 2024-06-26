@@ -110,7 +110,6 @@ void Match::countdown_match(std::chrono::time_point<std::chrono::steady_clock>& 
         }
     } else {
         if (!match_has_ended) {
-            std::cout << "Game Over" << std::endl;
             match_has_ended = true;
             online = false;
         }
@@ -130,7 +129,7 @@ void Match::respawn_players() {
         if (player->try_revive()) {
 
             bool can_be_placed = false;
-            Vector2D new_position = get_random_spawn_point(player_spawn_points);
+            engine::Vector2D new_position = get_random_spawn_point(player_spawn_points);
             while (!can_be_placed) {
                 std::cout << "Trying to respawn player at " << new_position.x << " "
                           << new_position.y << std::endl;
@@ -165,7 +164,7 @@ void Match::respawn_items() {
 }
 
 
-Vector2D Match::get_random_spawn_point(std::vector<Vector2D> const& spawnpoints) {
+engine::Vector2D Match::get_random_spawn_point(std::vector<engine::Vector2D> const& spawnpoints) {
     if (spawnpoints.empty()) {
         throw std::runtime_error("No spawn points found in map.");
     }
@@ -203,7 +202,7 @@ void Match::kill_all_cheat() {
 //-------------------- Conection Methods -----------------
 
 void Match::add_player_to_game(const AddPlayerDTO& dto) {
-    Vector2D pos = get_random_spawn_point(player_spawn_points);
+    engine::Vector2D pos = get_random_spawn_point(player_spawn_points);
 
     auto player_resources_ptr =
             resource_pool->get_yaml(map_character_enum_to_string.at(dto.player_character));
@@ -325,7 +324,7 @@ GameStateDTO Match::create_actual_snapshot() {
 
     game_state.num_bullets = 0;
     collision_manager->iterateDynamicBodies(
-            [&game_state](const std::shared_ptr<DynamicBody>& body) {
+            [&game_state](const std::shared_ptr<engine::DynamicBody>& body) {
                 auto bullet = std::dynamic_pointer_cast<Bullet>(body);
 
                 if (bullet) {
@@ -373,9 +372,7 @@ void Match::load_environment() {
         throw std::runtime_error("Invalid map size");
     }
 
-    collision_manager = std::make_unique<CollisionManager>(grid_width, grid_height);
-
-    std::cout << "Loading map..." << std::endl;
+    collision_manager = std::make_unique<engine::CollisionManager>(grid_width, grid_height);
 
     for (auto obj: yaml["objects"]) {
 
@@ -430,7 +427,7 @@ void Match::load_items() {
     for (auto& spawn_point: item_spawn_points) {
         item_t current_item_type = static_cast<item_t>(i % ITEM_AMOUNTS);
         uint16_t id = static_cast<uint16_t>(i);
-        std::cout << "Item type: " << (int)current_item_type << std::endl;
+
         switch (current_item_type) {
             case BULLET_ONE_ITEM: {
                 auto bullet_one_item = std::make_shared<AmmoGunOne>(
@@ -494,17 +491,17 @@ void Match::load_spawn_points() {
     }
     std::transform(yaml["player_spawnpoints"].begin(), yaml["player_spawnpoints"].end(),
                    std::back_inserter(player_spawn_points), [](const YAML::Node& sp) {
-                       return Vector2D(sp["x"].as<int>(), sp["y"].as<int>());
+                       return engine::Vector2D(sp["x"].as<int>(), sp["y"].as<int>());
                    });
 
     std::transform(yaml["enemy_spawnpoints"].begin(), yaml["enemy_spawnpoints"].end(),
                    std::back_inserter(enemy_spawn_points), [](const YAML::Node& sp) {
-                       return Vector2D(sp["x"].as<int>(), sp["y"].as<int>());
+                       return engine::Vector2D(sp["x"].as<int>(), sp["y"].as<int>());
                    });
 
     std::transform(yaml["item_spawnpoints"].begin(), yaml["item_spawnpoints"].end(),
                    std::back_inserter(item_spawn_points), [](const YAML::Node& sp) {
-                       return Vector2D(sp["x"].as<int>(), sp["y"].as<int>());
+                       return engine::Vector2D(sp["x"].as<int>(), sp["y"].as<int>());
                    });
 }
 
@@ -566,7 +563,7 @@ void Match::delete_disconnected_player(id_client_t id_client) {
         if (id_client == (*player).second->get_id()) {
             //            collision_manager->remove_object(
             //                    reinterpret_cast<const
-            //                    std::shared_ptr<CollisionObject>&>(*player));
+            //                    std::shared_ptr<engine::CollisionObject>&>(*player));
             players.erase(player);
 #ifdef LOG_VERBOSE
             std::cout << "Player " << id_client << " disconnected from match " << std::endl;

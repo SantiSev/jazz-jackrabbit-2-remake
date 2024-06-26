@@ -12,7 +12,7 @@
 Enemy::Enemy(uint16_t id, const character_t& character, int x, int y, int w, int h,
              const std::shared_ptr<Configuration>& config):
         CharacterBody(id, character, x, y, w, h,
-                      Vector2D(config->enemy_speed, config->enemy_falling_speed),
+                      engine::Vector2D(config->enemy_speed, config->enemy_falling_speed),
                       config->enemy_health, STATE_MOVING_RIGHT, config->enemy_respawn_cool_down),
         attack_damage(config->enemy_damage),
         movement_range(config->enemy_move_rng),
@@ -41,11 +41,11 @@ void Enemy::update_body() {
         patrol();
         position += velocity;
     } else {
-        velocity = Vector2D(0, 0);
+        velocity = engine::Vector2D(0, 0);
     }
 }
 
-void Enemy::handle_colision(CollisionObject* other) {
+void Enemy::handle_colision(engine::CollisionObject* other) {
 
     Player* player = dynamic_cast<Player*>(other);
     CollisionFace face = is_touching(other);
@@ -92,12 +92,12 @@ void Enemy::take_damage(int damage) {  // TODO ADD MORE STATES TO ENEMY
     }
 }
 
-void Enemy::revive(Vector2D new_position) {
+void Enemy::revive(engine::Vector2D new_position) {
     set_active_status(true);
     revive_counter = revive_cooldown;
     health = config->enemy_health;
     position = new_position;
-    velocity = Vector2D(x_speed, DEFAULT_SPEED_Y);
+    velocity = engine::Vector2D(x_speed, DEFAULT_SPEED_Y);
     spawn_position = new_position;
     set_active_status(true);
 }

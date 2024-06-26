@@ -1,13 +1,13 @@
 
 #include "collision_object.h"
 
-#include <iostream>
+using engine::CollisionObject;
 
 CollisionObject::CollisionObject(int hitbox_width, int hitbox_height):
-        GameObject(0, 0), hitbox_width(hitbox_width), hitbox_height(hitbox_height) {}
+        position(0, 0), hitbox_width(hitbox_width), hitbox_height(hitbox_height) {}
 
 CollisionObject::CollisionObject(int x, int y, int hitbox_width, int hitbox_height):
-        GameObject(x, y), hitbox_width(hitbox_width), hitbox_height(hitbox_height) {}
+        position(x, y), hitbox_width(hitbox_width), hitbox_height(hitbox_height) {}
 
 int CollisionObject::get_left_hitbox_side() const { return position.x; }
 

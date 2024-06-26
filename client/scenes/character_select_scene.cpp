@@ -91,8 +91,6 @@ void CharacterSelectScene::start(uint16_t selected_map_id) {
         it++;
     }
 
-    std::cout << "is joinning: " << (int)is_joinning << std::endl;
-    std::cout << "with id: " << match_selected_id << std::endl;
     if (game_running && !is_joinning) {
         message_handler.create_match(selected_character, selected_map_id, MAX_PLAYERS);
     } else {

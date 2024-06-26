@@ -33,9 +33,9 @@ public:
     //------- Overrided Methods --------
 
     void update_body() override;
-    void handle_colision(CollisionObject* other) override;
+    void handle_colision(engine::CollisionObject* other) override;
     void take_damage(int damage) override;
-    void revive(Vector2D new_position) override;
+    void revive(engine::Vector2D new_position) override;
     void print_info() override;
 
     //------- Movement Methods --------
@@ -45,7 +45,7 @@ public:
     void move_right() override;
 
     //------- Game Methods --------
-    Vector2D spawn_position;
+    engine::Vector2D spawn_position;
     virtual void patrol();
 };
 

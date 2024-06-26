@@ -15,9 +15,9 @@
 
 TEST_CASE("ColisionManager with a static body", "[ColisionManager]") {
 
-    CollisionManager collision_manager(100, 100);
+    engine::CollisionManager collision_manager(100, 100);
 
-    std::shared_ptr<StaticBody> body = std::make_shared<StaticBody>(50, 50, 10, 10);
+    std::shared_ptr<engine::StaticBody> body = std::make_shared<engine::StaticBody>(50, 50, 10, 10);
 
     collision_manager.add_object(body);
 
@@ -32,9 +32,9 @@ TEST_CASE("ColisionManager with a static body", "[ColisionManager]") {
 // create a test that places a static body in the collision manager and then removes it
 
 TEST_CASE("ColisionManager with a static body, then remove it", "[ColisionManager]") {
-    CollisionManager collision_manager(100, 100);
+    engine::CollisionManager collision_manager(100, 100);
 
-    std::shared_ptr<StaticBody> body = std::make_shared<StaticBody>(50, 50, 10, 10);
+    std::shared_ptr<engine::StaticBody> body = std::make_shared<engine::StaticBody>(50, 50, 10, 10);
 
     collision_manager.add_object(body);
 
@@ -51,9 +51,9 @@ TEST_CASE("ColisionManager with a static body, then remove it", "[ColisionManage
 }
 
 TEST_CASE("Check colision everywhere else other than the current place", "[ColisionManager]") {
-    CollisionManager collision_manager(100, 100);
+    engine::CollisionManager collision_manager(100, 100);
 
-    std::shared_ptr<StaticBody> body = std::make_shared<StaticBody>(0, 0, 10, 10);
+    std::shared_ptr<engine::StaticBody> body = std::make_shared<engine::StaticBody>(0, 0, 10, 10);
 
     collision_manager.add_object(body);  // the CM will now track body
 
@@ -66,14 +66,14 @@ TEST_CASE("Check colision everywhere else other than the current place", "[Colis
 }
 
 
-TEST_CASE("Update object position using move_horizontal", "[DynamicBody]") {
+TEST_CASE("Update object position using move_horizontal", "[engine::DynamicBody]") {
 
-    CollisionManager collision_manager(1000, 1000);
+    engine::CollisionManager collision_manager(1000, 1000);
 
     int expected_position = 50;
-    auto body = std::make_shared<DynamicBody>(
-            50, 50, 10, 10, Vector2D(1, 1),
-            Vector2D(0, 0));  // Create a dynamic body at position 50,50
+    auto body = std::make_shared<engine::DynamicBody>(
+            50, 50, 10, 10, engine::Vector2D(1, 1),
+            engine::Vector2D(0, 0));  // Create a dynamic body at position 50,50
 
     collision_manager.add_object(body);  // Add the object to the collision manager
 
@@ -97,15 +97,15 @@ TEST_CASE("Update object position using move_horizontal", "[DynamicBody]") {
             expected_position + 10);  // make sure that the body i got is at the correct position
 }
 
-TEST_CASE("Push Dynamic Object into a wall", "[DynamicBody]") {
+TEST_CASE("Push Dynamic Object into a wall", "[engine::DynamicBody]") {
 
-    CollisionManager collision_manager(1000, 1000);
+    engine::CollisionManager collision_manager(1000, 1000);
     int Y = 10;  // Y axis remains constant because we are only moving horizontally
     int expected_position = 50;
-    auto dynamic_body = std::make_shared<DynamicBody>(
+    auto dynamic_body = std::make_shared<engine::DynamicBody>(
             expected_position, Y, 10,
             10);  // Create a dynamic body at position 50,Y and speed of 1
-    auto static_body = std::make_shared<StaticBody>(expected_position + 10, Y, 10,
+    auto static_body = std::make_shared<engine::StaticBody>(expected_position + 10, Y, 10,
                                                     10);  // Create a static body at position 60,Y
 
     collision_manager.add_object(dynamic_body);  // Add the object to the collision manager
@@ -127,12 +127,12 @@ TEST_CASE("Push Dynamic Object into a wall", "[DynamicBody]") {
                                  // wall
 }
 
-TEST_CASE("Push Dynamic Object out of bounds", "[CollisionManager]") {
+TEST_CASE("Push Dynamic Object out of bounds", "[engine::CollisionManager]") {
 
-    CollisionManager collision_manager(1000, 1000);
+    engine::CollisionManager collision_manager(1000, 1000);
     int Y = 10;                   // Y axis remains constant because we are only moving horizontally
     int expected_position = 990;  // the object is currenty at the right edge of the grid
-    auto dynamic_body = std::make_shared<DynamicBody>(
+    auto dynamic_body = std::make_shared<engine::DynamicBody>(
             expected_position, Y, 10,
             10);  // Create a dynamic body at position 990,Y and speed of 1
 
@@ -156,19 +156,19 @@ TEST_CASE("Push Dynamic Object out of bounds", "[CollisionManager]") {
                                                     // 990,Y since the objects width is of 10
 }
 
-TEST_CASE("Move multiple dynamic objects", "[DynamicBody]") {
+TEST_CASE("Move multiple dynamic objects", "[engine::DynamicBody]") {
 
-    CollisionManager collision_manager(1000, 1000);
+    engine::CollisionManager collision_manager(1000, 1000);
     int x_1 = 50;
     int y_1 = 10;
     int x_2 = x_1 + 20;
     int y_2 = 10;
 
-    auto dynamic_body_1 = std::make_shared<DynamicBody>(
+    auto dynamic_body_1 = std::make_shared<engine::DynamicBody>(
             x_1, y_1, 10,
             10);  // Create a dynamic body at position 50,Y and speed of 1
 
-    auto dynamic_body_2 = std::make_shared<DynamicBody>(
+    auto dynamic_body_2 = std::make_shared<engine::DynamicBody>(
             x_2, y_2, 10,
             10);  // Create a dynamic body at position 50,Y and speed of 1
 
@@ -203,13 +203,13 @@ TEST_CASE("Move multiple dynamic objects", "[DynamicBody]") {
     REQUIRE(dynamic_body_2 == get_body_2);
 }
 
-TEST_CASE("Move dynamic from left to right", "[DynamicBody]") {
+TEST_CASE("Move dynamic from left to right", "[engine::DynamicBody]") {
 
-    CollisionManager collision_manager(1000, 1000);
+    engine::CollisionManager collision_manager(1000, 1000);
     int x_1 = 50;
     int y_1 = 10;
 
-    auto dynamic_body = std::make_shared<DynamicBody>(
+    auto dynamic_body = std::make_shared<engine::DynamicBody>(
             x_1, y_1, 10,
             10);  // Create a dynamic body at position 50,Y and speed of 1
 
@@ -249,18 +249,18 @@ TEST_CASE("Move dynamic from left to right", "[DynamicBody]") {
     REQUIRE(get_body_new_origin_point == nullptr);
 }
 
-TEST_CASE("Crash Dynamic Objects into each other", "[DynamicBody]") {
+TEST_CASE("Crash Dynamic Objects into each other", "[engine::DynamicBody]") {
 
-    CollisionManager collision_manager(1000, 1000);
+    engine::CollisionManager collision_manager(1000, 1000);
     int x_1 = 50;
     int x_2 = 80;
     int Y = 10;
 
-    auto dynamic_body_1 = std::make_shared<DynamicBody>(
+    auto dynamic_body_1 = std::make_shared<engine::DynamicBody>(
             x_1, Y, 10,
             10);  // Create a dynamic body at position 50,Y and speed of 1
 
-    auto dynamic_body_2 = std::make_shared<DynamicBody>(
+    auto dynamic_body_2 = std::make_shared<engine::DynamicBody>(
             x_2, Y, 10,
             10);  // Create a dynamic body at position 50,Y and speed of 1
 

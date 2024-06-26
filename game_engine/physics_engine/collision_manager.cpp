@@ -4,16 +4,20 @@
 
 #include "physics_object/dynamic_body.h"
 
+using engine::CollisionManager;
+
 CollisionManager::CollisionManager(int level_width, int level_height):
         grid_width(level_width),
         grid_height(level_height),
-        grid(level_width, std::vector<std::shared_ptr<CollisionObject>>(level_height, nullptr)) {}
+        grid(level_width,
+             std::vector<std::shared_ptr<engine::CollisionObject>>(level_height, nullptr)) {}
 
-std::shared_ptr<CollisionObject> CollisionManager::get_collision_object_at(int x, int y) const {
+std::shared_ptr<engine::CollisionObject> CollisionManager::get_collision_object_at(int x,
+                                                                                   int y) const {
     return grid[x][y];
 }
 
-void CollisionManager::place_object_in_grid(std::shared_ptr<CollisionObject> obj) {
+void CollisionManager::place_object_in_grid(std::shared_ptr<engine::CollisionObject> obj) {
 
     for (int i = obj->position.x; i < obj->position.x + obj->get_hitbox_width(); ++i) {
         for (int j = obj->position.y; j < obj->position.y + obj->get_hitbox_height(); ++j) {
@@ -28,8 +32,8 @@ bool CollisionManager::is_valid_cell(int x, int y) const {
     return x >= 0 && x < grid_width && y >= 0 && y < grid_height;
 }
 
-void CollisionManager::remove_object_from_grid(std::shared_ptr<CollisionObject> obj,
-                                               Vector2D position) {
+void CollisionManager::remove_object_from_grid(std::shared_ptr<engine::CollisionObject> obj,
+                                               engine::Vector2D position) {
 
     for (int i = position.x; i < position.x + obj->get_hitbox_width(); ++i) {
         for (int j = position.y; j < position.y + obj->get_hitbox_height(); ++j) {
@@ -44,8 +48,8 @@ void CollisionManager::remove_object_from_grid(std::shared_ptr<CollisionObject> 
 // ----------------- public methods ---------------------
 
 
-bool CollisionManager::can_be_placed(std::shared_ptr<CollisionObject> obj,
-                                     Vector2D new_position) const {
+bool CollisionManager::can_be_placed(std::shared_ptr<engine::CollisionObject> obj,
+                                     engine::Vector2D new_position) const {
     for (int i = new_position.x; i < new_position.x + obj->get_hitbox_width(); ++i) {
         for (int j = new_position.y; j < new_position.y + obj->get_hitbox_height(); ++j) {
             if (grid[i][j] != nullptr) {
@@ -56,28 +60,28 @@ bool CollisionManager::can_be_placed(std::shared_ptr<CollisionObject> obj,
     return true;
 }
 
-void CollisionManager::add_object(std::shared_ptr<StaticBody> obj) {
+void CollisionManager::add_object(std::shared_ptr<engine::StaticBody> obj) {
 
     static_bodies.emplace_back(obj);
     place_object_in_grid(obj);
 }
 
-void CollisionManager::track_dynamic_body(std::shared_ptr<DynamicBody> obj) {
+void CollisionManager::track_dynamic_body(std::shared_ptr<engine::DynamicBody> obj) {
 
     dynamic_bodies.emplace_back(obj, obj->position);
     place_object_in_grid(obj);
 }
 
-void CollisionManager::remove_object(std::shared_ptr<CollisionObject> obj) {
+void CollisionManager::remove_object(std::shared_ptr<engine::CollisionObject> obj) {
     remove_object_from_grid(obj, obj->position);
 }
 
-void CollisionManager::update_object(std::shared_ptr<CollisionObject> obj) {
+void CollisionManager::update_object(std::shared_ptr<engine::CollisionObject> obj) {
     remove_object_from_grid(obj, obj->position);
     place_object_in_grid(obj);
 }
 
-void CollisionManager::detect_colisions(std::shared_ptr<DynamicBody> obj) {
+void CollisionManager::detect_colisions(std::shared_ptr<engine::DynamicBody> obj) {
     // Get the position and hitbox dimensions of the obj
     int obj_x = obj->position.x;
     int obj_y = obj->position.y;
@@ -91,7 +95,7 @@ void CollisionManager::detect_colisions(std::shared_ptr<DynamicBody> obj) {
 
     for (int i = obj_x; i < obj_x + obj_width; ++i) {
         for (int j = obj_y; j < obj_y + obj_height; ++j) {
-            std::shared_ptr<CollisionObject> other = get_collision_object_at(i, j);
+            std::shared_ptr<engine::CollisionObject> other = get_collision_object_at(i, j);
             if (other != nullptr && other.get() != obj.get()) {
                 // double dispatch to handle collision
                 obj->handle_colision(other.get());  // Handle collision with other object
@@ -102,7 +106,7 @@ void CollisionManager::detect_colisions(std::shared_ptr<DynamicBody> obj) {
 }
 
 void CollisionManager::handle_out_of_bounds(
-        std::shared_ptr<DynamicBody> obj) {  // TODO refactor this :D
+        std::shared_ptr<engine::DynamicBody> obj) {  // TODO refactor this :D
     if (obj->position.x < 0) {
         obj->position.x = 32;
         obj->velocity.x = 0;
@@ -178,7 +182,7 @@ void CollisionManager::remove_inactive_bodies() {
 }
 
 void CollisionManager::iterateDynamicBodies(
-        std::function<void(std::shared_ptr<DynamicBody>&)> func) {
+        std::function<void(std::shared_ptr<engine::DynamicBody>&)> func) {
     for (auto& bodyTuple: dynamic_bodies) {
         auto& body = std::get<0>(bodyTuple);
         func(body);
@@ -228,8 +232,8 @@ void CollisionManager::prepare_map() {
                 if (is_valid_cell(i - 1, j)) {
                     auto coll_obj = get_collision_object_at(i - 1, j);
                     // cast to static body
-                    StaticBody* adj_obj =
-                            dynamic_cast<StaticBody*>(get_collision_object_at(i - 1, j).get());
+                    engine::StaticBody* adj_obj = dynamic_cast<engine::StaticBody*>(
+                            get_collision_object_at(i - 1, j).get());
 
                     if (adj_obj && adj_obj->position.x + adj_obj->get_hitbox_width() ==
                                            static_body->position.x) {
@@ -241,7 +245,7 @@ void CollisionManager::prepare_map() {
                 // Check right adjacent cell
                 if (is_valid_cell(i + 1, j)) {
                     auto coll_obj = get_collision_object_at(i + 1, j);
-                    StaticBody* adj_obj = dynamic_cast<StaticBody*>(coll_obj.get());
+                    engine::StaticBody* adj_obj = dynamic_cast<engine::StaticBody*>(coll_obj.get());
                     if (adj_obj && adj_obj->position.x == static_body->position.x +
                                                                   static_body->get_hitbox_width()) {
                         static_body->disable_collision(CollisionFace::RIGHT);
@@ -252,7 +256,7 @@ void CollisionManager::prepare_map() {
                 // Check top adjacent cell
                 if (is_valid_cell(i, j - 1)) {
                     auto coll_obj = get_collision_object_at(i, j - 1);
-                    StaticBody* adj_obj = dynamic_cast<StaticBody*>(coll_obj.get());
+                    engine::StaticBody* adj_obj = dynamic_cast<engine::StaticBody*>(coll_obj.get());
                     if (adj_obj && adj_obj->position.y + adj_obj->get_hitbox_height() ==
                                            static_body->position.y) {
                         static_body->disable_collision(CollisionFace::TOP);
@@ -263,7 +267,7 @@ void CollisionManager::prepare_map() {
                 // Check bottom adjacent cell
                 if (is_valid_cell(i, j + 1)) {
                     auto coll_obj = get_collision_object_at(i, j + 1);
-                    StaticBody* adj_obj = dynamic_cast<StaticBody*>(coll_obj.get());
+                    engine::StaticBody* adj_obj = dynamic_cast<engine::StaticBody*>(coll_obj.get());
                     if (adj_obj &&
                         adj_obj->position.y ==
                                 static_body->position.y + static_body->get_hitbox_height()) {

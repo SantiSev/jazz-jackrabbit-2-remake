@@ -54,10 +54,10 @@ private:
     size_t max_players;
     ClientMonitor& client_monitor;
     uint16_t map;
-    std::unique_ptr<CollisionManager> collision_manager;
-    std::vector<Vector2D> player_spawn_points;
-    std::vector<Vector2D> enemy_spawn_points;
-    std::vector<Vector2D> item_spawn_points;
+    std::unique_ptr<engine::CollisionManager> collision_manager;
+    std::vector<engine::Vector2D> player_spawn_points;
+    std::vector<engine::Vector2D> enemy_spawn_points;
+    std::vector<engine::Vector2D> item_spawn_points;
     std::mutex match_mutex;
 
     const std::shared_ptr<engine::ResourcePool>& resource_pool;
@@ -73,9 +73,9 @@ private:
 
     void respawn_items();
 
-    Collectable create_random_item(Vector2D position);
+    Collectable create_random_item(engine::Vector2D position);
 
-    Vector2D get_random_spawn_point(std::vector<Vector2D> const& spawnpoints);
+    engine::Vector2D get_random_spawn_point(std::vector<engine::Vector2D> const& spawnpoints);
 
     //-------------------- Initialization Methods -----------------
 

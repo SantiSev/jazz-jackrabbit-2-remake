@@ -4,7 +4,7 @@
 #include "../../../common/item_enum.h"
 #include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
 
-class Collectable: public DynamicBody {
+class Collectable: public engine::DynamicBody {
 private:
     uint16_t id;
     bool collected = false;
@@ -15,7 +15,7 @@ private:
 public:
     Collectable(uint16_t id, int x, int y, int hitbox_width, int hitbox_height, item_t item_type,
                 int respawn_cooldown):
-            DynamicBody(x, y, hitbox_width, hitbox_height),
+            engine::DynamicBody(x, y, hitbox_width, hitbox_height),
             id(id),
             item_type(item_type),
             respawn_cooldown(respawn_cooldown) {}
@@ -42,7 +42,7 @@ public:
         }
     }
 
-    virtual void respawn(Vector2D new_position) {
+    virtual void respawn(engine::Vector2D new_position) {
         position = new_position;
         set_active_status(true);
         respawn_counter = 0;

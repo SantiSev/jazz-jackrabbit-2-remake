@@ -3,12 +3,15 @@
 
 #include <iostream>
 
-StaticBody::StaticBody(int width, int height): CollisionObject(width, height) {}
+using engine::StaticBody;
 
-StaticBody::StaticBody(int x, int y, int width, int height): CollisionObject(x, y, width, height) {}
+StaticBody::StaticBody(int width, int height): engine::CollisionObject(width, height) {}
+
+StaticBody::StaticBody(int x, int y, int width, int height):
+        engine::CollisionObject(x, y, width, height) {}
 
 
-void StaticBody::handle_colision(CollisionObject* other) {
+void StaticBody::handle_colision(engine::CollisionObject* other) {
     // This is a static body, so it does not move.
     // Therefore, it does not need to handle colisions.
     CollisionFace face = this->is_touching(other);
