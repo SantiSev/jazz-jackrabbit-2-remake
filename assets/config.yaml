@@ -44,3 +44,6 @@ bullet:
     base_ammo: 5
     base_max_ammo: 10
     base_shoot_rate: 20
+
+item:
+    respawn_time: 300 # unit is in game loops

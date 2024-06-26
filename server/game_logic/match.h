@@ -41,7 +41,7 @@ class Match: public Thread {
 private:
     bool online;
     bool match_has_ended = false;
-    int match_time = MATCH_DURATION;
+    int match_time = 300;
     Queue<std::shared_ptr<Message>>& lobby_queue;
     MatchMessageHandler message_handler;
 
