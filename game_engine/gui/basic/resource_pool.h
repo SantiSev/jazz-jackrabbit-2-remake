@@ -35,12 +35,12 @@ private:
     std::unordered_map<std::string, std::shared_ptr<YAML::Node>> yamls;
     std::unordered_map<std::string, std::shared_ptr<Sound>> sounds;
 
+    // It contains the general configuration of the game
+    std::shared_ptr<Configuration> config{};
+
 public:
     // Load files that don't depend on the renderer only
     ResourcePool();
-
-    // It contains the general configuration of the game
-    std::shared_ptr<Configuration> config{};
 
     // Load files that depend on the renderer or not
     explicit ResourcePool(SDL_Renderer* renderer);

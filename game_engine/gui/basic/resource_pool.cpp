@@ -9,10 +9,9 @@ using engine::Sound;
 using engine::SoundEffect;
 using engine::Texture;
 
-ResourcePool::ResourcePool(): renderer(nullptr), config(std::make_shared<Configuration>()) {}
+ResourcePool::ResourcePool(): renderer(nullptr), config(nullptr) {}
 
-ResourcePool::ResourcePool(SDL_Renderer* renderer):
-        renderer(renderer), config(std::make_shared<Configuration>()) {}
+ResourcePool::ResourcePool(SDL_Renderer* renderer): renderer(renderer), config(nullptr) {}
 
 void ResourcePool::load_texture(const std::string& name) {
     if (renderer == nullptr) {
@@ -62,8 +61,8 @@ void ResourcePool::load_music(const std::string& name) {
 }
 
 void engine::ResourcePool::load_config(const std::string& name) {
-    config->load_yaml_info(get_yaml(name));
-    //        config->load_yaml_info(YAML::LoadFile(asset_manager.get_full_path(file)));
+    load_yaml(name);
+    config = std::make_shared<Configuration>(get_yaml(name));
 }
 
 const std::shared_ptr<Texture>& ResourcePool::get_texture(const std::string& name) const {

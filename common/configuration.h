@@ -7,7 +7,7 @@
 
 class Configuration {
 public:
-    Configuration();
+    explicit Configuration(const std::shared_ptr<YAML::Node>& config);
 
     // Match config
     int match_max_players;
@@ -46,9 +46,6 @@ public:
     int bullet_base_ammo;
     int bullet_base_max_ammo;
     int bullet_base_shoot_rate;
-
-    void load_yaml_info(const std::shared_ptr<YAML::Node>& config);
-    //    void load_yaml_info(const YAML::Node& config);
 
     ~Configuration();
 };
