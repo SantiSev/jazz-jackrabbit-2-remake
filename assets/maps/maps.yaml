@@ -3,9 +3,9 @@ map_list:
       id: 1
     - name: "Electri City"
       id: 2
-    - name: "Old Reliable"
-      id: 3
     - name: "Cathedral"
+      id: 3
+    - name: "Old Reliable"
       id: 4
 
 maps:
@@ -17,7 +17,8 @@ maps:
     yaml: "assets/maps/electric_map"
   3:
     texture: "assets/editor/editor_assets"
-    yaml: "assets/maps/old_reliable_map"
+    yaml: "assets/maps/cathedral"
   4:
     texture: "assets/editor/editor_assets"
-    yaml: "assets/maps/cathedral"
+    yaml: "assets/maps/old_reliable_map"
+    
