@@ -99,7 +99,9 @@ void CommonProtocol::send_game_state(const uint16_t header, GameStateDTO game_st
 }
 
 void CommonProtocol::send_finish_match(const uint16_t header) {
+#ifdef LOG
     std::cout << "sending finish match" << std::endl;
+#endif
     send_header(header);
 }
 
@@ -115,7 +117,9 @@ void CommonProtocol::send_game_created(const uint16_t header,
     send_header(header);
     game_created.map_id = htons(game_created.map_id);
     skt.sendall(&game_created, sizeof(game_created), &was_closed);
+#ifdef LOG
     std::cout << "sended game created" << std::endl;
+#endif
 }
 
 void CommonProtocol::send_add_player(const uint16_t header, AddPlayerDTO dto) {

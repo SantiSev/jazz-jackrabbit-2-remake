@@ -35,6 +35,7 @@ private:
 
     std::atomic<bool>& game_running;
     std::atomic<bool>& character_select_running;
+    uint16_t& selected_map_id;
     uint16_t& match_selected_id;
     std::atomic<bool>& is_joinning;
 
@@ -50,14 +51,14 @@ public:
                          std::shared_ptr<engine::SoundManager> sound_manager,
                          std::atomic<bool>& game_running,
                          std::atomic<bool>& character_select_running,
-                         std::atomic<bool>& is_joinning, uint16_t& match_selected_id,
-                         ClientMessageHandler& message_handler);
+                         std::atomic<bool>& is_joinning, uint16_t& selected_map_id,
+                         uint16_t& match_selected_id, ClientMessageHandler& message_handler);
 
     // cant copy
     CharacterSelectScene(const CharacterSelectScene&) = delete;
     CharacterSelectScene& operator=(const CharacterSelectScene&) = delete;
 
-    void start(uint16_t selected_map_id);
+    void start();
 
     ~CharacterSelectScene();
 };

@@ -37,16 +37,16 @@ private:
 
     ClientMessageHandler& message_handler;
 
+    uint16_t& selected_map_id;
+
     void create_buttons();
 
 public:
-    uint16_t selected_map_id;
-
     MapSelectScene(engine::Window& window, EventLoop* event_loop,
                    std::shared_ptr<engine::ResourcePool> resource_pool,
                    std::atomic<bool>& game_running, std::atomic<bool>& map_select_running,
                    std::atomic<bool>& character_select_running,
-                   ClientMessageHandler& message_handler);
+                   ClientMessageHandler& message_handler, uint16_t& selected_map_id);
 
     // cant copy
     MapSelectScene(const MapSelectScene&) = delete;

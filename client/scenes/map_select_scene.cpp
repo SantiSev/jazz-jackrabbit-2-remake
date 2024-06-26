@@ -8,7 +8,7 @@ MapSelectScene::MapSelectScene(engine::Window& window, EventLoop* event_loop,
                                std::atomic<bool>& game_running,
                                std::atomic<bool>& map_select_running,
                                std::atomic<bool>& character_select_running,
-                               ClientMessageHandler& message_handler):
+                               ClientMessageHandler& message_handler, uint16_t& selected_map_id):
         window(window),
         renderer(window.get_renderer()),
         event_loop(event_loop),
@@ -22,7 +22,7 @@ MapSelectScene::MapSelectScene(engine::Window& window, EventLoop* event_loop,
         map_select_running(map_select_running),
         character_select_running(character_select_running),
         message_handler(message_handler),
-        selected_map_id(1) {
+        selected_map_id(selected_map_id) {
     auto texture = resource_pool->get_texture(CHARACTER_SELECT_FILE);
     auto yaml = *resource_pool->get_yaml(CHARACTER_SELECT_FILE);
 

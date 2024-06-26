@@ -41,11 +41,16 @@ private:
     std::atomic<bool> character_select_running;
     std::atomic<bool> match_select_running;
     std::atomic<bool> is_joinning;
+
+    uint16_t selected_map_id;
     uint16_t joined_id_match;
 
     ClientMessageHandler& message_handler;
 
     void create_buttons();
+
+    void connect_buttons();
+    void disconnect_buttons();
 
 public:
     MenuScene(engine::Window& window, EventLoop* event_loop,
