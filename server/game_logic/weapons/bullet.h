@@ -6,6 +6,7 @@
 #include <iostream>
 #include <memory>
 
+#include "../../../common/configuration.h"
 #include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
 
 
@@ -13,7 +14,7 @@
 #define OFFSET_BULLET_X 3
 #define BULLET_POINTS 10
 #define BULLET_BONUS_POINTS 50
-#define GOING_LEFT 0
+#define GOING_LEFT 0x00
 #define GOING_RIGHT 1
 
 class Player;
@@ -26,9 +27,13 @@ private:
     Player& player_owner;
     int bullet_damage = 1;
     int life_span = BULLET_LIFE_SPAN;
+    int enemy_points = 0;
+    int player_points = 0;
+
 
 public:
-    Bullet(const uint64_t& id, const uint8_t type, Player& player_owner, const int& bullet_damage);
+    Bullet(const uint64_t& id, const uint8_t type, Player& player_owner, const int& bullet_damage,
+           const int& bullet_speed, const int& enemy_points, const int& player_points);
 
     uint64_t get_id() const;
 
@@ -39,6 +44,10 @@ public:
     void update_body() override;
 
     void handle_colision(CollisionObject* other) override;
+
+    void print_info() override;
+
+    void handle_out_of_bounds() override;
 };
 
 

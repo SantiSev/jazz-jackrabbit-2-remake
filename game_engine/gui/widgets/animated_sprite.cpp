@@ -56,6 +56,8 @@ void AnimatedSprite::draw(SDL_Renderer* renderer, int it) {
 
 void AnimatedSprite::next_frame() { current_frame = (current_frame + next_frame_offset) % frames; }
 
+SDL_Rect& AnimatedSprite::get_body() { return d_rect; }
+
 void AnimatedSprite::set_position(int x, int y) {
     // If no animations are set, there's no need to adjust the position
     if (animations == nullptr) {
@@ -63,6 +65,7 @@ void AnimatedSprite::set_position(int x, int y) {
         d_rect.y = y;
         return;
     }
+
     set_position_with_correction(x, y);
 }
 

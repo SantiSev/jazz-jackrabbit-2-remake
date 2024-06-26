@@ -3,29 +3,33 @@
 
 #include <cstdio>
 #include <list>
-#include <map>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
+#include "../../common/configuration.h"
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../protocol/manager_message_handler.h"
 #include "../protocol/server_thread_manager.h"
 #include "./match.h"
+
+#define CONFIG "assets/config"
 
 class Message;
 
 class MatchesManager: public Thread {
 private:
     bool online = true;
-    uint16_t clients_connected = 0;
+    uint16_t client_id_counter = 100;
     int matches_number = 0;
-    std::map<int, std::shared_ptr<Match>> matches;
+    std::unordered_map<int, std::shared_ptr<Match>> matches;
     std::list<ServerThreadManager*> clients;
     MatchesManagerMessageHandler message_handler;
     std::mutex manager_mutex;
-    ClientMonitor client_monitor;
+    std::unordered_map<int, ClientMonitor*> client_monitors;
     std::shared_ptr<engine::ResourcePool> resource_pool;
+    ClientMonitor lobby_monitor;
 
     void pre_load_resources();
 
@@ -36,37 +40,28 @@ public:
 
     void run() override;
     void stop() override;
-    ~MatchesManager() override = default;
-
-    void stop_all_matches();
-    void check_matches_status();
-    void stop_finished_match(Match* match);
-
-    MatchInfoDTO return_matches_lists();
-
-    void create_new_match(const CreateGameDTO& dto);
+    ~MatchesManager() override;
 
     void add_new_client_to_manager(Socket client_socket);
-
+    void create_new_match(const CreateGameDTO& dto);
+    void join_match(const JoinMatchDTO& dto);
+    void send_client_succesful_connect(const uint16_t& id_client, const uint16_t& map);
     void send_match_lists(RequestActiveGamesDTO dto);
 
+    MatchInfoDTO return_matches_lists();
+    void stop_all_matches();
     void clear_all_clients();
-
-    void join_match(const JoinMatchDTO& dto);
-
-    ServerThreadManager* get_client_by_id(const uint16_t& id);
-
-    void send_client_succesful_connect(const uint16_t& id_client, const map_list_t& map);
-
+    void check_matches_status();
     void delete_disconnected_client(const id_client_t& id_client);
 
+    ServerThreadManager* get_client_by_id(const uint16_t& id);
     std::shared_ptr<AddPlayerMessage> make_add_player_message(const std::string& player_name,
                                                               id_client_t client_id,
                                                               character_t character,
-                                                              map_list_t map) const;
-
-    Queue<std::shared_ptr<Message>>& get_match_queue_by_id(size_t i);
+                                                              uint16_t map) const;
+    Queue<std::shared_ptr<Message>>& get_match_queue_by_id(int match_id);
+    void clean_client_monitors();
+    bool can_create_match(int max_matches);
 };
-
 
 #endif

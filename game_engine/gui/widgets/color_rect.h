@@ -15,10 +15,11 @@ private:
     SDL_Rect rect;
 
 public:
-    ColorRect(const SDL_Color& color, SDL_Rect& rect);
+    ColorRect(const SDL_Color& color, SDL_Rect rect);
 
     void draw(SDL_Renderer* renderer, int it) override;
 
+    SDL_Rect& get_body() override;
     void set_position(int x, int y) override;
 
     bool is_intersecting(SDL_Point& point) const override;

@@ -8,15 +8,20 @@
 #include <SDL2/SDL.h>
 #include <yaml-cpp/yaml.h>
 
+#include "../../../common/configuration.h"
 #include "../../errors.h"
 
 #include "asset_manager.h"
 #include "font.h"
+#include "music.h"
+#include "sound_effect.h"
 #include "texture.h"
 
 #define PNG_EXTENSION ".png"
 #define YAML_EXTENSION ".yaml"
 #define TTF_EXTENSION ".ttf"
+#define WAV_EXTENSION ".wav"
+#define MP3_EXTENSION ".mp3"
 
 namespace engine {
 // Uses a path pseudo-relative to the project root directory to load and retrieve resources
@@ -28,6 +33,10 @@ private:
     std::unordered_map<std::string, std::shared_ptr<Texture>> textures;
     std::unordered_map<std::string, std::shared_ptr<Font>> fonts;
     std::unordered_map<std::string, std::shared_ptr<YAML::Node>> yamls;
+    std::unordered_map<std::string, std::shared_ptr<Sound>> sounds;
+
+    // It contains the general configuration of the game
+    std::shared_ptr<Configuration> config{};
 
 public:
     // Load files that don't depend on the renderer only
@@ -43,11 +52,17 @@ public:
     void load_texture(const std::string& name);
     void load_font(const std::string& name, int size);
     void load_yaml(const std::string& name);
+    void load_sound_effect(const std::string& name);
+    void load_music(const std::string& name);
+    void load_config(const std::string& name);
 
     // Thread-safe, read only getters
     const std::shared_ptr<Texture>& get_texture(const std::string& name) const;
     const std::shared_ptr<Font>& get_font(const std::string& name) const;
     const std::shared_ptr<YAML::Node>& get_yaml(const std::string& name) const;
+    const std::shared_ptr<Sound>& get_sound(const std::string& name) const;
+    const std::shared_ptr<Configuration>& get_config() const;
+
 
     ~ResourcePool();
 };

@@ -6,7 +6,9 @@
 #include <cstring>
 #include <iomanip>
 #include <list>
+#include <map>
 #include <memory>
+#include <random>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -15,6 +17,7 @@
 #include <yaml-cpp/yaml.h>
 
 #include "../../common/assets.h"
+#include "../../common/item_enum.h"
 #include "../../game_engine/gui/basic/resource_pool.h"
 #include "../../game_engine/physics_engine/collision_manager.h"
 #include "../../server/game_logic/weapons/bullet.h"
@@ -48,30 +51,21 @@ private:
     std::vector<std::shared_ptr<Collectable>> items;
 
     size_t players_connected = 0;
-    size_t required_players;
+    size_t max_players;
     ClientMonitor& client_monitor;
-    map_list_t map;
+    uint16_t map;
     std::unique_ptr<CollisionManager> collision_manager;
     std::vector<Vector2D> player_spawn_points;
     std::vector<Vector2D> enemy_spawn_points;
+    std::vector<Vector2D> item_spawn_points;
     std::mutex match_mutex;
 
     const std::shared_ptr<engine::ResourcePool>& resource_pool;
 
-public:
-    Queue<std::shared_ptr<Message>> match_queue;
-    // Constructor
-    explicit Match(const map_list_t& map_selected, size_t required_players_setting,
-                   Queue<std::shared_ptr<Message>>& lobby_queue, ClientMonitor& monitor,
-                   const std::shared_ptr<engine::ResourcePool>& resource_pool);
-    void run() override;
-    void stop() override;
-    ~Match() override = default;
-
     //-------------------- Gameloop Methods ----------------------
 
-    void countdown_match(std::chrono::time_point<std::chrono::system_clock>& runTime,
-                         const std::chrono::time_point<std::chrono::system_clock>& endTime);
+    void countdown_match(std::chrono::time_point<std::chrono::steady_clock>& runTime,
+                         const std::chrono::time_point<std::chrono::steady_clock>& endTime);
 
     void respawn_players();
 
@@ -79,9 +73,31 @@ public:
 
     void respawn_items();
 
-    void run_command(const CommandDTO& dto);
+    Collectable create_random_item(Vector2D position);
 
-    Vector2D select_player_spawn_point();
+    Vector2D get_random_spawn_point(std::vector<Vector2D> const& spawnpoints);
+
+    //-------------------- Initialization Methods -----------------
+
+    void load_environment();
+
+    void initiate_enemies(std::vector<character_t> enemy_types);
+
+    void load_spawn_points();
+
+    void load_items();
+
+public:
+    Queue<std::shared_ptr<Message>> match_queue;
+    // Constructor
+    explicit Match(const uint16_t& map_selected, size_t required_players_setting,
+                   Queue<std::shared_ptr<Message>>& lobby_queue, ClientMonitor& monitor,
+                   const std::shared_ptr<engine::ResourcePool>& resource_pool);
+    void run() override;
+    void stop() override;
+    ~Match() override = default;
+
+    void run_command(const CommandDTO& dto);
 
     //-------------------- Conection Methods ----------------------
 
@@ -93,13 +109,9 @@ public:
 
     GameStateDTO create_actual_snapshot();
 
-    //-------------------- Initialization Methods -----------------
+    void run_cheat_command(const CheatCommandDTO& dto);
 
-    void load_enviorment(map_list_t map);
-
-    void initiate_enemies();
-
-    void load_spawn_points();
+    void kill_all_cheat();
 
     //-------------------- Getter Methods -----------------
 
@@ -107,13 +119,13 @@ public:
 
     bool has_match_ended() const;
 
-    size_t get_num_players();
+    size_t get_num_players() const;
 
     size_t get_max_players() const;
 
     std::vector<size_t> get_clients_ids();
 
-    map_list_t get_map() const;
+    uint16_t get_map() const;
 
     Queue<std::shared_ptr<Message>>& get_match_queue();
 };

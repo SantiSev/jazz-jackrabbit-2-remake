@@ -10,8 +10,11 @@
 // Game Settings
 const uint8_t MAX_MATCHES_TO_CREATE = 16;
 const size_t MAX_PLAYERS =
-        2;  // The match doesn't start without this many players connected to the match.
-const size_t MAX_ENEMIES = 6;
+        8;  // The match doesn't start without this many players connected to the match.
+const size_t MAX_ENEMIES = 12;
+const size_t MIN_ENEMIES = 2;
+const size_t MAX_ITEMS = 50;
+const size_t MIN_ITEMS = 1;
 #define PLAYER_KILL_POINTS 15
 #define ENEMY_KILL_POINTS 5
 
@@ -27,10 +30,10 @@ const uint8_t PLAYER_EVENT = 0x01;
 
 // Gameloop
 const size_t MAX_EVENTS_PER_LOOP = 20;
-const size_t MATCH_DURATION = 60;  // TODO match duration?
+const size_t MATCH_DURATION = 300;
 
 // Player states
-typedef enum _state: uint8_t {
+typedef enum: uint8_t {
     STATE_IDLE_RIGHT = 0x00,
     STATE_IDLE_LEFT = 0X01,
     STATE_SHOOTING_RIGHT = 0x02,
@@ -48,7 +51,8 @@ typedef enum _state: uint8_t {
     STATE_INTOXICATED_MOV_LEFT = 0X14,
     STATE_SPECIAL_RIGHT = 0X15,
     STATE_SPECIAL_LEFT = 0X16,
-    STATE_DEAD = 0X17
+    STATE_DYING = 0X17,
+    STATE_DEAD = 0X18
 } state_t;
 
 const std::map<uint8_t, std::string> map_states_to_animations = {
@@ -69,6 +73,7 @@ const std::map<uint8_t, std::string> map_states_to_animations = {
         {STATE_INTOXICATED_MOV_LEFT, "intoxicated_moving_left"},
         {STATE_SPECIAL_RIGHT, "special_right"},
         {STATE_SPECIAL_LEFT, "special_left"},
+        {STATE_DYING, "dying"},
         {STATE_DEAD, "dead"}};
 
 // Weapons
@@ -83,7 +88,9 @@ const std::map<uint8_t, std::string> map_states_to_animations = {
 #define BULLET_HEIGHT 10
 #define BULLET_SPEED 20
 
-//
-
+// Viewport
+#define VIEWPORT_WIDTH 800
+#define VIEWPORT_HEIGHT 600
+const uint32_t RATE = 1000 / 60;
 
 #endif

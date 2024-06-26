@@ -55,8 +55,10 @@ public:
 
     void draw(SDL_Renderer* renderer, int it) override;
 
+    SDL_Rect& get_body() override;
     void set_position(int x, int y) override;
     void set_position_with_correction(int x, int y);
+
     void reverse_animation();
     void flip();
     void set_animation(const std::string& animation_name);

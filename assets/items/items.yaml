@@ -1,0 +1,62 @@
+body_width: 23
+body_height: 23
+bullet_one:
+    flipped: false
+    frames: 10
+    fps: 8
+    x: 44
+    y: 57
+    w: 23
+    h: 23
+    off_x: 0
+    off_y: 0
+bullet_two:
+    flipped: false
+    frames: 10
+    fps: 8
+    x: 44
+    y: 87
+    w: 23
+    h: 23
+    off_x: 0
+    off_y: 0
+bullet_three:
+    flipped: false
+    frames: 10
+    fps: 8
+    x: 44
+    y: 27
+    w: 23
+    h: 23
+    off_x: 0
+    off_y: 0
+carrot:
+    flipped: false
+    frames: 10
+    fps: 8
+    x: 44
+    y: 141
+    w: 23
+    h: 23
+    off_x: 0
+    off_y: 0
+meat:
+    flipped: false
+    frames: 1
+    fps: 8
+    x: 44
+    y: 180
+    w: 23
+    h: 23
+    off_x: 0
+    off_y: 0
+coin:
+    flipped: false
+    frames: 20
+    fps: 8
+    x: 35
+    y: 306
+    w: 23
+    h: 23
+    off_x: 0
+    off_y: 0

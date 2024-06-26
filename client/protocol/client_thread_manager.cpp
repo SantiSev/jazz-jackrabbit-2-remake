@@ -21,7 +21,7 @@ ClientThreadManager::~ClientThreadManager() {
 }
 
 void ClientThreadManager::set_active_games(MatchInfoDTO dto) {
-    std::cout << "primera partida-> mapa:" << dto.active_games[0].map
+    std::cout << "primera partida-> mapa:" << dto.active_games[0].map_id
               << " max players:" << dto.active_games[0].players_max
               << " players_ingame:" << dto.active_games[0].players_ingame << std::endl;
 }

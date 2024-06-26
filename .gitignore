@@ -56,3 +56,7 @@ valgrind.log
 # Logs
 server.log
 client.log
+
+# Maps
+tiles.yaml
+new_map.yaml

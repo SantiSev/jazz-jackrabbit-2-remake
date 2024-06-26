@@ -24,7 +24,7 @@ protected:
     bool is_hovered_m;
 
 public:
-    explicit Button(std::unique_ptr<Label> label, SDL_Rect& rect, const SDL_Color& color,
+    explicit Button(std::unique_ptr<Label> label, SDL_Rect rect, const SDL_Color& color,
                     const SDL_Color& hoverColor);
 
     // Cant copy
@@ -37,9 +37,14 @@ public:
 
     void draw(SDL_Renderer* renderer, int it) override;
 
+    void center_x(int x, int w);
+    void center_y(int y, int h);
+    void center(int x, int y, int w, int h);
+
     void on_click() override;
     void is_hovered(bool) override;
 
+    SDL_Rect& get_body() override;
     void set_position(int x, int y) override;
 
     bool is_intersecting(SDL_Point&) const override;

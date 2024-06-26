@@ -1,6 +1,7 @@
 # width and height of the hitbox
 body_width: 30
 body_height: 44
+weapon_y: 13
 idle_right:
     flipped: false
     frames: 26
@@ -9,8 +10,8 @@ idle_right:
     y: 55
     w: 48
     h: 48
-    off_x: -6
-    off_y: -3
+    off_x: -9
+    off_y: -2
 idle_left:
     flipped: true
     frames: 26
@@ -19,8 +20,8 @@ idle_left:
     y: 55
     w: 48
     h: 48
-    off_x: -6
-    off_y: -3
+    off_x: -9
+    off_y: -2
 moving_right:
     flipped: false
     frames: 8
@@ -30,7 +31,7 @@ moving_right:
     w: 54
     h: 43
     off_x: -11
-    off_y: 1
+    off_y: -2
 moving_left:
     flipped: true
     frames: 8
@@ -40,8 +41,8 @@ moving_left:
     w: 54
     h: 43
     off_x: -11
-    off_y: 1
-spriting_right:
+    off_y: -2
+sprinting_right:
     flipped: false
     frames: 4
     fps: 8
@@ -50,8 +51,8 @@ spriting_right:
     w: 67
     h: 38
     off_x: -17
-    off_y: 6
-spriting_left:
+    off_y: 3
+sprinting_left:
     flipped: true
     frames: 4
     fps: 8
@@ -60,7 +61,7 @@ spriting_left:
     w: 67
     h: 38
     off_x: -17
-    off_y: 6
+    off_y: 3
 jumping_right:
     flipped: false
     frames: 9
@@ -90,7 +91,7 @@ falling:
     w: 57
     h: 46
     off_x: -12
-    off_y: -2
+    off_y: 0
 shooting_right:
     flipped: false
     frames: 2
@@ -100,7 +101,7 @@ shooting_right:
     w: 48
     h: 44
     off_x: -7
-    off_y: -3
+    off_y: 1
 shooting_left:
     flipped: true
     frames: 2
@@ -110,7 +111,7 @@ shooting_left:
     w: 48
     h: 44
     off_x: -7
-    off_y: -3
+    off_y: 1
 special_right:
     flipped: false
     frames: 1
@@ -120,7 +121,7 @@ special_right:
     w: 0
     h: 0
     off_x: 0
-    off_y: 0
+    off_y: -2
 special_left:
     flipped: false
     frames: 3
@@ -133,51 +134,61 @@ special_left:
     off_y: -2
 damaged:
     flipped: false
-    frames: 3
-    fps: 8
-    x: 8
-    y: 516
-    w: 57
-    h: 46
+    frames: 9
+    fps: 4
+    x: 40
+    y: 707
+    w: 65
+    h: 63
     off_x: -12
-    off_y: -2
+    off_y: -10
 dead:
     flipped: false
     frames: 3
     fps: 8
-    x: 8
-    y: 516
-    w: 57
-    h: 46
+    x: 1260
+    y: 740
+    w: 72
+    h: 54
+    off_x: -12
+    off_y: -2
+dying:
+    flipped: false
+    frames: 20
+    fps: 8
+    x: 36
+    y: 811
+    w: 72
+    h: 54
     off_x: -12
     off_y: -2
 intoxicated_idle:
     flipped: false
     frames: 8
     fps: 8
-    x: 2
+    x: 1
     y: 585
     w: 48
     h: 47
-    off_x: -7
-    off_y: -2
+    off_x: -5
+    off_y: -1
 intoxicated_moving_right:
     flipped: false
     frames: 12
     fps: 8
-    x: 3
-    y: 657
+    x: 1
+    y: 646
     w: 66
     h: 49
-    off_x: -17
-    off_y: -5
+    off_x: 0
+    off_y: -1
 intoxicated_moving_left:
     flipped: true
     frames: 12
     fps: 8
-    x: 3
-    y: 657
+    x: 1
+    y: 646
     w: 66
     h: 49
-    off_x: -17
-    off_y: -5
+    off_x: 0
+    off_y: -1

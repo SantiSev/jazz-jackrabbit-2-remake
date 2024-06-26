@@ -172,3 +172,14 @@ A su vez si se quiere editar usando otras texturas se puede cambiar el archivo `
 En este release se provee una textura adicional `assets/editor/electric_texture.yaml` para usarla debera cambiarle el nombre del archivo a `editor_assets` reemplazando asi la textura anterior.
 
 Nota: tener en cuenta de no agregar mas bloques de los que hay en estas texturas del release y no sacar los bloques de spawnpoints y null block.
+
+### Tests de events
+
+Para testear los eventos, simplemente hay que correr:
+
+```bash
+./build.sh events
+```
+
+Los tests utilizan tiburoncin y scripts modificados que fueron proveidos por la catedra Taller de programacion I
+Veiga (FIUBA).

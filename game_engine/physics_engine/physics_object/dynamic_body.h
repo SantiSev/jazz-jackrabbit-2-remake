@@ -20,6 +20,8 @@ public:
     void handle_colision(CollisionObject* other) override;
 
     virtual void print_info();
+
+    virtual void handle_out_of_bounds() {}
 };
 
 

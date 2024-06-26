@@ -6,23 +6,24 @@
 #include "../../../common/character_enum.h"
 
 CharacterBody::CharacterBody(size_t id, const character_t& character, int x, int y, int w, int h,
-                             Vector2D velocity, int health, uint8_t state, size_t revive_cooldown):
+                             Vector2D velocity, int health, state_t state, int revive_cooldown):
         DynamicBody(x, y, w, h, Vector2D(velocity)),
         id(id),
         character_reference(character),
         state(state),
         health(health),
-        revive_cooldown(revive_cooldown) {}
+        revive_cooldown(revive_cooldown),
+        revive_counter(revive_cooldown) {}
 
 //------- Getters --------
 
-uint16_t CharacterBody::get_id() { return id; }
+uint16_t CharacterBody::get_id() const { return id; }
 
-character_t CharacterBody::get_character() { return character_reference; }
+character_t CharacterBody::get_character() const { return character_reference; }
 
-uint8_t CharacterBody::get_state() { return state; }
+state_t CharacterBody::get_state() const { return state; }
 
-int CharacterBody::get_health() { return health; }
+int CharacterBody::get_health() const { return health; }
 
 bool CharacterBody::is_dead() { return health == 0; }
 
@@ -58,35 +59,25 @@ bool CharacterBody::try_revive() {
         return false;
     }
 
-    if (revive_cooldown == NONE && !is_active_object()) {
-        set_active_status(true);
+    if (revive_counter <= NONE) {
         return true;
     } else {
-        this->revive_cooldown--;
+        this->revive_counter--;
         return false;
     }
 }
 
 void CharacterBody::revive(Vector2D new_position) {
     this->health = MAX_HEALTH;
-    this->revive_cooldown = REVIVE_COOLDOWN;
     this->state = STATE_IDLE_RIGHT;
     position = new_position;
 }
 
 // ------- Movement Methods --------
 
-bool CharacterBody::is_on_floor() const { return on_floor; }
-
 bool CharacterBody::is_facing_right() const { return direction == RIGHT_DIR; }
 
 int CharacterBody::get_direction() const { return direction; }
-
-// Avoid adding falling animation   || Agus es un bo
-bool CharacterBody::is_doing_action_state() const {
-    return (state == STATE_SHOOTING_LEFT || state == STATE_SHOOTING_RIGHT ||
-            state == STATE_SPECIAL_RIGHT || state == STATE_SPECIAL_LEFT);
-}
 
 void CharacterBody::move_left() {
     direction = -1;
@@ -110,17 +101,15 @@ void CharacterBody::jump() {
     }
 }
 
-void CharacterBody::knockback(int force) { velocity.x += -direction * force; }
+void CharacterBody::knockback(int force) {
+    velocity.y = -abs(force);
+    velocity.x = force;
+    on_floor = false;
+}
 
 void CharacterBody::update_body() {
     if (!on_floor) {
         velocity.y += GRAVITY;
-
-        if (velocity.y > 0 && !is_doing_action_state()) {
-            state = STATE_FALLING;
-        } else {
-            state = is_facing_right() ? STATE_JUMPING_RIGHT : STATE_JUMPING_LEFT;
-        }
 
     } else {
         velocity.x -= FRICCTION * direction;
@@ -140,8 +129,6 @@ void CharacterBody::handle_colision(CollisionObject* other) {
 
         if (face == CollisionFace::LEFT ||
             face == CollisionFace::RIGHT) {  // if im touching something on my side, then i cant
-            // move
-            // into it
             velocity.x = 0;
         } else if (face ==
                    CollisionFace::TOP) {  // if i touch something on top, then i cant move into

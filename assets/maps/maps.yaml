@@ -1,0 +1,18 @@
+map_list:
+    - name: "Hidden Castle"
+      id: 1
+    - name: "Electri City"
+      id: 2
+    - name: "Old Reliable"
+      id: 3
+
+maps:
+    1:
+        texture: "assets/editor/editor_assets"
+        yaml: "assets/maps/hidden_castle_map"
+    2:
+        texture: "assets/editor/editor_assets"
+        yaml: "assets/maps/electric_map"
+    3:
+        texture: "assets/editor/editor_assets"
+        yaml: "assets/maps/old_reliable_map"

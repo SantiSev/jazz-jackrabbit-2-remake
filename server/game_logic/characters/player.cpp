@@ -1,23 +1,29 @@
 #include "player.h"
 
 
-Player::Player(uint16_t id, std::string name, const character_t& character, int x, int y,
-               CollisionManager& collision_manager):
-        CharacterBody(id, character, x, y, PLAYER_WIDTH, PLAYER_HEIGHT,
-                      Vector2D(NONE, MAX_FALL_SPEED), MAX_HEALTH, STATE_IDLE_RIGHT,
-                      REVIVE_COOLDOWN),
+Player::Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w,
+               int h, int shooting_h, CollisionManager& collision_manager,
+               const std::shared_ptr<Configuration>& config):
+        CharacterBody(id, character, x, y, w, h, Vector2D(NONE, config->player_falling_speed),
+                      config->player_health, STATE_IDLE_RIGHT, config->player_respawn_cool_down),
         name(std::move(name)),
         weapons(NUM_OF_WEAPONS),
-        collision_manager(collision_manager) {
+        collision_manager(collision_manager),
+        shooting_height(shooting_h),
+        config(config) {
+    revive_cooldown = config->player_respawn_cool_down;
     set_starting_weapon();
 }
 
 
 // -------- Getters ---------
+int Player::get_shooting_height() const { return shooting_height; }
 
 int Player::get_points() const { return points; }
 
 Weapon* Player::get_weapon(size_t weapon) const { return weapons[weapon].get(); }
+
+Weapon* Player::get_selected_weapon() const { return get_weapon(selected_weapon); }
 
 std::string Player::get_name() const { return name; }
 
@@ -25,12 +31,11 @@ std::string Player::get_name() const { return name; }
 
 void Player::set_name(std::string new_name) { this->name = std::move(new_name); }
 
-void Player::set_starting_weapon() {  // todo check if its needed to be in config
-    // TODO fix this the id should not be passed as a parameter
-    weapons[0] = std::make_unique<DefaultGun>(COMMON_BULLET, *this, collision_manager);
-    weapons[1] = std::make_unique<GunOne>(BULLET_ONE, *this, collision_manager);
-    weapons[2] = std::make_unique<GunTwo>(BULLET_TWO, *this, collision_manager);
-    weapons[3] = std::make_unique<GunThree>(BULLET_THREE, *this, collision_manager);
+void Player::set_starting_weapon() {
+    weapons[0] = std::make_unique<DefaultGun>(COMMON_BULLET, *this, collision_manager, config);
+    weapons[1] = std::make_unique<GunOne>(BULLET_ONE, *this, collision_manager, config);
+    weapons[2] = std::make_unique<GunTwo>(BULLET_TWO, *this, collision_manager, config);
+    weapons[3] = std::make_unique<GunThree>(BULLET_THREE, *this, collision_manager, config);
 }
 
 // ------------ Point Methods --------------
@@ -46,9 +51,9 @@ void Player::reload_weapon(size_t weapon_id, int ammo_amount) {
 
 void Player::shoot_selected_weapon() {
 
-#ifdef LOG_VERBOSE
-    std::cout << "| Player id: " << this->id << " | Player::shoot_selected_weapon() |" << std::endl;
-#endif
+    if (is_intoxicated) {
+        return;
+    }
 
     weapons[selected_weapon]->shoot();
     state = is_facing_right() ? STATE_SHOOTING_RIGHT : STATE_SHOOTING_LEFT;
@@ -59,13 +64,48 @@ void Player::select_next_weapon() { selected_weapon = (selected_weapon + 1) % we
 
 // ------------ Intoxication Methods --------------
 
-bool Player::is_player_intoxicated() const { return is_intoxicated; }
+void Player::start_intoxication() {
+    is_intoxicated = true;
+    is_invincible = false;
 
-void Player::reset_intoxication() { is_intoxicated = false; }
+    intoxication_cooldown = config->player_intoxication_cool_down;
+}
 
-void Player::decrease_intoxication_cooldown() { intoxication_cooldown--; }
+void Player::handle_intoxication() {
+    if (is_intoxicated) {
+        intoxication_cooldown--;
+        if (intoxication_cooldown == NONE) {
+            is_intoxicated = false;
+        }
+    }
+}
 
-size_t Player::get_intoxication_cooldown() const { return intoxication_cooldown; }
+void Player::reset_intoxication() {
+    is_intoxicated = false;
+    intoxication_cooldown = config->player_intoxication_cool_down;
+}
+
+// ------------ Invinvibility Methods --------------
+
+void Player::start_invincibility() {
+    is_invincible = true;
+    is_intoxicated = false;
+    invincibility_cooldown = config->player_invincivility_cool_down;
+}
+
+void Player::handle_invincibility() {
+    if (is_invincible && !invincibility_cheat_active) {
+        invincibility_cooldown--;
+        if (invincibility_cooldown == NONE) {
+            is_invincible = false;
+        }
+    }
+}
+
+void Player::reset_invincibility() {
+    is_invincible = false;
+    invincibility_cooldown = config->player_invincivility_cool_down;
+}
 
 // ------------ Special Attack Methods --------------
 
@@ -77,91 +117,116 @@ void Player::reset_special_attack() { special_cooldown = SPECIAL_COOLDOWN; }
 
 // ------------ Movement Methods --------------
 
-void Player::move_left() {
-
-#ifdef LOG_VERBOSE
-    std::cout << "| Player id: " << this->id << " | Player::move_left() |" << std::endl;
-#endif
-
+void Player::move_horizontal(int new_direction) {
     if (is_knocked_back) {
         return;
     }
+    direction = new_direction;
 
-    direction = -1;
-    velocity.x = -DEFAULT_SPEED_X;
-    if (is_on_floor()) {
-        if (is_player_intoxicated()) {
-            state = STATE_INTOXICATED_MOV_LEFT;
-        } else {
-            state = STATE_MOVING_LEFT;
-        }
+    if (is_sprinting && !is_intoxicated && on_floor) {
+        velocity.x = direction * config->player_sprint_spd;
+    } else {
+        velocity.x = is_intoxicated ? direction * config->player_speed_x * INTOXICATION_SLOWDOWN :
+                                      direction * config->player_speed_x;
     }
-}
-
-void Player::move_right() {
-
-#ifdef LOG_VERBOSE
-    std::cout << "| Player id: " << this->id << " | Player::move_right() |" << std::endl;
-#endif
-
-    if (is_knocked_back) {
-        return;
-    }
-
-    direction = 1;
-    velocity.x = DEFAULT_SPEED_X;
-    if (is_on_floor()) {
-        if (is_player_intoxicated()) {
-            state = STATE_INTOXICATED_MOV_RIGHT;
-        } else {
-            state = STATE_MOVING_RIGHT;
-        }
-    }
-}
-
-void Player::jump() {
-
-#ifdef LOG_VERBOSE
-    std::cout << "| Player id: " << this->id << " | Player::jump() |" << std::endl;
-#endif
 
     if (on_floor) {
-        on_floor = false;
-        velocity.y = -JUMP_SPEED;
+
+        if (is_intoxicated) {
+            state = is_facing_right() ? STATE_INTOXICATED_MOV_RIGHT : STATE_INTOXICATED_MOV_LEFT;
+
+        } else if (is_sprinting) {
+            state = is_facing_right() ? STATE_SPRINTING_RIGHT : STATE_SPRINTING_LEFT;
+        } else {
+            state = is_facing_right() ? STATE_MOVING_RIGHT : STATE_MOVING_LEFT;
+        }
     }
-    if (is_facing_right()) {
-        state = STATE_JUMPING_RIGHT;
-    } else {
-        state = STATE_JUMPING_LEFT;
+}
+
+
+void Player::sprint() { is_sprinting = !is_sprinting; }
+
+void Player::move_left() { move_horizontal(LEFT_DIR); }
+
+void Player::move_right() { move_horizontal(RIGHT_DIR); }
+
+void Player::jump() {
+    if (is_intoxicated) {
+        return;
+    }
+    if (on_floor) {
+        on_floor = false;
+        velocity.y = -config->player_jump_f;
+        state = is_facing_right() ? STATE_JUMPING_RIGHT : STATE_JUMPING_LEFT;
     }
 }
 
 void Player::do_special_attack() {
     if (is_special_available()) {
-        // GENERAR PROYECTIL ESPECIAL
+        // DO SPECIAL ATTACK
         reset_special_attack();
     }
 }
 
+bool Player::is_shooting() {
+    return (state == STATE_SHOOTING_LEFT || state == STATE_SHOOTING_RIGHT ||
+            state == STATE_SPECIAL_RIGHT || state == STATE_SPECIAL_LEFT);
+}
 
 // ------------ Override Methods --------------
 
 void Player::update_body() {
 
-    if (is_dead()) {  // if the player is dead, then it shouldnt move
+    if (health == DYING) {
+
+        state = dying_duration > 0 ? STATE_DYING : STATE_DEAD;
+
+        if (dying_duration > 0) {  // the character is dying!
+            dying_duration--;
+        } else {  // the character is dead!
+            health = NONE;
+            set_active_status(false);
+        }
+
+        velocity = Vector2D(NONE, config->player_falling_speed);
+
         return;
     }
 
+    handle_intoxication();
+    handle_invincibility();
 
-    if (velocity.x == 0 && is_on_floor() && !is_knocked_back && state != STATE_SHOOTING_LEFT &&
-        state != STATE_SHOOTING_RIGHT) {
+
+    if (velocity.x == NONE && on_floor && !is_knocked_back && !is_shooting()) {
+
+        if (is_intoxicated) {
+            state = STATE_INTOXICATED_IDLE;
+        } else {
+            state = is_facing_right() ? STATE_IDLE_RIGHT : STATE_IDLE_LEFT;
+        }
+    }
+
+    if (on_floor && (get_state() == STATE_FALLING)) {
         state = is_facing_right() ? STATE_IDLE_RIGHT : STATE_IDLE_LEFT;
     }
 
 
     if (!on_floor) {
-        if (velocity.y < MAX_FALL_SPEED) {
+
+        if (velocity.y < config->player_falling_speed) {
             velocity.y += GRAVITY;
+        }
+
+        if (velocity.x != 0) {
+            velocity.x = direction * config->player_speed_x * AIR_FRICCTION;
+        }
+
+        if (!is_shooting()) {
+            if (velocity.y > NONE) {
+                state = STATE_FALLING;
+            } else {
+                state = is_facing_right() ? STATE_JUMPING_RIGHT : STATE_JUMPING_LEFT;
+            }
         }
 
     } else {
@@ -181,10 +246,6 @@ void Player::update_body() {
     }
 
     position += velocity;
-
-#ifdef LOG_VERBOSE
-    print_info();
-#endif
 }
 
 void Player::handle_colision(CollisionObject* other) {
@@ -209,43 +270,74 @@ void Player::handle_colision(CollisionObject* other) {
 }
 
 void Player::knockback(int force) {
-    velocity.x = -direction * force;
-    velocity.y = -force;
+
+    velocity.y = -abs(force);
+    velocity.x = force;
+    direction = force > 0 ? RIGHT_DIR : LEFT_DIR;
     on_floor = false;
     is_knocked_back = true;
 }
 
 void Player::revive(Vector2D new_position) {
-    this->health = MAX_HEALTH;
-    this->revive_cooldown = REVIVE_COOLDOWN;
+    set_active_status(true);
+    revive_counter = revive_cooldown;
+    this->health = config->player_health;
     this->state = STATE_IDLE_RIGHT;
     position = new_position;
+    is_sprinting = false;
+    dying_duration = DYING_TIME;
+    reset_intoxication();
+    reset_invincibility();
+    velocity = Vector2D(NONE, config->player_falling_speed);
 
     for (auto& weapon: weapons) {
         weapon->reset_ammo();
     }
 }
 
+void Player::take_damage(int damage) {
+
+    if (!is_invincible) {
+        health -= damage;
+    }
+
+    if (health <= DYING) {
+        health = DYING;
+        state = STATE_DYING;
+        velocity = Vector2D(NONE, NONE);
+    } else {
+        state = STATE_DAMAGED;
+    }
+}
+
 void Player::print_info() {
     std::cout << "--------------------------------" << std::endl;
-    std::cout << "| Id: " << id << " |" << std::endl;
-    std::cout << "| Position: " << position.x << " , " << position.y << " |" << std::endl;
-    std::cout << "| Velocity: " << velocity.x << " , " << velocity.y << " |" << std::endl;
+    std::cout << "| Player Id: " << id << " |" << std::endl;
+    std::cout << "| Character: " << (int)character_reference << " |" << std::endl;
+    std::cout << "| Active Status: " << is_active_object() << " |" << std::endl;
+    std::cout << "| State: " << (int)get_state() << " |" << std::endl;
+    std::cout << "| Position: (" << position.x << " , " << position.y << ") |" << std::endl;
+    std::cout << "| Velocity: (" << velocity.x << " , " << velocity.y << ") |" << std::endl;
+    std::cout << "| Direction: " << direction << " |" << std::endl;
     std::cout << "| Health: " << health << " |" << std::endl;
-    std::cout << "| on_floor: " << on_floor << " |" << std::endl;
-    std::cout << "| weapon: " << selected_weapon << " |" << std::endl;
-    std::cout << "| ammo: " << weapons[selected_weapon]->get_ammo() << " |" << std::endl;
-    std::cout << "| shoot status: " << weapons[selected_weapon]->shoot_ready() << " |" << std::endl;
-    std::cout << "| shoot status: " << weapons[selected_weapon]->shoot_rate_status() << " |"
+    std::cout << "| On_floor: " << on_floor << " |" << std::endl;
+    std::cout << "| Weapon: " << selected_weapon << " |" << std::endl;
+    std::cout << "| Ammo: " << weapons[selected_weapon]->get_ammo() << " |" << std::endl;
+    std::cout << "| Shoot status: " << weapons[selected_weapon]->shoot_ready() << " |" << std::endl;
+    std::cout << "| Shoot status: " << weapons[selected_weapon]->shoot_rate_status() << " |"
               << std::endl;
-    std::cout << "| points: " << points << " |" << std::endl;
-    std::cout << "| state: " << (int)get_state() << " |" << std::endl;
+    std::cout << "| Points: " << points << " |" << std::endl;
+    std::cout << "| Respawn Cooldown: " << revive_cooldown << " |" << std::endl;
+    std::cout << "| Respawn Counter: " << revive_counter << " |" << std::endl;
+    std::cout << "| Dying Counter: " << dying_duration << " |" << std::endl;
+    std::cout << "| Intoxication Cooldown: " << intoxication_cooldown << " |" << std::endl;
+    std::cout << "| Invincibility Cooldown: " << invincibility_cooldown << " |" << std::endl;
 }
 
 //------- Match Methods --------
 
 void Player::execute_command(command_t command) {
-    if (is_dead()) {
+    if (is_dead() || health == DYING) {
         return;
     }
 
@@ -256,52 +348,50 @@ void Player::execute_command(command_t command) {
         case MOVE_RIGHT:
             move_right();
             break;
+        case SPRINT:
+            if (is_sprint_allowed) {
+                sprint();
+            }
+            break;
         case JUMP:
             jump();
             break;
         case SHOOT:
-            std::cout << "SHOOT" << std::endl;
             shoot_selected_weapon();
+            break;
+        case CHANGE_WEAPON:
+            select_next_weapon();
             break;
         default:
             break;
     }
 }
 
-void Player::update_status(Vector2D spawn_point) {  // todo check if its needed
+void Player::activate_cheat_command(cheat_command_t command) {
+    switch (command) {
+        case CHEAT_MAX_AMMO:
+            for (auto& weapon: weapons) {
+                weapon->add_ammo(weapon->get_max_ammo());
+            }
+            break;
+        case CHEAT_INFINITE_AMMO:
+            for (auto& weapon: weapons) {
+                weapon->change_infinite_ammo();
+            }
+            break;
+        case CHEAT_MAX_HEALTH:
+            health = MAX_HEALTH;
+            break;
+        case CHEAT_INVINCIBLE:
+            change_invincibility_cheat();
+            break;
+        default:
+            break;
+    }
+}
 
-    if (is_dead()) {
-        return;
-    }
+void Player::change_invincibility_cheat() {
 
-    if (is_player_intoxicated()) {
-        decrease_intoxication_cooldown();
-        if (get_intoxication_cooldown() == NONE) {
-            reset_intoxication();
-        }
-    }
-    if (!is_special_available()) {
-        decrease_special_attack_cooldown();
-    }
-    if (!is_dead() && get_health() == NONE) {
-        velocity = Vector2D(0, 0);
-        state = STATE_DEAD;
-    }
-    if (is_on_floor() && (get_state() == STATE_FALLING)) {
-        if (is_facing_right()) {
-            state = STATE_IDLE_RIGHT;
-        } else {
-            state = STATE_IDLE_LEFT;
-        }
-    }
-    if (!is_on_floor() && (velocity.y > NONE) && !is_doing_action_state()) {
-        state = STATE_FALLING;
-    }
-    if (is_on_floor() && !is_doing_action_state()) {
-        if (is_facing_right()) {
-            state = STATE_IDLE_RIGHT;
-        } else {
-            state = STATE_IDLE_LEFT;
-        }
-    }
+    invincibility_cheat_active = !invincibility_cheat_active;
+    is_invincible = invincibility_cheat_active;
 }

@@ -29,6 +29,10 @@ public:
     void handle_recv_close_connection(const CloseConnectionDTO& dto) override;
 
     void handle_recv_command(const CommandDTO& command) override;
+
+    void handle_recv_finish_match() override;
+
+    void handle_recv_cheat_command(const CheatCommandDTO& cheat_command) override;
 };
 
 

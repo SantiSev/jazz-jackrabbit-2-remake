@@ -16,7 +16,7 @@ private:
 public:
     ServerThreadManager(Socket&& skt, Queue<std::shared_ptr<Message>>& receiver_queue);
 
-    std::shared_ptr<Queue<std::shared_ptr<Message>>>& get_sender_queue();
+    Queue<std::shared_ptr<Message>>& get_sender_queue();
 
     void set_client_id(const uint16_t& new_id);
 

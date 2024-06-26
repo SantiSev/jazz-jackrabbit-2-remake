@@ -2,7 +2,7 @@
 
 using engine::Button;
 
-Button::Button(std::unique_ptr<Label> label, SDL_Rect& rect, const SDL_Color& color,
+Button::Button(std::unique_ptr<Label> label, SDL_Rect rect, const SDL_Color& color,
                const SDL_Color& hover_color):
         label(std::move(label)),
         rect(rect),
@@ -36,6 +36,26 @@ void Button::draw(SDL_Renderer* renderer, int it) {
 
     label->draw(renderer, it);
 }
+
+void Button::center_x(int x, int w) {
+    int new_center = x + w / 2;
+    rect.x = new_center - rect.w / 2;
+    label->center_x(x, w);
+}
+
+void Button::center_y(int y, int h) {
+    int new_center = y + h / 2;
+    rect.y = new_center - rect.h / 2;
+    label->center_y(y, h);
+}
+
+void Button::center(int x, int y, int w, int h) {
+    center_x(x, w);
+    center_y(y, h);
+    label->center(x, y, w, h);
+}
+
+SDL_Rect& Button::get_body() { return rect; }
 
 void Button::set_position(int x, int y) {
     rect.x = x;
