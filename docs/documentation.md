@@ -50,6 +50,109 @@ A su vez se creo un objecto especial que no grafico ni controlador:
 
 * Camara: Contiene logica para solo renderizar los objetos que estan en la pantalla de 800x600 (utilizada por el editor y el match scene).
 
+### Physics Engine
+Para el diseño de la _"physics engine"_, decidi basarme en la implementacion de fisicas del motor de juegos **Godot** donde llegue al siguiente planteo
+
+##### Collision Objects
+Todos los objects del juego son `CollisionObject`'s que consiste en objects con 
+```cpp
+int hitbox_width;   // el ancho del hitbox del object0 
+int hitbox_height;  // el alto del hitbox del objecto 
+bool is_active = true; //el status para indicar si debe seguir detectando collisiones o no
+```
+[ un hitbox es utilizado para detectar colisiones entre los objetos de un juego ]
+
+Para detectar dichas collisiones se utiliza los metodos protegidos `is_touching()` que tiene 2 variantes:
+```cpp
+    /*
+     * This code determines which face of the calling
+     * CollisionObject instance (i.e., *this or self)
+     * is being touched by the other collision object.
+     */
+    CollisionFace is_touching(const CollisionObject* other) const;
+
+    /*
+     * This code is identical to the is_touching method,
+     * but it returns a boolean value instead of a CollisionFace.
+     */
+    bool is_touching_bool(const CollisionObject* other) const;
+```
+`CollisionFace` es un enum que indica de que lado fue tocado mi objecto con respecto al otro. Esto es util para diferenciar collisiones entre paredes, suelos, etc
+Hay objectos (como en balas e items) donde no es importante saber donde fue tocado sino que solo importa que haya ocurrido una colision.
+
+#### Abstraccion de Collision Object
+
+ ```cpp
+virtual void handle_colision(CollisionObject* other) = 0;
+```
+Este metodo es virtual puro porque CollisionObject no se debe poder instanciar en cualquier momento, el CollisionObject es la clase padre de todos los componentes del juego en donde todos sus clases hijos deben _handelear_ sus colisiones (dar la logica e indicar que ocurre cuando son colisionados). Hasta el momento hay solo 2 tipos:
+- `Dynamic_body`
+- `Static_body`
+
+#### Collision Objects - Static Body
+Static Body consiste en objetos que no se registra su movimiento y tampoco son movidos ó desaparecen.
+
+#### Collision Objects - Dynamic Body
+Dynamic Body consiste en objects que tienen movimiento (tanto horizontal como vertical), por lo tanto tienen el atributo:
+```cpp 
+Vector2D velocity;
+```
+Como los dynamic bodies se mueven, se debe poder actualizar sus valores de posicion y/o velocidad, por lo tanto, tambien tienen una funcion virtual llamada:
+```cpp
+virtual void update_body();
+```
+Cuando se desee crear un objecto que se puede mover se debe implementar esta funcion sino nunca se actualizará sus valores de posicion / movimiento
+
+
+### Collision Manager
+Como vimos hasta el momento, todo es un CollisionObject, todo debe tener collisiones, etc. Pero aca viene la parte interesante ...
+
+**¿Como se _detectan_ las colisiones?** --> A traves del `CollisionManager` !
+
+El CollisionManager tiene como funcion recibir CollisionObjects, colocarlo en una grilla (luego explico como es la grilla) y activar los metodos de handle_collision cuando detecta una collision entre 2 objectos.
+
+Principalmente detecta las colisiones de todos los objectos dinamicos. Si fuese a detectar cada colision de cada objeto, esto haria que el engine funcione muy pobre, por lo tanto decidí solo _trackear_ las colisiones de dynamicBodies y los StaticBodies solo estarán ahi para ser detectados.
+
+#### Collision Manager - Grid & Deteccion de Collisiones
+La grilla del collisionManager es de la siguiente manera:
+```cpp
+std::vector<std::vector<std::shared_ptr<CollisionObject>>> grid;
+```
+
+Es una matriz de shared pointers de CollisionObjects, en donde cada celda de la grilla indica 
+un pixel del juego. Al colocar un objecto en la grilla, en realidad estamos colocando en las posiciones desde (x ,y ) hasta (x+w , x+h ) shared pointers al mismo collision Object
+
+Luego el CollisionManager realiza detecciones de los objetos dynamicos iterando alrededor de sus celdas y viendo si da nullpointer (no se detecto un objecto) o un shared pointer de otro CollisionObject (tanto statico o dynamico). Al detectar una collision realiza un **double dispatch** donde se llama los metodos de handeleo de collisiones de ambos objectos detectas.
+
+#### Collision Manager - Detectar muchisimos bodies
+
+Para nuestro juego, vamos a tener personajes (dynamic bodies) que disparan desde sus armas distintas bullets (tambien dynamic bodies), pero ... ¿El collision Manager no se va a realentizar al traquear tantos objetos? NO
+
+con el metodo: 
+```cpp
+ void remove_inactive_bodies();
+```
+el collisionManager se ocupara de deshacerse de todos los bodies marcados como inactivos y serán quitadas del collisionManager.
+
+#### Collision Manager - Usos
+
+Se utiliza como atributo en la clase `Match` que lo utiliza para:
+- Cargar las colisiones de plataformas del mapa de una partida
+- Traquear los movimientos de players, enemigos, items & balas en la partida 
+
+Al cargar un mapa, se debe utilizar las funciones 
+```cpp
+void add_object(std::shared_ptr<StaticBody> obj);
+
+void prepare_map();
+```
+`add_object` permite agregar objectos estaticos al collisionManager y luego, la funcion `prepare_map` realiza una limpeza de las collisiones desactivando collisiones inecesarias entre objectos para evitar problemas de paredes invisibles y problemas raras debido a como se creo el custom map.
+
+Al insertar un player/enemy/item a la partida ó respawnearlo, se debe avisar al collisionManager con la funcion: 
+```cpp
+void track_dynamic_body(std::shared_ptr<DynamicBody> obj);
+```
+
 ## Client
 
 ### Escenas
@@ -117,17 +220,120 @@ Hay una variedad de iconos que son sprites estaticos como, la imagen del persona
 
 ## Server
 
+### Game Logic
+Consiste en toda la logica relacionado con el juego en si, personajes, items, cheats, logica de las partidas, etc ...
+
+#### Game Logic - Componentes
+
+Para nuestra logica de juego, con el uso de lo creado en Physics_Engine logramos crear varios tipos de componentes de juego, a continuacion explicaremos brevemente cada uno y como funciona
+
+**Characters**
+Para el juego, decidimos crear 2 tipos de characteres, `Players` & `Enemies`
+
+Los Players son los jugadores de las partidas y los clientes pueden ejecutar distitnos tipos de acciones como mover izquierda/derecha, saltar ó disparar
+
+Luego, tenemos los Enemies, que consta de characteres que van a tratar de atacar players que detecten, su movimiento es limitado (solo pudiendo mover izquiera o derecha) y caminan por determinado rango de de espacio
+
+la clases Player & Enemy son clases padre para luego poder crear los distintos tipos de players y enemies.
+
+**Tipos de Players:**
+- Jazz
+- Spaz
+- Lori
+
+**Tipos de Enemies:**
+- Mad Hatter 
+- Lizard Goon 
+
+**Weapons**
+
+Todos los Jugadores tienen 4 tipos de armas, donde cada uno tiene distitnos tipos de daño, velocidad, frecuencia de disparo y cantidad de ammunicion maxima (con excepcion de una arma que tiene ammo infinita)
+
+Al disparar distitnos player o enemigos, el player recibirá puntos y si logra matar a un enemigo o player recibe puntos bonus.
+
+**Collectables**
+
+Los collecatables son los items del juego, constan de estos tipos:
+
+**Ammo:**
+
+Items que recargan la ammunicion de las armas, de esta clase, hay 3 clases hijos que representan distitnos tipos de Ammo de Armas
+- AmmoGunOne
+- AmmoGunTwo
+- AmmoGunThree
+
+**Health_items:**
+
+Items que recuperan vida de los players, hasta el momento solo tenemos el item:
+-  Meat
+
+**Treasure:**
+
+Items que da puntos al jugador que lo collecciona
+item:
+- Coin
+
+**LA ZANAHORIA**
+
+La zanahoria es un item _raro_ que no cae bajo una categoria en particular que hace lo siguiente.
+Cuando un player lo colecciona, tiene 1/2 chance de ser intoxicado o tener invincibilidad por cierta cantidad de tiempo
+
+- Al ser intoxicado, el jugador se moverá mas lento, no podrá saltar ni tampoco va a poder disparar.
+- AL ser invincible al ser atacado por algun enemigo, player, etc no recibirá daño
+
+
+**Platform**
+El unico Platform hasta el momento, es el `Box_Platform` que consiste en bloques con Collision.
+
+
+### GameLoop
+
+El MatchesManager al recibir un mensaje del cliente de crear partida, lanza el hilo Match que es el game loop en sí, y añade al jugador a la partida. La Match puede continuar incluso si se van todos los jugadores, y pueden conectarse en cualquier momento cualquier jugador hasta que termine. La partida solo finaliza al llegar a cero el contador de partida, y tiene como límite una cantidad de jugadores que pueden unirse determinado por la configuracion del juego asignada en config.yaml.
+Está configurada la partida para correr el juego a 60 fps, y se manda un estado de la partida por loop al cliente para poder renderizarla.
+La partida además de los jugadores que pueden realizarse daño entre sí, contiene enemigos que patrullan de un lado a otro y realizan daño si haces contacto con ellos, aplicando también un knockback. Si los matas consigues puntos al igual que matar otro jugador (tambien puede configurarse estos valores en el confi.yaml).
+
+El hilo principal main lanza la clase `Server`, luego Server lanza el hilo accepter, el aceptador de conexiones con los clientes por socket, y luego `Server` queda a la espera del input 'q' para cerrar todo gracefully.
+
+El accepter lanza el hilo `MatchesManager`, y queda a la espera constante de clientes para ser aceptados. Al aceptar el socket del cliente se lo pasa al `MatchesManager` y a partir de él crea un nuevo "cliente". 
+
+Se crea un `ServerThreadManager` por cada cliente aceptado, el cual tiene su ServerProtocol (utiliza también metodos de su clase padre `CommonProtocol`), y sus respectivos hilos de Sender y receiver para enviar y recibir mensajes.
+
+La lógica principal de `MatchesManager` es de intermediar entre las request del cliente, tanto en estado de "lobby" esperando para crear o unirse a una partida. Va a tener una lista de partidas y una lista de `ClientMonitors`, cada uno para cada partida, para hacer broadcast de los estados del juego o su finalizacion.
+
+La comunicación entre `MatchesManager` y sus `Match` es mayormente entre colas internas, manejadas por dos manejadores de mensajes: `ManagerMessageHandler` quien recibe todo del cliente y realiza las operaciones y respuestas necesarias al cliente, y las acciones y cheats del jugador las comunica internamente buscando la queue de su respectiva `Match` y pusheando el mensaje necesario; y el `MatchMessageHandler` se encarga de igual manera que a cada jugador realizar las acciones o operaciones indicadas por el mensaje del cliente.
+
+La forma de saber qué cliente corresponde a cada player y su partida es que se le asigna un id de cliente cuando se conecta y se lo envía a su cliente para que lo almacene y en cada mensaje especifique su id junto con el mensaje. Y dentro de la partida va a tener su id asociado al cliente.
+
+La desconexión del cliente resulta tanto en el "lobby", que primero le avisa a su partida en la que se encontraba y lo elimina de la partida al "player", y luego elimina la conexión con el protocolo del cliente del servidor y borra su referencia de `ServerThreadManager`.
+
+Ejemplo de creación de partida una vez enviado el mensaje desde cliente:
+
+![DataFlowImage](img/CreateGameServer.png)
+
+### GameLoop
+
+El `MatchesManager` al recibir un mensaje del cliente de crear partida, lanza el hilo Match que es el game loop en sí, y añade al jugador a la partida. La `Match` puede continuar incluso si se van todos los jugadores, y pueden conectarse en cualquier momento cualquier jugador hasta que termine. La partida solo finaliza al llegar a cero el contador de partida, y tiene como límite una cantidad de jugadores que pueden unirse determinado por la configuracion del juego asignada en config.yaml.
+
+Está configurada la partida para correr el juego a 60 fps, y se manda un estado de la partida por loop al cliente para poder renderizarla.
+
+La partida además de los jugadores que pueden realizarse daño entre sí, contiene enemigos que patrullan de un lado a otro y realizan daño si haces contacto con ellos, aplicando también un knockback. Si los matas consigues puntos al igual que matar otro jugador (tambien puede configurarse estos valores en el confi.yaml).
+
 ## Protocol
 
 El diseño del protocolo fue basado gracias a la clase y diapositiva de la clase de Protocolo de la materia Taller
 de Programacion (Veiga).
+
+Data Flow:
+
+![DataFlowImage](img/DataFlow.png)
+
 
 ### Mensajes
 
 Los mensajes del protocolo tiene dos partes:
 
 * Header: Permite distinguir los mensajes
-* DTOs: Contiene la informacion del mensaje
+* DTOs: Contiene la información del mensaje
 
 ### Headers
 
@@ -138,7 +344,7 @@ mensaje:
 2. In game events (0x01)
 3. Menu events (0x02)
 
-El segundo byte, determina que mensaje es en si. Todos lo mensaje que hay son:
+El segundo byte, determina que mensaje es en si. Todos los mensajes que hay son:
 
 * NULL_MESSAGE (0x0000)
 * ACPT_CONNECTION (0x0001)
@@ -160,22 +366,22 @@ El segundo byte, determina que mensaje es en si. Todos lo mensaje que hay son:
 
 #### DTOs: NULL_MESSAGE (0x0000)
 
-Este mensaje existe por si llega un header invalido, no hacer nada.
+Este mensaje existe por si llega un header inválido, no hacer nada.
 
 #### DTOs: ACPT_CONNECTION (0x0001)
 
-Este mensaje le envia el servidor al cliente, para decirle que lo acepta y le devuelve da un
+Este mensaje le envía el servidor al cliente, para decirle que lo acepta y le devuelve da un
 `id_client` de 2 bytes.
 
 #### DTOs: CLOSE_CONNECTION (0x0002)
 
-Este mensaje se envia de forma bidireccional, para que el cliente le avise al servidor o
+Este mensaje se envía de forma bidireccional, para que el cliente le avise al servidor o
 viceversa, que se van a cerrar.
 
 #### DTOs: SEND_GAME_STATE (0x0100)
 
-Este mensaje le envia el servidor al cliente, para darle la informacion al cliente de lo que
-tiene que renderizar. Los Game states estan compuestos la siguiente forma:
+Este mensaje le envía el servidor al cliente, para darle la información al cliente de lo que
+tiene que renderizar. Los Game states están compuestos la siguiente forma:
 
 ```cpp
 struct BulletDTO {
@@ -258,17 +464,16 @@ struct CheatCommandDTO {
 
 Los tipos de cheat commands:
 
-* CHEAT_MAX_AMMO (0x00)
-* CHEAT_MAX_HEALTH (0x01)
-* CHEAT_INVINCIBLE (0x02)
-* CHEAT_REVIVE (0x03)
-* CHEAT_INFINITE_AMMO (0x04)
-* CHEAT_REVIVE_ALL (0x05)
+* CHEAT_MAX_AMMO (0x01)
+* CHEAT_MAX_HEALTH (0x02)
+* CHEAT_INVINCIBLE (0x03)
+* CHEAT_REVIVE (0x04)
+* CHEAT_INFINITE_AMMO (0x05)
 * CHEAT_KILL_ALL (0x06)
 
 #### DTOs: RECV_LEAVE_MATCH (0x0103)
 
-Este mensaje envia el cliente al server para que este ultimo sepa quien abandono la partida.
+Este mensaje envia el cliente al server para que este último sepa quien abandono la partida.
 La informacion es:
 
 ```cpp
