@@ -45,7 +45,7 @@ void Enemy::update_body() {
     }
 }
 
-void Enemy::handle_colision(CollisionObject* other) {
+void Enemy::handle_colision(engine::CollisionObject* other) {
 
     Player* player = dynamic_cast<Player*>(other);
     CollisionFace face = is_touching(other);

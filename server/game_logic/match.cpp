@@ -318,7 +318,7 @@ GameStateDTO Match::create_actual_snapshot() {
 
     game_state.num_bullets = 0;
     collision_manager->iterateDynamicBodies(
-            [&game_state](const std::shared_ptr<DynamicBody>& body) {
+            [&game_state](const std::shared_ptr<engine::DynamicBody>& body) {
                 auto bullet = std::dynamic_pointer_cast<Bullet>(body);
 
                 if (bullet) {
@@ -366,7 +366,7 @@ void Match::load_environment() {
         throw std::runtime_error("Invalid map size");
     }
 
-    collision_manager = std::make_unique<CollisionManager>(grid_width, grid_height);
+    collision_manager = std::make_unique<engine::CollisionManager>(grid_width, grid_height);
 
     std::cout << "Loading map..." << std::endl;
 

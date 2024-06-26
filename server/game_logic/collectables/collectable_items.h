@@ -45,7 +45,7 @@ public:
     Carrot(uint16_t id, int x, int y, int w, int h, const int& respawn_time):
             Collectable(id, x, y, w, h, CARROT, respawn_time) {}
 
-    void handle_colision(CollisionObject* other) override {
+    void handle_colision(engine::CollisionObject* other) override {
 
         Player* player = dynamic_cast<Player*>(other);
         if (!is_collected() && player) {

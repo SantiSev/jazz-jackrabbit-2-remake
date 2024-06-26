@@ -3,13 +3,16 @@
 
 #include <string>
 
-#include "../game_object.h"
+#include "../math/vector2D.h"
 
 #include "collision_face.h"
-#include "collision_object.h"
 
+namespace engine {
 
-class CollisionObject: public GameObject {
+class CollisionObject {
+public:
+    Vector2D position;
+
 private:
     int hitbox_width;
     int hitbox_height;
@@ -59,6 +62,7 @@ public:
 
     virtual ~CollisionObject() = default;
 };
+}  // namespace engine
 
 
 #endif  // GAME_ENGINE_COLISION_OBJECT_H_
