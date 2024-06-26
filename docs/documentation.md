@@ -119,7 +119,7 @@ void track_dynamic_body(std::shared_ptr<DynamicBody> obj);
 ## Server
 
 ### Game Logic
-Consiste en toda la logica realcionado con el juego en si, personajes, items, cheats, logica de las partidas, etc ...
+Consiste en toda la logica relacionado con el juego en si, personajes, items, cheats, logica de las partidas, etc ...
 
 #### Game Logic - Componentes
 
