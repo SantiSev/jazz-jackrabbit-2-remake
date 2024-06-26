@@ -4,7 +4,9 @@
 
 #include "../collision_object.h"
 
-class StaticBody: public CollisionObject {
+namespace engine {
+ 
+class StaticBody: public engine::CollisionObject {
 
 protected:
     bool top_collision = true;
@@ -13,11 +15,13 @@ protected:
     bool bottom_collision = true;
 
 public:
-    void handle_colision(CollisionObject* other) override;
+    void handle_colision(engine::CollisionObject* other) override;
     StaticBody(int width, int height);
     StaticBody(int x, int y, int width, int height);
     void disable_collision(CollisionFace face);
 };
+
+}
 
 
 #endif  // STATIC_BODY_H

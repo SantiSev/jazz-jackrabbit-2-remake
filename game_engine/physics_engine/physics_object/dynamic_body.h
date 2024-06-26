@@ -3,7 +3,10 @@
 
 #include "../collision_object.h"
 
-class DynamicBody: public CollisionObject {
+namespace engine {
+
+
+class DynamicBody: public engine::CollisionObject {
 public:
     Vector2D velocity = Vector2D(0, 0);
 
@@ -17,12 +20,13 @@ public:
      */
     virtual void update_body();
 
-    void handle_colision(CollisionObject* other) override;
+    void handle_colision(engine::CollisionObject* other) override;
 
     virtual void print_info();
 
     virtual void handle_out_of_bounds() {}
 };
+}
 
 
 #endif  // CHARACTER_BODY_H

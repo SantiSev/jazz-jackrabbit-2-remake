@@ -23,7 +23,7 @@ Constructor for guns:
  * A lot of Shoot rate
  * Little Bullet speed
  */
-GunOne::GunOne(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager,
+GunOne::GunOne(uint8_t weapon_id, Player& player_owner, engine::CollisionManager& collision_manager,
                const std::shared_ptr<Configuration>& config):
         Weapon(weapon_id, player_owner, collision_manager, config->bullet_base_ammo * 10,
                config->bullet_base_max_ammo * 10, config->bullet_base_dmg,
@@ -35,7 +35,7 @@ GunOne::GunOne(uint8_t weapon_id, Player& player_owner, CollisionManager& collis
  * Little Shoot rate
  * A lot of Bullet speed
  */
-GunTwo::GunTwo(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager,
+GunTwo::GunTwo(uint8_t weapon_id, Player& player_owner, engine::CollisionManager& collision_manager,
                const std::shared_ptr<Configuration>& config):
         Weapon(weapon_id, player_owner, collision_manager, config->bullet_base_ammo,
                (int)(config->bullet_base_max_ammo * 1.5), config->bullet_base_dmg * 4,
@@ -47,7 +47,7 @@ GunTwo::GunTwo(uint8_t weapon_id, Player& player_owner, CollisionManager& collis
  * A lot of Shoot rate
  * Slow Bullet speed
  */
-GunThree::GunThree(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager,
+GunThree::GunThree(uint8_t weapon_id, Player& player_owner, engine::CollisionManager& collision_manager,
                    const std::shared_ptr<Configuration>& config):
         Weapon(weapon_id, player_owner, collision_manager, config->bullet_base_ammo * 2,
                config->bullet_base_max_ammo * 3, config->bullet_base_dmg * 3,
@@ -61,7 +61,7 @@ GunThree::GunThree(uint8_t weapon_id, Player& player_owner, CollisionManager& co
  * Normal Bullet speed
  */
 
-DefaultGun::DefaultGun(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager,
+DefaultGun::DefaultGun(uint8_t weapon_id, Player& player_owner, engine::CollisionManager& collision_manager,
                        const std::shared_ptr<Configuration>& config):
         Weapon(weapon_id, player_owner, collision_manager, 99, config->bullet_base_max_ammo,
                config->bullet_base_dmg * 2, config->bullet_base_shoot_rate,

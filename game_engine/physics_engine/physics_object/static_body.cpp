@@ -1,14 +1,15 @@
 
 #include "static_body.h"
 
-#include <iostream>
 
-StaticBody::StaticBody(int width, int height): CollisionObject(width, height) {}
+using engine::StaticBody;
 
-StaticBody::StaticBody(int x, int y, int width, int height): CollisionObject(x, y, width, height) {}
+StaticBody::StaticBody(int width, int height): engine::CollisionObject(width, height) {}
+
+StaticBody::StaticBody(int x, int y, int width, int height): engine::CollisionObject(x, y, width, height) {}
 
 
-void StaticBody::handle_colision(CollisionObject* other) {
+void StaticBody::handle_colision(engine::CollisionObject* other) {
 
     CollisionFace face = this->is_touching(other);
 

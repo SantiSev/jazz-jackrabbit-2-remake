@@ -28,7 +28,7 @@ protected:
     int bullet_speed = 20;
     const std::shared_ptr<Configuration> config;
     Player& player_owner;
-    CollisionManager& collision_manager;  // the weapon creates bullets and sends them to the
+    engine::CollisionManager& collision_manager;  // the weapon creates bullets and sends them to the
                                           // collision manager
 
     int shoot_rate_counter = 0;
@@ -38,7 +38,7 @@ protected:
     bool is_weapon_empty() const;
 
 public:
-    Weapon(uint8_t weapon_id, Player& player_owner, CollisionManager& collision_manager, int ammo,
+    Weapon(uint8_t weapon_id, Player& player_owner, engine::CollisionManager& collision_manager, int ammo,
            int max_ammo, int weapon_damage, int shoot_rate, int bullet_speed,
            const std::shared_ptr<Configuration>& config);
 

@@ -42,7 +42,7 @@ class Carrot: public Collectable {
 public:
     Carrot(uint16_t id, int x, int y, int w, int h): Collectable(id, x, y, w, h, CARROT, 100) {}
 
-    void handle_colision(CollisionObject* other) override {
+    void handle_colision(engine::CollisionObject* other) override {
 
         Player* player = dynamic_cast<Player*>(other);
         if (!is_collected() && player) {

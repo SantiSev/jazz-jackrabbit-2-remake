@@ -2,7 +2,7 @@
 
 
 Player::Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w,
-               int h, int shooting_h, CollisionManager& collision_manager,
+               int h, int shooting_h, engine::CollisionManager& collision_manager,
                const std::shared_ptr<Configuration>& config):
         CharacterBody(id, character, x, y, w, h, Vector2D(NONE, config->player_falling_speed),
                       config->player_health, STATE_IDLE_RIGHT, config->player_respawn_cool_down),
@@ -248,7 +248,7 @@ void Player::update_body() {
     position += velocity;
 }
 
-void Player::handle_colision(CollisionObject* other) {
+void Player::handle_colision(engine::CollisionObject* other) {
 
     CollisionFace face = is_touching(other);
 

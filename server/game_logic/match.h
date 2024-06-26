@@ -54,7 +54,7 @@ private:
     size_t max_players;
     ClientMonitor& client_monitor;
     uint16_t map;
-    std::unique_ptr<CollisionManager> collision_manager;
+    std::unique_ptr<engine::CollisionManager> collision_manager;
     std::vector<Vector2D> player_spawn_points;
     std::vector<Vector2D> enemy_spawn_points;
     std::vector<Vector2D> item_spawn_points;

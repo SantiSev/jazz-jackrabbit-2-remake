@@ -16,7 +16,7 @@ public:
             Collectable(id, x, y, hitbox_width, hitbox_height, item_type, appearance_time),
             value(value) {}
 
-    void handle_colision(CollisionObject* other) override {
+    void handle_colision(engine::CollisionObject* other) override {
 
         Player* player = dynamic_cast<Player*>(other);
         if (!is_collected() && player) {

@@ -7,7 +7,7 @@
 
 CharacterBody::CharacterBody(size_t id, const character_t& character, int x, int y, int w, int h,
                              Vector2D velocity, int health, state_t state, int revive_cooldown):
-        DynamicBody(x, y, w, h, Vector2D(velocity)),
+        engine::DynamicBody(x, y, w, h, Vector2D(velocity)),
         id(id),
         character_reference(character),
         state(state),
@@ -118,7 +118,7 @@ void CharacterBody::update_body() {
     position += velocity;
 }
 
-void CharacterBody::handle_colision(CollisionObject* other) {
+void CharacterBody::handle_colision(engine::CollisionObject* other) {
 
     CollisionFace face = is_touching(other);
 

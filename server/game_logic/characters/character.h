@@ -31,7 +31,7 @@
 #define REVIVE_COOLDOWN 1000
 #define INVINCIBILITY_COOLDOWN 600
 
-class CharacterBody: public DynamicBody {
+class CharacterBody: public engine::DynamicBody {
 
 protected:
     // dto info
@@ -55,7 +55,7 @@ public:
 
     //------- Overrided Methods --------
 
-    void handle_colision(CollisionObject* other) override;
+    void handle_colision(engine::CollisionObject* other) override;
     void update_body() override;
 
     //------- Getters --------

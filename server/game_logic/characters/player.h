@@ -28,7 +28,7 @@ private:
     int points = 0;
     std::vector<std::unique_ptr<Weapon>> weapons;
     size_t selected_weapon = DEFAULT_WEAPON;
-    CollisionManager& collision_manager;
+    engine::CollisionManager& collision_manager;
     bool is_knocked_back = false;
     bool is_intoxicated = false;
     int special_cooldown = 0;
@@ -54,13 +54,13 @@ private:
 
 public:
     Player(uint16_t id, std::string name, const character_t& character, int x, int y, int w, int h,
-           int shooting_h, CollisionManager& collision_manager,
+           int shooting_h, engine::CollisionManager& collision_manager,
            const std::shared_ptr<Configuration>& config);
 
     //------- Overrided Methods --------
 
     void update_body() override;
-    void handle_colision(CollisionObject* other) override;
+    void handle_colision(engine::CollisionObject* other) override;
     void knockback(int force) override;
     void print_info() override;
     void revive(Vector2D new_position) override;

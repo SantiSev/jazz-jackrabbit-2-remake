@@ -18,7 +18,7 @@ public:
             weapon_id(weapon_id),
             amount(amount) {}
 
-    void handle_colision(CollisionObject* other) override {
+    void handle_colision(engine::CollisionObject* other) override {
 
         Player* player = dynamic_cast<Player*>(other);
 
