@@ -47,6 +47,9 @@ public:
     int bullet_base_max_ammo;
     int bullet_base_shoot_rate;
 
+    // Item match config
+    int item_respawn_cool_down;
+
     ~Configuration();
 };
 

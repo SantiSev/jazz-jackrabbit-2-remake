@@ -40,6 +40,9 @@ Configuration::Configuration(const std::shared_ptr<YAML::Node>& config) {
     bullet_base_ammo = bullet["base_ammo"].as<int>();
     bullet_base_max_ammo = bullet["base_max_ammo"].as<int>();
     bullet_base_shoot_rate = bullet["base_shoot_rate"].as<int>();
+
+    auto item = c["item"];
+    item_respawn_cool_down = item["respawn_time"].as<int>();
 }
 
 Configuration::~Configuration() = default;

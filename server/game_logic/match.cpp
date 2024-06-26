@@ -24,6 +24,8 @@ Match::Match(const uint16_t& map_selected, size_t required_players_setting,
         collision_manager(nullptr),
         resource_pool(resource_pool),
         match_queue(Queue<std::shared_ptr<Message>>()) {
+    auto config = *resource_pool->get_config();
+    match_time = config.match_duration;
     load_environment();
     load_spawn_points();
     load_items();
@@ -331,13 +333,13 @@ GameStateDTO Match::create_actual_snapshot() {
             });
 
     game_state.num_items = 0;
-    for (const auto& items: items) {
-        if (!items->is_collected()) {
+    for (const auto& item: items) {
+        if (!item->is_collected()) {
             auto& item_state = game_state.items[game_state.num_items];
-            item_state.id = items->get_id();
-            item_state.type = items->get_item_type();
-            item_state.x_pos = items->position.x;
-            item_state.y_pos = items->position.y;
+            item_state.id = item->get_id();
+            item_state.type = item->get_item_type();
+            item_state.x_pos = item->position.x;
+            item_state.y_pos = item->position.y;
             game_state.num_items++;
         }
     }
@@ -415,49 +417,54 @@ void Match::load_items() {
         throw std::runtime_error("No item spawn points found in map.");
     }
 
+    auto config = *resource_pool->get_config();
+
     for (auto& spawn_point: item_spawn_points) {
         item_t current_item_type = static_cast<item_t>(i % ITEM_AMOUNTS);
         uint16_t id = static_cast<uint16_t>(i);
         std::cout << "Item type: " << (int)current_item_type << std::endl;
         switch (current_item_type) {
             case BULLET_ONE_ITEM: {
-                auto bullet_one_item = std::make_shared<AmmoGunOne>(
-                        id, spawn_point.x, spawn_point.y, item_width, item_height);
+                auto bullet_one_item =
+                        std::make_shared<AmmoGunOne>(id, spawn_point.x, spawn_point.y, item_width,
+                                                     item_height, config.item_respawn_cool_down);
                 collision_manager->track_dynamic_body(bullet_one_item);
                 items.emplace_back(bullet_one_item);
                 break;
             }
             case BULLET_TWO_ITEM: {
-                auto bullet_two_item = std::make_shared<AmmoGunTwo>(
-                        id, spawn_point.x, spawn_point.y, item_width, item_height);
+                auto bullet_two_item =
+                        std::make_shared<AmmoGunTwo>(id, spawn_point.x, spawn_point.y, item_width,
+                                                     item_height, config.item_respawn_cool_down);
                 collision_manager->track_dynamic_body(bullet_two_item);
                 items.emplace_back(bullet_two_item);
                 break;
             }
             case BULLET_THREE_ITEM: {
-                auto bullet_three_item = std::make_shared<AmmoGunThree>(
-                        id, spawn_point.x, spawn_point.y, item_width, item_height);
+                auto bullet_three_item =
+                        std::make_shared<AmmoGunThree>(id, spawn_point.x, spawn_point.y, item_width,
+                                                       item_height, config.item_respawn_cool_down);
                 collision_manager->track_dynamic_body(bullet_three_item);
                 items.emplace_back(bullet_three_item);
                 break;
             }
             case CARROT: {
                 auto carrot = std::make_shared<Carrot>(id, spawn_point.x, spawn_point.y, item_width,
-                                                       item_height);
+                                                       item_height, config.item_respawn_cool_down);
                 collision_manager->track_dynamic_body(carrot);
                 items.emplace_back(carrot);
                 break;
             }
             case MEAT: {
                 auto meat = std::make_shared<Meat>(id, spawn_point.x, spawn_point.y, item_width,
-                                                   item_height);
+                                                   item_height, config.item_respawn_cool_down);
                 collision_manager->track_dynamic_body(meat);
                 items.emplace_back(meat);
                 break;
             }
             case COIN: {
                 auto coin = std::make_shared<Coin>(id, spawn_point.x, spawn_point.y, item_width,
-                                                   item_height);
+                                                   item_height, config.item_respawn_cool_down);
                 collision_manager->track_dynamic_body(coin);
                 items.emplace_back(coin);
                 break;
