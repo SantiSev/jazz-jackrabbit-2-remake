@@ -14,10 +14,7 @@ void SoundEffect::play_sound(int loops) {
         return;
     }
 
-    this->channel = Mix_PlayChannel(-1, sound, loops);
-    if (this->channel < 0) {
-        return;
-    }
+    Mix_PlayChannel(-1, sound, loops);
 }
 
 void SoundEffect::pause_sound() { Mix_Pause(this->channel); }
