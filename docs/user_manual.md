@@ -138,7 +138,7 @@ La ejecucion de los `cheat commands` y su correspondecia, en el teclado, es la s
 - Max ammo: 01
 - Max health: 02
 - Invincible: 03
-- Revive (Player): 04
+- Revive (Player): 04 (cuando está muerto)
 - Infinite ammo: 05
 - Kill all: 06
 
