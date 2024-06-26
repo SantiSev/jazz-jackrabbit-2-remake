@@ -5,7 +5,7 @@
 
 class GameObject {
 public:
-    Vector2D position;  // la posicion del objeto
+    Vector2D position;
 
     GameObject(): position(0, 0) {}
     GameObject(int x, int y): position(x, y) {}

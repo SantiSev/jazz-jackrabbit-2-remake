@@ -14,7 +14,7 @@
 #include "../../../game_engine/physics_engine/physics_object/dynamic_body.h"
 #include "../collectables/collectable.h"
 
-// Player config
+// Default Character config
 #define NONE 0
 #define MAX_HEALTH 100
 #define REVIVE_COOLDOWN 1000
