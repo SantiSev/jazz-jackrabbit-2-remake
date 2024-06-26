@@ -17,18 +17,18 @@ match:
 
 player:
     health: 100 # >= 10
-    speed_x: 14
+    speed_x: 11
     sprint_speed: 20
     jump_force: 25
-    falling_speed: 10
-    respawn_time: 600 # unit is in game loops
-    invulnerability_time: 600 # unit is in game loops
-    intoxication_time: 450 # unit is in game loops
+    falling_speed: 9
+    respawn_time: 250 # unit is in game loops
+    invulnerability_time: 300 # unit is in game loops
+    intoxication_time: 150 # unit is in game loops
     is_sprint_allowed: 1
 
 enemy:
     health: 100 # >= 10
-    damage: 25
+    damage: 20
     speed: 5
     falling_speed: 10
     respawn_time: 500 # unit is in game loops
