@@ -53,12 +53,12 @@ Este metodo es virtual puro porque CollisionObject no se debe poder instanciar e
 #### Collision Objects - Static Body
 Static Body consiste en objetos que no se registra su movimiento y tampoco son movidos ó desaparecen.
 
-#### Collision Objects - Dyanmic Body
+#### Collision Objects - Dynamic Body
 Dynamic Body consiste en objects que tienen movimiento (tanto horizontal como vertical), por lo tanto tienen el atributo:
 ```cpp 
 Vector2D velocity;
 ```
-Como los dyanmic bodies se mueven, se debe poder actualizar sus valores de posicion y/o velocidad, por lo tanto, tambien tienen una funcion virtual llamada:
+Como los dynamic bodies se mueven, se debe poder actualizar sus valores de posicion y/o velocidad, por lo tanto, tambien tienen una funcion virtual llamada:
 ```cpp
 virtual void update_body();
 ```
@@ -83,11 +83,11 @@ std::vector<std::vector<std::shared_ptr<CollisionObject>>> grid;
 Es una matriz de shared pointers de CollisionObjects, en donde cada celda de la grilla indica 
 un pixel del juego. Al colocar un objecto en la grilla, en realidad estamos colocando en las posiciones desde (x ,y ) hasta (x+w , x+h ) shared pointers al mismo collision Object
 
-Luego el CollisionManager realiza detecciones de los objetos Dyanmicos iterando alrededor de sus celdas y viendo si da nullpointer (no se detecto un objecto) o un shared pointer de otro CollisionObject (tanto statico o dyanmico). Al detectar una collision realiza un **double dispatch** donde se llama los metodos de handeleo de collisiones de ambos objectos detectas.
+Luego el CollisionManager realiza detecciones de los objetos dynamicos iterando alrededor de sus celdas y viendo si da nullpointer (no se detecto un objecto) o un shared pointer de otro CollisionObject (tanto statico o dynamico). Al detectar una collision realiza un **double dispatch** donde se llama los metodos de handeleo de collisiones de ambos objectos detectas.
 
 #### Collision Manager - Detectar muchisimos bodies
 
-Para nuestro juego, vamos a tener personajes (dyanmic bodies) que disparan desde sus armas distintas bullets (tambien dyanmic bodies), pero ... ¿El collision Manager no se va a realentizar al traquear tantos objetos? NO
+Para nuestro juego, vamos a tener personajes (dynamic bodies) que disparan desde sus armas distintas bullets (tambien dynamic bodies), pero ... ¿El collision Manager no se va a realentizar al traquear tantos objetos? NO
 
 con el metodo: 
 ```cpp
