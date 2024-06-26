@@ -140,10 +140,6 @@ void CollisionManager::update() {  // create to update specific object
     }
 }
 
-// create a method that removes all inactive objects from the grid
-// and from the dynamic_bodies vector
-// and then call this method from the update method
-
 void CollisionManager::remove_inactive_bodies() {
 
     if (dynamic_bodies.empty()) {
