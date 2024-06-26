@@ -169,7 +169,7 @@ metadata del mapa al archivo `maps.yaml`. La informacion requerdia es:
 
 A su vez si se quiere editar usando otras texturas se puede cambiar el archivo `assets/editor/editor_assets.yaml` y poner los x, y, w, h correspondientes al bloque que se quiere relativo al archivo `assets/editor/editor_assets.png`.
 
-En este release se provee una textura adicional `assets/editor/electric_texture.yaml` para usarla debera cambiarle el nombre del archivo a `editor_assets` reemplazando asi la textura anterior.
+En este release se proveen dos texturas adicionales `assets/editor/electric_texture.yaml` y `assets/editor/cathedral_texture`, para usarlas debera cambiarle el nombre del archivo a `editor_assets` reemplazando asi la textura anterior.
 
 Nota: tener en cuenta de no agregar mas bloques de los que hay en estas texturas del release y no sacar los bloques de spawnpoints y null block.
 
