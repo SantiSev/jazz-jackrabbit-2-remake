@@ -38,7 +38,7 @@ Para detectar dichas collisiones se utiliza los metodos protegidos `is_touching(
      */
     bool is_touching_bool(const CollisionObject* other) const;
 ```
-`CollisionFace `es un enum que indica de que lado fue tocado mi objecto con respecto al otro. Esto es util para diferenciar collisiones entre paredes, suelos, etc
+`CollisionFace` es un enum que indica de que lado fue tocado mi objecto con respecto al otro. Esto es util para diferenciar collisiones entre paredes, suelos, etc
 Hay objectos (como en balas e items) donde no es importante saber donde fue tocado sino que solo importa que haya ocurrido una colision.
 
 #### Abstraccion de Collision Object
@@ -47,7 +47,7 @@ Hay objectos (como en balas e items) donde no es importante saber donde fue toca
 virtual void handle_colision(CollisionObject* other) = 0;
 ```
 Este metodo es virtual puro porque CollisionObject no se debe poder instanciar en cualquier momento, el CollisionObject es la clase padre de todos los componentes del juego en donde todos sus clases hijos deben _handelear_ sus colisiones (dar la logica e indicar que ocurre cuando son colisionados). Hasta el momento hay solo 2 tipos:
-- `Dyanmic_body`
+- `Dynamic_body`
 - `Static_body`
 
 #### Collision Objects - Static Body
