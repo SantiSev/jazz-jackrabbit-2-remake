@@ -1,40 +1,8 @@
 #include "configuration.h"
 
-Configuration::Configuration():
-        match_max_players(0),
-        match_max_matches(0),
-        match_points_enemy(0),
-        match_points_player(0),
-        match_points_coin(0),
-        match_duration(0),
-        map_ed_max_height(0),
-        map_ed_max_width(0),
-        enemy_health(0),
-        enemy_damage(0),
-        enemy_respawn_cool_down(0),
-        enemy_speed(0),
-        enemy_falling_speed(0),
-        enemy_move_rng(0),
-        player_health(0),
-        player_speed_x(0),
-        player_sprint_spd(0),
-        player_jump_f(0),
-        player_falling_speed(0),
-        player_respawn_cool_down(0),
-        player_invincivility_cool_down(0),
-        player_intoxication_cool_down(0),
-        player_can_sprint(1),
-        bullet_base_dmg(0),
-        bullet_base_speed(0),
-        bullet_base_ammo(0),
-        bullet_base_max_ammo(0),
-        bullet_base_shoot_rate(0) {}
-
-Configuration::~Configuration() = default;
-
-// void Configuration::load_yaml_info(const YAML::Node& config){
-void Configuration::load_yaml_info(const std::shared_ptr<YAML::Node>& config) {
+Configuration::Configuration(const std::shared_ptr<YAML::Node>& config) {
     auto c = *config;
+
     auto match = c["match"];
     match_max_players = match["max_players"].as<int>();
     match_max_matches = match["max_matches_to_create"].as<int>();
@@ -42,6 +10,7 @@ void Configuration::load_yaml_info(const std::shared_ptr<YAML::Node>& config) {
     match_points_player = match["kill_points_player"].as<int>();
     match_points_coin = match["coin_points"].as<int>();
     match_duration = match["match_duration"].as<int>();
+
     auto map_ed = c["map_editor"];
     map_ed_max_height = map_ed["map_height"].as<int>();
     map_ed_max_width = map_ed["map_width"].as<int>();
@@ -72,3 +41,5 @@ void Configuration::load_yaml_info(const std::shared_ptr<YAML::Node>& config) {
     bullet_base_max_ammo = bullet["base_max_ammo"].as<int>();
     bullet_base_shoot_rate = bullet["base_shoot_rate"].as<int>();
 }
+
+Configuration::~Configuration() = default;

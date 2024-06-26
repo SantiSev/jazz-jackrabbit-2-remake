@@ -76,7 +76,6 @@ void Client::pre_load_resources() {
     resource_pool->load_yaml(map_character_enum_to_string.at(LIZARD_GOON));
     resource_pool->load_yaml(SFX_FILE);
     resource_pool->load_yaml(ITEMS_FILE);
-    resource_pool->load_yaml(CONFIG_FILE);
     resource_pool->load_yaml(EDITOR_FILE);
     resource_pool->load_yaml(MAPS_FILE);
     resource_pool->load_yaml(CHARACTER_SELECT_FILE);
