@@ -4,6 +4,8 @@
 
 [<img width=360 src="./docs/img/thumb.jpg" alt="TRAILER" />](https://www.youtube.com/watch?v=yL4jmEFELbI)
 
+**Tambien podes ver la [pagina web](https://atusgames.github.io/jazz-jackrabbit-2-remake) de este proyecto!**
+
 ## Images
 
 ### Map select
@@ -49,6 +51,6 @@ El proyecto cuenta con una licencia [MIT](./LICENSE).
 
 ## Derechos Externos
 
-* Puedes comprar el juego original [aqui](https://www.gog.com/en/game/jazz_jackrabbit_2_collection).
+* Podes comprar el juego original [aqui](https://www.gog.com/en/game/jazz_jackrabbit_2_collection).
 * Arte tomada de [aqui](https://www.spriters-resource.com/pc_computer/jazzjackrabbit2thesecretfiles/).
 * Usamos algunas herramientas con licencia MIT de [este](https://github.com/eldipa) usuario (mas detalles en **project manual**).
