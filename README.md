@@ -10,27 +10,27 @@
 
 Cuando se esta creando una partida se puede elegir el mapa en el que se desa jugar.
 
-![MAP](./docs/img/map.png)
+<img width=480 src="./docs/img/map.png" alt="img" />
 
 ### Match select
 
 Cuando se esta entrando a una partida se puede elegir entre todas las partidas abiertas actualmente.
 
-![MATCH](./docs/img/match.jpg)
+<img width=480 src="./docs/img/match.jpg" alt="img" />
 
 ### Character select
 
 Cuando se esta creando o entrando a una partida se puede elegir uno de los tres personajes.
 
-![CHARACTER](./docs/img/select.png)
+<img width=480 src="./docs/img/select.gif" alt="img" />
 
 ### In-game
 
 Cuando se esta en una partida arriba a la izquierda se puede ver la informacion relevante del estado del personaje, que arma tiene equipada y cuantas balas tiene.
 
-![MAP](./docs/img/ingame.png)
+<img width=480 src="./docs/img/ingame.png" alt="img" />
 
-## Mas Info
+## Como Jugar & Mas Info
 
 - [Manual de usuario](./docs/user_manual.md) (COMO JUGAR!)
 - [Manual de projecto](./docs/project_manual.md)
