@@ -4,7 +4,7 @@
 
 [<img width=360 src="./docs/img/thumb.jpg" alt="TRAILER" />](https://www.youtube.com/watch?v=yL4jmEFELbI)
 
-**Tambien podes ver la [pagina web](https://atusgames.github.io/jazz-jackrabbit-2-remake) de este proyecto!**
+**Tambien podes ver la [pagina web](https://atusgames.github.io/#/jazz-jackrabbit-2-remake) de este proyecto!**
 
 ## Images
 
