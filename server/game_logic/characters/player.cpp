@@ -143,9 +143,6 @@ void Player::move_horizontal(int new_direction) {
     }
 }
 
-
-void Player::sprint() { is_sprinting = !is_sprinting; }
-
 void Player::move_left() { move_horizontal(LEFT_DIR); }
 
 void Player::move_right() { move_horizontal(RIGHT_DIR); }
@@ -243,6 +240,13 @@ void Player::update_body() {
 
     for (auto& weapon: weapons) {
         weapon->update_shoot_rate();
+    }
+
+    if (is_moving_left) {
+        move_horizontal(LEFT_DIR);
+    }
+    if (is_moving_right) {
+        move_horizontal(RIGHT_DIR);
     }
 
     position += velocity;
@@ -344,13 +348,26 @@ void Player::execute_command(command_t command) {
     switch (command) {
         case MOVE_LEFT:
             move_left();
+            is_moving_left = true;
+            break;
+        case STOP_MOVE_LEFT:
+            is_moving_left = false;
             break;
         case MOVE_RIGHT:
             move_right();
+            is_moving_right = true;
+            break;
+        case STOP_MOVE_RIGHT:
+            is_moving_right = false;
             break;
         case SPRINT:
             if (is_sprint_allowed) {
-                sprint();
+                is_sprinting = true;
+            }
+            break;
+        case STOP_SPRINT:
+            if (is_sprint_allowed) {
+                is_sprinting = false;
             }
             break;
         case JUMP:

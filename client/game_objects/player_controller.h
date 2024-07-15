@@ -31,6 +31,8 @@ public:
     bool is_intersecting(SDL_Point& point) const override;
 
     ~PlayerController();
+
+    void on_key_release(const SDL_Keycode& key) override;
 };
 
 

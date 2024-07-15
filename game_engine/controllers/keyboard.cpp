@@ -12,7 +12,7 @@ void Keyboard::update(const SDL_Event& event) {
         if (!is_special_key(event.key.keysym.sym))
             return;
         for (auto obj: signal_objs) {
-            obj->on_key_press(event.key.keysym.sym);
+            obj->on_key_release(event.key.keysym.sym);
         }
     }
 }
@@ -27,6 +27,8 @@ void Keyboard::remove_on_key_down_signal_obj(CanvasObject* obj) {
     signal_objs.remove(obj);
 }
 
-bool Keyboard::is_special_key(const SDL_Keycode& key) { return key == SDLK_LSHIFT; }
+bool Keyboard::is_special_key(const SDL_Keycode& key) {
+    return key == SDLK_LSHIFT || key == SDLK_a || key == SDLK_d;
+}
 
 Keyboard::~Keyboard() = default;
