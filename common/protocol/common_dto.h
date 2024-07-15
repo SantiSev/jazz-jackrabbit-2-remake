@@ -44,6 +44,9 @@ typedef enum: uint8_t {
     SHOOT = 0x08,
     PAUSE_GAME = 0x9,
     TAUNT = 0x10,
+    STOP_MOVE_LEFT = 0x11,
+    STOP_MOVE_RIGHT = 0x12,
+    STOP_SPRINT = 0x13,
 } command_t;
 
 
@@ -92,7 +95,7 @@ struct CreateGameDTO {
     id_client_t id_client;
     character_t character_selected;
     uint16_t map_id;
-    uint8_t max_players;  // TODO esta var no se usa. se configura en config.yaml.
+    uint8_t max_players;
 } __attribute__((packed));
 
 struct JoinMatchDTO {

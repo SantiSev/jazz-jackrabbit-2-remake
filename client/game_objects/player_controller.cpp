@@ -48,6 +48,22 @@ void PlayerController::on_key_press(const SDL_Keycode& key) {
     }
 }
 
+void PlayerController::on_key_release(const SDL_Keycode& key) {
+    switch (key) {
+        case SDLK_a:
+            message_handler.send_command(STOP_MOVE_LEFT);
+            break;
+        case SDLK_d:
+            message_handler.send_command(STOP_MOVE_RIGHT);
+            break;
+        case SDLK_LSHIFT:
+            message_handler.send_command(STOP_SPRINT);
+            break;
+        default:
+            break;
+    }
+}
+
 void PlayerController::draw(SDL_Renderer* renderer, int it) {}
 
 SDL_Rect& PlayerController::get_body() { return body; }
