@@ -36,6 +36,8 @@ private:
     int invincibility_cooldown = INVINCIBILITY_COOLDOWN;
     bool is_invincible = false;
     bool is_sprinting = false;
+    bool is_moving_left = false;
+    bool is_moving_right = false;
     int shooting_height;
     std::shared_ptr<Configuration> config;
 
@@ -49,7 +51,6 @@ private:
     bool is_sprint_allowed = true;
 
     void move_horizontal(int new_direction);
-    void sprint();
     bool is_shooting();
 
 public:
