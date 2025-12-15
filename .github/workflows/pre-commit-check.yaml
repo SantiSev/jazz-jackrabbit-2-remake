@@ -14,8 +14,8 @@ jobs:
         with:
           python-version: '3.x'
 
-      - run: sudo apt-get update && sudo apt-get -y install cppcheck
-
-      - uses: pre-commit/action@v2.0.3
-        with:
-          extra_args: --all-files
+      - run: |
+          sudo apt-get update
+          sudo apt-get -y install cppcheck
+          pip install pre-commit
+          pre-commit run --all-files
