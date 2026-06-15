@@ -1,20 +1,31 @@
----
 repos:
   - repo: https://github.com/ssciwr/clang-format-hook
-    rev: v14.0.0
+    rev: v16.0.2
     hooks:
       - id: clang-format
-        files: ^(.*[.]cpp|.*[.]h)$
+        files: \.(c|cc|cpp|cxx|h|hh|hpp|hxx)$
         args: ["--style=file", "-i"]
-  - repo: https://github.com/cpplint/cpplint
-    rev: 1.6.0
+
+  - repo: local
     hooks:
-      - id: cpplint
-        files: ^(.*[.]cpp|.*[.]h)$
-  - repo: https://github.com/pocc/pre-commit-hooks
-    rev: 9a9bbc00895bbdb7670231c2565d4f1309c42905  # SHA of v1.3.5
-    hooks:
-      - id: cppcheck
-        exclude: "tests/"
-        files: ^(.*[.]cpp|.*[.]h)$
-        args: ["--inline-suppr", "--enable=all", "--suppress=missingIncludeSystem", "--suppress=missingInclude", "--suppress=unusedFunction", "--suppress=unmatchedSuppression", "--language=c++", "--std=c++20", "--error-exitcode=1"]
+      - id: cppcheck-server
+        name: cppcheck (server)
+        language: system
+        pass_filenames: false
+        entry: cppcheck
+        args:
+          - server/
+          - --enable=warning,style,performance,portability
+          - --std=c++20
+          - --suppress=ctuOneDefinitionRuleViolation
+
+      - id: cppcheck-client
+        name: cppcheck (client)
+        language: system
+        pass_filenames: false
+        entry: cppcheck
+        args:
+          - client/
+          - --enable=warning,style,performance,portability
+          - --std=c++20
+          - --suppress=ctuOneDefinitionRuleViolation
